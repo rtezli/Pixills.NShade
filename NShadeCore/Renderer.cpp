@@ -6,49 +6,49 @@ NShade::Renderer::Renderer(const std::shared_ptr<NShade::Renderer>& deviceResour
 
 }
 
-void CreateDeviceDependentResources()
+void NShade::Renderer::CreateDeviceDependentResources()
 {
 
 }
 
-void CreateWindowSizeDependentResources()
+void NShade::Renderer::CreateWindowSizeDependentResources()
 {
 
 }
 
-void ReleaseDeviceDependentResources()
+void NShade::Renderer::ReleaseDeviceDependentResources()
 {
 
 }
 
 //void Update(DX::StepTimer const& timer);
 
-void Render()
+void NShade::Renderer::Render()
 {
 
 }
 
-void StopRendering()
+void NShade::Renderer::StopRendering()
 {
 
 }
 
-void StartTracking()
+void NShade::Renderer::StartTracking()
 {
 
 }
 
-void TrackingUpdate(float positionX)
+void NShade::Renderer::TrackingUpdate(float positionX)
 {
 
 }
 
-void StopTracking()
+void NShade::Renderer::StopTracking()
 {
 
 }
 
-void Rotate(float radians)
+void NShade::Renderer::Rotate(float radians)
 {
 
 }

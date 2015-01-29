@@ -10,18 +10,18 @@ namespace NShade
 	class Renderer
 	{
 	public:
-		Renderer(const shared_ptr<NShade::Renderer>& deviceResources);
-		void CreateDeviceDependentResources();
-		void CreateWindowSizeDependentResources();
-		void ReleaseDeviceDependentResources();
+		NShade::Renderer::Renderer(const shared_ptr<NShade::Renderer>& deviceResources);
+		void NShade::Renderer::CreateDeviceDependentResources();
+		void NShade::Renderer::CreateWindowSizeDependentResources();
+		void NShade::Renderer::ReleaseDeviceDependentResources();
 	    //void Update(DX::StepTimer const& timer);
-		void Render();
-		void StopRendering();
-		void StartTracking();
-		void TrackingUpdate(float positionX);
-		void StopTracking();
-		bool IsTracking() { return m_tracking; }
-		bool IsRendering(){ return m_isRendering; }
+		void NShade::Renderer::Render();
+		void NShade::Renderer::StopRendering();
+		void NShade::Renderer::StartTracking();
+		void NShade::Renderer::TrackingUpdate(float positionX);
+		void NShade::Renderer::StopTracking();
+		bool NShade::Renderer::IsTracking() { return m_tracking; }
+		bool NShade::Renderer::IsRendering(){ return m_isRendering; }
 
 	private:
 		void Rotate(float radians);

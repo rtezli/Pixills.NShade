@@ -74,7 +74,7 @@ void NShade::Model::FillVerticesFromFbxImport(FbxScene* scene)
 		{
 			auto point = pointArray->GetAt(i);
 			auto data = point.mData;
-			XMVECTOR newVector = { data[0], data[1], data[2], data[3] };
+			XMVECTOR newVector = { (float)data[0], (float)data[1], (float)data[2], (float)data[3] };
 		}
 	}
 	scene->Destroy();
