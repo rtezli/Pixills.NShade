@@ -38,7 +38,7 @@ HRESULT NShade::Model::LoadModelFromFBXFile(CHAR* fileName)
 	return 0;
 }
 
-FbxScene* FbxImport(CHAR* fileName)
+FbxScene* NShade::Model::FbxImport(CHAR* fileName)
 {
 	FbxManager *lSdkManager = FbxManager::Create();
 	// create an IOSettings object
@@ -60,7 +60,7 @@ FbxScene* FbxImport(CHAR* fileName)
 	return lScene;
 }
 
-void FillVerticesFromFbxImport(FbxScene* scene)
+void NShade::Model::FillVerticesFromFbxImport(FbxScene* scene)
 {
 	FbxGeometry* geometry;
 	FbxArray<FbxVector4>* pointArray;
@@ -69,7 +69,8 @@ void FillVerticesFromFbxImport(FbxScene* scene)
 	{
 		geometry = scene->GetGeometry(i);
 		pointArray = &geometry->mControlPoints;
-		for (auto n = 0; n < pointArray->Size; n++)
+		auto size = pointArray->Size();
+		for (auto n = 0; n < size; n++)
 		{
 			auto point = pointArray->GetAt(i);
 			auto data = point.mData;

@@ -16,6 +16,9 @@ namespace NShade{
 		HRESULT LoadModelFromFBXFile(CHAR* fileName);
 		HRESULT LoadModelFromOBJFile(CHAR* fileName);
 	private:
+		FbxScene* NShade::Model::FbxImport(CHAR* fileName);
+		void FillVerticesFromFbxImport(FbxScene* scene);
+	private:
 		HRESULT CreateBuffer();
 		ID3D11Device* m_pDevice;
 		ID3D11Buffer* m_pVertexBuffer;
