@@ -28,6 +28,11 @@ void Render()
 
 }
 
+void StopRendering()
+{
+
+}
+
 void StartTracking()
 {
 

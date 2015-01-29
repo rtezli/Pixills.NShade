@@ -16,11 +16,12 @@ namespace NShade
 		void ReleaseDeviceDependentResources();
 	    //void Update(DX::StepTimer const& timer);
 		void Render();
+		void StopRendering();
 		void StartTracking();
 		void TrackingUpdate(float positionX);
 		void StopTracking();
 		bool IsTracking() { return m_tracking; }
-
+		bool IsRendering(){ return m_isRendering; }
 
 	private:
 		void Rotate(float radians);
@@ -42,6 +43,7 @@ namespace NShade
 		//uint32	m_indexCount;
 
 		// Für die Renderschleife verwendete Variablen.
+		bool	m_isRendering;
 		bool	m_loadingComplete;
 		float	m_degreesPerSecond;
 		bool	m_tracking;

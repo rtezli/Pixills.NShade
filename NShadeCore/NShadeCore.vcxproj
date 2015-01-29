@@ -155,7 +155,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="common.h" />
-    <ClInclude Include="D3DBootstrapper.h" />
+    <ClInclude Include="D3DSystem.h" />
     <ClInclude Include="Export.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="Model.h" />
@@ -166,7 +166,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="D3DBootstrapper.cpp" />
+    <ClCompile Include="D3DSystem.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
