@@ -2,6 +2,7 @@ Debug
 Release
 ipch
 _Resharper*
+*.ipch
 *.sdf
 *.opensdf
 *.user
