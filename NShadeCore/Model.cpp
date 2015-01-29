@@ -71,7 +71,9 @@ void FillVerticesFromFbxImport(FbxScene* scene)
 		pointArray = &geometry->mControlPoints;
 		for (auto n = 0; n < pointArray->Size; n++)
 		{
-			auto point = pointArray[n];
+			auto point = pointArray->GetAt(i);
+			auto data = point.mData;
+			XMVECTOR newVector = { data[0], data[1], data[2], data[3] };
 		}
 	}
 	scene->Destroy();
