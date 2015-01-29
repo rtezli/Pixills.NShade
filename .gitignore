@@ -2,6 +2,8 @@ Debug
 Release
 ipch
 _Resharper*
+*.sdf
+*.opensdf
 *.user
 *.suo
 # Compiled Object files
