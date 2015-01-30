@@ -27,24 +27,25 @@ namespace NShade{
 		HRESULT SetCamera(XMVECTOR position, XMVECTOR direction, UINT16 viewAngle);
 		HRESULT SetCamera(XMVECTOR position, XMVECTOR direction, FLOAT focalLength);
 	private:
-		HRESULT D3DSystem::CreateDevice();
-		HRESULT D3DSystem::CreateSwapChain();
-		HRESULT D3DSystem::CreateCamera();
-		HRESULT D3DSystem::LoadModels();
-		HRESULT D3DSystem::ApplyShaders();
-		HRESULT D3DSystem::CreateRenderer();
-		HRESULT D3DSystem::Render();
+		HRESULT CreateDevice();
+		HRESULT	CreateSwapChain();
+		HRESULT CreateCamera();
+		HWND	Create3DWindow(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen);
+		HRESULT	LoadModels();
+		HRESULT	ApplyShaders();
+		HRESULT	CreateRenderer();
+		HRESULT	Render();
 	private:
-		D3D_FEATURE_LEVEL m_d3dFeatureLevel;
-		Renderer*	m_renderer;
-		Camera*		m_camera;
+		D3D_FEATURE_LEVEL	m_d3dFeatureLevel;
+		Renderer*			m_renderer;
+		Camera*				m_camera;
 
-	    XMMATRIX	m_worldMatrix;
-		XMMATRIX	m_viewMatrix;
-		XMMATRIX	m_projectionMatrix;
+		XMMATRIX			m_worldMatrix;
+		XMMATRIX			m_viewMatrix;
+		XMMATRIX			m_projectionMatrix;
 
-		XMVECTOR	m_position;
-		XMVECTOR	m_rotation;
+		XMVECTOR			m_position;
+		XMVECTOR			m_rotation;
 	};
 }
 

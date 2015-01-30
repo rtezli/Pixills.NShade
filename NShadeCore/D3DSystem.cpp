@@ -39,6 +39,15 @@ HRESULT NShade::D3DSystem::Initialize(
 	return 0;
 }
 
+HWND NShade::D3DSystem::Create3DWindow(int screenWidth,
+	int screenHeight,
+	bool vsync,
+	HWND hwnd,
+	bool fullscreen)
+{
+	return 0;
+}
+
 HRESULT NShade::D3DSystem::CreateDevice()
 {
 	UINT creationFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
@@ -53,35 +62,46 @@ HRESULT NShade::D3DSystem::CreateDevice()
 		D3D_FEATURE_LEVEL_9_2,
 		D3D_FEATURE_LEVEL_9_1
 	};
+	HRESULT createResult = 0;
+	ID3D11Device* pDevice = 0;
+	ID3D11DeviceContext*  pDeviceContext = 0;
 
-	ID3D11Device* pDevice;
-	ID3D11DeviceContext*  pDeviceContext;
+	createResult = D3D11CreateDevice(
+		nullptr,
+		D3D_DRIVER_TYPE_HARDWARE,
+		0,
+		creationFlags,
+		featureLevels,
+		ARRAYSIZE(featureLevels),
+		D3D11_SDK_VERSION,
+		&pDevice,
+		&m_d3dFeatureLevel,
+		&pDeviceContext);
 
-	//HRESULT createResult = D3D11CreateDevice(
-	//	nullptr,					// "nullptr" angeben, um den Standardadapter zu verwenden.
-	//	D3D_DRIVER_TYPE_HARDWARE,	// Mit dem Hardwaregrafiktreiber ein Gerät erstellen.
-	//	0,							// Sollte 0 sein, wenn der Treiber nicht D3D_DRIVER_TYPE_SOFTWARE ist.
-	//	creationFlags,				// Debug- und Direct2D-Kompatibilitätsflags festlegen.
-	//	featureLevels,				// Liste der von dieser App unterstützten Funktionsebenen.
-	//	ARRAYSIZE(featureLevels),	// Größe der oben angeführten Liste.
-	//	D3D11_SDK_VERSION,			// Dies für Windows Store-Apps immer auf D3D11_SDK_VERSION festlegen.
-	//	&pDevice,					// Gibt das erstellte Direct3D-Gerät zurück.
-	//	&m_d3dFeatureLevel,			// Gibt die Funktionsebene des erstellten Geräts zurück.
-	//	&pDeviceContext				// Gibt den unmittelbaren Kontext des Geräts zurück.
-	//	);
-	//if (FAILED(createResult))
-	//{
-	//}
+	if (FAILED(createResult))
+	{
+		createResult = D3D11CreateDevice(
+			nullptr,
+			D3D_DRIVER_TYPE_WARP,
+			0,
+			creationFlags,
+			featureLevels,
+			ARRAYSIZE(featureLevels),
+			D3D11_SDK_VERSION,
+			&pDevice,
+			&m_d3dFeatureLevel,
+			&pDeviceContext);;
+	}
 
-	return 0;
+	return createResult;
 }
 
-HRESULT SetCamera(XMVECTOR position, XMVECTOR direction)
+HRESULT NShade::D3DSystem::SetCamera(XMVECTOR position, XMVECTOR direction, UINT16 viewAngle)
 {
 	return 0;
 }
 
-HRESULT SetCamera(XMVECTOR position, XMVECTOR direction, FLOAT focalLength)
+HRESULT NShade::D3DSystem::SetCamera(XMVECTOR position, XMVECTOR direction, FLOAT focalLength)
 {
 	return 0;
 }
