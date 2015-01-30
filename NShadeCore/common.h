@@ -2,6 +2,7 @@
 
 #include "wrl.h"
 #include "exception"
+
 namespace DX
 {
 	// Helper class for animation and simulation timing.

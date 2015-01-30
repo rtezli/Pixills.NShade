@@ -3,18 +3,18 @@
 
 
 
-NShade::File::File()
+File::File()
 {
 }
 
 
-NShade::File::~File()
+File::~File()
 {
 	
 	
 }
 
-std::vector<CHAR> NShade::File::ReadFileBytes(CHAR* fileName)
+std::vector<CHAR> File::ReadFileBytes(CHAR* fileName)
 {
 	ifstream stream(fileName, ios::binary | ios::ate);
 	std::streamoff length = stream.tellg();

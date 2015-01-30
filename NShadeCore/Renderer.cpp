@@ -1,54 +1,54 @@
 #include "stdafx.h"
 #include "Renderer.h"
 
-NShade::Renderer::Renderer(const std::shared_ptr<NShade::Renderer>& deviceResources)
+Renderer::Renderer(const std::shared_ptr<Renderer>& deviceResources) 
 {
 
 }
 
-void NShade::Renderer::CreateDeviceDependentResources()
+void Renderer::CreateDeviceDependentResources()
 {
 
 }
 
-void NShade::Renderer::CreateWindowSizeDependentResources()
+void Renderer::CreateWindowSizeDependentResources()
 {
 
 }
 
-void NShade::Renderer::ReleaseDeviceDependentResources()
+void Renderer::ReleaseDeviceDependentResources()
 {
 
 }
 
 //void Update(DX::StepTimer const& timer);
 
-void NShade::Renderer::Render(IDXGISwapChain* swapChain)
+void Renderer::Render(IDXGISwapChain* swapChain)
 {
 	
 }
 
-void NShade::Renderer::StopRendering()
+void Renderer::StopRendering()
 {
 
 }
 
-void NShade::Renderer::StartTracking()
+void Renderer::StartTracking()
 {
 
 }
 
-void NShade::Renderer::TrackingUpdate(float positionX)
+void Renderer::TrackingUpdate(float positionX)
 {
 
 }
 
-void NShade::Renderer::StopTracking()
+void Renderer::StopTracking()
 {
 
 }
 
-void NShade::Renderer::Rotate(float radians)
+void Renderer::Rotate(float radians)
 {
 
 }

@@ -1,44 +1,45 @@
 #include "stdafx.h"
 #include "Model.h"
 
-NSHADECORE_API struct PositionColorVertex
-{
-	XMFLOAT3 Pos;
-	XMFLOAT3 Col;
-}PositionColor;
-
-NShade::Model::Model()
+Model::Model()
 {
 
 }
 
-NShade::Model::~Model()
+Model::~Model()
 {
 
 }
 
-HRESULT NShade::Model::LoadModelFromFBXFile(CHAR* fileName)
+HRESULT Model::Initialize(ID3D11Device* pDevice, NSVERTEX2* pModel[])
+{
+	m_pDevice = pDevice;
+	auto resutlt = InitializeVertexBuffer(pModel);
+	resutlt = InitializeIndexBuffer(pModel);
+	return resutlt;
+}
+
+HRESULT Model::LoadModelFromFBXFile(CHAR* fileName)
 {
 	auto fbxScene = FbxImport(fileName);
 	FillVerticesFromFbxImport(fbxScene);
-	PositionColorVertex* vertices = 0;
+	NSVERTEX2* vertices = 0;
 
 	m_initData.pSysMem = vertices;
 	m_initData.SysMemPitch = 0;
 	m_initData.SysMemSlicePitch = 0;
 
 	m_bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	m_bufferDesc.ByteWidth = sizeof(PositionColorVertex) * 3;
+	m_bufferDesc.ByteWidth = sizeof(NSVERTEX2) * 3;
 	m_bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	m_bufferDesc.CPUAccessFlags = 0;
 	m_bufferDesc.MiscFlags = 0;
 
-	CreateBuffer();
 
 	return 0;
 }
 
-FbxScene* NShade::Model::FbxImport(CHAR* fileName)
+FbxScene* Model::FbxImport(CHAR* fileName)
 {
 	FbxManager *lSdkManager = FbxManager::Create();
 	// create an IOSettings object
@@ -60,7 +61,7 @@ FbxScene* NShade::Model::FbxImport(CHAR* fileName)
 	return lScene;
 }
 
-void NShade::Model::FillVerticesFromFbxImport(FbxScene* scene)
+void Model::FillVerticesFromFbxImport(FbxScene* scene)
 {
 	FbxGeometry* geometry;
 	FbxArray<FbxVector4>* pointArray;
@@ -80,28 +81,56 @@ void NShade::Model::FillVerticesFromFbxImport(FbxScene* scene)
 	scene->Destroy();
 }
 
-HRESULT NShade::Model::LoadModelFromOBJFile(CHAR* fileName)
+HRESULT Model::LoadModelFromOBJFile(CHAR* fileName)
 {
 	// TODO : Get the vertices from the file
-	PositionColorVertex* vertices = 0;
+	NSVERTEX2* vertices = 0;
 
 	m_initData.pSysMem = vertices;
 	m_initData.SysMemPitch = 0;
 	m_initData.SysMemSlicePitch = 0;
 
 	m_bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	m_bufferDesc.ByteWidth = sizeof(PositionColorVertex) * 3;
+	m_bufferDesc.ByteWidth = sizeof(NSVERTEX2) * 3;
 	m_bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	m_bufferDesc.CPUAccessFlags = 0;
 	m_bufferDesc.MiscFlags = 0;
 
-	CreateBuffer();
-
 	return 0;
 }
 
-HRESULT NShade::Model::CreateBuffer()
+HRESULT Model::InitializeVertexBuffer(NSVERTEX2* vertices[])
 {
-	auto result = m_pDevice->CreateBuffer(&m_bufferDesc, &m_initData, &m_pVertexBuffer);
-	return result;
+	D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
+	vertexBufferData.pSysMem = vertices;
+	vertexBufferData.SysMemPitch = 0;
+	vertexBufferData.SysMemSlicePitch = 0;
+	CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(vertices), D3D11_BIND_VERTEX_BUFFER);
+	auto resutlt = m_pDevice->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &m_pVertexBuffer);
+	return resutlt;
 }
+
+HRESULT Model::InitializeIndexBuffer(NSVERTEX2* vertices[])
+{
+	D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
+	indexBufferData.pSysMem = vertices;
+	indexBufferData.SysMemPitch = 0;
+	indexBufferData.SysMemSlicePitch = 0;
+	CD3D11_BUFFER_DESC indexBufferDesc(sizeof(vertices), D3D11_BIND_INDEX_BUFFER);
+	auto resutlt = m_pDevice->CreateBuffer(&indexBufferDesc, &indexBufferData, &m_pIndexBuffer);
+	delete[] vertices;
+	return resutlt;
+}
+
+const Model::NSVERTEX2 Model::Cube[8] =
+{
+	NSVERTEX2{ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f) },
+	NSVERTEX2{ XMFLOAT3(-0.5f, -0.5f, 0.5f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
+	NSVERTEX2{ XMFLOAT3(-0.5f, 0.5f, -0.5f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+	NSVERTEX2{ XMFLOAT3(-0.5f, 0.5f, 0.5f), XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f) },
+
+	NSVERTEX2{ XMFLOAT3(0.5f, -0.5f, -0.5f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
+	NSVERTEX2{ XMFLOAT3(0.5f, -0.5f, 0.5f), XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f) },
+	NSVERTEX2{ XMFLOAT3(0.5f, 0.5f, -0.5f), XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) },
+	NSVERTEX2{ XMFLOAT3(0.5f, 0.5f, 0.5f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) }
+};

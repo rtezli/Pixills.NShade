@@ -7,15 +7,16 @@
 
 using namespace std;
 
-namespace NShade{
-	class File
+
+	class File : public IUnknown
 	{
 	public:
 		File();
 		~File();
 
+		virtual ULONG __stdcall Release() = 0;
 	public:
-		std::vector<CHAR> NShade::File::ReadFileBytes(CHAR* fileName);
+		std::vector<CHAR> File::ReadFileBytes(CHAR* fileName);
 	};
-}
+
 
