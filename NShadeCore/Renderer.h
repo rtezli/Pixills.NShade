@@ -2,6 +2,7 @@
 
 #include "memory"
 #include "d3d11.h"
+#include "dxgi.h"
 
 using namespace std;
 
@@ -15,7 +16,8 @@ namespace NShade
 		void NShade::Renderer::CreateWindowSizeDependentResources();
 		void NShade::Renderer::ReleaseDeviceDependentResources();
 	    //void Update(DX::StepTimer const& timer);
-		void NShade::Renderer::Render();
+		void NShade::Renderer::Render(IDXGISwapChain* swapChain);
+		void NShade::Renderer::RenderDeferred(IDXGISwapChain* swapChain);
 		void NShade::Renderer::StopRendering();
 		void NShade::Renderer::StartTracking();
 		void NShade::Renderer::TrackingUpdate(float positionX);

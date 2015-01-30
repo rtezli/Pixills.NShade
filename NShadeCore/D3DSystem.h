@@ -3,6 +3,7 @@
 #include "Export.h"
 #include "windows.h"
 #include "d3d11.h"
+#include "dxgi.h"
 #include "directxmath.h"
 #include "renderer.h"
 #include "camera.h"
@@ -36,16 +37,22 @@ namespace NShade{
 		HRESULT	CreateRenderer();
 		HRESULT	Render();
 	private:
-		D3D_FEATURE_LEVEL	m_d3dFeatureLevel;
-		Renderer*			m_renderer;
-		Camera*				m_camera;
+		ID3D11Device*			m_pDevice;
+		ID3D11DeviceContext*	m_pDeviceContext;
+		IDXGIFactory1*			m_pDXGIFactory;
+		IDXGISwapChain*			m_pSwapChain;
+		ID3D11RenderTargetView*	m_pRenderTarget;
+		ID3D11DepthStencilView* m_pDepthStencilView;
+		D3D_FEATURE_LEVEL		m_D3dFeatureLevel;
+		Renderer*				m_pRenderer;
+		Camera*					m_pCamera;
 
-		XMMATRIX			m_worldMatrix;
-		XMMATRIX			m_viewMatrix;
-		XMMATRIX			m_projectionMatrix;
+		XMMATRIX				m_WorldMatrix;
+		XMMATRIX				m_ViewMatrix;
+		XMMATRIX				m_ProjectionMatrix;
 
-		XMVECTOR			m_position;
-		XMVECTOR			m_rotation;
+		XMVECTOR				m_Position;
+		XMVECTOR				m_Rotation;
 	};
 }
 

@@ -23,9 +23,9 @@ void NShade::Renderer::ReleaseDeviceDependentResources()
 
 //void Update(DX::StepTimer const& timer);
 
-void NShade::Renderer::Render()
+void NShade::Renderer::Render(IDXGISwapChain* swapChain)
 {
-
+	
 }
 
 void NShade::Renderer::StopRendering()

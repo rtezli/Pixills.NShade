@@ -19,7 +19,9 @@ Dependencies
 Windows SDK
 
 On Windows 7		(%PROGRAMFILES(x86)%\Windows Kits\8.0)
+
 On Windows 8.0		(%PROGRAMFILES(x86)%\Windows Kits\8.0)
+
 On Windows 8.1		(%PROGRAMFILES(x86)%\Windows Kits\8.1)
 
 **Autodesk FBX SDK 2015.1 VS2012** 

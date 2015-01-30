@@ -32,6 +32,7 @@ HRESULT NShade::D3DSystem::Initialize(
 	float screenNear)
 {
 	CreateDevice();
+	CreateSwapChain();
 	CreateCamera();
 	LoadModels();
 	CreateRenderer();
@@ -63,8 +64,8 @@ HRESULT NShade::D3DSystem::CreateDevice()
 		D3D_FEATURE_LEVEL_9_1
 	};
 	HRESULT createResult = 0;
-	ID3D11Device* pDevice = 0;
-	ID3D11DeviceContext*  pDeviceContext = 0;
+	
+	
 
 	createResult = D3D11CreateDevice(
 		nullptr,
@@ -74,9 +75,9 @@ HRESULT NShade::D3DSystem::CreateDevice()
 		featureLevels,
 		ARRAYSIZE(featureLevels),
 		D3D11_SDK_VERSION,
-		&pDevice,
-		&m_d3dFeatureLevel,
-		&pDeviceContext);
+		&m_pDevice,
+		&m_D3dFeatureLevel,
+		&m_pDeviceContext);
 
 	if (FAILED(createResult))
 	{
@@ -88,9 +89,9 @@ HRESULT NShade::D3DSystem::CreateDevice()
 			featureLevels,
 			ARRAYSIZE(featureLevels),
 			D3D11_SDK_VERSION,
-			&pDevice,
-			&m_d3dFeatureLevel,
-			&pDeviceContext);;
+			&m_pDevice,
+			&m_D3dFeatureLevel,
+			&m_pDeviceContext);
 	}
 
 	return createResult;
@@ -108,6 +109,10 @@ HRESULT NShade::D3DSystem::SetCamera(XMVECTOR position, XMVECTOR direction, FLOA
 
 HRESULT NShade::D3DSystem::CreateSwapChain()
 {
+	HRESULT result = 0;
+	DXGI_SWAP_CHAIN_DESC swapChainDesc = { 0 };
+
+	result = m_pDXGIFactory->CreateSwapChain(m_pDevice, &swapChainDesc, &m_pSwapChain);
 	return 0;
 }
 
@@ -133,10 +138,14 @@ HRESULT NShade::D3DSystem::ApplyShaders()
 
 HRESULT NShade::D3DSystem::Render()
 {
+	ID3D11Texture2D* backBuffer = 0;
+	m_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
+	m_pDevice->CreateRenderTargetView(backBuffer, nullptr, &m_pRenderTarget);
+ 
 	// TODO : limit FPS to a value
-	while (m_renderer->IsRendering())
+	while (m_pRenderer->IsRendering())
 	{
-		m_renderer->Render();
+		m_pSwapChain->Present(1, 0);
 	}
 	return 0;
 }
