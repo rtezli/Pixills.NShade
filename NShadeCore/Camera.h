@@ -5,7 +5,7 @@
 
 using namespace DirectX;
 
-class NSHADECORE_API Camera : public IUnknown
+class Camera : public IUnknown
 {
 public:
 	Camera();

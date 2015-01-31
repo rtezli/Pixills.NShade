@@ -3,10 +3,10 @@
 
 
 // This is an example of an exported variable
-NSHADECORE_API int nNShadeCore=0;
+int nNShadeCore=0;
 
 // This is an example of an exported function.
-NSHADECORE_API int fnNShadeCore(void)
+int fnNShadeCore(void)
 {
 	return 42;
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "stdafx.h"
+#include "export.h"
 #include "memory"
 #include "d3d11.h"
 #include "dxgi.h"

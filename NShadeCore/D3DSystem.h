@@ -1,27 +1,28 @@
 #pragma once
 
-#include "stdafx.h"
-#include "Export.h"
 #include "windows.h"
 #include "d3d11.h"
 #include "dxgi.h"
 #include "directxmath.h"
+
+#include "stdafx.h"
+#include "export.h"
 #include "renderer.h"
 #include "camera.h"
 #include "model.h"
 
 using namespace DirectX;
 
-
-NSHADECORE_API enum Perspective
+class D3DSystem
 {
-	FIRST_PERSON,
-	THIRD_PERSON,
-	ISOMETRIC
-}Perspective;
+private :
+	enum Perspective
+	{
+		FIRST_PERSON,
+		THIRD_PERSON,
+		ISOMETRIC
+	};
 
-class NSHADECORE_API D3DSystem
-{
 public:
 	D3DSystem();
 	~D3DSystem();

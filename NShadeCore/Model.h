@@ -10,7 +10,7 @@ using namespace DirectX;
 
 
 
-class NSHADECORE_API Model : public IUnknown
+class Model : public IUnknown
 {
 private:
 	struct NSVERTEX2

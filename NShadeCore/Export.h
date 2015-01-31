@@ -1,8 +1,14 @@
 #pragma once
 #pragma warning( disable: 4251 )
 
-#ifdef NSHADECORE_EXPORTS
-#define NSHADECORE_API __declspec(dllexport)
+#ifdef API
+#define API __declspec(dllexport)
 #else
-#define NSHADECORE_API __declspec(dllimport)
+#define API __declspec(dllimport)
+#endif
+
+#ifdef EXTERN
+#define EXTERN extern "C"
+#else
+#define EXTERN extern "C"
 #endif
