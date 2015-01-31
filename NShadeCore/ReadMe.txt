@@ -29,3 +29,14 @@ Coordinates
 -----------
 
 Here the left-handed cartesian cooradinate system is used
+
+Helpful Tools
+-------------
+
+NGenerator
+Author : Paul Stovells  
+http://sourceforge.net/projects/ngenerator/files/latest/download
+
+Dependency Walker
+Author : Steve P. Millers  
+http://www.dependencywalker.com/

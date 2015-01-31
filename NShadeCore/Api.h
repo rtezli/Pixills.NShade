@@ -2,7 +2,7 @@
 
 #include "d3dsystem.h"
 
-EXTERN BOOL API InitializeForWindow(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear);
+EXTERN HRESULT API InitializeForWindow(int screenWidth, int screenHeight, BYTE vsync, HWND hwnd, BYTE fullscreen, float screenDepth, float screenNear);
 EXTERN BOOL API AddModel();
 EXTERN BOOL API DeleteModel(CHAR* id);
 EXTERN BOOL API AddScene();

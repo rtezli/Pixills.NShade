@@ -17,7 +17,7 @@ HRESULT D3DSystem::InitializeWithWindow(
 	float screenDepth,
 	float screenNear)
 {
-	HWND windowHandle = 0;
+	HWND* windowHandle = 0;
 	Initialize(screenWidth, screenHeight, vsync, windowHandle, fullscreen, screenDepth, screenNear);
 	return 0;
 }
@@ -26,11 +26,17 @@ HRESULT D3DSystem::Initialize(
 	int screenWidth,
 	int screenHeight,
 	bool vsync,
-	HWND hwnd,
+	HWND* hwnd,
 	bool fullscreen,
 	float screenDepth,
 	float screenNear)
 {
+	m_ScreenWidth = screenWidth;
+	m_ScreenHeight = screenHeight;
+	m_vsync_enabled = vsync;
+	m_Fullscreen = fullscreen;
+	m_pWindow = hwnd;
+
 	CreateDevice();
 	CreateSwapChain();
 	CreateCamera();
@@ -198,8 +204,61 @@ HRESULT D3DSystem::SetCamera(XMVECTOR position, XMVECTOR direction, FLOAT focalL
 
 HRESULT D3DSystem::CreateSwapChain()
 {
-	HRESULT result = 0;
+ 
+	auto result = m_pDevice->QueryInterface(__uuidof(IDXGIDevice), (void **)&m_pDXGIDevice);
+	result = m_pDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&m_pDXGIAdapter);
+	result = m_pDXGIAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&m_pDXGIFactory);
+
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = { 0 };
+	swapChainDesc.BufferCount = 1;
+
+	// Set the width and height of the back buffer.
+	swapChainDesc.BufferDesc.Width = m_ScreenWidth;
+	swapChainDesc.BufferDesc.Height = m_ScreenHeight;
+	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+
+	if (m_vsync_enabled)
+	{
+		swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
+		swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+		//swapChainDesc.BufferDesc.RefreshRate.Numerator = numerator;
+		//swapChainDesc.BufferDesc.RefreshRate.Denominator = denominator;
+	}
+	else
+	{
+		swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
+		swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+	}
+
+	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+
+	// Set the handle for the window to render to.
+	swapChainDesc.OutputWindow = (*m_pWindow);
+
+	// Turn multisampling off.
+	swapChainDesc.SampleDesc.Count = 1;
+	swapChainDesc.SampleDesc.Quality = 0;
+
+	// Set to full screen or windowed mode.
+	if (m_Fullscreen)
+	{
+		swapChainDesc.Windowed = false;
+	}
+	else
+	{
+		swapChainDesc.Windowed = true;
+	}
+	swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+
+	// Discard the back buffer contents after presenting.
+	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+
+	// Don't set the advanced flags.
+	swapChainDesc.Flags = 0;
+
+	// Set the feature level to DirectX 11.
+	auto featureLevel = D3D_FEATURE_LEVEL_11_0;
 
 	result = m_pDXGIFactory->CreateSwapChain(m_pDevice, &swapChainDesc, &m_pSwapChain);
 	return 0;
@@ -212,9 +271,9 @@ HRESULT D3DSystem::CreateCamera()
 
 HRESULT D3DSystem::LoadModels()
 {
-	//auto cube = m_pModel->Cube;
-	auto result = m_pModel->Initialize(m_pDevice, NULL);
-	return result;
+	auto cube = m_pModel->Cube;
+	auto result = m_pModel->Initialize(m_pDevice, cube);
+	return 0;
 }
 
 HRESULT D3DSystem::CreateRenderer()
@@ -257,24 +316,24 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 	switch (umessage)
 	{
 		// Check if the window is being destroyed.
-		case WM_DESTROY:
-		{
-			PostQuitMessage(0);
-			return 0;
-		}
+	case WM_DESTROY:
+	{
+		PostQuitMessage(0);
+		return 0;
+	}
 
-		// Check if the window is being closed.
-		case WM_CLOSE:
-		{
-			PostQuitMessage(0);
-			return 0;
-		}
+	// Check if the window is being closed.
+	case WM_CLOSE:
+	{
+		PostQuitMessage(0);
+		return 0;
+	}
 
-		// All other messages pass to the message handler in the system class.
-		default:
-		{
-			//return ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
-		}
+	// All other messages pass to the message handler in the system class.
+	default:
+	{
+		//return ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
+	}
 	}
 	return 0;
 }

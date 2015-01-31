@@ -11,12 +11,12 @@ Model::~Model()
 
 }
 
-HRESULT Model::Initialize(ID3D11Device* pDevice, NSVERTEX2* pModel[])
+HRESULT Model::Initialize(ID3D11Device* pDevice, std::vector<NSVERTEX2>)
 {
-	m_pDevice = pDevice;
-	auto resutlt = InitializeVertexBuffer(pModel);
-	resutlt = InitializeIndexBuffer(pModel);
-	return resutlt;
+	//m_pDevice = pDevice;
+	//auto resutlt = InitializeVertexBuffer(pModel);
+	//resutlt = InitializeIndexBuffer(pModel);
+	return 0;
 }
 
 HRESULT Model::LoadModelFromFBXFile(CHAR* fileName)
@@ -34,7 +34,6 @@ HRESULT Model::LoadModelFromFBXFile(CHAR* fileName)
 	m_bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	m_bufferDesc.CPUAccessFlags = 0;
 	m_bufferDesc.MiscFlags = 0;
-
 
 	return 0;
 }
@@ -99,30 +98,31 @@ HRESULT Model::LoadModelFromOBJFile(CHAR* fileName)
 	return 0;
 }
 
-HRESULT Model::InitializeVertexBuffer(NSVERTEX2* vertices[])
+HRESULT Model::InitializeVertexBuffer(std::vector<NSVERTEX2> vertices)
 {
 	D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
-	vertexBufferData.pSysMem = vertices;
+	vertexBufferData.pSysMem = &vertices;
 	vertexBufferData.SysMemPitch = 0;
 	vertexBufferData.SysMemSlicePitch = 0;
 	CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(vertices), D3D11_BIND_VERTEX_BUFFER);
 	auto resutlt = m_pDevice->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &m_pVertexBuffer);
+	delete &vertices;
 	return resutlt;
 }
 
-HRESULT Model::InitializeIndexBuffer(NSVERTEX2* vertices[])
+HRESULT Model::InitializeIndexBuffer(std::vector<NSVERTEX2> indeces)
 {
 	D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
-	indexBufferData.pSysMem = vertices;
+	indexBufferData.pSysMem = &indeces;
 	indexBufferData.SysMemPitch = 0;
 	indexBufferData.SysMemSlicePitch = 0;
-	CD3D11_BUFFER_DESC indexBufferDesc(sizeof(vertices), D3D11_BIND_INDEX_BUFFER);
+	CD3D11_BUFFER_DESC indexBufferDesc(sizeof(indeces), D3D11_BIND_INDEX_BUFFER);
 	auto resutlt = m_pDevice->CreateBuffer(&indexBufferDesc, &indexBufferData, &m_pIndexBuffer);
-	delete[] vertices;
+	delete &indeces;
 	return resutlt;
 }
 
-const Model::NSVERTEX2 Model::Cube[8] =
+const std::vector<Model::NSVERTEX2> Model::Cube =
 {
 	NSVERTEX2{ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f) },
 	NSVERTEX2{ XMFLOAT3(-0.5f, -0.5f, 0.5f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },

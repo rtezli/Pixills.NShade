@@ -8,8 +8,6 @@
 
 using namespace DirectX;
 
-
-
 class Model : public IUnknown
 {
 private:
@@ -30,21 +28,21 @@ public:
 	~Model();
 	HRESULT LoadModelFromFBXFile(CHAR* fileName);
 	HRESULT LoadModelFromOBJFile(CHAR* fileName);
-	HRESULT Initialize(ID3D11Device* pDevice, NSVERTEX2* pModel[]);
+	HRESULT Model::Initialize(ID3D11Device* pDevice, std::vector<NSVERTEX2> vertexes);
 	virtual ULONG __stdcall Release() = 0;
-	static const NSVERTEX2 Model::Cube[8];
-	static const NSVERTEX2 Model::Sphere[8];
+	static const std::vector<Model::NSVERTEX2> Cube;
+	static const std::vector<Model::NSVERTEX2> Sphere;
 
 private:
-	HRESULT		Model::InitializeVertexBuffer(NSVERTEX2* vertices[]);
-	HRESULT		Model::InitializeIndexBuffer(NSVERTEX2* indexes[]);
+	HRESULT Model::InitializeVertexBuffer(std::vector<NSVERTEX2> vertexes);
+	HRESULT Model::InitializeIndexBuffer(std::vector<NSVERTEX2> indexes);
 	FbxScene*	Model::FbxImport(CHAR* fileName);
 	void FillVerticesFromFbxImport(FbxScene* scene);
 private:
-	USHORT m_indexCount;
-	ID3D11Device* m_pDevice;
-	ID3D11Buffer* m_pVertexBuffer;
-	ID3D11Buffer* m_pIndexBuffer;
+	ID3D11Device* m_pDevice = 0;
+	ID3D11Buffer* m_pVertexBuffer = 0;
+	ID3D11Buffer* m_pIndexBuffer = 0;
+	USHORT m_indexCount = 0;
 	D3D11_BUFFER_DESC m_bufferDesc;
 	D3D11_SUBRESOURCE_DATA m_initData;
 };

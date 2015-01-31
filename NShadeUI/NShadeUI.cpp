@@ -55,13 +55,6 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	return (int) msg.wParam;
 }
 
-
-
-//
-//  FUNCTION: MyRegisterClass()
-//
-//  PURPOSE: Registers the window class.
-//
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
 	WNDCLASSEX wcex;
@@ -95,20 +88,35 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-   HWND hWnd;
-
    hInst = hInstance; // Store instance handle in our global variable
 
-   hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
+   m_hWnd = CreateWindow(
+	   szWindowClass, 
+	   szTitle, 
+	   WS_OVERLAPPEDWINDOW,
+	   CW_USEDEFAULT, 
+	   0, 
+	   CW_USEDEFAULT, 
+	   0, 
+	   NULL, 
+	   NULL, 
+	   hInstance, 
+	   NULL);
 
-   if (!hWnd)
+   if (!m_hWnd)
    {
       return FALSE;
    }
 
-   ShowWindow(hWnd, nCmdShow);
-   UpdateWindow(hWnd);
+   auto result = Init3DSystem(&m_hWnd);
+
+   if (FAILED(result))
+   {
+	   return 0;
+   }
+
+   ShowWindow(m_hWnd, nCmdShow);
+   UpdateWindow(m_hWnd);
 
    return TRUE;
 }
@@ -179,4 +187,10 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	return (INT_PTR)FALSE;
+}
+
+HRESULT Init3DSystem(HWND* window){
+	auto system = new D3DSystem();
+	system->Initialize(800, 600, false, window, false, 100.00f, 0.0f);
+	return 0;
 }

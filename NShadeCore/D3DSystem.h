@@ -13,7 +13,7 @@
 
 using namespace DirectX;
 
-class D3DSystem
+EXTERN class API D3DSystem
 {
 private :
 	enum Perspective
@@ -26,7 +26,7 @@ private :
 public:
 	D3DSystem();
 	~D3DSystem();
-	HRESULT Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear);
+	HRESULT Initialize(int screenWidth, int screenHeight, bool vsync, HWND* hwnd, bool fullscreen, float screenDepth, float screenNear);
 	HRESULT InitializeWithWindow(int screenWidth, int screenHeight, bool vsync, bool fullscreen, float screenDepth, float screenNear);
 	HRESULT InitializeWindow(int& screenWidth, int& screenHeight);
 	HRESULT SetCamera(XMVECTOR position, XMVECTOR direction, UINT16 viewAngle);
@@ -43,15 +43,20 @@ private:
 	VOID	Destroy();
 
 private:
-	Renderer*				m_pRenderer;
-	Camera*					m_pCamera;
-	Model*					m_pModel;
-	ID3D11Device*			m_pDevice;
-	ID3D11DeviceContext*	m_pDeviceContext;
-	IDXGIFactory1*			m_pDXGIFactory;
-	IDXGISwapChain*			m_pSwapChain;
-	ID3D11RenderTargetView*	m_pRenderTarget;
-	ID3D11DepthStencilView* m_pDepthStencilView;
+	Renderer*				m_pRenderer = 0;
+	Camera*					m_pCamera = 0;
+	Model*					m_pModel = 0;
+
+	IDXGIDevice*			m_pDXGIDevice = 0;
+	IDXGIAdapter*			m_pDXGIAdapter = 0;
+	IDXGIFactory1*			m_pDXGIFactory = 0;
+	IDXGISwapChain*			m_pSwapChain = 0;
+
+	ID3D11Device*			m_pDevice = 0;
+	ID3D11DeviceContext*	m_pDeviceContext = 0;
+	ID3D11RenderTargetView*	m_pRenderTarget = 0;
+	ID3D11DepthStencilView* m_pDepthStencilView = 0;
+	HWND*					m_pWindow = 0;
 
 	D3D_FEATURE_LEVEL		m_D3dFeatureLevel;
 	XMMATRIX				m_WorldMatrix;
@@ -60,6 +65,11 @@ private:
 
 	XMVECTOR				m_Position;
 	XMVECTOR				m_Rotation;
+
+	int						m_ScreenWidth;
+	int						m_ScreenHeight;
+	BOOL					m_vsync_enabled;
+	BOOL					m_Fullscreen;
 };
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
