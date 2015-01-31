@@ -11,11 +11,11 @@ Model::~Model()
 
 }
 
-HRESULT Model::Initialize(ID3D11Device* pDevice, std::vector<NSVERTEX2>)
+HRESULT Model::Initialize(ID3D11Device* pDevice, std::vector<NSVERTEX2>* pModel, UINT size)
 {
-	//m_pDevice = pDevice;
-	//auto resutlt = InitializeVertexBuffer(pModel);
-	//resutlt = InitializeIndexBuffer(pModel);
+	m_pDevice = pDevice;
+	auto resutlt = InitializeVertexBuffer(pModel);
+	resutlt = InitializeIndexBuffer(pModel);
 	return 0;
 }
 
@@ -98,7 +98,7 @@ HRESULT Model::LoadModelFromOBJFile(CHAR* fileName)
 	return 0;
 }
 
-HRESULT Model::InitializeVertexBuffer(std::vector<NSVERTEX2> vertices)
+HRESULT Model::InitializeVertexBuffer(std::vector<NSVERTEX2>* vertices)
 {
 	D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
 	vertexBufferData.pSysMem = &vertices;
@@ -106,11 +106,10 @@ HRESULT Model::InitializeVertexBuffer(std::vector<NSVERTEX2> vertices)
 	vertexBufferData.SysMemSlicePitch = 0;
 	CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(vertices), D3D11_BIND_VERTEX_BUFFER);
 	auto resutlt = m_pDevice->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &m_pVertexBuffer);
-	delete &vertices;
 	return resutlt;
 }
 
-HRESULT Model::InitializeIndexBuffer(std::vector<NSVERTEX2> indeces)
+HRESULT Model::InitializeIndexBuffer(std::vector<NSVERTEX2>* indeces)
 {
 	D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
 	indexBufferData.pSysMem = &indeces;
@@ -118,7 +117,6 @@ HRESULT Model::InitializeIndexBuffer(std::vector<NSVERTEX2> indeces)
 	indexBufferData.SysMemSlicePitch = 0;
 	CD3D11_BUFFER_DESC indexBufferDesc(sizeof(indeces), D3D11_BIND_INDEX_BUFFER);
 	auto resutlt = m_pDevice->CreateBuffer(&indexBufferDesc, &indexBufferData, &m_pIndexBuffer);
-	delete &indeces;
 	return resutlt;
 }
 

@@ -3,6 +3,7 @@ NShade.Frontend
 Debug
 Release
 ipch
+packages
 _Resharper*
 *.ipch
 *.sdf
@@ -24,5 +25,6 @@ _Resharper*
 *.dylib
 
 *.dll
+
 
 

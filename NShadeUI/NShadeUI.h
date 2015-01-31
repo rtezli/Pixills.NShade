@@ -6,3 +6,4 @@
 HRESULT	Init3DSystem(HWND* window);
 
 HWND m_hWnd = 0;
+D3DSystem* m_system = 0;

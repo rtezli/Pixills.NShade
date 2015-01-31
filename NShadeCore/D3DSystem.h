@@ -31,6 +31,8 @@ public:
 	HRESULT InitializeWindow(int& screenWidth, int& screenHeight);
 	HRESULT SetCamera(XMVECTOR position, XMVECTOR direction, UINT16 viewAngle);
 	HRESULT SetCamera(XMVECTOR position, XMVECTOR direction, FLOAT focalLength);
+	VOID	Render();
+	VOID	Destroy();
 private:
 	HRESULT CreateDevice();
 	HRESULT	CreateSwapChain();
@@ -39,9 +41,6 @@ private:
 	HRESULT	LoadModels();
 	HRESULT	ApplyShaders();
 	HRESULT	CreateRenderer();
-	VOID	Render();
-	VOID	Destroy();
-
 private:
 	Renderer*				m_pRenderer = 0;
 	Camera*					m_pCamera = 0;

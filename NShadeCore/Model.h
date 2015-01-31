@@ -8,7 +8,7 @@
 
 using namespace DirectX;
 
-class Model : public IUnknown
+class Model // : public IUnknown
 {
 private:
 	struct NSVERTEX2
@@ -28,14 +28,14 @@ public:
 	~Model();
 	HRESULT LoadModelFromFBXFile(CHAR* fileName);
 	HRESULT LoadModelFromOBJFile(CHAR* fileName);
-	HRESULT Model::Initialize(ID3D11Device* pDevice, std::vector<NSVERTEX2> vertexes);
-	virtual ULONG __stdcall Release() = 0;
+	HRESULT Model::Initialize(ID3D11Device* pDevice, std::vector<NSVERTEX2>* vertexes, UINT size);
+	//virtual ULONG __stdcall Release() = 0;
 	static const std::vector<Model::NSVERTEX2> Cube;
 	static const std::vector<Model::NSVERTEX2> Sphere;
 
 private:
-	HRESULT Model::InitializeVertexBuffer(std::vector<NSVERTEX2> vertexes);
-	HRESULT Model::InitializeIndexBuffer(std::vector<NSVERTEX2> indexes);
+	HRESULT Model::InitializeVertexBuffer(std::vector<NSVERTEX2>* vertexes);
+	HRESULT Model::InitializeIndexBuffer(std::vector<NSVERTEX2>* indexes);
 	FbxScene*	Model::FbxImport(CHAR* fileName);
 	void FillVerticesFromFbxImport(FbxScene* scene);
 private:

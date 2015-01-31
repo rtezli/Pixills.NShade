@@ -271,8 +271,10 @@ HRESULT D3DSystem::CreateCamera()
 
 HRESULT D3DSystem::LoadModels()
 {
+	m_pModel = new Model();
 	auto cube = m_pModel->Cube;
-	auto result = m_pModel->Initialize(m_pDevice, cube);
+	auto size = cube.size();
+	auto result = m_pModel->Initialize(m_pDevice, &cube, size);
 	return 0;
 }
 
