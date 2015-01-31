@@ -10,6 +10,7 @@
 #include "renderer.h"
 #include "camera.h"
 #include "model.h"
+#include "input.h"
 
 using namespace DirectX;
 
@@ -44,6 +45,7 @@ private:
 private:
 	Renderer*				m_pRenderer = 0;
 	Camera*					m_pCamera = 0;
+	Input*					m_pInputDevices = 0;
 	Model*					m_pModel = 0;
 
 	IDXGIDevice*			m_pDXGIDevice = 0;

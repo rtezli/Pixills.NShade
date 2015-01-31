@@ -112,7 +112,16 @@ HRESULT Model::InitializeVertexBuffer(std::vector<NSVERTEX2>* vertices)
 HRESULT Model::InitializeIndexBuffer(std::vector<NSVERTEX2>* indeces)
 {
 	D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
-	indexBufferData.pSysMem = &indeces;
+	static const unsigned short cubeIndices[] =
+	{
+		0, 2, 1, 1, 2, 3,
+		4, 5, 6, 5, 7, 6,
+		0, 1, 5, 0, 5, 4,
+		2, 6, 7, 2, 7, 3,
+		0, 4, 6, 0, 6, 2,
+		1, 3, 7,1, 7, 5,
+	};
+	indexBufferData.pSysMem = &cubeIndices;
 	indexBufferData.SysMemPitch = 0;
 	indexBufferData.SysMemSlicePitch = 0;
 	CD3D11_BUFFER_DESC indexBufferDesc(sizeof(indeces), D3D11_BIND_INDEX_BUFFER);

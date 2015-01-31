@@ -293,12 +293,7 @@ VOID D3DSystem::Render()
 	ID3D11Texture2D* backBuffer = 0;
 	m_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
 	m_pDevice->CreateRenderTargetView(backBuffer, nullptr, &m_pRenderTarget);
-
-	// TODO : limit FPS to a value
-	while (m_pRenderer->IsRendering())
-	{
-		m_pSwapChain->Present(1, 0);
-	}
+	m_pSwapChain->Present(1, 0);
 }
 
 VOID D3DSystem::Destroy()

@@ -163,6 +163,7 @@
     <ClInclude Include="D3DSystem.h" />
     <ClInclude Include="Export.h" />
     <ClInclude Include="File.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="stdafx.h" />
@@ -187,6 +188,7 @@
     </ClCompile>
     <ClCompile Include="Api.cpp" />
     <ClCompile Include="File.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="stdafx.cpp">
