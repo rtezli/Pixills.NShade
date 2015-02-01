@@ -1,8 +1,9 @@
-// NShadeUI.cpp : Defines the entry point for the application.
-//
-
 #include "stdafx.h"
 #include "NShadeUI.h"
+#include "rx.hpp"
+
+namespace rx = rxcpp;
+namespace rxsc = rxcpp::schedulers;
 
 #define MAX_LOADSTRING 100
 
@@ -13,7 +14,7 @@ TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
 
 // Forward declarations of functions included in this code module:
 ATOM				MyRegisterClass(HINSTANCE hInstance);
-BOOL				InitInstance(HINSTANCE, int);
+bool				InitInstance(HINSTANCE, int);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 
@@ -77,7 +78,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	return RegisterClassEx(&wcex);
 }
 
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
+bool InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // Store instance handle in our global variable
 
@@ -96,7 +97,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    if (!m_hWnd)
    {
-      return FALSE;
+      return false;
    }
 
    auto result = Init3DSystem(&m_hWnd);
@@ -156,13 +157,13 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		return (INT_PTR)TRUE;
+		return (INT_PTR)true;
 
 	case WM_COMMAND:
 		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
 		{
 			EndDialog(hDlg, LOWORD(wParam));
-			return (INT_PTR)TRUE;
+			return (INT_PTR)true;
 		}
 		break;
 	}
@@ -172,6 +173,6 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 HRESULT Init3DSystem(HWND* window)
 {
 	m_system = new D3DSystem();
-	m_system->Initialize(800, 600, false, window, false, 100.00f, 0.0f);
+	m_system->Initialize(false, window, false, 100.00f, 0.0f);
 	return 0;
 }

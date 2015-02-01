@@ -1,18 +1,13 @@
 #pragma once
-
-#include "windows.h"
+#include "export.h"
 #include "d3d11.h"
 #include "dxgi.h"
 #include "directxmath.h"
 
-#include "stdafx.h"
-#include "export.h"
 #include "renderer.h"
 #include "camera.h"
 #include "model.h"
 #include "input.h"
-
-using namespace DirectX;
 
 EXTERN class API D3DSystem
 {
@@ -27,9 +22,9 @@ private :
 public:
 	D3DSystem();
 	~D3DSystem();
-	HRESULT Initialize(int screenWidth, int screenHeight, bool vsync, HWND* hwnd, bool fullscreen, float screenDepth, float screenNear);
-	HRESULT InitializeWithWindow(int screenWidth, int screenHeight, bool vsync, bool fullscreen, float screenDepth, float screenNear);
-	HRESULT InitializeWindow(int& screenWidth, int& screenHeight);
+	HRESULT Initialize(BOOL vsync, HWND* hwnd, BOOL fullscreen, FLOAT screenDepth, FLOAT screenNear);
+	HRESULT InitializeWithWindow(INT32 screenWidth, INT32 screenHeight, BOOL vsync, BOOL fullscreen, FLOAT screenDepth, FLOAT screenNear);
+	HRESULT InitializeWindow(INT32& screenWidth, INT32& screenHeight);
 	HRESULT SetCamera(XMVECTOR position, XMVECTOR direction, UINT16 viewAngle);
 	HRESULT SetCamera(XMVECTOR position, XMVECTOR direction, FLOAT focalLength);
 	VOID	Render();
@@ -38,39 +33,40 @@ private:
 	HRESULT CreateDevice();
 	HRESULT	CreateSwapChain();
 	HRESULT CreateCamera();
-	HWND	Create3DWindow(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen);
+	HWND	Create3DWindow(INT32 screenWidth, INT32 screenHeight, BOOL vsync, HWND hwnd, BOOL fullscreen);
 	HRESULT	LoadModels();
 	HRESULT	ApplyShaders();
 	HRESULT	CreateRenderer();
 private:
-	Renderer*				m_pRenderer = 0;
-	Camera*					m_pCamera = 0;
-	Input*					m_pInputDevices = 0;
-	Model*					m_pModel = 0;
+	std::shared_ptr<Renderer>				m_pRenderer;
+	std::shared_ptr<Camera>					m_pCamera;
+	std::shared_ptr<Input>					m_pInputDevices;
+	std::shared_ptr<Model>					m_pModel;
 
-	IDXGIDevice*			m_pDXGIDevice = 0;
-	IDXGIAdapter*			m_pDXGIAdapter = 0;
-	IDXGIFactory1*			m_pDXGIFactory = 0;
-	IDXGISwapChain*			m_pSwapChain = 0;
+	std::shared_ptr<IDXGIDevice>			m_pDXGIDevice;
+	std::shared_ptr<IDXGIAdapter>			m_pDXGIAdapter;
+	std::shared_ptr<IDXGIFactory1>			m_pDXGIFactory;
+	std::shared_ptr<IDXGISwapChain>			m_pSwapChain;
+	std::shared_ptr<ID3D11Texture2D>		m_pRenderBuffer;
 
-	ID3D11Device*			m_pDevice = 0;
-	ID3D11DeviceContext*	m_pDeviceContext = 0;
-	ID3D11RenderTargetView*	m_pRenderTarget = 0;
-	ID3D11DepthStencilView* m_pDepthStencilView = 0;
-	HWND*					m_pWindow = 0;
+	std::shared_ptr<ID3D11Device>			m_pDevice;
+	std::shared_ptr<ID3D11DeviceContext>	m_pDeviceContext;
+	std::shared_ptr<ID3D11RenderTargetView>	m_pRenderTarget;
+	std::shared_ptr<ID3D11DepthStencilView>	m_pDepthStencilView;
+	std::shared_ptr<HWND>					m_pWindow;
 
-	D3D_FEATURE_LEVEL		m_D3dFeatureLevel;
-	XMMATRIX				m_WorldMatrix;
-	XMMATRIX				m_ViewMatrix;
-	XMMATRIX				m_ProjectionMatrix;
+	D3D_FEATURE_LEVEL						m_D3dFeatureLevel;
+	XMFLOAT4X4								m_WorldMatrix;
+	XMFLOAT4X4								m_ViewMatrix;
+	XMFLOAT4X4								m_ProjectionMatrix;
 
-	XMVECTOR				m_Position;
-	XMVECTOR				m_Rotation;
+	XMVECTOR								m_Position;
+	XMVECTOR								m_Rotation;
 
-	int						m_ScreenWidth;
-	int						m_ScreenHeight;
-	BOOL					m_vsync_enabled;
-	BOOL					m_Fullscreen;
+	INT32									m_ScreenWidth;
+	INT32									m_ScreenHeight;
+	BOOL									m_vsync_enabled;
+	BOOL									m_Fullscreen;
 };
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);

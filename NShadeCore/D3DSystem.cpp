@@ -7,35 +7,51 @@ D3DSystem::D3DSystem()
 
 D3DSystem::~D3DSystem()
 {
+	m_pRenderer.reset();
+	m_pCamera.reset();
+	m_pInputDevices.reset();
+	m_pModel.reset();
+
+	m_pDevice->Release();
+	m_pDeviceContext->Release();;
+	m_pRenderTarget->Release();
+	m_pDepthStencilView->Release();
 }
 
 HRESULT D3DSystem::InitializeWithWindow(
-	int screenWidth,
-	int screenHeight,
-	bool vsync,
-	bool fullscreen,
-	float screenDepth,
-	float screenNear)
+	INT32 screenWidth,
+	INT32 screenHeight,
+	BOOL vsync,
+	BOOL fullscreen,
+	FLOAT screenDepth,
+	FLOAT screenNear)
 {
 	HWND* windowHandle = 0;
-	Initialize(screenWidth, screenHeight, vsync, windowHandle, fullscreen, screenDepth, screenNear);
+	Initialize(vsync, windowHandle, fullscreen, screenDepth, screenNear);
 	return 0;
 }
 
 HRESULT D3DSystem::Initialize(
-	int screenWidth,
-	int screenHeight,
-	bool vsync,
+	BOOL vsync,
 	HWND* hwnd,
-	bool fullscreen,
-	float screenDepth,
-	float screenNear)
+	BOOL fullscreen,
+	FLOAT screenDepth,
+	FLOAT screenNear)
 {
-	m_ScreenWidth = screenWidth;
-	m_ScreenHeight = screenHeight;
+	RECT windowRect;
+	auto result = GetWindowRect(*hwnd, &windowRect);
+
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	m_ScreenWidth = windowRect.right - windowRect.left;
+	m_ScreenHeight = windowRect.bottom - windowRect.top;
+
 	m_vsync_enabled = vsync;
 	m_Fullscreen = fullscreen;
-	m_pWindow = hwnd;
+	m_pWindow = std::shared_ptr<HWND>(hwnd);
 
 	CreateDevice();
 	CreateSwapChain();
@@ -46,11 +62,12 @@ HRESULT D3DSystem::Initialize(
 	return 0;
 }
 
-HWND D3DSystem::Create3DWindow(int screenWidth,
-	int screenHeight,
-	bool vsync,
+HWND D3DSystem::Create3DWindow(
+	INT32 screenWidth,
+	INT32 screenHeight,
+	BOOL vsync,
 	HWND hwnd,
-	bool fullscreen)
+	BOOL fullscreen)
 {
 	WNDCLASSEX wc;
 	DEVMODE dmScreenSettings;
@@ -161,6 +178,8 @@ HRESULT D3DSystem::CreateDevice()
 	HRESULT createResult = 0;
 
 
+	ID3D11Device* device = 0;
+	ID3D11DeviceContext* context = 0;
 
 	createResult = D3D11CreateDevice(
 		nullptr,
@@ -170,9 +189,9 @@ HRESULT D3DSystem::CreateDevice()
 		featureLevels,
 		ARRAYSIZE(featureLevels),
 		D3D11_SDK_VERSION,
-		&m_pDevice,
+		&device,
 		&m_D3dFeatureLevel,
-		&m_pDeviceContext);
+		&context);
 
 	if (FAILED(createResult))
 	{
@@ -184,10 +203,13 @@ HRESULT D3DSystem::CreateDevice()
 			featureLevels,
 			ARRAYSIZE(featureLevels),
 			D3D11_SDK_VERSION,
-			&m_pDevice,
+			&device,
 			&m_D3dFeatureLevel,
-			&m_pDeviceContext);
+			&context);
 	}
+
+	m_pDevice = std::shared_ptr<ID3D11Device>(device);
+	m_pDeviceContext = std::shared_ptr<ID3D11DeviceContext>(context);
 
 	return createResult;
 }
@@ -204,10 +226,17 @@ HRESULT D3DSystem::SetCamera(XMVECTOR position, XMVECTOR direction, FLOAT focalL
 
 HRESULT D3DSystem::CreateSwapChain()
 {
- 
-	auto result = m_pDevice->QueryInterface(__uuidof(IDXGIDevice), (void **)&m_pDXGIDevice);
-	result = m_pDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&m_pDXGIAdapter);
-	result = m_pDXGIAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&m_pDXGIFactory);
+	IDXGIDevice* dxgiDevice = 0;
+	IDXGIAdapter* dxgiAdapter = 0;
+	IDXGIFactory1* dxgiFactory = 0;
+
+	auto result = m_pDevice->QueryInterface(__uuidof(IDXGIDevice), (void **)&dxgiDevice);
+	result = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&dxgiAdapter);
+	result = dxgiAdapter->GetParent(__uuidof(IDXGIFactory1), (void **)&dxgiFactory);
+
+	m_pDXGIDevice = std::shared_ptr<IDXGIDevice>(dxgiDevice);
+	m_pDXGIAdapter = std::shared_ptr<IDXGIAdapter>(dxgiAdapter);
+	m_pDXGIFactory = std::shared_ptr<IDXGIFactory1>(dxgiFactory);
 
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = { 0 };
 	swapChainDesc.BufferCount = 1;
@@ -260,7 +289,10 @@ HRESULT D3DSystem::CreateSwapChain()
 	// Set the feature level to DirectX 11.
 	auto featureLevel = D3D_FEATURE_LEVEL_11_0;
 
-	result = m_pDXGIFactory->CreateSwapChain(m_pDevice, &swapChainDesc, &m_pSwapChain);
+	IDXGISwapChain* chain = 0;
+	result = m_pDXGIFactory->CreateSwapChain(m_pDevice.get(), &swapChainDesc, &chain);
+	m_pSwapChain = std::shared_ptr<IDXGISwapChain>(chain);
+
 	return 0;
 }
 
@@ -271,10 +303,11 @@ HRESULT D3DSystem::CreateCamera()
 
 HRESULT D3DSystem::LoadModels()
 {
-	m_pModel = new Model();
+	m_pModel = std::shared_ptr<Model>(new Model());
+	auto device = m_pDevice.get();
 	auto cube = m_pModel->Cube;
 	auto size = cube.size();
-	auto result = m_pModel->Initialize(m_pDevice, &cube, size);
+	auto result = m_pModel->Initialize(device, &cube, size);
 	return 0;
 }
 
@@ -290,22 +323,20 @@ HRESULT D3DSystem::ApplyShaders()
 
 VOID D3DSystem::Render()
 {
-	ID3D11Texture2D* backBuffer = 0;
-	m_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
-	m_pDevice->CreateRenderTargetView(backBuffer, nullptr, &m_pRenderTarget);
+	auto buffer = m_pRenderBuffer.get();
+	auto target = m_pRenderTarget.get();
+	m_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&buffer));
+	m_pDevice->CreateRenderTargetView(buffer, nullptr, &target);
 	m_pSwapChain->Present(1, 0);
 }
 
 VOID D3DSystem::Destroy()
 {
-	if (m_pCamera)
-	{
-		DESTROY(m_pDeviceContext);
-		DESTROY(m_pDXGIFactory);
-		DESTROY(m_pSwapChain);
-		DESTROY(m_pRenderTarget);
-		DESTROY(m_pDepthStencilView);
-	}
+	m_pDeviceContext;
+	m_pDXGIFactory;
+	m_pSwapChain;
+	m_pRenderTarget;
+	m_pDepthStencilView;
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)

@@ -1,27 +1,23 @@
 #pragma once
 
-#include "Export.h"
-#include <DirectXMath.h>
+#include "memory"
+#include "export.h"
+#include "directxmath.h"
 
-using namespace DirectX;
-
-class Camera : public IUnknown
+class Camera
 {
 public:
 	Camera();
 	~Camera();
-
+public:
 	void Build(float ViewWidth, float ViewHeight, float NearZ, float FarZ);
 	void RotateHorizontal(float Angle);
 	void RotateVertical(float Angle);
 	void MoveX(float Angle);
 	void MoveY(float Angle);
 	void MoveZ(float Angle);
-
-	virtual ULONG __stdcall Release() = 0;
-
 private:
-	XMMATRIX  viewMatrix;
-	XMVECTOR  position;
-	XMVECTOR  direction;
+	std::shared_ptr<DirectX::XMFLOAT4X4>	m_viewMatrix;
+	std::shared_ptr<DirectX::XMVECTOR>		m_position;
+	std::shared_ptr<DirectX::XMVECTOR>		m_direction;
 };

@@ -1,21 +1,20 @@
 #pragma once
 
-#include "Export.h"
-#include <iostream>
-#include <fstream>
-#include <ppltasks.h>
+#include "export.h"
+#include "iostream"
+#include "fstream"
+#include "memory"
+#include "ppltasks.h"
 
 using namespace std;
 
-class File : public IUnknown
+class File
 {
 public:
 	File();
 	~File();
-
-	virtual ULONG __stdcall Release() = 0;
 public:
-	std::vector<CHAR> File::ReadFileBytes(CHAR* fileName);
+	std::shared_ptr<CHAR> File::ReadFileBytes(CHAR* fileName);
 };
 
 

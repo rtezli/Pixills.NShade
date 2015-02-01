@@ -1,12 +1,10 @@
 #include "stdafx.h"
 #include "input.h"
 
-
 Input::Input()
 {
 
 }
-
 
 Input::~Input()
 {
@@ -25,7 +23,8 @@ HRESULT Input::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int s
 		return false;
 	}
 
-	result = m_pDirectInput->CreateDevice(GUID_SysKeyboard, &m_pKeyboard, NULL);
+	auto keyboard = m_pKeyboard.get();
+	result = m_pDirectInput->CreateDevice(GUID_SysKeyboard, &keyboard, NULL);
 	if (FAILED(result))
 	{
 		return false;
@@ -48,8 +47,8 @@ HRESULT Input::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int s
 	{
 		return false;
 	}
-
-	result = m_pDirectInput->CreateDevice(GUID_SysMouse, &m_pMouse, NULL);
+	auto mouse = m_pMouse.get();
+	result = m_pDirectInput->CreateDevice(GUID_SysMouse, &mouse, NULL);
 	if (FAILED(result))
 	{
 		return false;
@@ -61,8 +60,8 @@ HRESULT Input::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int s
 		return false;
 	}
 
-	result = result = m_pMouse->SetDataFormat(&c_dfDIMouse);
-	m_pMouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	result = m_pMouse->SetDataFormat(&c_dfDIMouse);
+	result = m_pMouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 	if (FAILED(result))
 	{
 		return false;
@@ -77,7 +76,7 @@ HRESULT Input::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int s
 	return true;
 }
 
-BOOL Input::Frame()
+bool Input::Frame()
 {
 	bool result;
 
@@ -102,8 +101,8 @@ BOOL Input::Frame()
 	return true;
 }
 
-BOOL Input::ReadKeyboard()
-{;
+bool Input::ReadKeyboard()
+{
 	// Read the keyboard device.
 	auto result = m_pKeyboard->GetDeviceState(sizeof(m_keyboardState), (LPVOID)&m_keyboardState);
 	if (FAILED(result))
@@ -121,7 +120,7 @@ BOOL Input::ReadKeyboard()
 	return true;
 }
 
-BOOL Input::ReadMouse()
+bool Input::ReadMouse()
 {
 	HRESULT result;
 

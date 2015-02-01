@@ -1,14 +1,15 @@
 #pragma once
 
-#include "Export.h"
+#include "export.h"
 #include "d3d11.h"
 #include "directxmath.h"
 #include "fbxsdk.h"
+#include "memory"
 #include "vector"
 
 using namespace DirectX;
 
-class Model // : public IUnknown
+class Model
 {
 private:
 	struct NSVERTEX2
@@ -36,12 +37,13 @@ public:
 private:
 	HRESULT Model::InitializeVertexBuffer(std::vector<NSVERTEX2>* vertexes);
 	HRESULT Model::InitializeIndexBuffer(std::vector<NSVERTEX2>* indexes);
-	FbxScene*	Model::FbxImport(CHAR* fileName);
+	FbxScene* Model::FbxImport(CHAR* fileName);
 	void FillVerticesFromFbxImport(FbxScene* scene);
 private:
-	ID3D11Device* m_pDevice = 0;
-	ID3D11Buffer* m_pVertexBuffer = 0;
-	ID3D11Buffer* m_pIndexBuffer = 0;
+	std::shared_ptr<ID3D11Device> m_pDevice;
+	std::shared_ptr<ID3D11Buffer> m_pVertexBuffer;
+	std::shared_ptr<ID3D11Buffer> m_pIndexBuffer;
+
 	USHORT m_indexCount = 0;
 	D3D11_BUFFER_DESC m_bufferDesc;
 	D3D11_SUBRESOURCE_DATA m_initData;

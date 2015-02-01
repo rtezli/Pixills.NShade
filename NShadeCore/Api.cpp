@@ -1,20 +1,19 @@
 #include "stdafx.h"
 #include "api.h"
 
-HRESULT InitializeForWindow(int screenWidth, int screenHeight, BYTE vsync, HWND* hwnd, BYTE fullscreen, float screenDepth, float screenNear)
+HRESULT InitializeForWindow(BOOL vsync, HWND* hwnd, BOOL fullscreen, FLOAT screenDepth, FLOAT screenNear)
 {
 	HRESULT result = 0;
 	try
 	{
 		auto sys = new D3DSystem();
-		result = sys->Initialize(screenWidth, screenHeight, vsync, hwnd, fullscreen, screenDepth, screenNear);
-		return result;
+		result = sys->Initialize(vsync, hwnd, fullscreen, screenDepth, screenNear);
 	}
 	catch (int e)
 	{
-		return e;
+		result = e;
 	}
-
+	return result;
 }
 
 BOOL AddModel()
@@ -22,7 +21,7 @@ BOOL AddModel()
 	return true;
 }
 
-BOOL DeleteModel(CHAR* id)
+BOOL DeleteModel(LPTSTR id)
 {
 	return true;
 }
@@ -32,17 +31,17 @@ BOOL AddScene()
 	return true;
 }
 
-BOOL DeleteScene(CHAR* id)
+BOOL DeleteScene(LPTSTR id)
 {
 	return true;
 }
 
-BOOL AddShader(CHAR* code)
+BOOL AddShader(LPTSTR code)
 {
 	return true;
 }
 
-BOOL DeleteShader(CHAR* id)
+BOOL DeleteShader(LPTSTR id)
 {
 	return true;
 }

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Renderer.h"
+#include "renderer.h"
 
 Renderer::Renderer(const std::shared_ptr<Renderer>& deviceResources) 
 {

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Camera.h"
+#include "camera.h"
 
 Camera::Camera()
 {
@@ -14,7 +14,8 @@ Camera::~Camera()
 
 void Camera::Build(float ViewWidth, float ViewHeight, float NearZ, float FarZ)
 {
-	viewMatrix = XMMatrixPerspectiveRH(ViewWidth, ViewHeight, NearZ, FarZ);
+	//auto matrix = DirectX::XMMatrixPerspectiveLH(ViewWidth, ViewHeight, NearZ, FarZ);
+	//DirectX::XMStoreFloat4x4(&m_viewMatrix, matrix);
 }
 
 void Camera::RotateHorizontal(float Angle)

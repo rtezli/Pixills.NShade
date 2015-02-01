@@ -87,7 +87,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;NSHADECORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProgramW6432)\Autodesk\FBX\FBX SDK\2015.1\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProgramW6432)\Autodesk\FBX\FBX SDK\2015.1\include;Rx/v2/src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -103,7 +103,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;NSHADECORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProgramW6432)\Autodesk\FBX\FBX SDK\2015.1\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProgramW6432)\Autodesk\FBX\FBX SDK\2015.1\include;Rx/v2/src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -121,7 +121,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;NSHADECORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProgramW6432)\Autodesk\FBX\FBX SDK\2015.1\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProgramW6432)\Autodesk\FBX\FBX SDK\2015.1\include;Rx/v2/src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -141,7 +141,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;NSHADECORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProgramW6432)\Autodesk\FBX\FBX SDK\2015.1\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProgramW6432)\Autodesk\FBX\FBX SDK\2015.1\include;Rx/v2/src</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -164,6 +164,7 @@
     <ClInclude Include="Export.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="stdafx.h" />
@@ -189,6 +190,7 @@
     <ClCompile Include="Api.cpp" />
     <ClCompile Include="File.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="stdafx.cpp">

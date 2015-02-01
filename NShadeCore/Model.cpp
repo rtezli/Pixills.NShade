@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Model.h"
+#include "model.h"
 
 Model::Model()
 {
@@ -13,7 +13,7 @@ Model::~Model()
 
 HRESULT Model::Initialize(ID3D11Device* pDevice, std::vector<NSVERTEX2>* pModel, UINT size)
 {
-	m_pDevice = pDevice;
+	m_pDevice = std::shared_ptr<ID3D11Device>(pDevice);
 	auto resutlt = InitializeVertexBuffer(pModel);
 	resutlt = InitializeIndexBuffer(pModel);
 	return 0;
@@ -105,8 +105,9 @@ HRESULT Model::InitializeVertexBuffer(std::vector<NSVERTEX2>* vertices)
 	vertexBufferData.SysMemPitch = 0;
 	vertexBufferData.SysMemSlicePitch = 0;
 	CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(vertices), D3D11_BIND_VERTEX_BUFFER);
-	auto resutlt = m_pDevice->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &m_pVertexBuffer);
-	return resutlt;
+	auto vertBuffer = m_pVertexBuffer.get();
+	auto result = m_pDevice->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &vertBuffer);
+	return result;
 }
 
 HRESULT Model::InitializeIndexBuffer(std::vector<NSVERTEX2>* indeces)
@@ -119,14 +120,15 @@ HRESULT Model::InitializeIndexBuffer(std::vector<NSVERTEX2>* indeces)
 		0, 1, 5, 0, 5, 4,
 		2, 6, 7, 2, 7, 3,
 		0, 4, 6, 0, 6, 2,
-		1, 3, 7,1, 7, 5,
+		1, 3, 7, 1, 7, 5,
 	};
 	indexBufferData.pSysMem = &cubeIndices;
 	indexBufferData.SysMemPitch = 0;
 	indexBufferData.SysMemSlicePitch = 0;
 	CD3D11_BUFFER_DESC indexBufferDesc(sizeof(indeces), D3D11_BIND_INDEX_BUFFER);
-	auto resutlt = m_pDevice->CreateBuffer(&indexBufferDesc, &indexBufferData, &m_pIndexBuffer);
-	return resutlt;
+	auto indexBuffer = m_pIndexBuffer.get();
+	auto result = m_pDevice->CreateBuffer(&indexBufferDesc, &indexBufferData, &indexBuffer);
+	return result;
 }
 
 const std::vector<Model::NSVERTEX2> Model::Cube =
