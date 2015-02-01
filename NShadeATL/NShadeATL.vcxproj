@@ -156,6 +156,11 @@
   <ItemGroup>
     <Midl Include="NShadeATL.idl" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NShadeCore\NShadeCore.vcxproj">
+      <Project>{0ad865d6-acb4-4378-a97e-d7eaf1ecbf30}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
