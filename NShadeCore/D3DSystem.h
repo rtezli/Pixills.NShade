@@ -2,7 +2,7 @@
 #include "export.h"
 #include "d3d11.h"
 #include "dxgi.h"
-#include "directxmath.h"
+//#include "directxmath.h"
 
 #include "renderer.h"
 #include "camera.h"
@@ -22,9 +22,8 @@ private :
 public:
 	D3DSystem();
 	~D3DSystem();
-	HRESULT Initialize(BOOL vsync, HWND* hwnd, BOOL fullscreen, FLOAT screenDepth, FLOAT screenNear);
+	HRESULT InitializeForWindow(BOOL vsync, HWND* hwnd, BOOL fullscreen, FLOAT screenDepth, FLOAT screenNear);
 	HRESULT InitializeWithWindow(INT32 screenWidth, INT32 screenHeight, BOOL vsync, BOOL fullscreen, FLOAT screenDepth, FLOAT screenNear);
-	HRESULT InitializeWindow(INT32& screenWidth, INT32& screenHeight);
 	HRESULT SetCamera(XMVECTOR position, XMVECTOR direction, UINT16 viewAngle);
 	HRESULT SetCamera(XMVECTOR position, XMVECTOR direction, FLOAT focalLength);
 	VOID	Render();
@@ -33,7 +32,8 @@ private:
 	HRESULT CreateDevice();
 	HRESULT	CreateSwapChain();
 	HRESULT CreateCamera();
-	HWND	Create3DWindow(INT32 screenWidth, INT32 screenHeight, BOOL vsync, HWND hwnd, BOOL fullscreen);
+	HRESULT InitializeWindow(int screenWidth, int screenHeight);
+	HWND	Create3DWindow(INT32 screenWidth, INT32 screenHeight, BOOL vsync, HWND* hwnd, BOOL fullscreen);
 	HRESULT	LoadModels();
 	HRESULT	ApplyShaders();
 	HRESULT	CreateRenderer();

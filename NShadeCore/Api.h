@@ -3,7 +3,8 @@
 #include "export.h"
 #include "d3dsystem.h"
 
-EXTERN HRESULT API InitializeForWindow(BOOL vsync, HWND* hwnd, BOOL fullscreen, FLOAT screenDepth, FLOAT screenNear);
+EXTERN HRESULT API InitializeForWindowS(HWND* hwnd);
+EXTERN HRESULT API InitializeForWindow(bool vsync, HWND* hwnd, bool fullscreen, float screenDepth, float screenNear);
 EXTERN BOOL API AddModel();
 EXTERN BOOL API DeleteModel(LPTSTR id);
 EXTERN BOOL API AddScene();

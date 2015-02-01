@@ -9,6 +9,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NShadeUI", "NShadeUI\NShade
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NShadeTests", "NShadeTests\NShadeTests.vcxproj", "{9757CB21-B840-49A6-B057-9F322E543DD6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NShadeATL", "NShadeATL\NShadeATL.vcxproj", "{2389C357-D86D-485E-AB2A-44FACC25EE00}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NShadeATLPS", "NShadeATL\NShadeATLPS.vcxproj", "{81A017EB-74A1-4720-A2AF-872F13FB97A1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2389C357-D86D-485E-AB2A-44FACC25EE00} = {2389C357-D86D-485E-AB2A-44FACC25EE00}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -40,6 +47,16 @@ Global
 		{9757CB21-B840-49A6-B057-9F322E543DD6}.Release|Win32.Build.0 = Release|Win32
 		{9757CB21-B840-49A6-B057-9F322E543DD6}.Release|x64.ActiveCfg = Release|x64
 		{9757CB21-B840-49A6-B057-9F322E543DD6}.Release|x64.Build.0 = Release|x64
+		{2389C357-D86D-485E-AB2A-44FACC25EE00}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2389C357-D86D-485E-AB2A-44FACC25EE00}.Debug|Win32.Build.0 = Debug|Win32
+		{2389C357-D86D-485E-AB2A-44FACC25EE00}.Debug|x64.ActiveCfg = Debug|Win32
+		{2389C357-D86D-485E-AB2A-44FACC25EE00}.Release|Win32.ActiveCfg = Release|Win32
+		{2389C357-D86D-485E-AB2A-44FACC25EE00}.Release|Win32.Build.0 = Release|Win32
+		{2389C357-D86D-485E-AB2A-44FACC25EE00}.Release|x64.ActiveCfg = Release|Win32
+		{81A017EB-74A1-4720-A2AF-872F13FB97A1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{81A017EB-74A1-4720-A2AF-872F13FB97A1}.Debug|x64.ActiveCfg = Debug|Win32
+		{81A017EB-74A1-4720-A2AF-872F13FB97A1}.Release|Win32.ActiveCfg = Release|Win32
+		{81A017EB-74A1-4720-A2AF-872F13FB97A1}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

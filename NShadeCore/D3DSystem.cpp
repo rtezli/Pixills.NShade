@@ -26,12 +26,11 @@ HRESULT D3DSystem::InitializeWithWindow(
 	FLOAT screenDepth,
 	FLOAT screenNear)
 {
-	HWND* windowHandle = 0;
-	Initialize(vsync, windowHandle, fullscreen, screenDepth, screenNear);
+	InitializeWindow(screenWidth, screenHeight);
 	return 0;
 }
 
-HRESULT D3DSystem::Initialize(
+HRESULT D3DSystem::InitializeForWindow(
 	BOOL vsync,
 	HWND* hwnd,
 	BOOL fullscreen,
@@ -66,7 +65,7 @@ HWND D3DSystem::Create3DWindow(
 	INT32 screenWidth,
 	INT32 screenHeight,
 	BOOL vsync,
-	HWND hwnd,
+	HWND* hwnd,
 	BOOL fullscreen)
 {
 	WNDCLASSEX wc;
@@ -75,7 +74,7 @@ HWND D3DSystem::Create3DWindow(
 
 
 	// Get an external pointer to this object.
-	//ApplicationHandle = this;
+	ApplicationHandle = this;
 
 	// Get the instance of this application.
 	auto applicatioInstance = GetModuleHandle(NULL);
@@ -92,7 +91,7 @@ HWND D3DSystem::Create3DWindow(
 	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
 	wc.hIconSm = wc.hIcon;
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+	wc.hbrBackground = (HBRUSH)GetStockObject(GRAY_BRUSH);
 	wc.lpszMenuName = NULL;
 	wc.lpszClassName = applicationName;
 	wc.cbSize = sizeof(WNDCLASSEX);
@@ -156,9 +155,30 @@ HWND D3DSystem::Create3DWindow(
 	return handle;
 }
 
-HRESULT InitializeWindow(int& screenWidth, int& screenHeight)
+HRESULT D3DSystem::InitializeWindow(int screenWidth, int screenHeight)
 {
-	return 0;
+	HINSTANCE hInstance = 0;
+	HWND handle = 0;
+
+	handle = CreateWindow(
+		L"",
+		L"",
+		WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT,
+		screenWidth,
+		CW_USEDEFAULT,
+		screenHeight,
+		NULL,
+		NULL,
+		hInstance,
+		NULL);
+
+	if (!handle)
+	{
+		return false;
+	}
+
+	m_pWindow = std::shared_ptr<HWND>(&handle);
 }
 
 HRESULT D3DSystem::CreateDevice()
@@ -289,9 +309,9 @@ HRESULT D3DSystem::CreateSwapChain()
 	// Set the feature level to DirectX 11.
 	auto featureLevel = D3D_FEATURE_LEVEL_11_0;
 
-	IDXGISwapChain* chain = 0;
-	result = m_pDXGIFactory->CreateSwapChain(m_pDevice.get(), &swapChainDesc, &chain);
-	m_pSwapChain = std::shared_ptr<IDXGISwapChain>(chain);
+	auto device = m_pDevice.get();
+	auto swapChain = m_pSwapChain.get();
+	result = m_pDXGIFactory->CreateSwapChain(device, &swapChainDesc, &swapChain);
 
 	return 0;
 }
@@ -323,20 +343,25 @@ HRESULT D3DSystem::ApplyShaders()
 
 VOID D3DSystem::Render()
 {
-	auto buffer = m_pRenderBuffer.get();
-	auto target = m_pRenderTarget.get();
-	m_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&buffer));
-	m_pDevice->CreateRenderTargetView(buffer, nullptr, &target);
-	m_pSwapChain->Present(1, 0);
+	ID3D11Texture2D* backBuffer = 0;
+	ID3D11RenderTargetView* targetView = 0;
+	//auto buffer = m_pRenderBuffer.get();
+	//auto target = m_pRenderTarget.get();
+	auto chain = m_pSwapChain.get();
+	chain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
+	//m_pRenderBuffer = std::shared_ptr<ID3D11Texture2D>(backBuffer);
+
+	m_pDevice->CreateRenderTargetView(backBuffer, nullptr, &targetView);
+	chain->Present(1, 0);
 }
 
 VOID D3DSystem::Destroy()
 {
-	m_pDeviceContext;
-	m_pDXGIFactory;
-	m_pSwapChain;
-	m_pRenderTarget;
-	m_pDepthStencilView;
+	//m_pDeviceContext;
+	//m_pDXGIFactory;
+	//m_pSwapChain;
+	//m_pRenderTarget;
+	//m_pDepthStencilView;
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)

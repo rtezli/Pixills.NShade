@@ -1,0 +1,18 @@
+// NShadeATL.idl : IDL source for NShadeATL
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (NShadeATL.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	uuid(AD91F3F8-5370-4082-8DA5-A5E0A8281059),
+	version(1.0),
+]
+library NShadeATLLib
+{
+	importlib("stdole2.tlb");
+};
+

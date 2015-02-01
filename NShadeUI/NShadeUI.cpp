@@ -2,6 +2,7 @@
 #include "NShadeUI.h"
 #include "rx.hpp"
 
+
 namespace rx = rxcpp;
 namespace rxsc = rxcpp::schedulers;
 
@@ -80,7 +81,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 
 bool InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-   hInst = hInstance; // Store instance handle in our global variable
+   hInst = hInstance;
 
    m_hWnd = CreateWindow(
 	   szWindowClass, 
@@ -172,7 +173,8 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 HRESULT Init3DSystem(HWND* window)
 {
-	m_system = new D3DSystem();
-	m_system->Initialize(false, window, false, 100.00f, 0.0f);
+	//m_system = new D3DSystem();
+	InitializeForWindowS(window);
+	//m_system->InitializeForWindow(false, window, false, 100.00f, 0.0f);
 	return 0;
 }

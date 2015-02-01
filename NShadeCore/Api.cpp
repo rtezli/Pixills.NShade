@@ -7,13 +7,28 @@ HRESULT InitializeForWindow(BOOL vsync, HWND* hwnd, BOOL fullscreen, FLOAT scree
 	try
 	{
 		auto sys = new D3DSystem();
-		result = sys->Initialize(vsync, hwnd, fullscreen, screenDepth, screenNear);
+		result = sys->InitializeForWindow(vsync, hwnd, fullscreen, screenDepth, screenNear);
 	}
 	catch (int e)
 	{
 		result = e;
 	}
-	return result;
+	return 0;
+}
+
+HRESULT InitializeForWindowS(HWND* hwnd)
+{
+	HRESULT result = 0;
+	try
+	{
+		auto sys = new D3DSystem();
+		result = sys->InitializeForWindow(false, hwnd, false, 100.00f, 0.00f);
+	}
+	catch (int e)
+	{
+		result = e;
+	}
+	return 0;
 }
 
 BOOL AddModel()
