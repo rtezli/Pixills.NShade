@@ -11,17 +11,10 @@
 
 EXTERN class API D3DSystem
 {
-private :
-	enum Perspective
-	{
-		FIRST_PERSON,
-		THIRD_PERSON,
-		ISOMETRIC
-	};
-
 public:
 	D3DSystem();
 	~D3DSystem();
+public:
 	HRESULT InitializeForWindow(BOOL vsync, HWND* hwnd, BOOL fullscreen, FLOAT screenDepth, FLOAT screenNear);
 	HRESULT InitializeWithWindow(INT32 screenWidth, INT32 screenHeight, BOOL vsync, BOOL fullscreen, FLOAT screenDepth, FLOAT screenNear);
 	HRESULT SetCamera(XMVECTOR position, XMVECTOR direction, UINT16 viewAngle);
@@ -71,3 +64,11 @@ private:
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 static D3DSystem* ApplicationHandle = 0;
+
+enum Perspective : byte
+{
+	UNDEFINED = 0,
+	FIRST_PERSON = 1,
+	THIRD_PERSON = 2,
+	ISOMETRIC = 3
+};
