@@ -13,7 +13,7 @@ D3DSystem::~D3DSystem()
 	m_pModel.reset();
 
 	m_pDevice->Release();
-	m_pDeviceContext->Release();;
+	m_pDeviceContext->Release();
 	m_pRenderTarget->Release();
 	m_pDepthStencilView->Release();
 }
@@ -27,6 +27,8 @@ HRESULT D3DSystem::InitializeWithWindow(
 	FLOAT screenNear)
 {
 	InitializeWindow(screenWidth, screenHeight);
+	auto window = m_pWindow.get();
+	InitializeForWindow(vsync, window, fullscreen, screenDepth, screenNear);
 	return 0;
 }
 
@@ -51,13 +53,7 @@ HRESULT D3DSystem::InitializeForWindow(
 	m_vsync_enabled = vsync;
 	m_Fullscreen = fullscreen;
 	m_pWindow = std::shared_ptr<HWND>(hwnd);
-
-	CreateDevice();
-	CreateSwapChain();
-	CreateCamera();
-	LoadModels();
-	CreateRenderer();
-
+	Initialize();
 	return 0;
 }
 
@@ -179,6 +175,16 @@ HRESULT D3DSystem::InitializeWindow(int screenWidth, int screenHeight)
 	}
 
 	m_pWindow = std::shared_ptr<HWND>(&handle);
+	return 0;
+}
+
+HRESULT D3DSystem::Initialize()
+{
+	CreateDevice();
+	CreateSwapChain();
+	CreateCamera();
+	LoadModels();
+	CreateRenderer();
 	return 0;
 }
 
@@ -334,11 +340,7 @@ HRESULT D3DSystem::LoadModels()
 
 HRESULT D3DSystem::CreateRenderer()
 {
-	return 0;
-}
-
-HRESULT D3DSystem::ApplyShaders()
-{
+	m_pRenderer = std::shared_ptr<Renderer>(new Renderer());
 	return 0;
 }
 

@@ -1,7 +1,12 @@
 #include "stdafx.h"
 #include "renderer.h"
 
-Renderer::Renderer(const std::shared_ptr<Renderer>& deviceResources) 
+Renderer::Renderer()
+{
+
+}
+
+Renderer::~Renderer()
 {
 
 }
@@ -20,8 +25,6 @@ void Renderer::ReleaseDeviceDependentResources()
 {
 
 }
-
-//void Update(DX::StepTimer const& timer);
 
 void Renderer::Render(IDXGISwapChain* swapChain)
 {

@@ -8,19 +8,22 @@
 class Renderer
 {
 public:
-	Renderer::Renderer(const std::shared_ptr<Renderer>& deviceResources);
-	void Renderer::CreateDeviceDependentResources();
-	void Renderer::CreateWindowSizeDependentResources();
-	void Renderer::ReleaseDeviceDependentResources();
-	//void Update(DX::StepTimer const& timer);
-	void Renderer::Render(IDXGISwapChain* swapChain);
-	void Renderer::RenderDeferred(IDXGISwapChain* swapChain);
-	void Renderer::StopRendering();
-	void Renderer::StartTracking();
-	void Renderer::TrackingUpdate(float positionX);
-	void Renderer::StopTracking();
-	bool Renderer::IsTracking() { return m_tracking; }
-	bool Renderer::IsRendering(){ return m_isRendering; }
+	Renderer();
+	~Renderer();
+public:
+	void CreateDeviceDependentResources();
+	void CreateWindowSizeDependentResources();
+	void ReleaseDeviceDependentResources();
+
+	void Render(IDXGISwapChain* swapChain);
+	void RenderDeferred(IDXGISwapChain* swapChain);
+	void StopRendering();
+	void StartTracking();
+	void StopTracking();
+	void TrackingUpdate(float positionX);
+
+	bool IsTracking() { return m_tracking; }
+	bool IsRendering(){ return m_isRendering; }
 private:
 	void Rotate(float radians);
 

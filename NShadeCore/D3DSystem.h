@@ -17,6 +17,7 @@ public:
 public:
 	HRESULT InitializeForWindow(BOOL vsync, HWND* hwnd, BOOL fullscreen, FLOAT screenDepth, FLOAT screenNear);
 	HRESULT InitializeWithWindow(INT32 screenWidth, INT32 screenHeight, BOOL vsync, BOOL fullscreen, FLOAT screenDepth, FLOAT screenNear);
+	HRESULT Initialize();
 	HRESULT SetCamera(XMVECTOR position, XMVECTOR direction, UINT16 viewAngle);
 	HRESULT SetCamera(XMVECTOR position, XMVECTOR direction, FLOAT focalLength);
 	VOID	Render();
@@ -28,7 +29,6 @@ private:
 	HRESULT InitializeWindow(int screenWidth, int screenHeight);
 	HWND	Create3DWindow(INT32 screenWidth, INT32 screenHeight, BOOL vsync, HWND* hwnd, BOOL fullscreen);
 	HRESULT	LoadModels();
-	HRESULT	ApplyShaders();
 	HRESULT	CreateRenderer();
 private:
 	std::shared_ptr<Renderer>				m_pRenderer;
@@ -60,6 +60,9 @@ private:
 	INT32									m_ScreenHeight;
 	BOOL									m_vsync_enabled;
 	BOOL									m_Fullscreen;
+
+	CHAR*									m_standardVertexShader = "PixelShader.cso";
+	CHAR*									m_standardPixelShader = "VertexShader.cso";
 };
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
