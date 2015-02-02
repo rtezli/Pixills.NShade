@@ -73,9 +73,4 @@
       <Filter>Source Files\common</Filter>
     </Midl>
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt">
-      <Filter>Source Files\common</Filter>
-    </Text>
-  </ItemGroup>
 </Project>

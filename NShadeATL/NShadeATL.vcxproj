@@ -147,9 +147,6 @@
     <ResourceCompile Include="NShadeATL.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="NShadeATL.def" />
     <None Include="NShadeATL.rgs" />
   </ItemGroup>

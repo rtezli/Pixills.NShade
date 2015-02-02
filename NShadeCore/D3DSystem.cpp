@@ -179,6 +179,7 @@ HRESULT D3DSystem::InitializeWindow(int screenWidth, int screenHeight)
 	}
 
 	m_pWindow = std::shared_ptr<HWND>(&handle);
+	return 0;
 }
 
 HRESULT D3DSystem::CreateDevice()
