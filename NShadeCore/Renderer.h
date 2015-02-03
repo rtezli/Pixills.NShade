@@ -13,6 +13,7 @@ public:
 	bool IsRendering(){ return m_isRendering; }
 private:
 	void	Initialize();
+	HRESULT	InitializeShaders();
 	HRESULT CreateSwapChain();
 	void	Render();
 
@@ -39,8 +40,10 @@ private:
 	DirectX::XMFLOAT4X4						m_ViewMatrix;
 	DirectX::XMFLOAT4X4						m_ProjectionMatrix;
 
-	const char*								m_standardVertexShader = "PixelShader.cso";
-	const char*								m_standardPixelShader = "VertexShader.cso";
+	struct SHADER_SET*						m_pShaderSet;
+
+	char*									m_standardVertexShader = "PixelShader.cso";
+	char*									m_standardPixelShader = "VertexShader.cso";
 
 	int										m_ScreenWidth;
 	int										m_ScreenHeight;
@@ -48,6 +51,14 @@ private:
 	bool									m_isRendering;
 	bool									m_loadingComplete;
 	bool									m_tracking;
+};
 
-
+struct SHADER_SET
+{
+	std::shared_ptr<ID3D11PixelShader>		PixelShader;
+	std::shared_ptr<ID3D11VertexShader>		VertexShader;
+	std::shared_ptr<ID3D11HullShader>		HullShader;
+	std::shared_ptr<ID3D11DomainShader>		DomainShader;
+	std::shared_ptr<ID3D11GeometryShader>	GeometryShader;
+	std::shared_ptr<ID3D11ComputeShader>	ComputeShader;
 };

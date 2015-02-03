@@ -16,6 +16,7 @@ Renderer::~Renderer()
 void Renderer::Initialize()
 {
 	CreateSwapChain();
+	InitializeShaders();
 }
 
 HRESULT Renderer::CreateSwapChain()
@@ -87,6 +88,23 @@ HRESULT Renderer::CreateSwapChain()
 	auto swapChain = m_pSwapChain.get();
 	result = m_pDXGIFactory->CreateSwapChain(device, &swapChainDesc, &swapChain);
 	return 0;
+}
+
+HRESULT Renderer::InitializeShaders()
+{
+	m_pShaderSet = new SHADER_SET();
+	
+	ID3D11PixelShader* pixelShader = 0;
+	auto psByteCode = File::ReadFileBytes(m_standardPixelShader);
+	auto result = m_pDevice->CreatePixelShader(psByteCode->FileBytes, psByteCode->Length, NULL, &pixelShader);
+	m_pShaderSet->PixelShader = std::shared_ptr<ID3D11PixelShader>(pixelShader);
+
+	ID3D11VertexShader* vertexShader = 0;
+	auto vsByteCode = File::ReadFileBytes(m_standardVertexShader);
+	result = m_pDevice->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &vertexShader);
+	m_pShaderSet->VertexShader = std::shared_ptr<ID3D11VertexShader>(vertexShader);
+
+	return result;
 }
 
 void Renderer::Render()

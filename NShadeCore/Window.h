@@ -11,7 +11,7 @@ public:
 	bool VSyncEnabled(){ return m_VsyncEnabled; }
 	int Width(){ return m_ScreenWidth; }
 	int Height(){ return m_ScreenHeight; }
-	std::shared_ptr<HWND> WindowHandle(){ return m_pWindow; }
+	std::shared_ptr<HWND>	WindowHandle(){ return m_pWindow; }
 private :
 	std::shared_ptr<HWND>	m_pWindow;
 	int						m_ScreenWidth;

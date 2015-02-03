@@ -8,7 +8,11 @@ public:
 	File();
 	~File();
 public:
-	std::shared_ptr<CHAR> File::ReadFileBytes(CHAR* fileName);
+	static struct FILE_BYTE_RESULT* ReadFileBytes(CHAR* fileName);
 };
 
-
+struct FILE_BYTE_RESULT
+{
+	CHAR* FileBytes;
+	long Length;
+};
