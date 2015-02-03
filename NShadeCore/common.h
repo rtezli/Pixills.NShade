@@ -1,7 +1,6 @@
 #pragma once
 
-#include "wrl.h"
-#include "exception"
+#include "includes.h"
 
 namespace DX
 {
@@ -43,10 +42,10 @@ namespace DX
 		double GetTotalSeconds() const                      { return TicksToSeconds(m_totalTicks); }
 
 		// Get total number of updates since start of the program.
-		UINT32 GetFrameCount() const                        { return m_frameCount; }
+		UINT64 GetFrameCount() const                        { return m_frameCount; }
 
 		// Get the current framerate.
-		UINT32 GetFramesPerSecond() const                   { return m_framesPerSecond; }
+		UINT64 GetFramesPerSecond() const                   { return m_framesPerSecond; }
 
 		// Set whether to use fixed or variable timestep mode.
 		void SetFixedTimeStep(bool isFixedTimestep)         { m_isFixedTimeStep = isFixedTimestep; }

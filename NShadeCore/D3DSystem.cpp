@@ -11,11 +11,8 @@ D3DSystem::~D3DSystem()
 	m_pCamera.reset();
 	m_pInputDevices.reset();
 	m_pModel.reset();
-
 	m_pDevice->Release();
 	m_pDeviceContext->Release();
-	m_pRenderTarget->Release();
-	m_pDepthStencilView->Release();
 }
 
 HRESULT D3DSystem::InitializeWithWindow(
@@ -47,11 +44,11 @@ HRESULT D3DSystem::InitializeForWindow(
 		return result;
 	}
 
-	m_ScreenWidth = windowRect.right - windowRect.left;
-	m_ScreenHeight = windowRect.bottom - windowRect.top;
+	//m_ScreenWidth = windowRect.right - windowRect.left;
+	//m_ScreenHeight = windowRect.bottom - windowRect.top;
 
-	m_vsync_enabled = vsync;
-	m_Fullscreen = fullscreen;
+	//m_vsync_enabled = vsync;
+	//m_Fullscreen = fullscreen;
 	m_pWindow = std::shared_ptr<HWND>(hwnd);
 	Initialize();
 	return 0;
@@ -181,7 +178,6 @@ HRESULT D3DSystem::InitializeWindow(int screenWidth, int screenHeight)
 HRESULT D3DSystem::Initialize()
 {
 	CreateDevice();
-	CreateSwapChain();
 	CreateCamera();
 	LoadModels();
 	CreateRenderer();
@@ -251,78 +247,6 @@ HRESULT D3DSystem::SetCamera(XMVECTOR position, XMVECTOR direction, FLOAT focalL
 	return 0;
 }
 
-HRESULT D3DSystem::CreateSwapChain()
-{
-	IDXGIDevice* dxgiDevice = 0;
-	IDXGIAdapter* dxgiAdapter = 0;
-	IDXGIFactory1* dxgiFactory = 0;
-
-	auto result = m_pDevice->QueryInterface(__uuidof(IDXGIDevice), (void **)&dxgiDevice);
-	result = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&dxgiAdapter);
-	result = dxgiAdapter->GetParent(__uuidof(IDXGIFactory1), (void **)&dxgiFactory);
-
-	m_pDXGIDevice = std::shared_ptr<IDXGIDevice>(dxgiDevice);
-	m_pDXGIAdapter = std::shared_ptr<IDXGIAdapter>(dxgiAdapter);
-	m_pDXGIFactory = std::shared_ptr<IDXGIFactory1>(dxgiFactory);
-
-	DXGI_SWAP_CHAIN_DESC swapChainDesc = { 0 };
-	swapChainDesc.BufferCount = 1;
-
-	// Set the width and height of the back buffer.
-	swapChainDesc.BufferDesc.Width = m_ScreenWidth;
-	swapChainDesc.BufferDesc.Height = m_ScreenHeight;
-	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-
-	if (m_vsync_enabled)
-	{
-		swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
-		swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-		//swapChainDesc.BufferDesc.RefreshRate.Numerator = numerator;
-		//swapChainDesc.BufferDesc.RefreshRate.Denominator = denominator;
-	}
-	else
-	{
-		swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
-		swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-	}
-
-	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-
-	// Set the handle for the window to render to.
-	swapChainDesc.OutputWindow = (*m_pWindow);
-
-	// Turn multisampling off.
-	swapChainDesc.SampleDesc.Count = 1;
-	swapChainDesc.SampleDesc.Quality = 0;
-
-	// Set to full screen or windowed mode.
-	if (m_Fullscreen)
-	{
-		swapChainDesc.Windowed = false;
-	}
-	else
-	{
-		swapChainDesc.Windowed = true;
-	}
-	swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-
-	// Discard the back buffer contents after presenting.
-	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-
-	// Don't set the advanced flags.
-	swapChainDesc.Flags = 0;
-
-	// Set the feature level to DirectX 11.
-	auto featureLevel = D3D_FEATURE_LEVEL_11_0;
-
-	auto device = m_pDevice.get();
-	auto swapChain = m_pSwapChain.get();
-	result = m_pDXGIFactory->CreateSwapChain(device, &swapChainDesc, &swapChain);
-
-	return 0;
-}
-
 HRESULT D3DSystem::CreateCamera()
 {
 	return 0;
@@ -340,31 +264,14 @@ HRESULT D3DSystem::LoadModels()
 
 HRESULT D3DSystem::CreateRenderer()
 {
-	m_pRenderer = std::shared_ptr<Renderer>(new Renderer());
+	auto screen = std::shared_ptr<Screen>(new Screen(m_pWindow));
+	m_pRenderer = std::shared_ptr<Renderer>(new Renderer(m_pDevice, screen));
 	return 0;
 }
 
 VOID D3DSystem::Render()
 {
-	ID3D11Texture2D* backBuffer = 0;
-	ID3D11RenderTargetView* targetView = 0;
-	//auto buffer = m_pRenderBuffer.get();
-	//auto target = m_pRenderTarget.get();
-	auto chain = m_pSwapChain.get();
-	chain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
-	//m_pRenderBuffer = std::shared_ptr<ID3D11Texture2D>(backBuffer);
 
-	m_pDevice->CreateRenderTargetView(backBuffer, nullptr, &targetView);
-	chain->Present(1, 0);
-}
-
-VOID D3DSystem::Destroy()
-{
-	//m_pDeviceContext;
-	//m_pDXGIFactory;
-	//m_pSwapChain;
-	//m_pRenderTarget;
-	//m_pDepthStencilView;
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)

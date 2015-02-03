@@ -20,11 +20,11 @@ HRESULT RemoveModel(Model* model)
 {
 	return 0;
 }
-HRESULT Move(XMVECTOR* vector)
+HRESULT Move(DirectX::XMVECTOR* vector)
 {
 	return 0;
 }
-HRESULT Rotate(XMVECTOR* vector)
+HRESULT Rotate(DirectX::XMVECTOR* vector)
 {
 	return 0;
 }

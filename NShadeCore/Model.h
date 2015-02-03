@@ -1,28 +1,22 @@
 #pragma once
 
-#include "export.h"
-#include "d3d11.h"
-#include "directxmath.h"
+#include "includes.h"
 #include "fbxsdk.h"
-#include "memory"
-#include "vector"
-
-using namespace DirectX;
 
 class Model
 {
 private:
 	struct NSVERTEX2
 	{
-		XMFLOAT3 Position;
-		XMFLOAT4 Color;
+		DirectX::XMFLOAT3 Position;
+		DirectX::XMFLOAT4 Color;
 	};
 
 	struct NSVERTEX3
 	{
-		XMFLOAT3 Position;
-		XMFLOAT3 Color;
-		XMFLOAT3 Uv;
+		DirectX::XMFLOAT3 Position;
+		DirectX::XMFLOAT3 Color;
+		DirectX::XMFLOAT3 Uv;
 	};
 public:
 	Model();

@@ -174,7 +174,7 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 HRESULT Init3DSystem(HWND* window)
 {
 	//m_system = new D3DSystem();
-	InitializeForWindowS(window);
+	//InitializeForWindowS(window);
 	//m_system->InitializeForWindow(false, window, false, 100.00f, 0.0f);
 	return 0;
 }

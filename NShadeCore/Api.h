@@ -1,6 +1,6 @@
 #pragma once
 
-#include "export.h"
+#include "common.h"
 #include "d3dsystem.h"
 
 EXTERN HRESULT API InitializeForWindowS(HWND* hwnd);

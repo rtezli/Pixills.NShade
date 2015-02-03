@@ -1,51 +1,61 @@
 #pragma once
 
-#include "export.h"
-#include "memory"
-#include "d3d11.h"
-#include "dxgi.h"
+#include "includes.h"
+#include "screen.h"
 
 class Renderer
 {
 public:
-	Renderer();
+	Renderer(std::shared_ptr<ID3D11Device> pDevice, std::shared_ptr<Screen> pScreen);
 	~Renderer();
 public:
-	void CreateDeviceDependentResources();
-	void CreateWindowSizeDependentResources();
-	void ReleaseDeviceDependentResources();
+	//void CreateDeviceDependentResources();
+	//void CreateWindowSizeDependentResources();
+	//void ReleaseDeviceDependentResources();
 
-	void Render(IDXGISwapChain* swapChain);
-	void RenderDeferred(IDXGISwapChain* swapChain);
-	void StopRendering();
-	void StartTracking();
-	void StopTracking();
-	void TrackingUpdate(float positionX);
+	//void StopRendering();
+	//void StartTracking();
+	//void StopTracking();
+	//void TrackingUpdate(float positionX);
 
 	bool IsTracking() { return m_tracking; }
 	bool IsRendering(){ return m_isRendering; }
 private:
-	void Rotate(float radians);
-
+	HRESULT Initialize();
+	HRESULT Render();
+	HRESULT CreateSwapChain();
 private:
-	// Zeiger in den Geräteressourcen zwischengespeichert.
-	std::shared_ptr<Renderer> m_deviceResources;
+	std::shared_ptr<Screen>					m_pScreen;
+	std::shared_ptr<ID3D11Device>			m_pDevice;
+	std::shared_ptr<IDXGIDevice>			m_pDXGIDevice;
+	std::shared_ptr<IDXGIAdapter>			m_pDXGIAdapter;
+	std::shared_ptr<IDXGIFactory1>			m_pDXGIFactory;
+	std::shared_ptr<IDXGISwapChain>			m_pSwapChain;
+	std::shared_ptr<ID3D11Texture2D>		m_pRenderBuffer;
 
-	// Direct3D-Ressourcen für Würfelgeometrie.
-	std::shared_ptr<ID3D11InputLayout>	m_inputLayout;
-	std::shared_ptr<ID3D11Buffer>		m_vertexBuffer;
-	std::shared_ptr<ID3D11Buffer>		m_indexBuffer;
-	std::shared_ptr<ID3D11VertexShader>	m_vertexShader;
-	std::shared_ptr<ID3D11PixelShader>	m_pixelShader;
-	std::shared_ptr<ID3D11Buffer>		m_constantBuffer;
+	std::shared_ptr<ID3D11InputLayout>		m_inputLayout;
+	std::shared_ptr<ID3D11Buffer>			m_vertexBuffer;
+	std::shared_ptr<ID3D11Buffer>			m_indexBuffer;
+	std::shared_ptr<ID3D11VertexShader>		m_vertexShader;
+	std::shared_ptr<ID3D11PixelShader>		m_pixelShader;
+	std::shared_ptr<ID3D11Buffer>			m_constantBuffer;
 
-	// Systemressourcen für Würfelgeometrie.
-	//ModelViewProjectionConstantBuffer	m_constantBufferData;
-	//uint32	m_indexCount;
+	std::shared_ptr<ID3D11RenderTargetView>	m_pRenderTarget;
+	std::shared_ptr<ID3D11DepthStencilView>	m_pDepthStencilView;
 
-	// Für die Renderschleife verwendete Variablen.
-	bool	m_isRendering;
-	bool	m_loadingComplete;
-	float	m_degreesPerSecond;
-	bool	m_tracking;
+	DirectX::XMFLOAT4X4						m_WorldMatrix;
+	DirectX::XMFLOAT4X4						m_ViewMatrix;
+	DirectX::XMFLOAT4X4						m_ProjectionMatrix;
+
+	CHAR*									m_standardVertexShader = "PixelShader.cso";
+	CHAR*									m_standardPixelShader = "VertexShader.cso";
+
+	INT32									m_ScreenWidth;
+	INT32									m_ScreenHeight;
+
+	bool									m_isRendering;
+	bool									m_loadingComplete;
+	bool									m_tracking;
+
+
 };

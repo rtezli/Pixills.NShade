@@ -1,12 +1,6 @@
 #pragma once
 
-#include "export.h"
-#include "iostream"
-#include "fstream"
-#include "memory"
-#include "ppltasks.h"
-
-using namespace std;
+#include "includes.h"
 
 class File
 {

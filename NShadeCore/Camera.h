@@ -1,8 +1,6 @@
 #pragma once
 
-#include "memory"
-#include "export.h"
-#include "directxmath.h"
+#include "includes.h"
 
 class Camera
 {

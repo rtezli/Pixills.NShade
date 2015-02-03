@@ -2,14 +2,8 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
-#include "memory"
-#include "export.h"
-#include "dinput.h"
-#include "directxmath.h"
-//#include "rx.hpp"
+#include "includes.h"
 
-//namespace rx = rxcpp;
-//namespace rxsub = rxcpp::subjects;
 using namespace DirectX;
 
 

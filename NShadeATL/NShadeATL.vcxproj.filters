@@ -73,6 +73,7 @@
     <None Include="NShadeATL.def">
       <Filter>Source Files\common</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="NShadeATL.idl">
