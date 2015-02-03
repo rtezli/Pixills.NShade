@@ -11,7 +11,7 @@ Model::~Model()
 
 }
 
-HRESULT Model::Initialize(ID3D11Device* pDevice, std::vector<NSVERTEX2>* pModel, UINT size)
+HRESULT Model::Initialize(ID3D11Device* pDevice, std::vector<NSVERTEX2>* pModel, unsigned int size)
 {
 	m_pDevice = std::shared_ptr<ID3D11Device>(pDevice);
 	auto resutlt = InitializeVertexBuffer(pModel);
@@ -19,10 +19,28 @@ HRESULT Model::Initialize(ID3D11Device* pDevice, std::vector<NSVERTEX2>* pModel,
 	return 0;
 }
 
-HRESULT Model::LoadModelFromFBXFile(CHAR* fileName)
+HRESULT Model::LoadModelFromFBXFile(char* fileName)
 {
-	auto fbxScene = FbxImport(fileName);
-	FillVerticesFromFbxImport(fbxScene);
+	FbxScene* fbxScene = ImportFbx(fileName);
+ 
+	FbxGeometry* geometry;
+	FbxArray<FbxVector4>* pointArray;
+ 
+	auto count = fbxScene->GetGeometryCount();
+	for (auto i = 0; i < count; i++)
+	{
+		geometry = fbxScene->GetGeometry(i);
+		pointArray = &geometry->mControlPoints;
+		auto size = pointArray->Size();
+		for (auto n = 0; n < size; n++)
+		{
+			auto point = pointArray->GetAt(i);
+			auto data = point.mData;
+			DirectX::XMVECTOR newVector = { (float)data[0], (float)data[1], (float)data[2], (float)data[3] };
+		}
+	}
+	fbxScene->Destroy();
+
 	NSVERTEX2* vertices = 0;
 
 	m_initData.pSysMem = vertices;
@@ -38,49 +56,25 @@ HRESULT Model::LoadModelFromFBXFile(CHAR* fileName)
 	return 0;
 }
 
-FbxScene* Model::FbxImport(CHAR* fileName)
+FbxScene* Model::ImportFbx(char *fileName)
 {
-	FbxManager *lSdkManager = FbxManager::Create();
-	// create an IOSettings object
+	auto lSdkManager = FbxManager::Create();
+	
 	FbxIOSettings * ios = FbxIOSettings::Create(lSdkManager, IOSROOT);
-	// set some IOSettings options 
 	ios->SetBoolProp(IMP_FBX_MATERIAL, true);
 	ios->SetBoolProp(IMP_FBX_TEXTURE, true);
-	// create an empty scene
+
 	auto lScene = FbxScene::Create(lSdkManager, "");
-	// Create an importer.
+
 	FbxImporter* lImporter = FbxImporter::Create(lSdkManager, "");
-	// Initialize the importer by providing a filename and the IOSettings to use
 	lImporter->Initialize(fileName, -1, ios);
-	// Import the scene.
 	lImporter->Import(lScene);
-	// Destroy the importer.
 	lImporter->Destroy();
 
 	return lScene;
 }
 
-void Model::FillVerticesFromFbxImport(FbxScene* scene)
-{
-	FbxGeometry* geometry;
-	FbxArray<FbxVector4>* pointArray;
-	auto count = scene->GetGeometryCount();
-	for (auto i = 0; i < count; i++)
-	{
-		geometry = scene->GetGeometry(i);
-		pointArray = &geometry->mControlPoints;
-		auto size = pointArray->Size();
-		for (auto n = 0; n < size; n++)
-		{
-			auto point = pointArray->GetAt(i);
-			auto data = point.mData;
-			DirectX::XMVECTOR newVector = { (float)data[0], (float)data[1], (float)data[2], (float)data[3] };
-		}
-	}
-	scene->Destroy();
-}
-
-HRESULT Model::LoadModelFromOBJFile(CHAR* fileName)
+HRESULT Model::LoadModelFromOBJFile(char* fileName)
 {
 	// TODO : Get the vertices from the file
 	NSVERTEX2* vertices = 0;

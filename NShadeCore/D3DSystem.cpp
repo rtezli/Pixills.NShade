@@ -16,139 +16,31 @@ D3DSystem::~D3DSystem()
 }
 
 HRESULT D3DSystem::InitializeWithWindow(
-	INT32 screenWidth,
-	INT32 screenHeight,
-	BOOL vsync,
-	BOOL fullscreen,
-	FLOAT screenDepth,
-	FLOAT screenNear)
+	int screenWidth,
+	int screenHeight,
+	bool vsync,
+	bool fullscreen,
+	float screenDepth,
+	float screenNear)
 {
-	InitializeWindow(screenWidth, screenHeight);
-	auto window = m_pWindow.get();
-	InitializeForWindow(vsync, window, fullscreen, screenDepth, screenNear);
+	auto handle = InitializeWindow(screenWidth, screenHeight);
+	InitializeForWindow(vsync, handle, fullscreen, screenDepth, screenNear);
 	return 0;
 }
 
 HRESULT D3DSystem::InitializeForWindow(
-	BOOL vsync,
-	HWND* hwnd,
-	BOOL fullscreen,
-	FLOAT screenDepth,
-	FLOAT screenNear)
+	bool vsync,
+	std::shared_ptr<HWND> hwnd,
+	bool fullscreen,
+	float screenDepth,
+	float screenNear)
 {
-	RECT windowRect;
-	auto result = GetWindowRect(*hwnd, &windowRect);
-
-	if (FAILED(result))
-	{
-		return result;
-	}
-
-	//m_ScreenWidth = windowRect.right - windowRect.left;
-	//m_ScreenHeight = windowRect.bottom - windowRect.top;
-
-	//m_vsync_enabled = vsync;
-	//m_Fullscreen = fullscreen;
-	m_pWindow = std::shared_ptr<HWND>(hwnd);
+	m_pWindow = std::shared_ptr<Window>(new Window(hwnd, vsync, fullscreen));
 	Initialize();
 	return 0;
 }
 
-HWND D3DSystem::Create3DWindow(
-	INT32 screenWidth,
-	INT32 screenHeight,
-	BOOL vsync,
-	HWND* hwnd,
-	BOOL fullscreen)
-{
-	WNDCLASSEX wc;
-	DEVMODE dmScreenSettings;
-	int posX, posY;
-
-
-	// Get an external pointer to this object.
-	ApplicationHandle = this;
-
-	// Get the instance of this application.
-	auto applicatioInstance = GetModuleHandle(NULL);
-
-	// Give the application a name.
-	auto applicationName = L"Simple Rendering Engine";
-
-	// Setup the windows class with default settings.
-	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	wc.lpfnWndProc = WndProc;
-	wc.cbClsExtra = 0;
-	wc.cbWndExtra = 0;
-	wc.hInstance = applicatioInstance;
-	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
-	wc.hIconSm = wc.hIcon;
-	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground = (HBRUSH)GetStockObject(GRAY_BRUSH);
-	wc.lpszMenuName = NULL;
-	wc.lpszClassName = applicationName;
-	wc.cbSize = sizeof(WNDCLASSEX);
-
-	// Register the window class.
-	RegisterClassEx(&wc);
-
-	// Determine the resolution of the clients desktop screen.
-	screenWidth = GetSystemMetrics(SM_CXSCREEN);
-	screenHeight = GetSystemMetrics(SM_CYSCREEN);
-
-	// Setup the screen settings depending on whether it is running in full screen or in windowed mode.
-	if (fullscreen)
-	{
-		// If full screen set the screen to maximum size of the users desktop and 32bit.
-		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
-		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
-		dmScreenSettings.dmPelsWidth = (unsigned long)screenWidth;
-		dmScreenSettings.dmPelsHeight = (unsigned long)screenHeight;
-		dmScreenSettings.dmBitsPerPel = 32;
-		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
-
-		// Change the display settings to full screen.
-		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
-		posX = posY = 0;
-	}
-	else
-	{
-		screenWidth = 800;
-		screenHeight = 600;
-
-		posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
-		posY = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
-	}
-
-	RECT rect = { 0, 0, screenWidth, screenHeight };
-	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, FALSE);
-
-	auto handle =
-		CreateWindowEx(
-		WS_EX_APPWINDOW,
-		applicationName,
-		applicationName,
-		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
-		posX,
-		posY,
-		rect.right - rect.left,
-		rect.bottom - rect.top,
-		NULL,
-		NULL,
-		applicatioInstance,
-		NULL);
-
-	ShowWindow(handle, SW_SHOW);
-	SetForegroundWindow(handle);
-	SetFocus(handle);
-
-	// Hide the mouse cursor.
-	// ShowCursor(false);
-
-	return handle;
-}
-
-HRESULT D3DSystem::InitializeWindow(int screenWidth, int screenHeight)
+std::shared_ptr<HWND> D3DSystem::InitializeWindow(int screenWidth, int screenHeight)
 {
 	HINSTANCE hInstance = 0;
 	HWND handle = 0;
@@ -170,9 +62,7 @@ HRESULT D3DSystem::InitializeWindow(int screenWidth, int screenHeight)
 	{
 		return false;
 	}
-
-	m_pWindow = std::shared_ptr<HWND>(&handle);
-	return 0;
+	return std::shared_ptr<HWND>(&handle);
 }
 
 HRESULT D3DSystem::Initialize()
@@ -237,12 +127,12 @@ HRESULT D3DSystem::CreateDevice()
 	return createResult;
 }
 
-HRESULT D3DSystem::SetCamera(XMVECTOR position, XMVECTOR direction, UINT16 viewAngle)
+HRESULT D3DSystem::SetCamera(XMVECTOR position, XMVECTOR direction, unsigned short viewAngle)
 {
 	return 0;
 }
 
-HRESULT D3DSystem::SetCamera(XMVECTOR position, XMVECTOR direction, FLOAT focalLength)
+HRESULT D3DSystem::SetCamera(XMVECTOR position, XMVECTOR direction, float focalLength)
 {
 	return 0;
 }
@@ -264,12 +154,11 @@ HRESULT D3DSystem::LoadModels()
 
 HRESULT D3DSystem::CreateRenderer()
 {
-	auto screen = std::shared_ptr<Screen>(new Screen(m_pWindow));
-	m_pRenderer = std::shared_ptr<Renderer>(new Renderer(m_pDevice, screen));
+	m_pRenderer = std::shared_ptr<Renderer>(new Renderer(m_pDevice, m_pWindow));
 	return 0;
 }
 
-VOID D3DSystem::Render()
+void D3DSystem::Render()
 {
 
 }
@@ -300,3 +189,98 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 	}
 	return 0;
 }
+
+//HWND D3DSystem::Create3DWindow(
+//	INT32 screenWidth,
+//	INT32 screenHeight,
+//	BOOL vsync,
+//	HWND* hwnd,
+//	BOOL fullscreen)
+//{
+//	WNDCLASSEX wc;
+//	DEVMODE dmScreenSettings;
+//	int posX, posY;
+//
+//
+//	// Get an external pointer to this object.
+//	ApplicationHandle = this;
+//
+//	// Get the instance of this application.
+//	auto applicatioInstance = GetModuleHandle(NULL);
+//
+//	// Give the application a name.
+//	auto applicationName = L"Simple Rendering Engine";
+//
+//	// Setup the windows class with default settings.
+//	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+//	wc.lpfnWndProc = WndProc;
+//	wc.cbClsExtra = 0;
+//	wc.cbWndExtra = 0;
+//	wc.hInstance = applicatioInstance;
+//	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
+//	wc.hIconSm = wc.hIcon;
+//	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+//	wc.hbrBackground = (HBRUSH)GetStockObject(GRAY_BRUSH);
+//	wc.lpszMenuName = NULL;
+//	wc.lpszClassName = applicationName;
+//	wc.cbSize = sizeof(WNDCLASSEX);
+//
+//	// Register the window class.
+//	RegisterClassEx(&wc);
+//
+//	// Determine the resolution of the clients desktop screen.
+//	screenWidth = GetSystemMetrics(SM_CXSCREEN);
+//	screenHeight = GetSystemMetrics(SM_CYSCREEN);
+//
+//	// Setup the screen settings depending on whether it is running in full screen or in windowed mode.
+//	if (fullscreen)
+//	{
+//		// If full screen set the screen to maximum size of the users desktop and 32bit.
+//		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
+//		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
+//		dmScreenSettings.dmPelsWidth = (unsigned long)screenWidth;
+//		dmScreenSettings.dmPelsHeight = (unsigned long)screenHeight;
+//		dmScreenSettings.dmBitsPerPel = 32;
+//		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+//
+//		// Change the display settings to full screen.
+//		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
+//		posX = posY = 0;
+//	}
+//	else
+//	{
+//		screenWidth = 800;
+//		screenHeight = 600;
+//
+//		posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
+//		posY = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
+//	}
+//
+//	RECT rect = { 0, 0, screenWidth, screenHeight };
+//	https://msdn.microsoft.com/en-us/library/windows/desktop/ms632665%28v=vs.85%29.aspx
+//	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, FALSE);
+//
+//	auto handle =
+//		CreateWindowEx(
+//		WS_EX_APPWINDOW,
+//		applicationName,
+//		applicationName,
+//		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
+//		posX,
+//		posY,
+//		rect.right - rect.left,
+//		rect.bottom - rect.top,
+//		NULL,
+//		NULL,
+//		applicatioInstance,
+//		NULL);
+//
+//	ShowWindow(handle, SW_SHOW);
+//	SetForegroundWindow(handle);
+//	SetFocus(handle);
+//
+//	// Hide the mouse cursor.
+//	// ShowCursor(false);
+//
+//	return handle;
+//}

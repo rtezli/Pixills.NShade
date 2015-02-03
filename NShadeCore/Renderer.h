@@ -1,31 +1,23 @@
 #pragma once
 
 #include "includes.h"
-#include "screen.h"
+#include "window.h"
 
 class Renderer
 {
 public:
-	Renderer(std::shared_ptr<ID3D11Device> pDevice, std::shared_ptr<Screen> pScreen);
+	Renderer(std::shared_ptr<ID3D11Device> pDevice, std::shared_ptr<Window> pWindow);
 	~Renderer();
 public:
-	//void CreateDeviceDependentResources();
-	//void CreateWindowSizeDependentResources();
-	//void ReleaseDeviceDependentResources();
-
-	//void StopRendering();
-	//void StartTracking();
-	//void StopTracking();
-	//void TrackingUpdate(float positionX);
-
 	bool IsTracking() { return m_tracking; }
 	bool IsRendering(){ return m_isRendering; }
 private:
-	HRESULT Initialize();
-	HRESULT Render();
+	void	Initialize();
 	HRESULT CreateSwapChain();
+	void	Render();
+
 private:
-	std::shared_ptr<Screen>					m_pScreen;
+	std::shared_ptr<Window>					m_pWindow;
 	std::shared_ptr<ID3D11Device>			m_pDevice;
 	std::shared_ptr<IDXGIDevice>			m_pDXGIDevice;
 	std::shared_ptr<IDXGIAdapter>			m_pDXGIAdapter;
@@ -47,11 +39,11 @@ private:
 	DirectX::XMFLOAT4X4						m_ViewMatrix;
 	DirectX::XMFLOAT4X4						m_ProjectionMatrix;
 
-	CHAR*									m_standardVertexShader = "PixelShader.cso";
-	CHAR*									m_standardPixelShader = "VertexShader.cso";
+	const char*								m_standardVertexShader = "PixelShader.cso";
+	const char*								m_standardPixelShader = "VertexShader.cso";
 
-	INT32									m_ScreenWidth;
-	INT32									m_ScreenHeight;
+	int										m_ScreenWidth;
+	int										m_ScreenHeight;
 
 	bool									m_isRendering;
 	bool									m_loadingComplete;

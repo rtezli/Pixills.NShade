@@ -20,14 +20,14 @@ LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPTSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+	_In_opt_ HINSTANCE hPrevInstance,
+	_In_ LPTSTR    lpCmdLine,
+	_In_ int       nCmdShow)
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
- 	// TODO: Place code here.
+	// TODO: Place code here.
 	MSG msg;
 	HACCEL hAccelTable;
 
@@ -37,7 +37,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	MyRegisterClass(hInstance);
 
 	// Perform application initialization:
-	if (!InitInstance (hInstance, nCmdShow))
+	if (!InitInstance(hInstance, nCmdShow))
 	{
 		return FALSE;
 	}
@@ -55,7 +55,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		}
 	}
 
-	return (int) msg.wParam;
+	return (int)msg.wParam;
 }
 
 ATOM MyRegisterClass(HINSTANCE hInstance)
@@ -64,54 +64,54 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 
 	wcex.cbSize = sizeof(WNDCLASSEX);
 
-	wcex.style			= CS_HREDRAW | CS_VREDRAW;
-	wcex.lpfnWndProc	= WndProc;
-	wcex.cbClsExtra		= 0;
-	wcex.cbWndExtra		= 0;
-	wcex.hInstance		= hInstance;
-	wcex.hIcon			= LoadIcon(hInstance, MAKEINTRESOURCE(IDI_NSHADEUI));
-	wcex.hCursor		= LoadCursor(NULL, IDC_ARROW);
-	wcex.hbrBackground	= (HBRUSH)(COLOR_WINDOW+1);
-	wcex.lpszMenuName	= MAKEINTRESOURCE(IDC_NSHADEUI);
-	wcex.lpszClassName	= szWindowClass;
-	wcex.hIconSm		= LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+	wcex.style = CS_HREDRAW | CS_VREDRAW;
+	wcex.lpfnWndProc = WndProc;
+	wcex.cbClsExtra = 0;
+	wcex.cbWndExtra = 0;
+	wcex.hInstance = hInstance;
+	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_NSHADEUI));
+	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	wcex.lpszMenuName = MAKEINTRESOURCE(IDC_NSHADEUI);
+	wcex.lpszClassName = szWindowClass;
+	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
 	return RegisterClassEx(&wcex);
 }
 
 bool InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-   hInst = hInstance;
+	hInst = hInstance;
 
-   m_hWnd = CreateWindow(
-	   szWindowClass, 
-	   szTitle, 
-	   WS_OVERLAPPEDWINDOW,
-	   CW_USEDEFAULT, 
-	   0, 
-	   CW_USEDEFAULT, 
-	   0, 
-	   NULL, 
-	   NULL, 
-	   hInstance, 
-	   NULL);
+	m_hWnd = CreateWindow(
+		szWindowClass,
+		szTitle,
+		WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT,
+		0,
+		CW_USEDEFAULT,
+		0,
+		NULL,
+		NULL,
+		hInstance,
+		NULL);
 
-   if (!m_hWnd)
-   {
-      return false;
-   }
+	if (!m_hWnd)
+	{
+		return false;
+	}
 
-   auto result = Init3DSystem(&m_hWnd);
+	auto result = Init3DSystem(&m_hWnd);
 
-   if (FAILED(result))
-   {
-	   return 0;
-   }
+	if (FAILED(result))
+	{
+		return 0;
+	}
 
-   ShowWindow(m_hWnd, nCmdShow);
-   UpdateWindow(m_hWnd);
+	ShowWindow(m_hWnd, nCmdShow);
+	UpdateWindow(m_hWnd);
 
-   return TRUE;
+	return TRUE;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -123,7 +123,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	switch (message)
 	{
 	case WM_COMMAND:
-		wmId    = LOWORD(wParam);
+		wmId = LOWORD(wParam);
 		wmEvent = HIWORD(wParam);
 		// Parse the menu selections:
 		switch (wmId)
@@ -171,10 +171,11 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	return (INT_PTR)FALSE;
 }
 
-HRESULT Init3DSystem(HWND* window)
+HRESULT Init3DSystem(HWND* pWindow)
 {
-	//m_system = new D3DSystem();
-	//InitializeForWindowS(window);
-	//m_system->InitializeForWindow(false, window, false, 100.00f, 0.0f);
+	HRESULT Init3DSystem(HWND* pWindow);
+	auto window = std::shared_ptr<HWND>(pWindow);
+	m_system = new D3DSystem();
+	m_system->InitializeForWindow(false, window, false, 100.00f, 0.0f);
 	return 0;
 }

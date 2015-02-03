@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "renderer.h"
 
-Renderer::Renderer(std::shared_ptr<ID3D11Device> pDevice, std::shared_ptr<Screen> pScreen)
+Renderer::Renderer(std::shared_ptr<ID3D11Device> pDevice, std::shared_ptr<Window> pWindow)
 {
 	m_pDevice = pDevice;
-	m_pScreen = pScreen;
+	m_pWindow = pWindow;
 }
 
 Renderer::~Renderer()
@@ -13,9 +13,9 @@ Renderer::~Renderer()
 	m_pDepthStencilView->Release();
 }
 
-HRESULT Renderer::Initialize()
+void Renderer::Initialize()
 {
-	return 0;
+	CreateSwapChain();
 }
 
 HRESULT Renderer::CreateSwapChain()
@@ -40,7 +40,7 @@ HRESULT Renderer::CreateSwapChain()
 	swapChainDesc.BufferDesc.Height = m_ScreenHeight;
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 
-	if (m_pScreen->VSync())
+	if (m_pWindow->VSyncEnabled())
 	{
 		swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
 		swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
@@ -56,14 +56,14 @@ HRESULT Renderer::CreateSwapChain()
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
 	// Set the handle for the window to render to.
-	swapChainDesc.OutputWindow = (*m_pScreen->WindowHandle().get());
+	swapChainDesc.OutputWindow = (*m_pWindow->WindowHandle().get());
 
 	// Turn multisampling off.
 	swapChainDesc.SampleDesc.Count = 1;
 	swapChainDesc.SampleDesc.Quality = 0;
 
 	// Set to full screen or windowed mode.
-	if (m_pScreen->Fullscreen())
+	if (m_pWindow->Fullscreen())
 	{
 		swapChainDesc.Windowed = false;
 	}
@@ -86,21 +86,15 @@ HRESULT Renderer::CreateSwapChain()
 	auto device = m_pDevice.get();
 	auto swapChain = m_pSwapChain.get();
 	result = m_pDXGIFactory->CreateSwapChain(device, &swapChainDesc, &swapChain);
-
 	return 0;
 }
 
-HRESULT Renderer::Render()
+void Renderer::Render()
 {
 	ID3D11Texture2D* backBuffer = 0;
 	ID3D11RenderTargetView* targetView = 0;
-	//auto buffer = m_pRenderBuffer.get();
-	//auto target = m_pRenderTarget.get();
-	auto chain = m_pSwapChain.get();
-	chain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
-	//m_pRenderBuffer = std::shared_ptr<ID3D11Texture2D>(backBuffer);
-
+	auto swapChain = m_pSwapChain.get();
+	swapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
 	m_pDevice->CreateRenderTargetView(backBuffer, nullptr, &targetView);
-	chain->Present(1, 0);
-	return 0;
+	swapChain->Present(1, 0);
 }
