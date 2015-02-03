@@ -40,6 +40,8 @@ private:
 	DirectX::XMFLOAT4X4						m_ViewMatrix;
 	DirectX::XMFLOAT4X4						m_ProjectionMatrix;
 
+	int										m_samplesCount = 4;
+
 	struct SHADER_SET*						m_pShaderSet;
 
 	char*									m_standardVertexShader = "PixelShader.cso";
