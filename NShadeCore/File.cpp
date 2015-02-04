@@ -24,7 +24,8 @@ struct FILE_BYTE_RESULT* File::ReadFileBytes(CHAR* fileName)
 	{
 		stream.seekg(0, std::ios::end);
 		auto size = stream.tellg();
-		CHAR* buffer = (CHAR *)malloc(sizeof(CHAR) * size);
+		CHAR* buffer;
+		ZeroMemory(&buffer, sizeof(CHAR));
 
 		stream.seekg(0, std::ios::beg);
 		stream.read(&buffer[0], size);

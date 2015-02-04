@@ -15,22 +15,25 @@ HRESULT Model::Initialize(ID3D11Device* pDevice, std::vector<NSVERTEX2>* pModel,
 {
 	m_pDevice = std::shared_ptr<ID3D11Device>(pDevice);
 	auto resutlt = InitializeVertexBuffer(pModel);
-	resutlt = InitializeIndexBuffer(pModel);
+	resutlt = InitializeIndexBuffer(NULL);
 	return 0;
 }
 
 HRESULT Model::LoadModelFromFBXFile(char* fileName)
 {
+
 	FbxScene* fbxScene = ImportFbx(fileName);
- 
-	FbxGeometry* geometry;
+	FbxNode* fbxRootNode = fbxScene->GetRootNode();
+	FbxGeometry* geometry = 0;
 	FbxArray<FbxVector4>* pointArray;
  
-	auto count = fbxScene->GetGeometryCount();
+	auto count = fbxRootNode->GetChildCount();
 	for (auto i = 0; i < count; i++)
 	{
-		geometry = fbxScene->GetGeometry(i);
+		auto child = fbxRootNode->GetChild(i);
+		FbxMesh* pMesh = (FbxMesh*)child->GetNodeAttribute();
 		pointArray = &geometry->mControlPoints;
+
 		auto size = pointArray->Size();
 		for (auto n = 0; n < size; n++)
 		{
@@ -104,7 +107,7 @@ HRESULT Model::InitializeVertexBuffer(std::vector<NSVERTEX2>* vertices)
 	return result;
 }
 
-HRESULT Model::InitializeIndexBuffer(std::vector<NSVERTEX2>* indeces)
+HRESULT Model::InitializeIndexBuffer(std::vector<int>* indeces)
 {
 	D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
 	static const unsigned short cubeIndices[] =

@@ -29,7 +29,7 @@ public:
 	static const std::vector<Model::NSVERTEX2> Sphere;
 private:
 	HRESULT						InitializeVertexBuffer(std::vector<NSVERTEX2>* vertexes);
-	HRESULT						InitializeIndexBuffer(std::vector<NSVERTEX2>* indexes);
+	HRESULT						InitializeIndexBuffer(std::vector<int>* indexes);
 	FbxScene*					ImportFbx(char* fileName);
 private:
 	std::shared_ptr<ID3D11Device> m_pDevice;
