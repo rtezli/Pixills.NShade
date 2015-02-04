@@ -9,8 +9,8 @@ public:
 	Renderer(std::shared_ptr<ID3D11Device> pDevice, std::shared_ptr<Window> pWindow);
 	~Renderer();
 public:
-	bool IsTracking() { return m_tracking; }
-	bool IsRendering(){ return m_isRendering; }
+	bool	IsTracking() { return m_tracking; }
+	bool	IsRendering(){ return m_isRendering; }
 private:
 	void	Initialize();
 	HRESULT	InitializeShaders();
@@ -36,9 +36,9 @@ private:
 	std::shared_ptr<ID3D11RenderTargetView>	m_pRenderTarget;
 	std::shared_ptr<ID3D11DepthStencilView>	m_pDepthStencilView;
 
-	DirectX::XMFLOAT4X4						m_WorldMatrix;
-	DirectX::XMFLOAT4X4						m_ViewMatrix;
-	DirectX::XMFLOAT4X4						m_ProjectionMatrix;
+	std::shared_ptr<DirectX::XMFLOAT4X4>	m_WorldMatrix;
+	std::shared_ptr<DirectX::XMFLOAT4X4>	m_ViewMatrix;
+	std::shared_ptr<DirectX::XMFLOAT4X4>	m_ProjectionMatrix;
 
 	int										m_samplesCount = 4;
 
