@@ -106,7 +106,7 @@ HRESULT Renderer::CompileVertexShader(LPCWSTR compiledShaderFile)
 {
 	ID3DBlob* shaderBlob = 0;
 	ID3D11VertexShader* vertexShader = 0;
-	auto result = CompileShader(compiledShaderFile, shaderBlob, "vs_5_0");
+	auto result = CompileShader(compiledShaderFile, shaderBlob, VS_PROFILE);
 	if (SUCCEEDED(result))
 	{
 		result = m_pDevice->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &vertexShader);
@@ -127,7 +127,7 @@ HRESULT Renderer::CompileHullShader(LPCWSTR compiledShaderFile)
 {
 	ID3DBlob* shaderBlob = 0;
 	ID3D11HullShader* hullShader = 0;
-	auto result = CompileShader(compiledShaderFile, shaderBlob, "hs_5_0");
+	auto result = CompileShader(compiledShaderFile, shaderBlob, HS_PROFILE);
 	if (SUCCEEDED(result))
 	{
 		result = m_pDevice->CreateHullShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &hullShader);
@@ -148,7 +148,7 @@ HRESULT Renderer::CompileGeometryShader(LPCWSTR compiledShaderFile)
 {
 	ID3DBlob* shaderBlob = 0;
 	ID3D11GeometryShader* geometryShader = 0;
-	auto result = CompileShader(compiledShaderFile, shaderBlob, "gs_5_0");
+	auto result = CompileShader(compiledShaderFile, shaderBlob, GS_PROFILE);
 	if (SUCCEEDED(result))
 	{
 		result = m_pDevice->CreateGeometryShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &geometryShader);
@@ -169,7 +169,7 @@ HRESULT Renderer::CompilePixelShader(LPCWSTR compiledShaderFile)
 {
 	ID3DBlob* shaderBlob = 0;
 	ID3D11PixelShader* pixelShader = 0;
-	auto result = CompileShader(compiledShaderFile, shaderBlob, "ps_5_0");
+	auto result = CompileShader(compiledShaderFile, shaderBlob, PS_PROFILE);
 	if (SUCCEEDED(result))
 	{
 		result = m_pDevice->CreatePixelShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &pixelShader);

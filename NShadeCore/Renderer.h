@@ -2,23 +2,23 @@
 #pragma comment(lib, "D3DCompiler.lib")
 
 #ifndef PS_PROFILE
-#define PS_PROFILE = "ps_5_0"
+#define PS_PROFILE {"ps_5_0" }
 #endif
 
 #ifndef VS_PROFILE
-#define VS_PROFILE = "vs_5_0"
+#define VS_PROFILE {"vs_5_0" }
 #endif
 
 #ifndef GS_PROFILE
-#define GS_PROFILE = "ps_5_0"
+#define GS_PROFILE { "ps_5_0" }
 #endif
 
 #ifndef HS_PROFILE
-#define HS_PROFILE = "hs_5_0"
+#define HS_PROFILE { "hs_5_0" }
 #endif
 
 #ifndef DS_PROFILE
-#define DS_PROFILE = "ds_5_0"
+#define DS_PROFILE { "ds_5_0" }
 #endif
 
 #include "includes.h"
