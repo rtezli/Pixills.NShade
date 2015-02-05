@@ -23,6 +23,11 @@ HRESULT D3DSystem::InitializeWithWindow(
 	float screenDepth,
 	float screenNear)
 {
+	m_viewportWidth = screenWidth;
+	m_viewportHeight = screenHeight;
+	m_nearZ = screenNear;
+	m_farZ = screenDepth;
+
 	auto handle = InitializeWindow(screenWidth, screenHeight);
 	InitializeForWindow(vsync, handle, fullscreen, screenDepth, screenNear);
 	return 0;
@@ -139,6 +144,7 @@ HRESULT D3DSystem::SetCamera(XMVECTOR position, XMVECTOR direction, float focalL
 
 HRESULT D3DSystem::CreateCamera()
 {
+	m_pCamera = std::shared_ptr<Camera>(new Camera(m_viewportWidth, m_viewportHeight, m_nearZ, m_farZ));
 	return 0;
 }
 

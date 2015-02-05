@@ -5,6 +5,7 @@ Renderer::Renderer(std::shared_ptr<ID3D11Device> pDevice, std::shared_ptr<Window
 {
 	m_pDevice = pDevice;
 	m_pWindow = pWindow;
+	m_pShaderSet = new SHADER_SET();
 	Initialize();
 }
 
@@ -16,7 +17,9 @@ Renderer::~Renderer()
 
 void Renderer::Initialize()
 {
-	CreateSwapChain();
+	CreateSwapChain();	
+	SetVertexShader(m_standardVertexShader);
+	SetPixelShader(m_standardPixelShader);
 }
 
 // 0x 2x, 4x MSAA
@@ -91,7 +94,6 @@ HRESULT Renderer::CreateSwapChain()
 	result = m_pDXGIFactory->CreateSwapChain(device, &swapChainDesc, &swapChain);
 	return 0;
 }
-
 
 HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 {

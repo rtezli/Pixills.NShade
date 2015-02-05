@@ -42,6 +42,11 @@ private:
 
 	XMVECTOR								m_Position;
 	XMVECTOR								m_Rotation;
+
+	int										m_viewportWidth;
+	int										m_viewportHeight;
+	int										m_nearZ;
+	int										m_farZ;
 };
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);

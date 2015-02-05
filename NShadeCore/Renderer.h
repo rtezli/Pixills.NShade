@@ -79,12 +79,14 @@ private:
 	std::shared_ptr<DirectX::XMFLOAT4X4>	m_ViewMatrix;
 	std::shared_ptr<DirectX::XMFLOAT4X4>	m_ProjectionMatrix;
 
+	//std::shared_ptr<DX::DeviceResources>	m_pDeviceResources;
+
 	int										m_samplesCount = 4;
 
 	struct SHADER_SET*						m_pShaderSet;
 
-	char*									m_standardVertexShader = "PixelShader.cso";
-	char*									m_standardPixelShader = "VertexShader.cso";
+	LPCWSTR									m_standardVertexShader = L"PixelShader.cso";
+	LPCWSTR									m_standardPixelShader = L"VertexShader.cso";
 
 	int										m_ScreenWidth;
 	int										m_ScreenHeight;
