@@ -28,7 +28,7 @@
 class Renderer
 {
 public:
-	Renderer(std::shared_ptr<ID3D11Device> pDevice, std::shared_ptr<Window> pWindow);
+	Renderer(DeviceResources* pResources, std::shared_ptr<Window> pWindow);
 	~Renderer();
 public:
 	bool	IsTracking() { return m_tracking; }
@@ -55,10 +55,9 @@ private:
 
 	HRESULT CreateSwapChain();
 	void	Render();
-
 private:
+	DeviceResources*						m_pDeviceResources;
 	std::shared_ptr<Window>					m_pWindow;
-	std::shared_ptr<ID3D11Device>			m_pDevice;
 	std::shared_ptr<IDXGIDevice>			m_pDXGIDevice;
 	std::shared_ptr<IDXGIAdapter>			m_pDXGIAdapter;
 	std::shared_ptr<IDXGIFactory1>			m_pDXGIFactory;
@@ -79,7 +78,7 @@ private:
 	std::shared_ptr<DirectX::XMFLOAT4X4>	m_ViewMatrix;
 	std::shared_ptr<DirectX::XMFLOAT4X4>	m_ProjectionMatrix;
 
-	//std::shared_ptr<DX::DeviceResources>	m_pDeviceResources;
+ 
 
 	int										m_samplesCount = 4;
 

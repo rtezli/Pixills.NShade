@@ -17,19 +17,21 @@ void Camera::Initialize(float ViewWidth, float ViewHeight, float NearZ, float Fa
 	float aspectRatio = 800 / 600;
 	float fovAngleY = 70.0f * DirectX::XM_PI / 180.0f;
 
+	m_constBuffer = new MATRIX_BUFFER();
+
 	auto orientation = m_deviceResources->GetOrientationTransform3D();
-	DirectX::XMMATRIX perspectiveMatrix = DirectX::XMMatrixPerspectiveFovLH(fovAngleY,aspectRatio,0.01f,100.0f);
+	XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovLH(fovAngleY, aspectRatio, 0.01f, 100.0f);
 
 	auto orientationMatrix = XMLoadFloat4x4(orientation);
-	DirectX::XMStoreFloat4x4(&m_constBuffer->projection, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
+	XMStoreFloat4x4(&m_constBuffer->projection, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
 
 	static const DirectX::XMVECTORF32 eye = { 0.0f, 0.7f, 1.5f, 0.0f };
 	static const DirectX::XMVECTORF32 at = { 0.0f, -0.1f, 0.0f, 0.0f };
 	static const DirectX::XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
 
-	DirectX::XMStoreFloat4x4(&m_constBuffer->view, DirectX::XMMatrixTranspose(DirectX::XMMatrixLookAtLH(eye, at, up)));
+	XMStoreFloat4x4(&m_constBuffer->view, XMMatrixTranspose(XMMatrixLookAtLH(eye, at, up)));
 
-	auto matrix = DirectX::XMMatrixPerspectiveFovLH(fovAngleY, aspectRatio, 0.01f, 100.0f);
+	auto matrix = XMMatrixPerspectiveFovLH(fovAngleY, aspectRatio, 0.01f, 100.0f);
 }
 
 void Camera::RotateHorizontal(float Angle)

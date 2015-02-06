@@ -2,12 +2,16 @@
 
 #include "includes.h"
 
+using namespace DirectX;
+
 class DeviceResources
 {
 public:
-	DeviceResources();
+	DeviceResources(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 	~DeviceResources();
 public:
-	DirectX::XMFLOAT4X4* GetOrientationTransform3D();
+	ID3D11Device*			Device;
+	ID3D11DeviceContext*	DeviceContext;
+	XMFLOAT4X4*				GetOrientationTransform3D();
 };
 

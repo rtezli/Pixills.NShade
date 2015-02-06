@@ -130,13 +130,13 @@ HRESULT Model::InitializeIndexBuffer(std::vector<int>* indeces)
 
 const std::vector<Model::NSVERTEX2> Model::Cube =
 {
-	NSVERTEX2{ DirectX::XMFLOAT3(-0.5f, -0.5f, -0.5f), DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f) },
-	NSVERTEX2{ DirectX::XMFLOAT3(-0.5f, -0.5f, 0.5f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
-	NSVERTEX2{ DirectX::XMFLOAT3(-0.5f, 0.5f, -0.5f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-	NSVERTEX2{ DirectX::XMFLOAT3(-0.5f, 0.5f, 0.5f), DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f) },
+	NSVERTEX2{ DirectX::XMFLOAT3(-0.5f, -0.5f, -0.5f),	DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f) },
+	NSVERTEX2{ DirectX::XMFLOAT3(-0.5f, -0.5f, 0.5f),	DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
+	NSVERTEX2{ DirectX::XMFLOAT3(-0.5f, 0.5f, -0.5f),	DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+	NSVERTEX2{ DirectX::XMFLOAT3(-0.5f, 0.5f, 0.5f),	DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f) },
 
-	NSVERTEX2{ DirectX::XMFLOAT3(0.5f, -0.5f, -0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-	NSVERTEX2{ DirectX::XMFLOAT3(0.5f, -0.5f, 0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f) },
-	NSVERTEX2{ DirectX::XMFLOAT3(0.5f, 0.5f, -0.5f), DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) },
-	NSVERTEX2{ DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f), DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) }
+	NSVERTEX2{ DirectX::XMFLOAT3(0.5f, -0.5f, -0.5f),	DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
+	NSVERTEX2{ DirectX::XMFLOAT3(0.5f, -0.5f, 0.5f),	DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f) },
+	NSVERTEX2{ DirectX::XMFLOAT3(0.5f, 0.5f, -0.5f),	DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) },
+	NSVERTEX2{ DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f),		DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) }
 };

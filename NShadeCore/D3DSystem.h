@@ -28,14 +28,12 @@ private:
 	HRESULT					LoadModels();
 	HRESULT					CreateRenderer();
 private:
+	DeviceResources*						m_pDeviceResources;
 	std::shared_ptr<Renderer>				m_pRenderer;
 	std::shared_ptr<Camera>					m_pCamera;
 	std::shared_ptr<Input>					m_pInputDevices;
 	std::shared_ptr<Model>					m_pModel;
 	std::shared_ptr<Window>					m_pWindow;
-
-	std::shared_ptr<ID3D11Device>			m_pDevice;
-	std::shared_ptr<ID3D11DeviceContext>	m_pDeviceContext;
 	std::shared_ptr<HWND>					m_pWindowHandle;
 
 	D3D_FEATURE_LEVEL						m_D3dFeatureLevel;

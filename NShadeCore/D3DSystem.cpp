@@ -11,8 +11,8 @@ D3DSystem::~D3DSystem()
 	m_pCamera.reset();
 	m_pInputDevices.reset();
 	m_pModel.reset();
-	m_pDevice->Release();
-	m_pDeviceContext->Release();
+
+	delete m_pDeviceResources;
 }
 
 HRESULT D3DSystem::InitializeWithWindow(
@@ -125,10 +125,7 @@ HRESULT D3DSystem::CreateDevice()
 			&m_D3dFeatureLevel,
 			&context);
 	}
-
-	m_pDevice = std::shared_ptr<ID3D11Device>(device);
-	m_pDeviceContext = std::shared_ptr<ID3D11DeviceContext>(context);
-
+	m_pDeviceResources = new DeviceResources(device, context);
 	return createResult;
 }
 
@@ -151,16 +148,15 @@ HRESULT D3DSystem::CreateCamera()
 HRESULT D3DSystem::LoadModels()
 {
 	m_pModel = std::shared_ptr<Model>(new Model());
-	auto device = m_pDevice.get();
 	auto cube = m_pModel->Cube;
 	auto size = cube.size();
-	auto result = m_pModel->Initialize(device, &cube, size);
+	auto result = m_pModel->Initialize(m_pDeviceResources->Device, &cube, size);
 	return 0;
 }
 
 HRESULT D3DSystem::CreateRenderer()
 {
-	m_pRenderer = std::shared_ptr<Renderer>(new Renderer(m_pDevice, m_pWindow));
+	m_pRenderer = std::shared_ptr<Renderer>(new Renderer(m_pDeviceResources, m_pWindow));
 	return 0;
 }
 

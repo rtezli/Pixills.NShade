@@ -3,6 +3,8 @@
 #include "includes.h"
 #include "deviceresources.h"
 
+using namespace DirectX;
+
 class Camera
 {
 public:
@@ -17,6 +19,7 @@ public:
 	void MoveZ(float Angle);
 private:
 	struct MATRIX_BUFFER*						m_constBuffer;
+	struct DEVICE_RESOURCES*					m_pDeviceResources;
 	std::shared_ptr<DirectX::XMFLOAT4X4>		m_position;
 	std::shared_ptr<DirectX::XMFLOAT4X4>		m_direction;
 	DirectX::XMFLOAT4X4*						m_constantBufferData;
