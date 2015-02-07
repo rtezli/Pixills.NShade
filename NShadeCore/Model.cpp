@@ -13,9 +13,24 @@ Model::~Model()
 
 HRESULT Model::Initialize(std::vector<VertexPositionColor>* pModel, unsigned int size)
 {
-	auto resutlt = InitializeVertexBuffer(pModel);
-	resutlt = InitializeIndexBuffer(NULL);
-	return 0;
+	auto result = InitializeVertexBuffer(pModel);
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	result = InitializeIndexBuffer(NULL);
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	result = InitializeConstantBuffer();
+	if (FAILED(result))
+	{
+		return result;
+	}
+	return result;
 }
 
 HRESULT Model::LoadModelFromFBXFile(char* fileName)
@@ -25,7 +40,7 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 	FbxNode* fbxRootNode = fbxScene->GetRootNode();
 	FbxGeometry* geometry = 0;
 	FbxArray<FbxVector4>* pointArray;
- 
+
 	auto count = fbxRootNode->GetChildCount();
 	for (auto i = 0; i < count; i++)
 	{
@@ -61,7 +76,7 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 FbxScene* Model::ImportFbx(char *fileName)
 {
 	auto lSdkManager = FbxManager::Create();
-	
+
 	FbxIOSettings * ios = FbxIOSettings::Create(lSdkManager, IOSROOT);
 	ios->SetBoolProp(IMP_FBX_MATERIAL, true);
 	ios->SetBoolProp(IMP_FBX_TEXTURE, true);
@@ -94,19 +109,28 @@ HRESULT Model::LoadModelFromOBJFile(char* fileName)
 	return 0;
 }
 
-HRESULT Model::InitializeVertexBuffer(std::vector<VertexPositionColor>* vertices)
+HRESULT Model::InitializeVertexBuffer(vector<VertexPositionColor>* vertices)
 {
+	vector<VertexPositionColor>* verticesVector;
+	auto cube = Model::Cube;
+	
+	if (!vertices)
+	{
+		verticesVector = &cube;
+	}
+	else
+	{
+		verticesVector = vertices;
+	}
+
 	D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
-	vertexBufferData.pSysMem = &vertices;
+	vertexBufferData.pSysMem = verticesVector;
 	vertexBufferData.SysMemPitch = 0;
 	vertexBufferData.SysMemSlicePitch = 0;
 
 	CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(vertices), D3D11_BIND_VERTEX_BUFFER);
 
-	auto device = DeviceResource()->Device;
-	auto buffer = DeviceResource()->VertexBuffer;
-
-	auto result = device->CreateBuffer(&vertexBufferDesc, &m_initData, &buffer);
+	auto result = DeviceResource()->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &DeviceResource()->VertexBuffer);
 	if (FAILED(result))
 	{
 		return result;
@@ -132,13 +156,27 @@ HRESULT Model::InitializeIndexBuffer(std::vector<int>* indeces)
 	indexBufferData.SysMemSlicePitch = 0;
 
 	CD3D11_BUFFER_DESC indexBufferDesc(sizeof(indeces), D3D11_BIND_INDEX_BUFFER);
+
 	auto device = DeviceResource()->Device;
 	auto indexBuffer = DeviceResource()->IndexBuffer;
+
 	auto result = device->CreateBuffer(&indexBufferDesc, &indexBufferData, &indexBuffer);
 	if (FAILED(result))
 	{
 		return result;
 	}
+	return result;
+}
+
+HRESULT Model::InitializeConstantBuffer()
+{
+	CD3D11_BUFFER_DESC constantBufferDesc(sizeof(MVPConstantBuffer), D3D11_BIND_CONSTANT_BUFFER);
+	auto result = DeviceResource()->Device->CreateBuffer(&constantBufferDesc, nullptr, &DeviceResource()->ConstantBuffer);
+	if (FAILED(result))
+	{
+		return result;
+	}
+
 	return result;
 }
 

@@ -18,6 +18,7 @@ private:
 	DeviceResources*			DeviceResource(){ return m_pDeviceResources.get(); }
 	HRESULT						InitializeVertexBuffer(std::vector<VertexPositionColor>* vertexes);
 	HRESULT						InitializeIndexBuffer(std::vector<int>* indexes);
+	HRESULT						InitializeConstantBuffer();
 	FbxScene*					ImportFbx(char* fileName);
 private:
 	unsigned short				m_indexCount = 0;

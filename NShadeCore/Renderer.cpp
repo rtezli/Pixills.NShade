@@ -133,8 +133,8 @@ HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 
 	static const D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "POSITION",	0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR",		0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
 	ID3D11InputLayout* inputLayout;
@@ -296,7 +296,7 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
 
 void Renderer::Render()
 {
-	//SetBuffers();
+	SetBuffers();
 
 	ID3D11Texture2D* backBuffer = 0;
 	ID3D11RenderTargetView* targetView = 0;
@@ -310,11 +310,13 @@ void Renderer::Render()
 void Renderer::SetBuffers()
 {
 	auto context = DeviceResource()->DeviceContext;
+	auto constBuffer = DeviceResource()->ConstantBuffer;
+	auto bufferData = DeviceResource()->ConstantBufferData;
 
 	UINT stride = sizeof(VertexPositionColor);
 	UINT offset = 0;
 
-	context->UpdateSubresource(DeviceResource()->ConstantBuffer, 0, NULL, DeviceResource()->ConstantBufferData, 0, 0);
+	context->UpdateSubresource(constBuffer, 0, NULL, bufferData, 0, 0);
 	context->IASetVertexBuffers(0, 1, &DeviceResource()->VertexBuffer, &stride, &offset);
 	context->IASetIndexBuffer(DeviceResource()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
 
