@@ -5,8 +5,11 @@ Renderer::Renderer(DeviceResources* pResources, std::shared_ptr<Window> pWindow)
 {
 	m_pDeviceResources = std::shared_ptr<DeviceResources>(pResources);
 	m_pWindow = pWindow;
-	m_pShaderSet = std::shared_ptr<ShaderSet>(new ShaderSet());
-	Initialize();
+
+	auto shaderSet = new ShaderSet();
+
+	m_pShaderSet = std::shared_ptr<ShaderSet>(shaderSet);
+	auto result = Initialize();
 }
 
 Renderer::~Renderer()
@@ -15,11 +18,23 @@ Renderer::~Renderer()
 	m_pDepthStencilView->Release();
 }
 
-void Renderer::Initialize()
+HRESULT Renderer::Initialize()
 {
-	CreateSwapChain();	
-	SetVertexShader(m_standardVertexShader);
-	SetPixelShader(m_standardPixelShader);
+	CreateSwapChain();
+
+	auto result = SetVertexShader(m_standardVertexShader);
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	result = SetPixelShader(m_standardPixelShader);
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	return result;
 }
 
 // 0x 2x, 4x MSAA
@@ -30,9 +45,20 @@ HRESULT Renderer::CreateSwapChain()
 	IDXGIFactory1* dxgiFactory = 0;
 
 	auto device = m_pDeviceResources->Device;
+
 	auto result = device->QueryInterface(__uuidof(IDXGIDevice), (void **)&dxgiDevice);
+
 	result = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&dxgiAdapter);
+	if (FAILED(result))
+	{
+		return result;
+	}
+
 	result = dxgiAdapter->GetParent(__uuidof(IDXGIFactory1), (void **)&dxgiFactory);
+	if (FAILED(result))
+	{
+		return result;
+	}
 
 	m_pDXGIDevice = std::shared_ptr<IDXGIDevice>(dxgiDevice);
 	m_pDXGIAdapter = std::shared_ptr<IDXGIAdapter>(dxgiAdapter);
@@ -93,38 +119,69 @@ HRESULT Renderer::CreateSwapChain()
 	auto swapChain = m_pSwapChain.get();
 	m_pDXGIFactory->CreateSwapChain(m_pDeviceResources->Device, &swapChainDesc, &swapChain);
 	m_pSwapChain = std::shared_ptr<IDXGISwapChain>(swapChain);
-	return 0;
+
+	return result;
 }
 
 HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 {
-	ID3D11VertexShader* vertexShader = 0;
 	auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
-	auto result = m_pDeviceResources->Device->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &vertexShader);
-	m_pShaderSet->VertexShader = vertexShader;
+
+	auto result = m_pDeviceResources->Device->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &m_pShaderSet->VertexShader);
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	static const D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+
+	ID3D11InputLayout* inputLayout;
+	result = m_pDeviceResources->Device->CreateInputLayout(
+		vertexDesc,
+		ARRAYSIZE(vertexDesc),
+		vsByteCode->FileBytes,
+		vsByteCode->Length,
+		&inputLayout);
+
+	m_pInputLayout = std::shared_ptr<ID3D11InputLayout>(inputLayout);
+
+	if (FAILED(result))
+	{
+		return result;
+	}
 	return result;
-}	
+}
 
 HRESULT Renderer::CompileVertexShader(LPCWSTR compiledShaderFile)
 {
 	ID3DBlob* shaderBlob = 0;
 	ID3D11VertexShader* vertexShader = 0;
 	auto device = m_pDeviceResources->Device;
+
 	auto result = CompileShader(compiledShaderFile, shaderBlob, VS_PROFILE);
 	if (SUCCEEDED(result))
 	{
 		result = device->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &vertexShader);
 	}
+
 	return result;
 }
 
 HRESULT Renderer::SetHullShader(LPCWSTR compiledShaderFile)
 {
-	ID3D11HullShader* hullShader = 0;
 	auto device = m_pDeviceResources->Device;
 	auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
-	auto result = device->CreateHullShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &hullShader);
-	m_pShaderSet->HullShader = hullShader;
+
+	auto result = device->CreateHullShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &m_pShaderSet->HullShader);
+	if (FAILED(result))
+	{
+		return result;
+	}
+
 	return result;
 }
 
@@ -132,6 +189,7 @@ HRESULT Renderer::CompileHullShader(LPCWSTR compiledShaderFile)
 {
 	ID3DBlob* shaderBlob = 0;
 	ID3D11HullShader* hullShader = 0;
+
 	auto result = CompileShader(compiledShaderFile, shaderBlob, HS_PROFILE);
 	if (SUCCEEDED(result))
 	{
@@ -143,11 +201,15 @@ HRESULT Renderer::CompileHullShader(LPCWSTR compiledShaderFile)
 
 HRESULT Renderer::SetGeometryShader(LPCWSTR compiledShaderFile)
 {
-	ID3D11GeometryShader* geometryShader = 0;
 	auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
 	auto device = m_pDeviceResources->Device;
-	auto result = device->CreateGeometryShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &geometryShader);
-	m_pShaderSet->GeometryShader = geometryShader;
+
+	auto result = device->CreateGeometryShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &m_pShaderSet->GeometryShader);
+	if (FAILED(result))
+	{
+		return result;
+	}
+
 	return result;
 }
 
@@ -156,20 +218,26 @@ HRESULT Renderer::CompileGeometryShader(LPCWSTR compiledShaderFile)
 	ID3DBlob* shaderBlob = 0;
 	ID3D11GeometryShader* geometryShader = 0;
 	auto device = m_pDeviceResources->Device;
+
 	auto result = CompileShader(compiledShaderFile, shaderBlob, GS_PROFILE);
 	if (SUCCEEDED(result))
 	{
 		result = device->CreateGeometryShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &geometryShader);
 	}
+
 	return result;
 }
 
 HRESULT Renderer::SetPixelShader(LPCWSTR compiledShaderFile)
 {
-	ID3D11PixelShader* pixelShader = 0;
 	auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
-	auto result = m_pDeviceResources->Device->CreatePixelShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &pixelShader);
-	m_pShaderSet->PixelShader = pixelShader;
+
+	auto result = m_pDeviceResources->Device->CreatePixelShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &m_pShaderSet->PixelShader);
+	if (FAILED(result))
+	{
+		return result;
+	}
+
 	return result;
 }
 
@@ -177,7 +245,13 @@ HRESULT Renderer::CompilePixelShader(LPCWSTR compiledShaderFile)
 {
 	ID3DBlob* shaderBlob = 0;
 	ID3D11PixelShader* pixelShader = 0;
+
 	auto result = CompileShader(compiledShaderFile, shaderBlob, PS_PROFILE);
+	if (FAILED(result))
+	{
+		return result;
+	}
+
 	auto device = DeviceResource()->Device;
 	if (SUCCEEDED(result))
 	{
@@ -189,7 +263,7 @@ HRESULT Renderer::CompilePixelShader(LPCWSTR compiledShaderFile)
 HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile)
 {
 	ID3DBlob* shaderBlob = 0;
- 
+
 	UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
 
 #if defined( DEBUG ) || defined( _DEBUG )
@@ -198,7 +272,7 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
 
 	const D3D_SHADER_MACRO defines[] =
 	{
-		"EXAMPLE_DEFINE", 
+		"EXAMPLE_DEFINE",
 		"1",
 		NULL,
 		NULL
@@ -214,15 +288,39 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
 		0,
 		&shaderBlob,
 		&shaderBlob);
+
 	return result;
 }
 
 void Renderer::Render()
 {
+	//SetBuffers();
+
 	ID3D11Texture2D* backBuffer = 0;
 	ID3D11RenderTargetView* targetView = 0;
+
 	auto swapChain = m_pSwapChain.get();
 	swapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
 	m_pDeviceResources->Device->CreateRenderTargetView(backBuffer, nullptr, &targetView);
 	swapChain->Present(1, 0);
+}
+
+void Renderer::SetBuffers()
+{
+	auto res = m_pDeviceResources.get();
+	auto context = res->DeviceContext;
+	auto vertexBuffer = m_pVertexBuffer.get();
+
+	UINT stride = sizeof(VertexPositionColor);
+	UINT offset = 0;
+
+	context->UpdateSubresource(m_pConstantBuffer.get(), 0, NULL, m_pConstantBuffer.get(), 0, 0);
+	context->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+	context->IASetIndexBuffer(m_pIndexBuffer.get(),DXGI_FORMAT_R16_UINT, 0);
+
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	context->IASetInputLayout(m_pInputLayout.get());
+	context->VSSetShader(m_pShaderSet->VertexShader, nullptr, 0);
+	context->PSSetShader(m_pShaderSet->PixelShader, nullptr, 0);
+	context->DrawIndexed(m_IndexCount, 0, 0);
 }

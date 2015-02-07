@@ -168,6 +168,7 @@
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="Export.h" />
     <ClInclude Include="File.h" />
+    <ClInclude Include="FpsTextRenderer.h" />
     <ClInclude Include="Includes.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Mesh.h" />
@@ -175,6 +176,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ShaderSet.h" />
+    <ClInclude Include="Types.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -198,6 +200,7 @@
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="File.cpp" />
+    <ClCompile Include="FpsTextRenderer.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />

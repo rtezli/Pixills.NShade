@@ -5,30 +5,17 @@
 
 class Model
 {
-private:
-	struct NSVERTEX2
-	{
-		DirectX::XMFLOAT3 Position;
-		DirectX::XMFLOAT4 Color;
-	};
-
-	struct NSVERTEX3
-	{
-		DirectX::XMFLOAT3 Position;
-		DirectX::XMFLOAT3 Color;
-		DirectX::XMFLOAT3 Uv;
-	};
 public:
 	Model();
 	~Model();
 	HRESULT LoadModelFromFBXFile(char* fileName);
 	HRESULT LoadModelFromOBJFile(char* fileName);
-	HRESULT	Initialize(ID3D11Device* pDevice, std::vector<NSVERTEX2>* vertexes, unsigned int size);
+	HRESULT	Initialize(ID3D11Device* pDevice, std::vector<VertexPositionColor>* vertexes, unsigned int size);
  
-	static const std::vector<Model::NSVERTEX2> Cube;
-	static const std::vector<Model::NSVERTEX2> Sphere;
+	static const std::vector<VertexPositionColor> Cube;
+	static const std::vector<VertexPositionColor> Sphere;
 private:
-	HRESULT						InitializeVertexBuffer(std::vector<NSVERTEX2>* vertexes);
+	HRESULT						InitializeVertexBuffer(std::vector<VertexPositionColor>* vertexes);
 	HRESULT						InitializeIndexBuffer(std::vector<int>* indexes);
 	FbxScene*					ImportFbx(char* fileName);
 private:
@@ -40,3 +27,4 @@ private:
 	D3D11_BUFFER_DESC		m_bufferDesc;
 	D3D11_SUBRESOURCE_DATA	m_initData;
 };
+

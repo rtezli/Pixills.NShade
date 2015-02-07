@@ -38,7 +38,7 @@ public:
 	DeviceResources*	DeviceResource() { return m_pDeviceResources.get(); }
 	ShaderSet*			Shaders()		 { return m_pShaderSet.get(); }
 private:
-	void	Initialize();
+	HRESULT	Initialize();
 	HRESULT	SetVertexShader(LPCWSTR compiledShaderFile);
 	HRESULT	CompileVertexShader(LPCWSTR shaderSource);
 
@@ -57,6 +57,7 @@ private:
 	HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
 
 	HRESULT CreateSwapChain();
+	void	SetBuffers();
 
 private:
 	std::shared_ptr<DeviceResources>		m_pDeviceResources;
@@ -67,12 +68,13 @@ private:
 	std::shared_ptr<IDXGISwapChain>			m_pSwapChain;
 	std::shared_ptr<ID3D11Texture2D>		m_pRenderBuffer;
 
-	std::shared_ptr<ID3D11InputLayout>		m_inputLayout;
-	std::shared_ptr<ID3D11Buffer>			m_vertexBuffer;
-	std::shared_ptr<ID3D11Buffer>			m_indexBuffer;
+	std::shared_ptr<ID3D11InputLayout>		m_pInputLayout;
 	std::shared_ptr<ID3D11VertexShader>		m_vertexShader;
 	std::shared_ptr<ID3D11PixelShader>		m_pixelShader;
-	std::shared_ptr<ID3D11Buffer>			m_constantBuffer;
+
+	std::shared_ptr<ID3D11Buffer>			m_pVertexBuffer;
+	std::shared_ptr<ID3D11Buffer>			m_pIndexBuffer;
+	std::shared_ptr<ID3D11Buffer>			m_pConstantBuffer;
 
 	std::shared_ptr<ID3D11RenderTargetView>	m_pRenderTarget;
 	std::shared_ptr<ID3D11DepthStencilView>	m_pDepthStencilView;
@@ -83,9 +85,10 @@ private:
 	std::shared_ptr<ShaderSet>				m_pShaderSet;
 
 	int										m_samplesCount = 4;
+	int										m_IndexCount;
 
-	LPCWSTR									m_standardVertexShader = L"PixelShader.cso";
-	LPCWSTR									m_standardPixelShader = L"VertexShader.cso";
+	LPCWSTR									m_standardVertexShader = L"VertexShader.cso";
+	LPCWSTR									m_standardPixelShader = L"PixelShader.cso";
 
 	int										m_ScreenWidth;
 	int										m_ScreenHeight;

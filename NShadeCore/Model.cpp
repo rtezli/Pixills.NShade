@@ -11,7 +11,7 @@ Model::~Model()
 
 }
 
-HRESULT Model::Initialize(ID3D11Device* pDevice, std::vector<NSVERTEX2>* pModel, unsigned int size)
+HRESULT Model::Initialize(ID3D11Device* pDevice, std::vector<VertexPositionColor>* pModel, unsigned int size)
 {
 	m_pDevice = std::shared_ptr<ID3D11Device>(pDevice);
 	auto resutlt = InitializeVertexBuffer(pModel);
@@ -44,14 +44,14 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 	}
 	fbxScene->Destroy();
 
-	NSVERTEX2* vertices = 0;
+	VertexPositionColor* vertices = 0;
 
 	m_initData.pSysMem = vertices;
 	m_initData.SysMemPitch = 0;
 	m_initData.SysMemSlicePitch = 0;
 
 	m_bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	m_bufferDesc.ByteWidth = sizeof(NSVERTEX2) * 3;
+	m_bufferDesc.ByteWidth = sizeof(VertexPositionColor) * 3;
 	m_bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	m_bufferDesc.CPUAccessFlags = 0;
 	m_bufferDesc.MiscFlags = 0;
@@ -80,14 +80,14 @@ FbxScene* Model::ImportFbx(char *fileName)
 HRESULT Model::LoadModelFromOBJFile(char* fileName)
 {
 	// TODO : Get the vertices from the file
-	NSVERTEX2* vertices = 0;
+	VertexPositionColor* vertices = 0;
 
 	m_initData.pSysMem = vertices;
 	m_initData.SysMemPitch = 0;
 	m_initData.SysMemSlicePitch = 0;
 
 	m_bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	m_bufferDesc.ByteWidth = sizeof(NSVERTEX2) * 3;
+	m_bufferDesc.ByteWidth = sizeof(VertexPositionColor) * 3;
 	m_bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	m_bufferDesc.CPUAccessFlags = 0;
 	m_bufferDesc.MiscFlags = 0;
@@ -95,15 +95,22 @@ HRESULT Model::LoadModelFromOBJFile(char* fileName)
 	return 0;
 }
 
-HRESULT Model::InitializeVertexBuffer(std::vector<NSVERTEX2>* vertices)
+HRESULT Model::InitializeVertexBuffer(std::vector<VertexPositionColor>* vertices)
 {
 	D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
 	vertexBufferData.pSysMem = &vertices;
 	vertexBufferData.SysMemPitch = 0;
 	vertexBufferData.SysMemSlicePitch = 0;
+
 	CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(vertices), D3D11_BIND_VERTEX_BUFFER);
 	auto vertBuffer = m_pVertexBuffer.get();
+	
 	auto result = m_pDevice->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &vertBuffer);
+	if (FAILED(result))
+	{
+		return result;
+	}
+
 	return result;
 }
 
@@ -122,21 +129,22 @@ HRESULT Model::InitializeIndexBuffer(std::vector<int>* indeces)
 	indexBufferData.pSysMem = &cubeIndices;
 	indexBufferData.SysMemPitch = 0;
 	indexBufferData.SysMemSlicePitch = 0;
+
 	CD3D11_BUFFER_DESC indexBufferDesc(sizeof(indeces), D3D11_BIND_INDEX_BUFFER);
 	auto indexBuffer = m_pIndexBuffer.get();
 	auto result = m_pDevice->CreateBuffer(&indexBufferDesc, &indexBufferData, &indexBuffer);
 	return result;
 }
 
-const std::vector<Model::NSVERTEX2> Model::Cube =
+const std::vector<VertexPositionColor> Model::Cube =
 {
-	NSVERTEX2{ DirectX::XMFLOAT3(-0.5f, -0.5f, -0.5f),	DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f) },
-	NSVERTEX2{ DirectX::XMFLOAT3(-0.5f, -0.5f, 0.5f),	DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
-	NSVERTEX2{ DirectX::XMFLOAT3(-0.5f, 0.5f, -0.5f),	DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-	NSVERTEX2{ DirectX::XMFLOAT3(-0.5f, 0.5f, 0.5f),	DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f) },
+	VertexPositionColor{ DirectX::XMFLOAT3(-0.5f, -0.5f, -0.5f), DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f) },
+	VertexPositionColor{ DirectX::XMFLOAT3(-0.5f, -0.5f, 0.5f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
+	VertexPositionColor{ DirectX::XMFLOAT3(-0.5f, 0.5f, -0.5f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+	VertexPositionColor{ DirectX::XMFLOAT3(-0.5f, 0.5f, 0.5f), DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f) },
 
-	NSVERTEX2{ DirectX::XMFLOAT3(0.5f, -0.5f, -0.5f),	DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-	NSVERTEX2{ DirectX::XMFLOAT3(0.5f, -0.5f, 0.5f),	DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f) },
-	NSVERTEX2{ DirectX::XMFLOAT3(0.5f, 0.5f, -0.5f),	DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) },
-	NSVERTEX2{ DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f),		DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) }
+	VertexPositionColor{ DirectX::XMFLOAT3(0.5f, -0.5f, -0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
+	VertexPositionColor{ DirectX::XMFLOAT3(0.5f, -0.5f, 0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f) },
+	VertexPositionColor{ DirectX::XMFLOAT3(0.5f, 0.5f, -0.5f), DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) },
+	VertexPositionColor{ DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f), DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) }
 };

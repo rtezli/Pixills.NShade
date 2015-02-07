@@ -20,4 +20,5 @@ namespace rxsub = rx::subjects;
 #include "dinput.h"
 #include "deviceresources.h"
 #include "shaderset.h"
+#include "types.h"
 #include "file.h"
