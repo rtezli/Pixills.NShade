@@ -24,7 +24,6 @@
 #include "includes.h"
 #include "d3dcompiler.h"
 #include "dxgi1_2.h"
-#include "window.h"
 
 class Renderer
 {
@@ -79,18 +78,10 @@ private:
 	void	SetBuffers();
 
 private:
-	std::shared_ptr<DeviceResources>		m_pDeviceResources;
-	std::shared_ptr<IDXGIDevice>			m_pDXGIDevice;
-	std::shared_ptr<IDXGIAdapter>			m_pDXGIAdapter;
-	std::shared_ptr<IDXGIFactory>			m_pDXGIFactory;
-	std::shared_ptr<ID3D11Texture2D>		m_pRenderBuffer;
-	std::shared_ptr<ID3D11InputLayout>		m_pInputLayout;
-	std::shared_ptr<ID3D11VertexShader>		m_vertexShader;
-	std::shared_ptr<ID3D11PixelShader>		m_pixelShader;
-	std::shared_ptr<ShaderSet>				m_pShaderSet;
-
-	LPCWSTR									m_standardVertexShader = L"VertexShader.cso";
-	LPCWSTR									m_standardPixelShader = L"PixelShader.cso";
+	shared_ptr<DeviceResources>		m_pDeviceResources;
+	shared_ptr<ID3D11VertexShader>		m_vertexShader;
+	shared_ptr<ID3D11PixelShader>		m_pixelShader;
+	shared_ptr<ShaderSet>				m_pShaderSet;
 
 	IDXGISwapChain*							m_pSwapChain;
 	ID3D11RenderTargetView*					m_pRenderTargetView;
@@ -99,6 +90,10 @@ private:
 	ID3D11DepthStencilState*				m_pDepthStencilState;
 	ID3D11DepthStencilView*					m_pDepthStencilView;
 	ID3D11RasterizerState*					m_pRasterizerState;
+	ID3D11InputLayout*						m_pInputLayout;
+
+	LPCWSTR									m_standardVertexShader = L"VertexShader.cso";
+	LPCWSTR									m_standardPixelShader = L"PixelShader.cso";
 
 	DXGI_SWAP_CHAIN_DESC					m_pSwapChainDescription;
 	D3D11_TEXTURE2D_DESC					m_pDepthBufferDesc;

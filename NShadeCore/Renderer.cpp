@@ -5,6 +5,7 @@ Renderer::Renderer(DeviceResources* pResources)
 {
 	m_pDeviceResources = shared_ptr<DeviceResources>(pResources);
 
+	m_pInputLayout = 0;
 	m_pSwapChain = 0;
 	m_pRenderTargetView = 0;
 	m_pBackBuffer = 0;
@@ -16,12 +17,48 @@ Renderer::Renderer(DeviceResources* pResources)
 
 Renderer::~Renderer()
 {
- 
+	m_pDeviceResources.reset();
+	m_vertexShader.reset();
+	m_pixelShader.reset();
+	m_pShaderSet.reset();
+
+	delete m_pInputLayout;
+	delete m_pSwapChain;
+	delete m_pRenderTargetView;
+	delete m_pBackBuffer;
+	delete m_pDepthStencilBuffer;
+	delete m_pDepthStencilState;
+	delete m_pDepthStencilView;
+	delete m_pRasterizerState;
 }
 
 HRESULT Renderer::Initialize()
 {
 	auto result = CreateSwapChain();
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	result = CreateSwapChain();
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	result = CreateDepthBuffer();
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	result = CreateDepthStencil();
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	result = CreateRasterizer();
 	if (FAILED(result))
 	{
 		return result;
@@ -79,11 +116,17 @@ HRESULT Renderer::CreateSwapChainDesciption()
 
 HRESULT Renderer::CreateSwapChain()
 {
+	auto result = CreateSwapChainDesciption();
+	if (FAILED(result))
+	{
+		return result;
+	}
+
 	IDXGIDevice* dxgiDevice = 0;
 	IDXGIAdapter* dxgiAdapter = 0;
 	IDXGIFactory* dxgiFactory = 0;
 
-	auto result = GetDevice()->QueryInterface(__uuidof(IDXGIDevice), (void **)&dxgiDevice);
+	result = GetDevice()->QueryInterface(__uuidof(IDXGIDevice), (void **)&dxgiDevice);
 	if (FAILED(result))
 	{
 		return result;
@@ -101,21 +144,7 @@ HRESULT Renderer::CreateSwapChain()
 		return result;
 	}
 
-	m_pDXGIDevice = std::shared_ptr<IDXGIDevice>(dxgiDevice);
-	m_pDXGIAdapter = std::shared_ptr<IDXGIAdapter>(dxgiAdapter);
-	m_pDXGIFactory = std::shared_ptr<IDXGIFactory>(dxgiFactory);
-
-	dxgiDevice->Release();
-	dxgiAdapter->Release();
-	dxgiFactory->Release();
-
-	result = CreateSwapChainDesciption();
-	if (FAILED(result))
-	{
-		return result;
-	}
-
-	result = m_pDXGIFactory->CreateSwapChain(GetDevice(), &m_pSwapChainDescription, &m_pSwapChain);
+	result = dxgiFactory->CreateSwapChain(GetDevice(), &m_pSwapChainDescription, &m_pSwapChain);
 	if (FAILED(result))
 	{
 		return result;
@@ -133,8 +162,9 @@ HRESULT Renderer::CreateSwapChain()
 		return result;
 	}
 
-	//ID3D11Texture2D* backBuffer = 0;
-	//ID3D11RenderTargetView* targetView = 0;
+	dxgiDevice->Release();
+	dxgiAdapter->Release();
+	dxgiFactory->Release();
 
 	return GetDevice()->CreateRenderTargetView(m_pBackBuffer, nullptr, &m_pRenderTargetView);
 }
@@ -156,12 +186,17 @@ HRESULT Renderer::CreateDepthBufferDescription()
 	m_pDepthBufferDesc.CPUAccessFlags = 0;
 	m_pDepthBufferDesc.MiscFlags = 0;
 
-	return GetDevice()->CreateTexture2D(&m_pDepthBufferDesc, NULL, &m_pDepthStencilBuffer);
+	return 0;
 }
 
 HRESULT Renderer::CreateDepthBuffer()
 {
-	return 0;
+	auto result = CreateDepthBufferDescription();
+	if (FAILED(result))
+	{
+		return result;
+	}
+	return GetDevice()->CreateTexture2D(&m_pDepthBufferDesc, NULL, &m_pDepthStencilBuffer);
 }
 
 
@@ -197,18 +232,27 @@ HRESULT Renderer::CreateDepthStencilViewDescription()
 	m_pDepthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	m_pDepthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	m_pDepthStencilViewDesc.Texture2D.MipSlice = 0;
-
-	auto result =  GetDevice()->CreateDepthStencilView(m_pDepthStencilBuffer, &m_pDepthStencilViewDesc, &m_pDepthStencilView);
-	if (FAILED(result))
-	{
-		return result;
-	}
-	GetDeviceContext()->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
 	return 0;
 }
 
 HRESULT Renderer::CreateDepthStencil()
 {
+	auto result = CreateDepthStencilDescription();
+	if (FAILED(result))
+	{
+		return result;
+	}
+	result = CreateDepthStencilViewDescription();
+	if (FAILED(result))
+	{
+		return result;
+	}
+	result = GetDevice()->CreateDepthStencilView(m_pDepthStencilBuffer, &m_pDepthStencilViewDesc, &m_pDepthStencilView);
+	if (FAILED(result))
+	{
+		return result;
+	}
+	GetDeviceContext()->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
 	return 0;
 }
 
@@ -228,18 +272,22 @@ HRESULT Renderer::CreateRasterizerDescription()
 	m_pRasterizerDesc.ScissorEnable = false;
 	m_pRasterizerDesc.SlopeScaledDepthBias = 0.0f;
 
-	auto result = GetDevice()->CreateRasterizerState(&m_pRasterizerDesc, &m_pRasterizerState);
-	if (FAILED(result))
-	{
-		return false;
-	}
-
-	GetDeviceContext()->RSSetState(m_pRasterizerState);
 	return 0;
 }
 
 HRESULT Renderer::CreateRasterizer()
 {
+	auto result = CreateRasterizerDescription();
+	if (FAILED(result))
+	{
+		return result;
+	}
+	result = GetDevice()->CreateRasterizerState(&m_pRasterizerDesc, &m_pRasterizerState);
+	if (FAILED(result))
+	{
+		return result;
+	}
+	GetDeviceContext()->RSSetState(m_pRasterizerState);
 	return 0;
 }
 
@@ -257,33 +305,18 @@ HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 
 	static const D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
-		{ "POSITION",	0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR",		0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
-	ID3D11InputLayout* inputLayout;
-	result = GetDevice()->CreateInputLayout(
-		vertexDesc,
-		ARRAYSIZE(vertexDesc),
-		vsByteCode->FileBytes,
-		vsByteCode->Length,
-		&inputLayout);
-
-	if (FAILED(result))
-	{
-		return result;
-	}
-
-	m_pInputLayout = std::shared_ptr<ID3D11InputLayout>(inputLayout);
-
-	return result;
+	return GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), vsByteCode->FileBytes, vsByteCode->Length, &m_pInputLayout);
 }
 
 HRESULT Renderer::CompileVertexShader(LPCWSTR compiledShaderFile)
 {
 	ID3DBlob* shaderBlob = 0;
 	ID3D11VertexShader* vertexShader = 0;
- 
+
 	auto result = CompileShader(compiledShaderFile, shaderBlob, VS_PROFILE);
 	if (FAILED(result))
 	{
@@ -387,7 +420,7 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
 
 void Renderer::Render()
 {
-	SetBuffers();
+	//SetBuffers();
 	m_pSwapChain->Present(1, 0);
 }
 
@@ -405,7 +438,7 @@ void Renderer::SetBuffers()
 	context->IASetIndexBuffer(DeviceResource()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
 
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	context->IASetInputLayout(m_pInputLayout.get());
+	context->IASetInputLayout(m_pInputLayout);
 	context->VSSetShader(DeviceResource()->Shaders->VertexShader, nullptr, 0);
 	context->PSSetShader(DeviceResource()->Shaders->PixelShader, nullptr, 0);
 	context->DrawIndexed(DeviceResource()->IndexCount, 0, 0);

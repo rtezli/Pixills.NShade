@@ -11,7 +11,7 @@ Model::~Model()
 
 }
 
-HRESULT Model::Initialize(std::vector<VertexPositionColor>* pModel, unsigned int size)
+HRESULT Model::Initialize(vector<VertexPositionColor>* pModel, unsigned int size)
 {
 	auto result = InitializeVertexBuffer(pModel);
 	if (FAILED(result))
@@ -53,7 +53,7 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 		{
 			auto point = pointArray->GetAt(i);
 			auto data = point.mData;
-			DirectX::XMVECTOR newVector = { (float)data[0], (float)data[1], (float)data[2], (float)data[3] };
+			XMVECTOR newVector = { (float)data[0], (float)data[1], (float)data[2], (float)data[3] };
 		}
 	}
 	fbxScene->Destroy();
@@ -139,7 +139,7 @@ HRESULT Model::InitializeVertexBuffer(vector<VertexPositionColor>* vertices)
 	return result;
 }
 
-HRESULT Model::InitializeIndexBuffer(std::vector<int>* indeces)
+HRESULT Model::InitializeIndexBuffer(vector<int>* indeces)
 {
 	D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
 	static const unsigned short cubeIndices[] =
@@ -180,15 +180,15 @@ HRESULT Model::InitializeConstantBuffer()
 	return result;
 }
 
-const std::vector<VertexPositionColor> Model::Cube =
+const vector<VertexPositionColor> Model::Cube =
 {
-	VertexPositionColor{ DirectX::XMFLOAT3(-0.5f, -0.5f, -0.5f), DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f) },
-	VertexPositionColor{ DirectX::XMFLOAT3(-0.5f, -0.5f, 0.5f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
-	VertexPositionColor{ DirectX::XMFLOAT3(-0.5f, 0.5f, -0.5f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-	VertexPositionColor{ DirectX::XMFLOAT3(-0.5f, 0.5f, 0.5f), DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f) },
+	VertexPositionColor{ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f) },
+	VertexPositionColor{ XMFLOAT3(-0.5f, -0.5f, 0.5f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
+	VertexPositionColor{ XMFLOAT3(-0.5f, 0.5f, -0.5f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+	VertexPositionColor{ XMFLOAT3(-0.5f, 0.5f, 0.5f), XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f) },
 
-	VertexPositionColor{ DirectX::XMFLOAT3(0.5f, -0.5f, -0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-	VertexPositionColor{ DirectX::XMFLOAT3(0.5f, -0.5f, 0.5f), DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f) },
-	VertexPositionColor{ DirectX::XMFLOAT3(0.5f, 0.5f, -0.5f), DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) },
-	VertexPositionColor{ DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f), DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) }
+	VertexPositionColor{ XMFLOAT3(0.5f, -0.5f, -0.5f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
+	VertexPositionColor{ XMFLOAT3(0.5f, -0.5f, 0.5f), XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f) },
+	VertexPositionColor{ XMFLOAT3(0.5f, 0.5f, -0.5f), XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) },
+	VertexPositionColor{ XMFLOAT3(0.5f, 0.5f, 0.5f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) }
 };

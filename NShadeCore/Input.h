@@ -28,9 +28,9 @@ private:
 	void Input::ProcessInput();
 	void Input::PublishInput(MOVE_ROTATE_INPUT* move){ (*OnInput)(move); }
 private:
-	std::shared_ptr<IDirectInput8> m_pDirectInput = 0;
-	std::shared_ptr<IDirectInputDevice8> m_pKeyboard = 0;
-	std::shared_ptr<IDirectInputDevice8> m_pMouse = 0;
+	shared_ptr<IDirectInput8> m_pDirectInput = 0;
+	shared_ptr<IDirectInputDevice8> m_pKeyboard = 0;
+	shared_ptr<IDirectInputDevice8> m_pMouse = 0;
 
 	unsigned char m_keyboardState[256];
 	DIMOUSESTATE m_mouseState;

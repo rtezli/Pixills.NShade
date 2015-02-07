@@ -11,10 +11,10 @@ public:
 public:
 	HRESULT AddModel(Model* model);
 	HRESULT RemoveModel(Model* model);
-	HRESULT Move(DirectX::XMVECTOR* vector);
-	HRESULT Rotate(DirectX::XMVECTOR* vector);
+	HRESULT Move(XMVECTOR* vector);
+	HRESULT Rotate(XMVECTOR* vector);
 public:
-	std::shared_ptr<std::vector<Model>> m_Models;
+	shared_ptr<vector<Model>> m_Models;
 
 };
 

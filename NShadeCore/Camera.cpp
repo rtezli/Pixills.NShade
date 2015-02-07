@@ -14,7 +14,7 @@ Camera::~Camera()
 void Camera::Initialize()
 {
 	float aspectRatio = DeviceResource()->ScreenWidth / DeviceResource()->ScreenHeight;
-	float fovAngleY = 70.0f * DirectX::XM_PI / 180.0f;
+	float fovAngleY = 70.0f * XM_PI / 180.0f;
 
 	auto res = DeviceResource();
 
@@ -25,9 +25,9 @@ void Camera::Initialize()
 
 	XMStoreFloat4x4(&res->ConstantBufferData->projection, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
 
-	static const DirectX::XMVECTORF32 eye = { 0.0f, 0.7f, 1.5f, 0.0f };
-	static const DirectX::XMVECTORF32 at = { 0.0f, -0.1f, 0.0f, 0.0f };
-	static const DirectX::XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
+	static const XMVECTORF32 eye = { 0.0f, 0.7f, 1.5f, 0.0f };
+	static const XMVECTORF32 at = { 0.0f, -0.1f, 0.0f, 0.0f };
+	static const XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
 
 	XMStoreFloat4x4(&res->ConstantBufferData->view, XMMatrixTranspose(XMMatrixLookAtLH(eye, at, up)));
 
