@@ -4,19 +4,30 @@
 Renderer::Renderer(DeviceResources* pResources)
 {
 	m_pDeviceResources = shared_ptr<DeviceResources>(pResources);
+
+	m_pSwapChain = 0;
+	m_pRenderTargetView = 0;
+	m_pBackBuffer = 0;
+	m_pDepthStencilBuffer = 0;
+	m_pDepthStencilState = 0;
+	m_pDepthStencilView = 0;
+	m_pRasterizerState = 0;
 }
 
 Renderer::~Renderer()
 {
-	m_pRenderTarget->Release();
-	m_pDepthStencilView->Release();
+ 
 }
 
 HRESULT Renderer::Initialize()
 {
-	CreateSwapChain();
+	auto result = CreateSwapChain();
+	if (FAILED(result))
+	{
+		return result;
+	}
 
-	auto result = SetVertexShader(m_standardVertexShader);
+	result = SetVertexShader(m_standardVertexShader);
 	if (FAILED(result))
 	{
 		return result;
@@ -31,14 +42,52 @@ HRESULT Renderer::Initialize()
 	return result;
 }
 
+
+HRESULT Renderer::CreateSwapChainDesciption()
+{
+	ZeroMemory(&m_pSwapChainDescription, sizeof(m_pSwapChainDescription));
+
+	m_pSwapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	m_pSwapChainDescription.BufferCount = 2;
+
+	m_pSwapChainDescription.BufferDesc.Width = DeviceResource()->ScreenWidth;
+	m_pSwapChainDescription.BufferDesc.Height = DeviceResource()->ScreenHeight;
+	m_pSwapChainDescription.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	m_pSwapChainDescription.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	m_pSwapChainDescription.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+	m_pSwapChainDescription.BufferDesc.RefreshRate.Numerator = 0;
+	m_pSwapChainDescription.BufferDesc.RefreshRate.Denominator = 1;
+	m_pSwapChainDescription.SampleDesc.Count = DeviceResource()->SamplesCount;
+	m_pSwapChainDescription.SampleDesc.Quality = 0;
+
+	m_pSwapChainDescription.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+	m_pSwapChainDescription.Flags = 0;
+
+	auto handle = *DeviceResource()->WindowHandle;
+	m_pSwapChainDescription.OutputWindow = handle;
+
+	if (DeviceResource()->FullScreen)
+	{
+		m_pSwapChainDescription.Windowed = false;
+	}
+	else
+	{
+		m_pSwapChainDescription.Windowed = true;
+	}
+	return 0;
+}
+
 HRESULT Renderer::CreateSwapChain()
 {
 	IDXGIDevice* dxgiDevice = 0;
 	IDXGIAdapter* dxgiAdapter = 0;
-	IDXGIFactory1* dxgiFactory = 0;
+	IDXGIFactory* dxgiFactory = 0;
 
- 
 	auto result = GetDevice()->QueryInterface(__uuidof(IDXGIDevice), (void **)&dxgiDevice);
+	if (FAILED(result))
+	{
+		return result;
+	}
 
 	result = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&dxgiAdapter);
 	if (FAILED(result))
@@ -46,55 +95,154 @@ HRESULT Renderer::CreateSwapChain()
 		return result;
 	}
 
-	result = dxgiAdapter->GetParent(__uuidof(IDXGIFactory1), (void **)&dxgiFactory);
+	result = dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&dxgiFactory);
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	m_pDXGIDevice  = std::shared_ptr<IDXGIDevice>(dxgiDevice);
+	m_pDXGIDevice = std::shared_ptr<IDXGIDevice>(dxgiDevice);
 	m_pDXGIAdapter = std::shared_ptr<IDXGIAdapter>(dxgiAdapter);
-	m_pDXGIFactory = std::shared_ptr<IDXGIFactory1>(dxgiFactory);
+	m_pDXGIFactory = std::shared_ptr<IDXGIFactory>(dxgiFactory);
 
-	DXGI_SWAP_CHAIN_DESC swapChainDesc = { 0 };
+	dxgiDevice->Release();
+	dxgiAdapter->Release();
+	dxgiFactory->Release();
 
-	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	swapChainDesc.BufferCount = 2;
-
-	swapChainDesc.BufferDesc.Width = DeviceResource()->ScreenWidth;
-	swapChainDesc.BufferDesc.Height = DeviceResource()->ScreenHeight;
-	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-	swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
-	swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-	swapChainDesc.SampleDesc.Count = DeviceResource()->SamplesCount;
-	swapChainDesc.SampleDesc.Quality = 0;
-
-	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-	swapChainDesc.Flags = 0;
-
-	auto handle = *DeviceResource()->WindowHandle;
-	swapChainDesc.OutputWindow = handle;
-
-	if (DeviceResource()->FullScreen)
-	{
-		swapChainDesc.Windowed = false;
-	}
-	else
-	{
-		swapChainDesc.Windowed = true;
-	}
-
-	IDXGISwapChain* swapChain;
-	result = m_pDXGIFactory->CreateSwapChain(GetDevice(), &swapChainDesc, &swapChain);
+	result = CreateSwapChainDesciption();
 	if (FAILED(result))
 	{
 		return result;
 	}
-	m_pSwapChain = std::shared_ptr<IDXGISwapChain>(swapChain);
-	return result;
+
+	result = m_pDXGIFactory->CreateSwapChain(GetDevice(), &m_pSwapChainDescription, &m_pSwapChain);
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	result = m_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&m_pBackBuffer));
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	result = GetDevice()->CreateRenderTargetView(m_pBackBuffer, NULL, &m_pRenderTargetView);
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	//ID3D11Texture2D* backBuffer = 0;
+	//ID3D11RenderTargetView* targetView = 0;
+
+	return GetDevice()->CreateRenderTargetView(m_pBackBuffer, nullptr, &m_pRenderTargetView);
 }
+
+
+HRESULT Renderer::CreateDepthBufferDescription()
+{
+	ZeroMemory(&m_pDepthBufferDesc, sizeof(m_pDepthBufferDesc));
+
+	m_pDepthBufferDesc.Width = DeviceResource()->ScreenWidth;
+	m_pDepthBufferDesc.Height = DeviceResource()->ScreenHeight;
+	m_pDepthBufferDesc.MipLevels = 1;
+	m_pDepthBufferDesc.ArraySize = 1;
+	m_pDepthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	m_pDepthBufferDesc.SampleDesc.Count = 1;
+	m_pDepthBufferDesc.SampleDesc.Quality = 0;
+	m_pDepthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	m_pDepthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	m_pDepthBufferDesc.CPUAccessFlags = 0;
+	m_pDepthBufferDesc.MiscFlags = 0;
+
+	return GetDevice()->CreateTexture2D(&m_pDepthBufferDesc, NULL, &m_pDepthStencilBuffer);
+}
+
+HRESULT Renderer::CreateDepthBuffer()
+{
+	return 0;
+}
+
+
+HRESULT Renderer::CreateDepthStencilDescription()
+{
+	ZeroMemory(&m_pDepthStencilDesc, sizeof(m_pDepthStencilDesc));
+
+	m_pDepthStencilDesc.DepthEnable = true;
+	m_pDepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	m_pDepthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+
+	m_pDepthStencilDesc.StencilEnable = true;
+	m_pDepthStencilDesc.StencilReadMask = 0xFF;
+	m_pDepthStencilDesc.StencilWriteMask = 0xFF;
+
+	m_pDepthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	m_pDepthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+	m_pDepthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	m_pDepthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	m_pDepthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	m_pDepthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+	m_pDepthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	m_pDepthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	return GetDevice()->CreateDepthStencilState(&m_pDepthStencilDesc, &m_pDepthStencilState);
+}
+
+HRESULT Renderer::CreateDepthStencilViewDescription()
+{
+	ZeroMemory(&m_pDepthStencilViewDesc, sizeof(m_pDepthStencilViewDesc));
+
+	m_pDepthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	m_pDepthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	m_pDepthStencilViewDesc.Texture2D.MipSlice = 0;
+
+	auto result =  GetDevice()->CreateDepthStencilView(m_pDepthStencilBuffer, &m_pDepthStencilViewDesc, &m_pDepthStencilView);
+	if (FAILED(result))
+	{
+		return result;
+	}
+	GetDeviceContext()->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+	return 0;
+}
+
+HRESULT Renderer::CreateDepthStencil()
+{
+	return 0;
+}
+
+
+HRESULT Renderer::CreateRasterizerDescription()
+{
+	ZeroMemory(&m_pRasterizerDesc, sizeof(m_pRasterizerDesc));
+
+	m_pRasterizerDesc.AntialiasedLineEnable = false;
+	m_pRasterizerDesc.CullMode = D3D11_CULL_BACK;
+	m_pRasterizerDesc.DepthBias = 0;
+	m_pRasterizerDesc.DepthBiasClamp = 0.0f;
+	m_pRasterizerDesc.DepthClipEnable = true;
+	m_pRasterizerDesc.FillMode = D3D11_FILL_SOLID;
+	m_pRasterizerDesc.FrontCounterClockwise = false;
+	m_pRasterizerDesc.MultisampleEnable = false;
+	m_pRasterizerDesc.ScissorEnable = false;
+	m_pRasterizerDesc.SlopeScaledDepthBias = 0.0f;
+
+	auto result = GetDevice()->CreateRasterizerState(&m_pRasterizerDesc, &m_pRasterizerState);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	GetDeviceContext()->RSSetState(m_pRasterizerState);
+	return 0;
+}
+
+HRESULT Renderer::CreateRasterizer()
+{
+	return 0;
+}
+
 
 HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 {
@@ -239,15 +387,8 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
 
 void Renderer::Render()
 {
-	//SetBuffers();
-
-	ID3D11Texture2D* backBuffer = 0;
-	ID3D11RenderTargetView* targetView = 0;
-
-	auto swapChain = m_pSwapChain.get();
-	swapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
-	GetDevice()->CreateRenderTargetView(backBuffer, nullptr, &targetView);
-	swapChain->Present(1, 0);
+	SetBuffers();
+	m_pSwapChain->Present(1, 0);
 }
 
 void Renderer::SetBuffers()

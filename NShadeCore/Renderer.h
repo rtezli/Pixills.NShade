@@ -23,6 +23,7 @@
 
 #include "includes.h"
 #include "d3dcompiler.h"
+#include "dxgi1_2.h"
 #include "window.h"
 
 class Renderer
@@ -37,10 +38,27 @@ public:
 	HRESULT	Initialize();
 public:
 	ID3D11Device*				const GetDevice(){ return DeviceResource()->Device; }
-	ID3D11DeviceContext*		const DeviceContext(){ return DeviceResource()->DeviceContext; }
+	ID3D11DeviceContext*		const GetDeviceContext(){ return DeviceResource()->DeviceContext; }
 	DeviceResources*			const DeviceResource(){ return m_pDeviceResources.get(); }
 private:
+	/* swap chain */
+	HRESULT	CreateSwapChainDesciption();
+	HRESULT CreateSwapChain();
 
+	/* depth buffer */
+	HRESULT CreateDepthBufferDescription();
+	HRESULT CreateDepthBuffer();
+
+	/* depth stencil */
+	HRESULT CreateDepthStencilDescription();
+	HRESULT CreateDepthStencilViewDescription();
+	HRESULT CreateDepthStencil();
+
+	/* rasterizer */
+	HRESULT CreateRasterizerDescription();
+	HRESULT CreateRasterizer();
+
+	/* sahders */
 	HRESULT	SetVertexShader(LPCWSTR compiledShaderFile);
 	HRESULT	CompileVertexShader(LPCWSTR shaderSource);
 
@@ -58,32 +76,35 @@ private:
 
 	HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
 
-	HRESULT CreateSwapChain();
 	void	SetBuffers();
 
 private:
 	std::shared_ptr<DeviceResources>		m_pDeviceResources;
-
 	std::shared_ptr<IDXGIDevice>			m_pDXGIDevice;
 	std::shared_ptr<IDXGIAdapter>			m_pDXGIAdapter;
-	std::shared_ptr<IDXGIFactory1>			m_pDXGIFactory;
-	std::shared_ptr<IDXGISwapChain>			m_pSwapChain;
+	std::shared_ptr<IDXGIFactory>			m_pDXGIFactory;
 	std::shared_ptr<ID3D11Texture2D>		m_pRenderBuffer;
-
 	std::shared_ptr<ID3D11InputLayout>		m_pInputLayout;
 	std::shared_ptr<ID3D11VertexShader>		m_vertexShader;
 	std::shared_ptr<ID3D11PixelShader>		m_pixelShader;
-
-	std::shared_ptr<ID3D11RenderTargetView>	m_pRenderTarget;
-	std::shared_ptr<ID3D11DepthStencilView>	m_pDepthStencilView;
-
-	std::shared_ptr<XMFLOAT4X4>	m_WorldMatrix;
-	std::shared_ptr<XMFLOAT4X4>	m_ViewMatrix;
-	std::shared_ptr<XMFLOAT4X4>	m_ProjectionMatrix;
 	std::shared_ptr<ShaderSet>				m_pShaderSet;
 
 	LPCWSTR									m_standardVertexShader = L"VertexShader.cso";
 	LPCWSTR									m_standardPixelShader = L"PixelShader.cso";
+
+	IDXGISwapChain*							m_pSwapChain;
+	ID3D11RenderTargetView*					m_pRenderTargetView;
+	ID3D11Texture2D*						m_pBackBuffer;
+	ID3D11Texture2D*						m_pDepthStencilBuffer;
+	ID3D11DepthStencilState*				m_pDepthStencilState;
+	ID3D11DepthStencilView*					m_pDepthStencilView;
+	ID3D11RasterizerState*					m_pRasterizerState;
+
+	DXGI_SWAP_CHAIN_DESC					m_pSwapChainDescription;
+	D3D11_TEXTURE2D_DESC					m_pDepthBufferDesc;
+	D3D11_DEPTH_STENCIL_DESC				m_pDepthStencilDesc;
+	D3D11_DEPTH_STENCIL_VIEW_DESC			m_pDepthStencilViewDesc;
+	D3D11_RASTERIZER_DESC					m_pRasterizerDesc;
 
 	bool									m_isRendering;
 	bool									m_loadingComplete;
