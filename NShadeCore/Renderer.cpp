@@ -418,6 +418,7 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
 	return result;
 }
 
+
 void Renderer::Render()
 {
 	//SetBuffers();

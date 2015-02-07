@@ -111,6 +111,10 @@ HRESULT D3DSystem::CreateDevice()
 {
 	UINT creationFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 
+#if defined(_DEBUG)
+	creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
 	D3D_FEATURE_LEVEL featureLevels[] =
 	{
 		D3D_FEATURE_LEVEL_11_1,
@@ -121,13 +125,11 @@ HRESULT D3DSystem::CreateDevice()
 		D3D_FEATURE_LEVEL_9_2,
 		D3D_FEATURE_LEVEL_9_1
 	};
-	HRESULT createResult = 0;
-
 
 	ID3D11Device* device = 0;
 	ID3D11DeviceContext* context = 0;
 
-	createResult = D3D11CreateDevice(
+	auto createResult = D3D11CreateDevice(
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		0,
@@ -155,6 +157,7 @@ HRESULT D3DSystem::CreateDevice()
 	}
 
 	m_pDeviceResources = new DeviceResources(device, context);
+
 	m_pDeviceResources->WindowHandle = m_pWindowHandle;
 	m_pDeviceResources->FullScreen = m_fullScreen;
 	m_pDeviceResources->VSync = m_vSync;
