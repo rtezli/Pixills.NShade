@@ -72,6 +72,9 @@
     <ClInclude Include="DeviceResources.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderSet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -108,6 +111,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DeviceResources.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderSet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

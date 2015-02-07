@@ -31,11 +31,14 @@ public:
 	Renderer(DeviceResources* pResources, std::shared_ptr<Window> pWindow);
 	~Renderer();
 public:
+	void	Render();
 	bool	IsTracking() { return m_tracking; }
 	bool	IsRendering(){ return m_isRendering; }
+public:
+	DeviceResources*	DeviceResource() { return m_pDeviceResources.get(); }
+	ShaderSet*			Shaders()		 { return m_pShaderSet.get(); }
 private:
 	void	Initialize();
-
 	HRESULT	SetVertexShader(LPCWSTR compiledShaderFile);
 	HRESULT	CompileVertexShader(LPCWSTR shaderSource);
 
@@ -54,9 +57,9 @@ private:
 	HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
 
 	HRESULT CreateSwapChain();
-	void	Render();
+
 private:
-	DeviceResources*						m_pDeviceResources;
+	std::shared_ptr<DeviceResources>		m_pDeviceResources;
 	std::shared_ptr<Window>					m_pWindow;
 	std::shared_ptr<IDXGIDevice>			m_pDXGIDevice;
 	std::shared_ptr<IDXGIAdapter>			m_pDXGIAdapter;
@@ -77,12 +80,9 @@ private:
 	std::shared_ptr<DirectX::XMFLOAT4X4>	m_WorldMatrix;
 	std::shared_ptr<DirectX::XMFLOAT4X4>	m_ViewMatrix;
 	std::shared_ptr<DirectX::XMFLOAT4X4>	m_ProjectionMatrix;
-
- 
+	std::shared_ptr<ShaderSet>				m_pShaderSet;
 
 	int										m_samplesCount = 4;
-
-	struct SHADER_SET*						m_pShaderSet;
 
 	LPCWSTR									m_standardVertexShader = L"PixelShader.cso";
 	LPCWSTR									m_standardPixelShader = L"VertexShader.cso";
@@ -93,14 +93,4 @@ private:
 	bool									m_isRendering;
 	bool									m_loadingComplete;
 	bool									m_tracking;
-};
-
-struct SHADER_SET
-{
-	std::shared_ptr<ID3D11PixelShader>		PixelShader;
-	std::shared_ptr<ID3D11VertexShader>		VertexShader;
-	std::shared_ptr<ID3D11HullShader>		HullShader;
-	std::shared_ptr<ID3D11DomainShader>		DomainShader;
-	std::shared_ptr<ID3D11GeometryShader>	GeometryShader;
-	std::shared_ptr<ID3D11ComputeShader>	ComputeShader;
 };

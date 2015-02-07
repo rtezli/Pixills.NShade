@@ -23,7 +23,7 @@ struct FILE_BYTE_RESULT* File::ReadFileBytes(CHAR* fileName)
 	if (stream)
 	{
 		stream.seekg(0, std::ios::end);
-		auto size = stream.tellg();
+		long size = stream.tellg();
 		CHAR* buffer;
 		ZeroMemory(&buffer, sizeof(CHAR));
 
@@ -49,7 +49,7 @@ struct FILE_BYTE_RESULT* File::ReadFileBytes(LPCWSTR fileName)
 	if (stream)
 	{
 		stream.seekg(0, std::ios::end);
-		auto size = stream.tellg();
+		long size = stream.tellg();
 		CHAR* buffer = (CHAR *)malloc(sizeof(CHAR) * size);
 
 		stream.seekg(0, std::ios::beg);

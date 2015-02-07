@@ -1,5 +1,7 @@
 #pragma once
 
+#pragma warning( disable : 4316 )
+
 #include "resource.h"
 //#include "D3DSystem.h"
 #include "api.h"

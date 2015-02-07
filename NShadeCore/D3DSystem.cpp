@@ -73,8 +73,8 @@ std::shared_ptr<HWND> D3DSystem::InitializeWindow(int screenWidth, int screenHei
 HRESULT D3DSystem::Initialize()
 {
 	CreateDevice();
-	CreateCamera();
 	LoadModels();
+	CreateCamera();
 	CreateRenderer();
 	return 0;
 }
@@ -162,7 +162,7 @@ HRESULT D3DSystem::CreateRenderer()
 
 void D3DSystem::Render()
 {
-
+	m_pRenderer->Render();
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
