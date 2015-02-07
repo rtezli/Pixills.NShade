@@ -37,7 +37,6 @@ HRESULT Renderer::Initialize()
 	return result;
 }
 
-// 0x 2x, 4x MSAA
 HRESULT Renderer::CreateSwapChain()
 {
 	IDXGIDevice* dxgiDevice = 0;
@@ -60,17 +59,18 @@ HRESULT Renderer::CreateSwapChain()
 		return result;
 	}
 
-	m_pDXGIDevice = std::shared_ptr<IDXGIDevice>(dxgiDevice);
+	m_pDXGIDevice  = std::shared_ptr<IDXGIDevice>(dxgiDevice);
 	m_pDXGIAdapter = std::shared_ptr<IDXGIAdapter>(dxgiAdapter);
 	m_pDXGIFactory = std::shared_ptr<IDXGIFactory1>(dxgiFactory);
 
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = { 0 };
 	swapChainDesc.BufferCount = 1;
 
-	swapChainDesc.BufferDesc.Height = m_ScreenHeight;
+	swapChainDesc.BufferDesc.Width = DeviceResource()->ScreenWidth;
+	swapChainDesc.BufferDesc.Height = DeviceResource()->ScreenHeight;
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 
-	swapChainDesc.SampleDesc.Count = m_samplesCount;
+	swapChainDesc.SampleDesc.Count = DeviceResource()->SamplesCount;
 	swapChainDesc.SampleDesc.Quality = 0;
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDesc.BufferCount = 2;
@@ -125,9 +125,11 @@ HRESULT Renderer::CreateSwapChain()
 
 HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 {
+	auto device = DeviceResource()->Device;
 	auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
+	auto shaders = DeviceResource()->Shaders;
 
-	auto result = m_pDeviceResources->Device->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &m_pShaderSet->VertexShader);
+	auto result = m_pDeviceResources->Device->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &shaders->VertexShader);
 	if (FAILED(result))
 	{
 		return result;
@@ -173,10 +175,11 @@ HRESULT Renderer::CompileVertexShader(LPCWSTR compiledShaderFile)
 
 HRESULT Renderer::SetHullShader(LPCWSTR compiledShaderFile)
 {
-	auto device = m_pDeviceResources->Device;
-	auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
+	auto device = DeviceResource()->Device;
+	auto hsByteCode = File::ReadFileBytes(compiledShaderFile);
+	auto shaders = DeviceResource()->Shaders;
 
-	auto result = device->CreateHullShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &m_pShaderSet->HullShader);
+	auto result = device->CreateHullShader(hsByteCode->FileBytes, hsByteCode->Length, NULL, &shaders->HullShader);
 	if (FAILED(result))
 	{
 		return result;
@@ -193,7 +196,7 @@ HRESULT Renderer::CompileHullShader(LPCWSTR compiledShaderFile)
 	auto result = CompileShader(compiledShaderFile, shaderBlob, HS_PROFILE);
 	if (SUCCEEDED(result))
 	{
-		auto device = m_pDeviceResources->Device;
+		auto device = DeviceResource()->Device;
 		result = device->CreateHullShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &hullShader);
 	}
 	return result;
@@ -201,10 +204,11 @@ HRESULT Renderer::CompileHullShader(LPCWSTR compiledShaderFile)
 
 HRESULT Renderer::SetGeometryShader(LPCWSTR compiledShaderFile)
 {
-	auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
 	auto device = m_pDeviceResources->Device;
+	auto gsByteCode = File::ReadFileBytes(compiledShaderFile);
+	auto shaders = DeviceResource()->Shaders;
 
-	auto result = device->CreateGeometryShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &m_pShaderSet->GeometryShader);
+	auto result = device->CreateGeometryShader(gsByteCode->FileBytes, gsByteCode->Length, NULL, &shaders->GeometryShader);
 	if (FAILED(result))
 	{
 		return result;
@@ -230,9 +234,11 @@ HRESULT Renderer::CompileGeometryShader(LPCWSTR compiledShaderFile)
 
 HRESULT Renderer::SetPixelShader(LPCWSTR compiledShaderFile)
 {
-	auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
+	auto device = DeviceResource()->Device;
+	auto psByteCode = File::ReadFileBytes(compiledShaderFile);
+	auto shaders = DeviceResource()->Shaders;
 
-	auto result = m_pDeviceResources->Device->CreatePixelShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &m_pShaderSet->PixelShader);
+	auto result = device->CreatePixelShader(psByteCode->FileBytes, psByteCode->Length, NULL, &shaders->PixelShader);
 	if (FAILED(result))
 	{
 		return result;
@@ -307,20 +313,18 @@ void Renderer::Render()
 
 void Renderer::SetBuffers()
 {
-	auto res = m_pDeviceResources.get();
-	auto context = res->DeviceContext;
-	auto vertexBuffer = m_pVertexBuffer.get();
+	auto context = DeviceResource()->DeviceContext;
 
 	UINT stride = sizeof(VertexPositionColor);
 	UINT offset = 0;
 
-	context->UpdateSubresource(m_pConstantBuffer.get(), 0, NULL, m_pConstantBuffer.get(), 0, 0);
-	context->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
-	context->IASetIndexBuffer(m_pIndexBuffer.get(),DXGI_FORMAT_R16_UINT, 0);
+	context->UpdateSubresource(DeviceResource()->ConstantBuffer, 0, NULL, DeviceResource()->ConstantBufferData, 0, 0);
+	context->IASetVertexBuffers(0, 1, &DeviceResource()->VertexBuffer, &stride, &offset);
+	context->IASetIndexBuffer(DeviceResource()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
 
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	context->IASetInputLayout(m_pInputLayout.get());
-	context->VSSetShader(m_pShaderSet->VertexShader, nullptr, 0);
-	context->PSSetShader(m_pShaderSet->PixelShader, nullptr, 0);
-	context->DrawIndexed(m_IndexCount, 0, 0);
+	context->VSSetShader(DeviceResource()->Shaders->VertexShader, nullptr, 0);
+	context->PSSetShader(DeviceResource()->Shaders->PixelShader, nullptr, 0);
+	context->DrawIndexed(DeviceResource()->IndexCount, 0, 0);
 }

@@ -141,16 +141,16 @@ HRESULT D3DSystem::SetCamera(XMVECTOR position, XMVECTOR direction, float focalL
 
 HRESULT D3DSystem::CreateCamera()
 {
-	m_pCamera = std::shared_ptr<Camera>(new Camera(m_viewportWidth, m_viewportHeight, m_nearZ, m_farZ));
+	m_pCamera = std::shared_ptr<Camera>(new Camera(m_pDeviceResources, m_viewportWidth, m_viewportHeight, m_nearZ, m_farZ));
 	return 0;
 }
 
 HRESULT D3DSystem::LoadModels()
 {
-	m_pModel = std::shared_ptr<Model>(new Model());
+	m_pModel = std::shared_ptr<Model>(new Model(m_pDeviceResources));
 	auto cube = m_pModel->Cube;
 	auto size = cube.size();
-	auto result = m_pModel->Initialize(m_pDeviceResources->Device, &cube, size);
+	auto result = m_pModel->Initialize(&cube, size);
 	return 0;
 }
 

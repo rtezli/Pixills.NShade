@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "model.h"
 
-Model::Model()
+Model::Model(DeviceResources* resources)
 {
-
+	m_pDeviceResources = shared_ptr<DeviceResources>(resources);
 }
 
 Model::~Model()
@@ -11,9 +11,8 @@ Model::~Model()
 
 }
 
-HRESULT Model::Initialize(ID3D11Device* pDevice, std::vector<VertexPositionColor>* pModel, unsigned int size)
+HRESULT Model::Initialize(std::vector<VertexPositionColor>* pModel, unsigned int size)
 {
-	m_pDevice = std::shared_ptr<ID3D11Device>(pDevice);
 	auto resutlt = InitializeVertexBuffer(pModel);
 	resutlt = InitializeIndexBuffer(NULL);
 	return 0;
@@ -103,9 +102,11 @@ HRESULT Model::InitializeVertexBuffer(std::vector<VertexPositionColor>* vertices
 	vertexBufferData.SysMemSlicePitch = 0;
 
 	CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(vertices), D3D11_BIND_VERTEX_BUFFER);
-	auto vertBuffer = m_pVertexBuffer.get();
-	
-	auto result = m_pDevice->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &vertBuffer);
+
+	auto device = DeviceResource()->Device;
+	auto buffer = DeviceResource()->VertexBuffer;
+
+	auto result = device->CreateBuffer(&vertexBufferDesc, &m_initData, &buffer);
 	if (FAILED(result))
 	{
 		return result;
@@ -131,8 +132,13 @@ HRESULT Model::InitializeIndexBuffer(std::vector<int>* indeces)
 	indexBufferData.SysMemSlicePitch = 0;
 
 	CD3D11_BUFFER_DESC indexBufferDesc(sizeof(indeces), D3D11_BIND_INDEX_BUFFER);
-	auto indexBuffer = m_pIndexBuffer.get();
-	auto result = m_pDevice->CreateBuffer(&indexBufferDesc, &indexBufferData, &indexBuffer);
+	auto device = DeviceResource()->Device;
+	auto indexBuffer = DeviceResource()->IndexBuffer;
+	auto result = device->CreateBuffer(&indexBufferDesc, &indexBufferData, &indexBuffer);
+	if (FAILED(result))
+	{
+		return result;
+	}
 	return result;
 }
 

@@ -6,25 +6,23 @@
 class Model
 {
 public:
-	Model();
+	Model(DeviceResources* pResources);
 	~Model();
 	HRESULT LoadModelFromFBXFile(char* fileName);
 	HRESULT LoadModelFromOBJFile(char* fileName);
-	HRESULT	Initialize(ID3D11Device* pDevice, std::vector<VertexPositionColor>* vertexes, unsigned int size);
+	HRESULT	Initialize(std::vector<VertexPositionColor>* vertexes, unsigned int size);
  
 	static const std::vector<VertexPositionColor> Cube;
 	static const std::vector<VertexPositionColor> Sphere;
 private:
+	DeviceResources*			DeviceResource(){ return m_pDeviceResources.get(); }
 	HRESULT						InitializeVertexBuffer(std::vector<VertexPositionColor>* vertexes);
 	HRESULT						InitializeIndexBuffer(std::vector<int>* indexes);
 	FbxScene*					ImportFbx(char* fileName);
 private:
-	std::shared_ptr<ID3D11Device> m_pDevice;
-	std::shared_ptr<ID3D11Buffer> m_pVertexBuffer;
-	std::shared_ptr<ID3D11Buffer> m_pIndexBuffer;
-
-	unsigned short			m_indexCount = 0;
-	D3D11_BUFFER_DESC		m_bufferDesc;
-	D3D11_SUBRESOURCE_DATA	m_initData;
+	unsigned short				m_indexCount = 0;
+	D3D11_BUFFER_DESC			m_bufferDesc;
+	D3D11_SUBRESOURCE_DATA		m_initData;
+	shared_ptr<DeviceResources>	m_pDeviceResources;
 };
 

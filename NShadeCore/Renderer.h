@@ -35,8 +35,10 @@ public:
 	bool	IsTracking() { return m_tracking; }
 	bool	IsRendering(){ return m_isRendering; }
 public:
-	DeviceResources*	DeviceResource() { return m_pDeviceResources.get(); }
-	ShaderSet*			Shaders()		 { return m_pShaderSet.get(); }
+	ID3D11Device*				const Device(){ return DeviceResource()->Device; }
+	ID3D11DeviceContext*		const DeviceContext(){ return DeviceResource()->DeviceContext; }
+	DeviceResources*			const DeviceResource(){ return m_pDeviceResources.get(); }
+	ShaderSet*					const Shaders(){ return m_pShaderSet.get(); }
 private:
 	HRESULT	Initialize();
 	HRESULT	SetVertexShader(LPCWSTR compiledShaderFile);
@@ -72,10 +74,6 @@ private:
 	std::shared_ptr<ID3D11VertexShader>		m_vertexShader;
 	std::shared_ptr<ID3D11PixelShader>		m_pixelShader;
 
-	std::shared_ptr<ID3D11Buffer>			m_pVertexBuffer;
-	std::shared_ptr<ID3D11Buffer>			m_pIndexBuffer;
-	std::shared_ptr<ID3D11Buffer>			m_pConstantBuffer;
-
 	std::shared_ptr<ID3D11RenderTargetView>	m_pRenderTarget;
 	std::shared_ptr<ID3D11DepthStencilView>	m_pDepthStencilView;
 
@@ -84,14 +82,8 @@ private:
 	std::shared_ptr<DirectX::XMFLOAT4X4>	m_ProjectionMatrix;
 	std::shared_ptr<ShaderSet>				m_pShaderSet;
 
-	int										m_samplesCount = 4;
-	int										m_IndexCount;
-
 	LPCWSTR									m_standardVertexShader = L"VertexShader.cso";
 	LPCWSTR									m_standardPixelShader = L"PixelShader.cso";
-
-	int										m_ScreenWidth;
-	int										m_ScreenHeight;
 
 	bool									m_isRendering;
 	bool									m_loadingComplete;
