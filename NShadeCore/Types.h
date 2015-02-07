@@ -1,7 +1,7 @@
 #pragma once
 
 #include "d3d11.h"
-#include "dxgi.h"
+//#include "dxgi.h"
 //#include "directxmath.h"
 
 struct VertexPositionColor
@@ -26,3 +26,37 @@ struct ShaderSet
 	ID3D11GeometryShader*	GeometryShader;
 	ID3D11ComputeShader*	ComputeShader;
 };
+
+namespace ScreenRotation
+{
+	static const DirectX::XMFLOAT4X4 Rotation0(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f
+		);
+
+	// 90-degree Z-rotation
+	static const DirectX::XMFLOAT4X4 Rotation90(
+		0.0f, 1.0f, 0.0f, 0.0f,
+		-1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f
+		);
+
+	// 180-degree Z-rotation
+	static const DirectX::XMFLOAT4X4 Rotation180(
+		-1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, -1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f
+		);
+
+	// 270-degree Z-rotation
+	static const DirectX::XMFLOAT4X4 Rotation270(
+		0.0f, -1.0f, 0.0f, 0.0f,
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f
+		);
+}

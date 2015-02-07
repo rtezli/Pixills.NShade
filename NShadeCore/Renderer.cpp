@@ -5,11 +5,7 @@ Renderer::Renderer(DeviceResources* pResources, std::shared_ptr<Window> pWindow)
 {
 	m_pDeviceResources = std::shared_ptr<DeviceResources>(pResources);
 	m_pWindow = pWindow;
-
-	auto shaderSet = new ShaderSet();
-
-	m_pShaderSet = std::shared_ptr<ShaderSet>(shaderSet);
-	auto result = Initialize();
+	Initialize();
 }
 
 Renderer::~Renderer()
@@ -129,7 +125,7 @@ HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 	auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
 	auto shaders = DeviceResource()->Shaders;
 
-	auto result = m_pDeviceResources->Device->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &shaders->VertexShader);
+	auto result = device->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &shaders->VertexShader);
 	if (FAILED(result))
 	{
 		return result;

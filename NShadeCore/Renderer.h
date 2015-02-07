@@ -38,7 +38,6 @@ public:
 	ID3D11Device*				const Device(){ return DeviceResource()->Device; }
 	ID3D11DeviceContext*		const DeviceContext(){ return DeviceResource()->DeviceContext; }
 	DeviceResources*			const DeviceResource(){ return m_pDeviceResources.get(); }
-	ShaderSet*					const Shaders(){ return m_pShaderSet.get(); }
 private:
 	HRESULT	Initialize();
 	HRESULT	SetVertexShader(LPCWSTR compiledShaderFile);

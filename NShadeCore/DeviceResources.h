@@ -14,7 +14,6 @@ public:
 public:
 	ID3D11Device*				Device;
 	ID3D11DeviceContext*		DeviceContext;
-	XMFLOAT4X4*					GetOrientationTransform3D;
 
 	ID3D11Buffer*				VertexBuffer;
 	ID3D11Buffer*				IndexBuffer;

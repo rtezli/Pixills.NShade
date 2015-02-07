@@ -20,10 +20,9 @@ void Camera::Initialize(float ViewWidth, float ViewHeight, float NearZ, float Fa
 
 	res->ConstantBufferData = new MVPConstantBuffer();
 
-	auto orientation = res->GetOrientationTransform3D;
-	XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovLH(fovAngleY, aspectRatio, 0.01f, 100.0f);
+	auto perspectiveMatrix = XMMatrixPerspectiveFovLH(fovAngleY, aspectRatio, 0.01f, 100.0f);
+	auto orientationMatrix = XMLoadFloat4x4(&ScreenRotation::Rotation0);
 
-	auto orientationMatrix = XMLoadFloat4x4(orientation);
 	XMStoreFloat4x4(&res->ConstantBufferData->projection, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
 
 	static const DirectX::XMVECTORF32 eye = { 0.0f, 0.7f, 1.5f, 0.0f };
