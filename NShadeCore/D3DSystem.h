@@ -15,26 +15,26 @@ public:
 	D3DSystem();
 	~D3DSystem();
 public:
-	HRESULT InitializeForWindow(bool vsync, std::shared_ptr<HWND> handle, bool fullscreen, float screenDepth, float screenNear);
-	HRESULT InitializeWithWindow(int screenWidth, int screenHeight, bool vsync, bool fullscreen, float screenDepth, float screenNear);
+	HRESULT InitializeForWindow(bool vsync, HWND* handle, bool fullscreen);
+	HRESULT InitializeWithWindow(int screenWidth, int screenHeight, bool vsync, bool fullscreen);
 	HRESULT Initialize();
-	HRESULT SetCamera(XMVECTOR position, XMVECTOR direction, unsigned short viewAngle);
-	HRESULT SetCamera(XMVECTOR position, XMVECTOR direction, float focalLength);
+	HRESULT SetCamera(XMVECTOR* position, XMVECTOR* direction, unsigned short viewAngle);
+	HRESULT SetCamera(XMVECTOR* position, XMVECTOR* direction, float focalLength);
 	void	Render();
 private:
-	std::shared_ptr<HWND>	InitializeWindow(int screenWidth, int screenHeight);
+	HRESULT					InitializeWindow(int screenWidth, int screenHeight);
 	HRESULT					CreateDevice();
 	HRESULT					CreateCamera();
 	HRESULT					LoadModels();
 	HRESULT					CreateRenderer();
 private:
 	DeviceResources*						m_pDeviceResources;
+	HWND*									m_pWindowHandle;
+
 	std::shared_ptr<Renderer>				m_pRenderer;
 	std::shared_ptr<Camera>					m_pCamera;
 	std::shared_ptr<Input>					m_pInputDevices;
 	std::shared_ptr<Model>					m_pModel;
-	std::shared_ptr<Window>					m_pWindow;
-	std::shared_ptr<HWND>					m_pWindowHandle;
 
 	D3D_FEATURE_LEVEL						m_D3dFeatureLevel;
 
@@ -45,6 +45,8 @@ private:
 	float									m_viewportHeight;
 	float									m_nearZ;
 	float									m_farZ;
+	bool									m_fullScreen;
+	bool									m_vSync;
 };
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);

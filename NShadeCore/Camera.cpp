@@ -1,19 +1,19 @@
 #include "stdafx.h"
 #include "camera.h"
 
-Camera::Camera(DeviceResources* resources, float viewWidth, float ViewHeight, float NearZ, float FarZ)
+Camera::Camera(DeviceResources* resources)
 {
 	m_pDeviceResources = shared_ptr<DeviceResources>(resources);
-	Initialize(viewWidth, ViewHeight, NearZ, FarZ);
+	Initialize();
 }
 
 Camera::~Camera()
 {
 }
 
-void Camera::Initialize(float ViewWidth, float ViewHeight, float NearZ, float FarZ)
+void Camera::Initialize()
 {
-	float aspectRatio = 800 / 600;
+	float aspectRatio = DeviceResource()->ScreenWidth / DeviceResource()->ScreenHeight;
 	float fovAngleY = 70.0f * DirectX::XM_PI / 180.0f;
 
 	auto res = DeviceResource();

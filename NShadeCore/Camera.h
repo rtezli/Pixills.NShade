@@ -6,10 +6,10 @@
 class Camera
 {
 public:
-	Camera(DeviceResources* resources, float ViewWidth, float ViewHeight, float NearZ, float FarZ);
+	Camera(DeviceResources* resources);
 	~Camera();
 public:
-	void				Initialize(float ViewWidth, float ViewHeight, float NearZ, float FarZ);
+	void				Initialize();
 	void				RotateHorizontal(float angle);
 	void				RotateVertical(float angle);
 	void				MoveX(float angle);

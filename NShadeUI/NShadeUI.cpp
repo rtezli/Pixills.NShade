@@ -174,8 +174,7 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 HRESULT Init3DSystem(HWND* pWindow)
 {
 	HRESULT Init3DSystem(HWND* pWindow);
-	auto window = std::shared_ptr<HWND>(pWindow);
 	m_system = new D3DSystem();
-	m_system->InitializeForWindow(false, window, false, 100.00f, 0.0f);
+	m_system->InitializeForWindow(false, pWindow, false);
 	return 0;
 }

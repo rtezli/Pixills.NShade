@@ -28,18 +28,19 @@
 class Renderer
 {
 public:
-	Renderer(DeviceResources* pResources, std::shared_ptr<Window> pWindow);
+	Renderer(DeviceResources* pResources);
 	~Renderer();
 public:
 	void	Render();
 	bool	IsTracking() { return m_tracking; }
 	bool	IsRendering(){ return m_isRendering; }
+	HRESULT	Initialize();
 public:
-	ID3D11Device*				const Device(){ return DeviceResource()->Device; }
+	ID3D11Device*				const GetDevice(){ return DeviceResource()->Device; }
 	ID3D11DeviceContext*		const DeviceContext(){ return DeviceResource()->DeviceContext; }
 	DeviceResources*			const DeviceResource(){ return m_pDeviceResources.get(); }
 private:
-	HRESULT	Initialize();
+
 	HRESULT	SetVertexShader(LPCWSTR compiledShaderFile);
 	HRESULT	CompileVertexShader(LPCWSTR shaderSource);
 
@@ -62,7 +63,7 @@ private:
 
 private:
 	std::shared_ptr<DeviceResources>		m_pDeviceResources;
-	std::shared_ptr<Window>					m_pWindow;
+
 	std::shared_ptr<IDXGIDevice>			m_pDXGIDevice;
 	std::shared_ptr<IDXGIAdapter>			m_pDXGIAdapter;
 	std::shared_ptr<IDXGIFactory1>			m_pDXGIFactory;
@@ -76,9 +77,9 @@ private:
 	std::shared_ptr<ID3D11RenderTargetView>	m_pRenderTarget;
 	std::shared_ptr<ID3D11DepthStencilView>	m_pDepthStencilView;
 
-	std::shared_ptr<DirectX::XMFLOAT4X4>	m_WorldMatrix;
-	std::shared_ptr<DirectX::XMFLOAT4X4>	m_ViewMatrix;
-	std::shared_ptr<DirectX::XMFLOAT4X4>	m_ProjectionMatrix;
+	std::shared_ptr<XMFLOAT4X4>	m_WorldMatrix;
+	std::shared_ptr<XMFLOAT4X4>	m_ViewMatrix;
+	std::shared_ptr<XMFLOAT4X4>	m_ProjectionMatrix;
 	std::shared_ptr<ShaderSet>				m_pShaderSet;
 
 	LPCWSTR									m_standardVertexShader = L"VertexShader.cso";

@@ -19,33 +19,17 @@ HRESULT D3DSystem::InitializeWithWindow(
 	int screenWidth,
 	int screenHeight,
 	bool vsync,
-	bool fullscreen,
-	float screenDepth,
-	float screenNear)
+	bool fullscreen)
 {
-	m_viewportWidth = screenWidth;
-	m_viewportHeight = screenHeight;
-	m_nearZ = screenNear;
-	m_farZ = screenDepth;
-
-	auto handle = InitializeWindow(screenWidth, screenHeight);
-	InitializeForWindow(vsync, handle, fullscreen, screenDepth, screenNear);
-	return 0;
+	auto result = InitializeWindow(screenWidth, screenHeight);
+	if (FAILED(result))
+	{
+		return result;
+	}
+	return InitializeForWindow(vsync, m_pWindowHandle, fullscreen);
 }
 
-HRESULT D3DSystem::InitializeForWindow(
-	bool vsync,
-	std::shared_ptr<HWND> hwnd,
-	bool fullscreen,
-	float screenDepth,
-	float screenNear)
-{
-	m_pWindow = std::shared_ptr<Window>(new Window(hwnd, vsync, fullscreen));
-	Initialize();
-	return 0;
-}
-
-std::shared_ptr<HWND> D3DSystem::InitializeWindow(int screenWidth, int screenHeight)
+HRESULT D3DSystem::InitializeWindow(int screenWidth, int screenHeight)
 {
 	HINSTANCE hInstance = 0;
 	HWND handle = 0;
@@ -67,16 +51,60 @@ std::shared_ptr<HWND> D3DSystem::InitializeWindow(int screenWidth, int screenHei
 	{
 		return false;
 	}
-	return std::shared_ptr<HWND>(&handle);
+	m_pWindowHandle = &handle;
+	return true;
+}
+
+HRESULT D3DSystem::InitializeForWindow(
+	bool vsync,
+	HWND* hwnd,
+	bool fullscreen)
+{
+	m_pWindowHandle = hwnd;
+	m_vSync = vsync;
+	m_fullScreen = fullscreen;
+
+	RECT rect;
+	GetWindowRect(*hwnd, &rect);
+	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, FALSE);
+
+	m_viewportWidth = GetSystemMetrics(SM_CXSCREEN);
+	m_viewportHeight = GetSystemMetrics(SM_CYSCREEN);
+
+	auto posX = (GetSystemMetrics(SM_CXSCREEN) - m_viewportWidth) / 2;
+	auto posY = (GetSystemMetrics(SM_CYSCREEN) - m_viewportHeight) / 2;
+
+	// ShowCursor(false);
+
+	return Initialize();
 }
 
 HRESULT D3DSystem::Initialize()
 {
-	CreateDevice();
-	LoadModels();
-	CreateCamera();
-	CreateRenderer();
-	return 0;
+	auto result = CreateDevice();
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	result = LoadModels();
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	result = CreateCamera();
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	result = CreateRenderer();
+	if (FAILED(result))
+	{
+		return result;
+	}
+	return result;
 }
 
 HRESULT D3DSystem::CreateDevice()
@@ -125,23 +153,32 @@ HRESULT D3DSystem::CreateDevice()
 			&m_D3dFeatureLevel,
 			&context);
 	}
+
 	m_pDeviceResources = new DeviceResources(device, context);
+	m_pDeviceResources->WindowHandle = m_pWindowHandle;
+	m_pDeviceResources->FullScreen = m_fullScreen;
+	m_pDeviceResources->VSync = m_vSync;
+	m_pDeviceResources->ScreenWidth = m_viewportWidth;
+	m_pDeviceResources->ScreenHeight = m_viewportHeight;
+	m_pDeviceResources->NearZ = 0.0f;
+	m_pDeviceResources->FarZ = 1000.0f;
+ 
 	return createResult;
 }
 
-HRESULT D3DSystem::SetCamera(XMVECTOR position, XMVECTOR direction, unsigned short viewAngle)
+HRESULT D3DSystem::SetCamera(XMVECTOR* position, XMVECTOR* direction, unsigned short viewAngle)
 {
 	return 0;
 }
 
-HRESULT D3DSystem::SetCamera(XMVECTOR position, XMVECTOR direction, float focalLength)
+HRESULT D3DSystem::SetCamera(XMVECTOR* position, XMVECTOR* direction, float focalLength)
 {
 	return 0;
 }
 
 HRESULT D3DSystem::CreateCamera()
 {
-	m_pCamera = std::shared_ptr<Camera>(new Camera(m_pDeviceResources, m_viewportWidth, m_viewportHeight, m_nearZ, m_farZ));
+	m_pCamera = std::shared_ptr<Camera>(new Camera(m_pDeviceResources));
 	return 0;
 }
 
@@ -156,8 +193,8 @@ HRESULT D3DSystem::LoadModels()
 
 HRESULT D3DSystem::CreateRenderer()
 {
-	m_pRenderer = std::shared_ptr<Renderer>(new Renderer(m_pDeviceResources, m_pWindow));
-	return 0;
+	m_pRenderer = std::shared_ptr<Renderer>(new Renderer(m_pDeviceResources));
+	return m_pRenderer->Initialize();
 }
 
 void D3DSystem::Render()
@@ -281,8 +318,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 //	SetForegroundWindow(handle);
 //	SetFocus(handle);
 //
-//	// Hide the mouse cursor.
-//	// ShowCursor(false);
+
 //
 //	return handle;
 //}
