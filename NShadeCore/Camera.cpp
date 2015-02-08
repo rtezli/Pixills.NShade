@@ -5,11 +5,13 @@ Camera::Camera(DeviceResources* resources)
 {
 	m_pDeviceResources = resources;
 
-	static const XMVECTORF32 eye = { 0.0f, 0.7f, -20.0, 0.0f };
-	static const XMVECTORF32 at = { 0.0f, -0.1f, 0.0f, 0.0f };
+	static const XMVECTORF32 eye =	{ 0.0f, 5.0f, 20.0, 0.0f };
+	static const XMVECTORF32 at =	{ 0.0f, 0.0f,  0.0f, 0.0f };
+	static const XMVECTORF32 up =	{ 0.0f, 1.0f,  0.0f, 0.0f };
 
-	m_position = eye;
-	m_targetPoint = at;
+	EyePosition = eye;
+	FocusPosition = at;
+	UpDirection = up;
 }
 
 Camera::~Camera()
@@ -18,22 +20,13 @@ Camera::~Camera()
 
 void Camera::Initialize()
 {
-	float aspectRatio = m_pDeviceResources->ScreenWidth / m_pDeviceResources->ScreenHeight;
-	float fovAngleY = 70.0f * XM_PI / 180.0f;
+	float aspectRatio = GetAspectRatio();
+	float fieldOfView = GetFieldOfView();
 
-	
 	m_pDeviceResources->ConstBufferData = new ConstantBufferData();
 
-	auto perspectiveMatrix = XMMatrixPerspectiveFovLH(fovAngleY, aspectRatio, m_pDeviceResources->NearZ, m_pDeviceResources->FarZ);
-	auto orientationMatrix = XMLoadFloat4x4(&ScreenRotation::Rotation0);
-	auto projection = XMMatrixTranspose(perspectiveMatrix * orientationMatrix);
-
-	XMStoreFloat4x4(&m_pDeviceResources->ConstBufferData->projection, perspectiveMatrix);
-
-
-	static const XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
-
-	XMStoreFloat4x4(&m_pDeviceResources->ConstBufferData->view, XMMatrixTranspose(XMMatrixLookAtLH(m_position, m_targetPoint, up)));
+	XMStoreFloat4x4(&m_pDeviceResources->ConstBufferData->view, GetViewMatrix());
+	XMStoreFloat4x4(&m_pDeviceResources->ConstBufferData->projection, GetProjectionMatrix());
 }
 
 void Camera::RotateHorizontal(float Angle)
