@@ -78,30 +78,30 @@ private:
 	void	SetBuffers();
 
 private:
-	shared_ptr<DeviceResources>		m_pDeviceResources;
+	shared_ptr<DeviceResources>			m_pDeviceResources;
 	shared_ptr<ID3D11VertexShader>		m_vertexShader;
 	shared_ptr<ID3D11PixelShader>		m_pixelShader;
 	shared_ptr<ShaderSet>				m_pShaderSet;
 
-	IDXGISwapChain*							m_pSwapChain;
-	ID3D11RenderTargetView*					m_pRenderTargetView;
-	ID3D11Texture2D*						m_pBackBuffer;
-	ID3D11Texture2D*						m_pDepthStencilBuffer;
-	ID3D11DepthStencilState*				m_pDepthStencilState;
-	ID3D11DepthStencilView*					m_pDepthStencilView;
-	ID3D11RasterizerState*					m_pRasterizerState;
-	ID3D11InputLayout*						m_pInputLayout;
+	IDXGISwapChain*						m_pSwapChain;
+	ID3D11RenderTargetView*				m_pRenderTargetView;
+	ID3D11Texture2D*					m_pBackBuffer;
+	ID3D11Texture2D*					m_pDepthStencilBuffer;
+	ID3D11DepthStencilState*			m_pDepthStencilState;
+	ID3D11DepthStencilView*				m_pDepthStencilView;
+	ID3D11RasterizerState*				m_pRasterizerState;
+	ID3D11InputLayout*					m_pInputLayout;
 
-	LPCWSTR									m_standardVertexShader = L"VertexShader.cso";
-	LPCWSTR									m_standardPixelShader = L"PixelShader.cso";
+	LPCWSTR								m_standardVertexShader = L"VertexShader.cso";
+	LPCWSTR								m_standardPixelShader = L"PixelShader.cso";
 
-	DXGI_SWAP_CHAIN_DESC					m_pSwapChainDescription;
-	D3D11_TEXTURE2D_DESC					m_pDepthBufferDesc;
-	D3D11_DEPTH_STENCIL_DESC				m_pDepthStencilDesc;
-	D3D11_DEPTH_STENCIL_VIEW_DESC			m_pDepthStencilViewDesc;
-	D3D11_RASTERIZER_DESC					m_pRasterizerDesc;
+	DXGI_SWAP_CHAIN_DESC				m_pSwapChainDescription;
+	D3D11_TEXTURE2D_DESC				m_pDepthBufferDesc;
+	D3D11_DEPTH_STENCIL_DESC			m_pDepthStencilDesc;
+	D3D11_DEPTH_STENCIL_VIEW_DESC		m_pDepthStencilViewDesc;
+	D3D11_RASTERIZER_DESC				m_pRasterizerDesc;
 
-	bool									m_isRendering;
-	bool									m_loadingComplete;
-	bool									m_tracking;
+	bool								m_isRendering;
+	bool								m_loadingComplete;
+	bool								m_tracking;
 };

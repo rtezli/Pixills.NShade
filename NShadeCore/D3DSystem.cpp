@@ -87,6 +87,12 @@ HRESULT D3DSystem::Initialize()
 		return result;
 	}
 
+	result = CreateRenderer();
+	if (FAILED(result))
+	{
+		return result;
+	}
+
 	result = LoadModels();
 	if (FAILED(result))
 	{
@@ -99,11 +105,6 @@ HRESULT D3DSystem::Initialize()
 		return result;
 	}
 
-	result = CreateRenderer();
-	if (FAILED(result))
-	{
-		return result;
-	}
 	return result;
 }
 
