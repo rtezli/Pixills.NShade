@@ -66,6 +66,12 @@ HRESULT Renderer::Initialize()
 		{
 			return result;
 		}
+
+		result = CreateViewPort();
+		if (FAILED(result))
+		{
+			return result;
+		}
 	}
 	return result;
 }
@@ -76,18 +82,21 @@ HRESULT Renderer::CreateSwapChainDesciption()
 	ZeroMemory(&m_pSwapChainDescription, sizeof(m_pSwapChainDescription));
 
 	m_pSwapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	m_pSwapChainDescription.BufferCount = 2;
+
+	m_pSwapChainDescription.BufferCount = 1;
+	m_pSwapChainDescription.SampleDesc.Quality = 0;
 
 	m_pSwapChainDescription.BufferDesc.Width = DeviceResource()->ScreenWidth;
 	m_pSwapChainDescription.BufferDesc.Height = DeviceResource()->ScreenHeight;
 	m_pSwapChainDescription.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	m_pSwapChainDescription.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	m_pSwapChainDescription.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+
 	m_pSwapChainDescription.BufferDesc.RefreshRate.Numerator = 0;
 	m_pSwapChainDescription.BufferDesc.RefreshRate.Denominator = 1;
 	m_pSwapChainDescription.SampleDesc.Count = DeviceResource()->SamplesCount;
-	m_pSwapChainDescription.SampleDesc.Quality = 0;
 
+
+	m_pSwapChainDescription.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	m_pSwapChainDescription.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 	m_pSwapChainDescription.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	m_pSwapChainDescription.Flags = 0;
 
@@ -213,7 +222,10 @@ HRESULT Renderer::CreateDepthStencilDescription()
 	m_pDepthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 	m_pDepthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-	return GetDevice()->CreateDepthStencilState(&m_pDepthStencilDesc, &m_pDepthStencilState);
+	 GetDevice()->CreateDepthStencilState(&m_pDepthStencilDesc, &m_pDepthStencilState);
+	 GetDeviceContext()->OMSetDepthStencilState(m_pDepthStencilState, 1);
+
+	 return 0;
 }
 
 HRESULT Renderer::CreateDepthStencilViewDescription()
@@ -223,6 +235,7 @@ HRESULT Renderer::CreateDepthStencilViewDescription()
 	m_pDepthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	m_pDepthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	m_pDepthStencilViewDesc.Texture2D.MipSlice = 0;
+
 	return 0;
 }
 
@@ -297,11 +310,13 @@ HRESULT Renderer::CreateRasterizer()
 	{
 		return result;
 	}
+
 	result = GetDevice()->CreateRasterizerState(&m_pRasterizerDesc, &m_pRasterizerState);
 	if (FAILED(result))
 	{
 		return result;
 	}
+
 	GetDeviceContext()->RSSetState(m_pRasterizerState);
 	return 0;
 }
@@ -462,12 +477,12 @@ void Renderer::Render()
 	context->UpdateSubresource(constBuffer, 0, NULL, bufferData, 0, 0);
 	context->IASetVertexBuffers(0, 1, &DeviceResource()->VertexBuffer, &stride, &offset);
 	context->IASetIndexBuffer(DeviceResource()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	context->IASetInputLayout(DeviceResource()->InputLayout);
-	context->VSSetShader(DeviceResource()->Shaders->VertexShader, nullptr, 0);
-	context->PSSetShader(DeviceResource()->Shaders->PixelShader, nullptr, 0);
-	context->DrawIndexed(DeviceResource()->IndexCount, 0, 0);
+
+	//context->IASetInputLayout(DeviceResource()->InputLayout);
+	//context->VSSetShader(DeviceResource()->Shaders->VertexShader, nullptr, 0);
+	//context->PSSetShader(DeviceResource()->Shaders->PixelShader, nullptr, 0);
+	//context->DrawIndexed(DeviceResource()->IndexCount, 0, 0);
 
 	DeviceResource()->SwapChain->Present(1, 0);
 

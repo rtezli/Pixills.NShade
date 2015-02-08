@@ -193,23 +193,31 @@ HRESULT D3DSystem::CreateRenderer()
 
 void D3DSystem::Render()
 {
-	Reset();
+	ClearScene();
+
+	// 	m_Camera->Render();
+
+	// Get the world, view, and projection matrices from the camera and d3d objects.
+	// m_Camera->GetViewMatrix(viewMatrix);
+	// m_D3D->GetWorldMatrix(worldMatrix);
+	// m_D3D->GetProjectionMatrix(projectionMatrix);
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	// m_Model->Render(m_D3D->GetDeviceContext());
+
+	// Render the model using the color shader.
+	// result = m_ColorShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
+
 	m_pRenderer->Render();
 }
 
-void D3DSystem::Reset()
+void D3DSystem::ClearScene()
 {
 	auto context = m_pDeviceResources->DeviceContext;
-
-	// Reset the viewport to target the whole screen.
-	auto viewport = m_pDeviceResources->ViewPort;
-	context->RSSetViewports(1, &viewport);
-
-	// Reset render targets to the screen.
-	ID3D11RenderTargetView *const targets[1] = { m_pDeviceResources->RenderTargetView };
-	context->OMSetRenderTargets(1, targets, m_pDeviceResources->DepthStencilView);
+	// ID3D11RenderTargetView *const targets[1] = { m_pDeviceResources->RenderTargetView };
+	// context->OMSetRenderTargets(1, targets, m_pDeviceResources->DepthStencilView);
 	context->ClearRenderTargetView(m_pDeviceResources->RenderTargetView, m_pDeviceResources->DefaultColor);
-	context->ClearDepthStencilView(m_pDeviceResources->DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	context->ClearDepthStencilView(m_pDeviceResources->DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
