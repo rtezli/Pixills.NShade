@@ -13,6 +13,8 @@ Renderer::Renderer(DeviceResources* pResources)
 	m_pDepthStencilState = 0;
 	m_pDepthStencilView = 0;
 	m_pRasterizerState = 0;
+
+	m_useSwapchain = false;
 }
 
 Renderer::~Renderer()
@@ -34,37 +36,7 @@ Renderer::~Renderer()
 
 HRESULT Renderer::Initialize()
 {
-	auto result = CreateSwapChain();
-	if (FAILED(result))
-	{
-		return result;
-	}
-
-	result = CreateSwapChain();
-	if (FAILED(result))
-	{
-		return result;
-	}
-
-	result = CreateDepthBuffer();
-	if (FAILED(result))
-	{
-		return result;
-	}
-
-	result = CreateDepthStencil();
-	if (FAILED(result))
-	{
-		return result;
-	}
-
-	result = CreateRasterizer();
-	if (FAILED(result))
-	{
-		return result;
-	}
-
-	result = SetVertexShader(m_standardVertexShader);
+	auto result = SetVertexShader(m_standardVertexShader);
 	if (FAILED(result))
 	{
 		return result;
@@ -76,9 +48,34 @@ HRESULT Renderer::Initialize()
 		return result;
 	}
 
+	if (m_useSwapchain)
+	{
+		result = CreateSwapChain();
+		if (FAILED(result))
+		{
+			return result;
+		}
+
+		result = CreateDepthBuffer();
+		if (FAILED(result))
+		{
+			return result;
+		}
+
+		result = CreateDepthStencil();
+		if (FAILED(result))
+		{
+			return result;
+		}
+
+		result = CreateRasterizer();
+		if (FAILED(result))
+		{
+			return result;
+		}
+	}
 	return result;
 }
-
 
 HRESULT Renderer::CreateSwapChainDesciption()
 {
@@ -421,11 +418,22 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
 
 void Renderer::Render()
 {
-	//SetBuffers();
+	if (m_useSwapchain)
+	{
+		RenderWithSwapchain();
+	}
+	else
+	{
+		RenderWithoutSwapchain();
+	}
+}
+
+void Renderer::RenderWithSwapchain()
+{
 	m_pSwapChain->Present(1, 0);
 }
 
-void Renderer::SetBuffers()
+void Renderer::RenderWithoutSwapchain()
 {
 	auto context = DeviceResource()->DeviceContext;
 	auto constBuffer = DeviceResource()->ConstantBuffer;

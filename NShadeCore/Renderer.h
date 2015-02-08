@@ -44,6 +44,10 @@ private:
 	HRESULT	CreateSwapChainDesciption();
 	HRESULT CreateSwapChain();
 
+	/* constant buffer */
+	HRESULT CreateConstantBufferDescription();
+	HRESULT CreateConstantBuffer();
+
 	/* depth buffer */
 	HRESULT CreateDepthBufferDescription();
 	HRESULT CreateDepthBuffer();
@@ -75,8 +79,8 @@ private:
 
 	HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
 
-	void	SetBuffers();
-
+	void	RenderWithSwapchain();
+	void	RenderWithoutSwapchain();
 private:
 	shared_ptr<DeviceResources>			m_pDeviceResources;
 	shared_ptr<ID3D11VertexShader>		m_vertexShader;
@@ -104,4 +108,5 @@ private:
 	bool								m_isRendering;
 	bool								m_loadingComplete;
 	bool								m_tracking;
+	bool								m_useSwapchain;
 };

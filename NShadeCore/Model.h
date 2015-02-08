@@ -10,14 +10,14 @@ public:
 	~Model();
 	HRESULT LoadModelFromFBXFile(char* fileName);
 	HRESULT LoadModelFromOBJFile(char* fileName);
-	HRESULT	Initialize(vector<VertexPositionColor>* vertexes, unsigned int size);
+	HRESULT	Initialize();
  
-	static const vector<VertexPositionColor> Cube;
+	static VertexPositionColor Cube[];
 	static const vector<VertexPositionColor> Sphere;
 private:
 	DeviceResources*			DeviceResource(){ return m_pDeviceResources.get(); }
-	HRESULT						InitializeVertexBuffer(vector<VertexPositionColor>* vertexes);
-	HRESULT						InitializeIndexBuffer(vector<int>* indexes);
+	HRESULT						InitializeVertexBuffer();
+	HRESULT						InitializeIndexBuffer(int indeces[]);
 	HRESULT						InitializeConstantBuffer();
 	FbxScene*					ImportFbx(char* fileName);
 private:

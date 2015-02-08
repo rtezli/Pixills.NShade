@@ -11,26 +11,21 @@ Model::~Model()
 
 }
 
-HRESULT Model::Initialize(vector<VertexPositionColor>* pModel, unsigned int size)
+HRESULT Model::Initialize()
 {
-	auto result = InitializeVertexBuffer(pModel);
+	auto result = InitializeConstantBuffer();
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	result = InitializeIndexBuffer(NULL);
+	result = InitializeVertexBuffer();
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	result = InitializeConstantBuffer();
-	if (FAILED(result))
-	{
-		return result;
-	}
-	return result;
+	return InitializeIndexBuffer(NULL);
 }
 
 HRESULT Model::LoadModelFromFBXFile(char* fileName)
@@ -109,47 +104,43 @@ HRESULT Model::LoadModelFromOBJFile(char* fileName)
 	return 0;
 }
 
-HRESULT Model::InitializeVertexBuffer(vector<VertexPositionColor>* vertices)
+HRESULT Model::InitializeConstantBuffer()
 {
-	vector<VertexPositionColor>* verticesVector;
-	auto cube = Model::Cube;
-	
-	if (!vertices)
+	CD3D11_BUFFER_DESC constantBufferDesc(sizeof(MVPConstantBuffer), D3D11_BIND_CONSTANT_BUFFER);
+	return DeviceResource()->Device->CreateBuffer(&constantBufferDesc, nullptr, &DeviceResource()->ConstantBuffer);
+}
+
+HRESULT Model::InitializeVertexBuffer()
+{
+	static const VertexPositionColor cube[] =
 	{
-		verticesVector = &cube;
-	}
-	else
-	{
-		verticesVector = vertices;
-	}
+		{ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
+		{ XMFLOAT3(-0.5f, -0.5f, 0.5f), XMFLOAT3(0.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3(-0.5f, 0.5f, -0.5f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+		{ XMFLOAT3(-0.5f, 0.5f, 0.5f), XMFLOAT3(0.0f, 1.0f, 1.0f) },
+		{ XMFLOAT3(0.5f, -0.5f, -0.5f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
+		{ XMFLOAT3(0.5f, -0.5f, 0.5f), XMFLOAT3(1.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3(0.5f, 0.5f, -0.5f), XMFLOAT3(1.0f, 1.0f, 0.0f) },
+		{ XMFLOAT3(0.5f, 0.5f, 0.5f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+	};
 
 	D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
-	vertexBufferData.pSysMem = verticesVector;
+	vertexBufferData.pSysMem = cube;
 	vertexBufferData.SysMemPitch = 0;
 	vertexBufferData.SysMemSlicePitch = 0;
 
-	CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(vertices), D3D11_BIND_VERTEX_BUFFER);
-
-	auto result = DeviceResource()->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &DeviceResource()->VertexBuffer);
-	if (FAILED(result))
-	{
-		return result;
-	}
-
-	return result;
+	CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(cube), D3D11_BIND_VERTEX_BUFFER);
+	return DeviceResource()->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &DeviceResource()->VertexBuffer);
 }
 
-HRESULT Model::InitializeIndexBuffer(vector<int>* indeces)
+HRESULT Model::InitializeIndexBuffer(int indeces[])
 {
 	D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
 	static const unsigned short cubeIndices[] =
 	{
-		0, 2, 1, 1, 2, 3,
-		4, 5, 6, 5, 7, 6,
-		0, 1, 5, 0, 5, 4,
-		2, 6, 7, 2, 7, 3,
-		0, 4, 6, 0, 6, 2,
-		1, 3, 7, 1, 7, 5,
+		0, 2, 1, 1, 2, 3, 4, 5, 6, 5, 7, 6,
+		0, 1, 5, 0, 5, 4, 2, 6, 7, 2, 7, 3,
+		0, 4, 6, 0, 6, 2, 1, 3, 7, 1, 7, 5,
 	};
 	indexBufferData.pSysMem = &cubeIndices;
 	indexBufferData.SysMemPitch = 0;
@@ -167,28 +158,3 @@ HRESULT Model::InitializeIndexBuffer(vector<int>* indeces)
 	}
 	return result;
 }
-
-HRESULT Model::InitializeConstantBuffer()
-{
-	CD3D11_BUFFER_DESC constantBufferDesc(sizeof(MVPConstantBuffer), D3D11_BIND_CONSTANT_BUFFER);
-	auto result = DeviceResource()->Device->CreateBuffer(&constantBufferDesc, nullptr, &DeviceResource()->ConstantBuffer);
-	if (FAILED(result))
-	{
-		return result;
-	}
-
-	return result;
-}
-
-const vector<VertexPositionColor> Model::Cube =
-{
-	VertexPositionColor{ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f) },
-	VertexPositionColor{ XMFLOAT3(-0.5f, -0.5f, 0.5f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
-	VertexPositionColor{ XMFLOAT3(-0.5f, 0.5f, -0.5f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-	VertexPositionColor{ XMFLOAT3(-0.5f, 0.5f, 0.5f), XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f) },
-
-	VertexPositionColor{ XMFLOAT3(0.5f, -0.5f, -0.5f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-	VertexPositionColor{ XMFLOAT3(0.5f, -0.5f, 0.5f), XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f) },
-	VertexPositionColor{ XMFLOAT3(0.5f, 0.5f, -0.5f), XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) },
-	VertexPositionColor{ XMFLOAT3(0.5f, 0.5f, 0.5f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) }
-};

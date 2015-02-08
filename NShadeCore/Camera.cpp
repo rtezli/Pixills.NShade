@@ -18,12 +18,15 @@ void Camera::Initialize()
 
 	auto res = DeviceResource();
 
-	res->ConstantBufferData = new MVPConstantBuffer();
+	DeviceResource()->ConstantBufferData = new MVPConstantBuffer();
 
 	auto perspectiveMatrix = XMMatrixPerspectiveFovLH(fovAngleY, aspectRatio, 0.01f, 100.0f);
-	auto orientationMatrix = XMLoadFloat4x4(&ScreenRotation::Rotation0);
 
-	XMStoreFloat4x4(&res->ConstantBufferData->projection, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
+	// No orientation for now
+	// auto orientationMatrix = XMLoadFloat4x4(&ScreenRotation::Rotation0);
+	// auto projection = XMMatrixTranspose(perspectiveMatrix * orientationMatrix);
+
+	XMStoreFloat4x4(&res->ConstantBufferData->projection, perspectiveMatrix);
 
 	static const XMVECTORF32 eye = { 0.0f, 0.7f, 1.5f, 0.0f };
 	static const XMVECTORF32 at = { 0.0f, -0.1f, 0.0f, 0.0f };
