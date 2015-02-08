@@ -8,7 +8,7 @@ struct VertexPositionColor
 	DirectX::XMFLOAT3 Color;
 };
 
-struct MVPConstantBuffer
+struct ConstantBufferData
 {
 	DirectX::XMFLOAT4X4 world;
 	DirectX::XMFLOAT4X4 view;

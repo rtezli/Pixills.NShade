@@ -16,9 +16,8 @@ public:
 	void				MoveY(float angle);
 	void				MoveZ(float angle);
 private:
-	DeviceResources*							DeviceResource(){ return m_pDeviceResources.get(); }
-	shared_ptr<XMFLOAT4X4>						m_position;
-	shared_ptr<XMFLOAT4X4>						m_direction;
-	shared_ptr<DeviceResources>					m_pDeviceResources;
+	DeviceResources*	m_pDeviceResources;
+	XMVECTORF32			m_position;
+	XMVECTORF32			m_targetPoint;
 };
 

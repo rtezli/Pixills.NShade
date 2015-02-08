@@ -222,10 +222,10 @@ HRESULT Renderer::CreateDepthStencilDescription()
 	m_pDepthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 	m_pDepthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-	 GetDevice()->CreateDepthStencilState(&m_pDepthStencilDesc, &m_pDepthStencilState);
-	 GetDeviceContext()->OMSetDepthStencilState(m_pDepthStencilState, 1);
+	GetDevice()->CreateDepthStencilState(&m_pDepthStencilDesc, &m_pDepthStencilState);
+	GetDeviceContext()->OMSetDepthStencilState(m_pDepthStencilState, 1);
 
-	 return 0;
+	return 0;
 }
 
 HRESULT Renderer::CreateDepthStencilViewDescription()
@@ -465,31 +465,29 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
 	return result;
 }
 
-void Renderer::Render()
+HRESULT Renderer::Render()
 {
 	auto context = DeviceResource()->DeviceContext;
-	auto constBuffer = DeviceResource()->ConstantBuffer;
-	auto bufferData = DeviceResource()->ConstantBufferData;
+	context->UpdateSubresource(DeviceResource()->ConstBuffer, 0, NULL, DeviceResource()->ConstBufferData, 0, 0);
 
 	UINT stride = sizeof(VertexPositionColor);
 	UINT offset = 0;
 
-	context->UpdateSubresource(constBuffer, 0, NULL, bufferData, 0, 0);
+	// Render models
 	context->IASetVertexBuffers(0, 1, &DeviceResource()->VertexBuffer, &stride, &offset);
 	context->IASetIndexBuffer(DeviceResource()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	context->IASetInputLayout(DeviceResource()->InputLayout);
 
-	//context->IASetInputLayout(DeviceResource()->InputLayout);
-	//context->VSSetShader(DeviceResource()->Shaders->VertexShader, nullptr, 0);
-	//context->PSSetShader(DeviceResource()->Shaders->PixelShader, nullptr, 0);
-	//context->DrawIndexed(DeviceResource()->IndexCount, 0, 0);
+	// Render shaders
+	context->VSSetShader(DeviceResource()->Shaders->VertexShader, nullptr, 0);
+	context->VSSetConstantBuffers(0, 1, &DeviceResource()->ConstBuffer);
+
+	context->PSSetShader(DeviceResource()->Shaders->PixelShader, nullptr, 0);
+
+	context->DrawIndexed(DeviceResource()->IndexCount, 0, 0);
 
 	DeviceResource()->SwapChain->Present(1, 0);
 
-	//DeviceResource()->RenderTargetView->Release();
-	//DeviceResource()->DepthStencilView->Release();
-	//context->DiscardView(m_d3dRenderTargetView.Get());
-
-	//// Discard the contents of the depth stencil.
-	//context->DiscardView(m_d3dDepthStencilView.Get());
+	return 0;
 }

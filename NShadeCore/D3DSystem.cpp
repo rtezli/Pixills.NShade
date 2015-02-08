@@ -195,18 +195,8 @@ void D3DSystem::Render()
 {
 	ClearScene();
 
-	// 	m_Camera->Render();
-
-	// Get the world, view, and projection matrices from the camera and d3d objects.
-	// m_Camera->GetViewMatrix(viewMatrix);
-	// m_D3D->GetWorldMatrix(worldMatrix);
-	// m_D3D->GetProjectionMatrix(projectionMatrix);
-
-	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	// m_Model->Render(m_D3D->GetDeviceContext());
-
-	// Render the model using the color shader.
-	// result = m_ColorShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
+	// Apply Camera Changes
+	// Update world-, view-, projection matrix
 
 	m_pRenderer->Render();
 }
@@ -214,8 +204,6 @@ void D3DSystem::Render()
 void D3DSystem::ClearScene()
 {
 	auto context = m_pDeviceResources->DeviceContext;
-	// ID3D11RenderTargetView *const targets[1] = { m_pDeviceResources->RenderTargetView };
-	// context->OMSetRenderTargets(1, targets, m_pDeviceResources->DepthStencilView);
 	context->ClearRenderTargetView(m_pDeviceResources->RenderTargetView, m_pDeviceResources->DefaultColor);
 	context->ClearDepthStencilView(m_pDeviceResources->DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }

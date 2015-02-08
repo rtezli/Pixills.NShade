@@ -106,8 +106,8 @@ HRESULT Model::LoadModelFromOBJFile(char* fileName)
 
 HRESULT Model::InitializeConstantBuffer()
 {
-	CD3D11_BUFFER_DESC constantBufferDesc(sizeof(MVPConstantBuffer), D3D11_BIND_CONSTANT_BUFFER);
-	return DeviceResource()->Device->CreateBuffer(&constantBufferDesc, nullptr, &DeviceResource()->ConstantBuffer);
+	CD3D11_BUFFER_DESC constantBufferDesc(sizeof(ConstantBufferData), D3D11_BIND_CONSTANT_BUFFER);
+	return DeviceResource()->Device->CreateBuffer(&constantBufferDesc, nullptr, &DeviceResource()->ConstBuffer);
 }
 
 HRESULT Model::InitializeVertexBuffer()

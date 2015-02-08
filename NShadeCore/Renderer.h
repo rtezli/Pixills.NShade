@@ -31,9 +31,8 @@ public:
 	Renderer(DeviceResources* pResources, bool useSwapChain);
 	~Renderer();
 public:
-	void	Render();
-	bool	IsTracking() { return m_tracking; }
-	bool	IsRendering(){ return m_isRendering; }
+	HRESULT	Render();
+	HRESULT SetShaderParameters();
 	HRESULT	Initialize();
 public:
 	ID3D11Device*				const GetDevice(){ return DeviceResource()->Device; }
@@ -82,8 +81,6 @@ private:
 	HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
 private:
 	shared_ptr<DeviceResources>			m_pDeviceResources;
-	//shared_ptr<ID3D11VertexShader>		m_vertexShader;
-	//shared_ptr<ID3D11PixelShader>		m_pixelShader;
 	shared_ptr<ShaderSet>				m_pShaderSet;
 
 	ID3D11Texture2D*					m_pBackBuffer;

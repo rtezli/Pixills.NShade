@@ -22,8 +22,8 @@ public:
 
 	ID3D11Buffer*				VertexBuffer;
 	ID3D11Buffer*				IndexBuffer;
-	ID3D11Buffer*				ConstantBuffer;
-	MVPConstantBuffer*			ConstantBufferData;
+	ID3D11Buffer*				ConstBuffer;
+	ConstantBufferData*			ConstBufferData;
 
 	IDXGISwapChain*				SwapChain;
 	IDXGISurface*				DxgiBackBuffer;
