@@ -1,12 +1,11 @@
 #include "stdafx.h"
 #include "renderer.h"
 
+
 Renderer::Renderer(DeviceResources* pResources, bool useSwapChain)
 {
 	m_pDeviceResources = shared_ptr<DeviceResources>(pResources);
 
-	m_pInputLayout = 0;
-	m_pSwapChain = 0;
 	m_pBackBuffer = 0;
 	m_pDepthStencilBuffer = 0;
 	m_pDepthStencilState = 0;
@@ -17,12 +16,8 @@ Renderer::Renderer(DeviceResources* pResources, bool useSwapChain)
 Renderer::~Renderer()
 {
 	m_pDeviceResources.reset();
-	m_vertexShader.reset();
-	m_pixelShader.reset();
 	m_pShaderSet.reset();
 
-	delete m_pInputLayout;
-	delete m_pSwapChain;
 	delete m_pBackBuffer;
 	delete m_pDepthStencilBuffer;
 	delete m_pDepthStencilState;
@@ -31,6 +26,9 @@ Renderer::~Renderer()
 
 HRESULT Renderer::Initialize()
 {
+	//auto currentDisplayInformation = DisplayInformation::GetForCurrentView();
+	//DeviceResource()->Dpi = currentDisplayInformation->LogicalDpi;
+
 	auto result = SetVertexShader(m_standardVertexShader);
 	if (FAILED(result))
 	{
@@ -71,6 +69,7 @@ HRESULT Renderer::Initialize()
 	}
 	return result;
 }
+
 
 HRESULT Renderer::CreateSwapChainDesciption()
 {
@@ -136,13 +135,13 @@ HRESULT Renderer::CreateSwapChain()
 		return result;
 	}
 
-	result = dxgiFactory->CreateSwapChain(GetDevice(), &m_pSwapChainDescription, &m_pSwapChain);
+	result = dxgiFactory->CreateSwapChain(GetDevice(), &m_pSwapChainDescription, &DeviceResource()->SwapChain);
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	result = m_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&m_pBackBuffer));
+	result = DeviceResource()->SwapChain->GetBuffer(0, IID_PPV_ARGS(&m_pBackBuffer));
 	if (FAILED(result))
 	{
 		return result;
@@ -244,7 +243,31 @@ HRESULT Renderer::CreateDepthStencil()
 	{
 		return result;
 	}
+
 	GetDeviceContext()->OMSetRenderTargets(1, &DeviceResource()->RenderTargetView, DeviceResource()->DepthStencilView);
+
+	//D2D1_BITMAP_PROPERTIES1 bitmapProperties =
+	//	D2D1::BitmapProperties1(
+	//	D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
+	//	D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED),
+	//	DeviceResource()->Dpi,
+	//	DeviceResource()->Dpi);
+
+
+	//DeviceResource()->GetBuffer(0, IID_PPV_ARGS(&m_pDxgiBackBuffer));
+
+
+	////GetDeviceContext()->Create(
+	////	m_pDxgiBackBuffer,
+	////	&bitmapProperties,
+	////	&m_pD2dTargetBitmap)
+	////	);
+
+	//GetDeviceContext()->SOSetTargets( SetTarget(m_pD2dTargetBitmap);
+
+	//// Grayscale text anti-aliasing is recommended for all Windows Store apps.
+	//GetDeviceContext()-> (D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE);
+
 	return 0;
 }
 
@@ -283,6 +306,23 @@ HRESULT Renderer::CreateRasterizer()
 	return 0;
 }
 
+HRESULT Renderer::CreateViewPort()
+{
+	CD3D11_VIEWPORT viewport;
+
+	GetDeviceContext()->RSSetViewports(1, &DeviceResource()->ViewPort);
+	viewport.Width = DeviceResource()->ScreenWidth;
+	viewport.Height = DeviceResource()->ScreenHeight;
+	viewport.MinDepth = 0.0f;
+	viewport.MaxDepth = 1.0f;
+	viewport.TopLeftX = 0.0f;
+	viewport.TopLeftY = 0.0f;
+
+	DeviceResource()->ViewPort = viewport;
+	GetDeviceContext()->RSSetViewports(1, &DeviceResource()->ViewPort);
+
+	return 0;
+}
 
 HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 {
@@ -301,7 +341,7 @@ HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
-	return GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), vsByteCode->FileBytes, vsByteCode->Length, &m_pInputLayout);
+	return GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), vsByteCode->FileBytes, vsByteCode->Length, &DeviceResource()->InputLayout);
 }
 
 HRESULT Renderer::CompileVertexShader(LPCWSTR compiledShaderFile)
@@ -410,25 +450,7 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
 	return result;
 }
 
-
 void Renderer::Render()
-{
-	//if (m_useSwapChain)
-	//{
-	//	RenderWithSwapchain();
-	//}
-	//else
-	//{
-		RenderWithoutSwapchain();
-	//}
-}
-
-void Renderer::RenderWithSwapchain()
-{
-	m_pSwapChain->Present(1, 0);
-}
-
-void Renderer::RenderWithoutSwapchain()
 {
 	auto context = DeviceResource()->DeviceContext;
 	auto constBuffer = DeviceResource()->ConstantBuffer;
@@ -442,8 +464,17 @@ void Renderer::RenderWithoutSwapchain()
 	context->IASetIndexBuffer(DeviceResource()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
 
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	context->IASetInputLayout(m_pInputLayout);
+	context->IASetInputLayout(DeviceResource()->InputLayout);
 	context->VSSetShader(DeviceResource()->Shaders->VertexShader, nullptr, 0);
 	context->PSSetShader(DeviceResource()->Shaders->PixelShader, nullptr, 0);
 	context->DrawIndexed(DeviceResource()->IndexCount, 0, 0);
+
+	DeviceResource()->SwapChain->Present(1, 0);
+
+	//DeviceResource()->RenderTargetView->Release();
+	//DeviceResource()->DepthStencilView->Release();
+	//context->DiscardView(m_d3dRenderTargetView.Get());
+
+	//// Discard the contents of the depth stencil.
+	//context->DiscardView(m_d3dDepthStencilView.Get());
 }

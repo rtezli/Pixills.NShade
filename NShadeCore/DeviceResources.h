@@ -1,6 +1,10 @@
 #pragma once
+#pragma comment(lib, "D2d1.lib")
 
 #include "includes.h"
+#include "directxcolors.h"
+#include "dxgi1_2.h"
+#include "d2d1_1.h"
 
 using namespace std;
 using namespace DirectX;
@@ -21,9 +25,14 @@ public:
 	ID3D11Buffer*				ConstantBuffer;
 	MVPConstantBuffer*			ConstantBufferData;
 
+	IDXGISwapChain*				SwapChain;
+	IDXGISurface*				DxgiBackBuffer;
+	ID2D1Bitmap*				D2dTargetBitmap;
+
 	ID3D11RenderTargetView*		RenderTargetView;
 	ID3D11DepthStencilView*		DepthStencilView;
-
+	ID3D11InputLayout*			InputLayout;
+	XMVECTORF32					DefaultColor;
 	ShaderSet*					Shaders;
 
 	D3D11_VIEWPORT				ViewPort;
@@ -31,8 +40,11 @@ public:
 	int							IndexCount;
 	int							ScreenWidth;
 	int							ScreenHeight;
+
+	float						Dpi;
+
 	float						NearZ;
-	int							FarZ;
+	float						FarZ;
 	bool						FullScreen;
 	bool						VSync;
 };

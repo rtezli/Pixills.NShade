@@ -65,6 +65,7 @@ HRESULT D3DSystem::InitializeForWindow(
 	m_fullScreen = fullscreen;
 
 	RECT rect;
+	
 	GetWindowRect(*hwnd, &rect);
 	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, FALSE);
 
@@ -93,13 +94,13 @@ HRESULT D3DSystem::Initialize()
 		return result;
 	}
 
-	result = LoadModels();
+	result = CreateCamera();
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	result = CreateCamera();
+	result = LoadModels();
 	if (FAILED(result))
 	{
 		return result;
@@ -173,6 +174,7 @@ HRESULT D3DSystem::CreateDevice()
 HRESULT D3DSystem::CreateCamera()
 {
 	m_pCamera = shared_ptr<Camera>(new Camera(m_pDeviceResources));
+	m_pCamera->Initialize();
 	return 0;
 }
 
@@ -191,6 +193,12 @@ HRESULT D3DSystem::CreateRenderer()
 
 void D3DSystem::Render()
 {
+	Reset();
+	m_pRenderer->Render();
+}
+
+void D3DSystem::Reset()
+{
 	auto context = m_pDeviceResources->DeviceContext;
 
 	// Reset the viewport to target the whole screen.
@@ -200,11 +208,8 @@ void D3DSystem::Render()
 	// Reset render targets to the screen.
 	ID3D11RenderTargetView *const targets[1] = { m_pDeviceResources->RenderTargetView };
 	context->OMSetRenderTargets(1, targets, m_pDeviceResources->DepthStencilView);
-
-	context->ClearRenderTargetView(m_pDeviceResources->RenderTargetView, Colors::Black);
+	context->ClearRenderTargetView(m_pDeviceResources->RenderTargetView, m_pDeviceResources->DefaultColor);
 	context->ClearDepthStencilView(m_pDeviceResources->DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-	m_pRenderer->Render();
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)

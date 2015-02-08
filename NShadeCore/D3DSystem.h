@@ -3,8 +3,6 @@
 #include "includes.h"
 #include "export.h"
 
-#include "directxcolors.h"
-
 #include "renderer.h"
 #include "camera.h"
 #include "model.h"
@@ -19,6 +17,7 @@ public:
 	HRESULT InitializeForWindow(bool vsync, HWND* handle, bool fullscreen);
 	HRESULT InitializeWithWindow(int screenWidth, int screenHeight, bool vsync, bool fullscreen);
 	HRESULT Initialize();
+	void	Reset();
 	void	Render();
 private:
 	HRESULT					InitializeWindow(int screenWidth, int screenHeight);

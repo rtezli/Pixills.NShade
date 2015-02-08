@@ -23,7 +23,7 @@
 
 #include "includes.h"
 #include "d3dcompiler.h"
-#include "dxgi1_2.h"
+
 
 class Renderer
 {
@@ -61,6 +61,8 @@ private:
 	HRESULT CreateRasterizerDescription();
 	HRESULT CreateRasterizer();
 
+	HRESULT CreateViewPort();
+
 	/* sahders */
 	HRESULT	SetVertexShader(LPCWSTR compiledShaderFile);
 	HRESULT	CompileVertexShader(LPCWSTR shaderSource);
@@ -78,23 +80,17 @@ private:
 	HRESULT CompilePixelShader(LPCWSTR shaderSource);
 
 	HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
-
-	void	RenderWithSwapchain();
-	void	RenderWithoutSwapchain();
 private:
 	shared_ptr<DeviceResources>			m_pDeviceResources;
-	shared_ptr<ID3D11VertexShader>		m_vertexShader;
-	shared_ptr<ID3D11PixelShader>		m_pixelShader;
+	//shared_ptr<ID3D11VertexShader>		m_vertexShader;
+	//shared_ptr<ID3D11PixelShader>		m_pixelShader;
 	shared_ptr<ShaderSet>				m_pShaderSet;
-
-	IDXGISwapChain*						m_pSwapChain;
 
 	ID3D11Texture2D*					m_pBackBuffer;
 	ID3D11Texture2D*					m_pDepthStencilBuffer;
 	ID3D11DepthStencilState*			m_pDepthStencilState;
 
 	ID3D11RasterizerState*				m_pRasterizerState;
-	ID3D11InputLayout*					m_pInputLayout;
 
 	LPCWSTR								m_standardVertexShader = L"VertexShader.cso";
 	LPCWSTR								m_standardPixelShader = L"PixelShader.cso";

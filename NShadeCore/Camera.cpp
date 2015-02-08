@@ -4,7 +4,6 @@
 Camera::Camera(DeviceResources* resources)
 {
 	m_pDeviceResources = shared_ptr<DeviceResources>(resources);
-	Initialize();
 }
 
 Camera::~Camera()

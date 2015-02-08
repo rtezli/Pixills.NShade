@@ -1,37 +1,38 @@
-cbuffer MatrixBuffer
+// A constant buffer that stores the three basic column-major matrices for composing geometry.
+cbuffer ModelViewProjectionConstantBuffer : register(b0)
 {
-	matrix worldMatrix;
-	matrix viewMatrix;
-	matrix projectionMatrix;
+	matrix model;
+	matrix view;
+	matrix projection;
 };
 
-struct VertexInputType
+// Per-vertex data used as input to the vertex shader.
+struct VertexShaderInput
 {
-	float4 position : POSITION;
-	float4 color	: COLOR;
+	float3 pos : POSITION;
+	float3 color : COLOR0;
 };
 
-struct PixelInputType
+// Per-pixel color data passed through the pixel shader.
+struct PixelShaderInput
 {
-	float4 position : SV_POSITION;
-	float4 color	: COLOR;
+	float4 pos : SV_POSITION;
+	float3 color : COLOR0;
 };
 
-
-PixelInputType main(VertexInputType input)
+// Simple shader to do vertex processing on the GPU.
+PixelShaderInput main(VertexShaderInput input)
 {
-	PixelInputType output;
+	PixelShaderInput output;
+	float4 pos = float4(input.pos, 1.0f);
 
+		// Transform the vertex position into projected space.
+		pos = mul(pos, model);
+	pos = mul(pos, view);
+	pos = mul(pos, projection);
+	output.pos = pos;
 
-	// Change the position vector to be 4 units for proper matrix calculations.
-	input.position.w = 1.0f;
-
-	// Calculate the position of the vertex against the world, view, and projection matrices.
-	output.position = mul(input.position, worldMatrix);
-	output.position = mul(output.position, viewMatrix);
-	output.position = mul(output.position, projectionMatrix);
-
-	// Store the input color for the pixel shader to use.
+	// Pass the color through without modification.
 	output.color = input.color;
 
 	return output;
