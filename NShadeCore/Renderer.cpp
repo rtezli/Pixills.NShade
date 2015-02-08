@@ -1,20 +1,17 @@
 #include "stdafx.h"
 #include "renderer.h"
 
-Renderer::Renderer(DeviceResources* pResources)
+Renderer::Renderer(DeviceResources* pResources, bool useSwapChain)
 {
 	m_pDeviceResources = shared_ptr<DeviceResources>(pResources);
 
 	m_pInputLayout = 0;
 	m_pSwapChain = 0;
-	m_pRenderTargetView = 0;
 	m_pBackBuffer = 0;
 	m_pDepthStencilBuffer = 0;
 	m_pDepthStencilState = 0;
-	m_pDepthStencilView = 0;
 	m_pRasterizerState = 0;
-
-	m_useSwapchain = false;
+	m_useSwapChain = useSwapChain;
 }
 
 Renderer::~Renderer()
@@ -26,11 +23,9 @@ Renderer::~Renderer()
 
 	delete m_pInputLayout;
 	delete m_pSwapChain;
-	delete m_pRenderTargetView;
 	delete m_pBackBuffer;
 	delete m_pDepthStencilBuffer;
 	delete m_pDepthStencilState;
-	delete m_pDepthStencilView;
 	delete m_pRasterizerState;
 }
 
@@ -48,7 +43,7 @@ HRESULT Renderer::Initialize()
 		return result;
 	}
 
-	if (m_useSwapchain)
+	if (m_useSwapChain)
 	{
 		result = CreateSwapChain();
 		if (FAILED(result))
@@ -153,7 +148,7 @@ HRESULT Renderer::CreateSwapChain()
 		return result;
 	}
 
-	result = GetDevice()->CreateRenderTargetView(m_pBackBuffer, NULL, &m_pRenderTargetView);
+	result = GetDevice()->CreateRenderTargetView(m_pBackBuffer, NULL, &DeviceResource()->RenderTargetView);
 	if (FAILED(result))
 	{
 		return result;
@@ -163,7 +158,7 @@ HRESULT Renderer::CreateSwapChain()
 	dxgiAdapter->Release();
 	dxgiFactory->Release();
 
-	return GetDevice()->CreateRenderTargetView(m_pBackBuffer, nullptr, &m_pRenderTargetView);
+	return GetDevice()->CreateRenderTargetView(m_pBackBuffer, nullptr, &DeviceResource()->RenderTargetView);
 }
 
 
@@ -244,12 +239,12 @@ HRESULT Renderer::CreateDepthStencil()
 	{
 		return result;
 	}
-	result = GetDevice()->CreateDepthStencilView(m_pDepthStencilBuffer, &m_pDepthStencilViewDesc, &m_pDepthStencilView);
+	result = GetDevice()->CreateDepthStencilView(m_pDepthStencilBuffer, &m_pDepthStencilViewDesc, &DeviceResource()->DepthStencilView);
 	if (FAILED(result))
 	{
 		return result;
 	}
-	GetDeviceContext()->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+	GetDeviceContext()->OMSetRenderTargets(1, &DeviceResource()->RenderTargetView, DeviceResource()->DepthStencilView);
 	return 0;
 }
 
@@ -418,14 +413,14 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
 
 void Renderer::Render()
 {
-	if (m_useSwapchain)
-	{
-		RenderWithSwapchain();
-	}
-	else
-	{
+	//if (m_useSwapChain)
+	//{
+	//	RenderWithSwapchain();
+	//}
+	//else
+	//{
 		RenderWithoutSwapchain();
-	}
+	//}
 }
 
 void Renderer::RenderWithSwapchain()

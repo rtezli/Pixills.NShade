@@ -185,12 +185,25 @@ HRESULT D3DSystem::LoadModels()
 
 HRESULT D3DSystem::CreateRenderer()
 {
-	m_pRenderer = shared_ptr<Renderer>(new Renderer(m_pDeviceResources));
+	m_pRenderer = shared_ptr<Renderer>(new Renderer(m_pDeviceResources, true));
 	return m_pRenderer->Initialize();
 }
 
 void D3DSystem::Render()
 {
+	auto context = m_pDeviceResources->DeviceContext;
+
+	// Reset the viewport to target the whole screen.
+	auto viewport = m_pDeviceResources->ViewPort;
+	context->RSSetViewports(1, &viewport);
+
+	// Reset render targets to the screen.
+	ID3D11RenderTargetView *const targets[1] = { m_pDeviceResources->RenderTargetView };
+	context->OMSetRenderTargets(1, targets, m_pDeviceResources->DepthStencilView);
+
+	context->ClearRenderTargetView(m_pDeviceResources->RenderTargetView, Colors::Black);
+	context->ClearDepthStencilView(m_pDeviceResources->DepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
 	m_pRenderer->Render();
 }
 

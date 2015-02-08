@@ -3,6 +3,8 @@
 #include "includes.h"
 #include "export.h"
 
+#include "directxcolors.h"
+
 #include "renderer.h"
 #include "camera.h"
 #include "model.h"

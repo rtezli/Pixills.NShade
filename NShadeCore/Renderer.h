@@ -28,7 +28,7 @@
 class Renderer
 {
 public:
-	Renderer(DeviceResources* pResources);
+	Renderer(DeviceResources* pResources, bool useSwapChain);
 	~Renderer();
 public:
 	void	Render();
@@ -88,11 +88,11 @@ private:
 	shared_ptr<ShaderSet>				m_pShaderSet;
 
 	IDXGISwapChain*						m_pSwapChain;
-	ID3D11RenderTargetView*				m_pRenderTargetView;
+
 	ID3D11Texture2D*					m_pBackBuffer;
 	ID3D11Texture2D*					m_pDepthStencilBuffer;
 	ID3D11DepthStencilState*			m_pDepthStencilState;
-	ID3D11DepthStencilView*				m_pDepthStencilView;
+
 	ID3D11RasterizerState*				m_pRasterizerState;
 	ID3D11InputLayout*					m_pInputLayout;
 
@@ -108,5 +108,5 @@ private:
 	bool								m_isRendering;
 	bool								m_loadingComplete;
 	bool								m_tracking;
-	bool								m_useSwapchain;
+	bool								m_useSwapChain;
 };

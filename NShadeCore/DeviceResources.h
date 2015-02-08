@@ -21,8 +21,12 @@ public:
 	ID3D11Buffer*				ConstantBuffer;
 	MVPConstantBuffer*			ConstantBufferData;
 
+	ID3D11RenderTargetView*		RenderTargetView;
+	ID3D11DepthStencilView*		DepthStencilView;
+
 	ShaderSet*					Shaders;
 
+	D3D11_VIEWPORT				ViewPort;
 	int							SamplesCount;
 	int							IndexCount;
 	int							ScreenWidth;

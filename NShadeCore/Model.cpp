@@ -142,6 +142,9 @@ HRESULT Model::InitializeIndexBuffer(int indeces[])
 		0, 1, 5, 0, 5, 4, 2, 6, 7, 2, 7, 3,
 		0, 4, 6, 0, 6, 2, 1, 3, 7, 1, 7, 5,
 	};
+
+	DeviceResource()->IndexCount = ARRAYSIZE(cubeIndices);
+
 	indexBufferData.pSysMem = &cubeIndices;
 	indexBufferData.SysMemPitch = 0;
 	indexBufferData.SysMemSlicePitch = 0;
