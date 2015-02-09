@@ -16,7 +16,7 @@ public:
 	void				MoveY(float angle);
 	void				MoveZ(float angle);
 
-	float				GetAspectRatio(){ return m_pDeviceResources->ScreenWidth / m_pDeviceResources->ScreenHeight; };
+	float				GetAspectRatio(){ return m_pDeviceResources->ViewPort->Width / m_pDeviceResources->ViewPort->Height; };
 	float				GetFieldOfView(){ return 70.0f * XM_PI / 180.0f; };
 
 	XMFLOAT4X4 GetViewMatrix();

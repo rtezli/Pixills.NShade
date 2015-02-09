@@ -157,13 +157,22 @@ HRESULT D3DSystem::CreateDevice()
 			&context);
 	}
 
+	D3D11_VIEWPORT viewPort;
+	viewPort.Width = m_viewportWidth;
+	viewPort.Height = m_viewportWidth;
+	viewPort.TopLeftX = 0;
+	viewPort.TopLeftY = 0;
+	viewPort.MinDepth = D3D11_MIN_DEPTH;
+	viewPort.MaxDepth = D3D11_MAX_DEPTH;
+		
 	m_pDeviceResources = new DeviceResources(device, context);
 
 	m_pDeviceResources->WindowHandle = m_pWindowHandle;
 	m_pDeviceResources->FullScreen = m_fullScreen;
 	m_pDeviceResources->VSync = m_vSync;
-	m_pDeviceResources->ScreenWidth = m_viewportWidth;
-	m_pDeviceResources->ScreenHeight = m_viewportHeight;
+
+	m_pDeviceResources->ViewPort = &viewPort;
+	
 	m_pDeviceResources->NearZ = 0.0f;
 	m_pDeviceResources->FarZ = 1000.0f;
 

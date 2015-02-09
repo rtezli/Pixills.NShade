@@ -83,13 +83,6 @@ private:
 	HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
 private:
 	shared_ptr<DeviceResources>			m_pDeviceResources;
-	shared_ptr<ShaderSet>				m_pShaderSet;
-
-	ID3D11Texture2D*					m_pBackBuffer;
-	ID3D11Texture2D*					m_pDepthStencilBuffer;
-	ID3D11DepthStencilState*			m_pDepthStencilState;
-
-	ID3D11RasterizerState*				m_pRasterizerState;
 
 	LPCWSTR								m_standardVertexShader = L"VertexShader.cso";
 	LPCWSTR								m_standardPixelShader = L"PixelShader.cso";
@@ -100,8 +93,5 @@ private:
 	D3D11_DEPTH_STENCIL_VIEW_DESC		m_pDepthStencilViewDesc;
 	D3D11_RASTERIZER_DESC				m_pRasterizerDesc;
 
-	bool								m_isRendering;
-	bool								m_loadingComplete;
-	bool								m_tracking;
 	bool								m_useSwapChain;
 };

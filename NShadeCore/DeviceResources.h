@@ -25,6 +25,12 @@ public:
 	ID3D11Buffer*				ConstBuffer;
 	ConstantBufferData*			ConstBufferData;
 
+	ID3D11Texture2D*			BackBuffer;
+	ID3D11Texture2D*			DepthStencilBuffer;
+
+	ID3D11DepthStencilState*	DepthStencilState;
+	ID3D11RasterizerState*		RasterizerState;
+
 	IDXGISwapChain*				SwapChain;
 	IDXGISurface*				DxgiBackBuffer;
 	ID2D1Bitmap*				D2dTargetBitmap;
@@ -35,14 +41,13 @@ public:
 	XMVECTORF32					DefaultColor;
 	ShaderSet*					Shaders;
 
-	D3D11_VIEWPORT				ViewPort;
+	D3D11_VIEWPORT*				ViewPort;
+
 	int							SwapChainFlags;
 	int							Quality;
 	int							SamplesCount;
 	int							BufferCount;
 	int							IndexCount;
-	int							ScreenWidth;
-	int							ScreenHeight;
 
 	float						Dpi;
 
