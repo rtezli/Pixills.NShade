@@ -32,6 +32,7 @@ public:
 	~Renderer();
 public:
 	HRESULT	Render();
+	HRESULT	ResizeSwapChain(UINT32 newWidth, UINT32 newHeight);
 	HRESULT SetShaderParameters();
 	HRESULT	Initialize();
 public:

@@ -82,26 +82,22 @@ HRESULT Renderer::CreateSwapChainDesciption()
 	ZeroMemory(&m_pSwapChainDescription, sizeof(m_pSwapChainDescription));
 
 	m_pSwapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	m_pSwapChainDescription.BufferCount = DeviceResource()->BufferCount;
+	m_pSwapChainDescription.SwapEffect = DXGI_SWAP_EFFECT_DISCARD; // DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL
+	m_pSwapChainDescription.Flags = DeviceResource()->SwapChainFlags;
 
-	m_pSwapChainDescription.BufferCount = 1;
-	m_pSwapChainDescription.SampleDesc.Quality = 0;
+	m_pSwapChainDescription.SampleDesc.Quality = DeviceResource()->Quality;
+	m_pSwapChainDescription.SampleDesc.Count = DeviceResource()->SamplesCount;
 
 	m_pSwapChainDescription.BufferDesc.Width = DeviceResource()->ScreenWidth;
 	m_pSwapChainDescription.BufferDesc.Height = DeviceResource()->ScreenHeight;
 	m_pSwapChainDescription.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-
 	m_pSwapChainDescription.BufferDesc.RefreshRate.Numerator = 0;
 	m_pSwapChainDescription.BufferDesc.RefreshRate.Denominator = 1;
-	m_pSwapChainDescription.SampleDesc.Count = DeviceResource()->SamplesCount;
-
-
 	m_pSwapChainDescription.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	m_pSwapChainDescription.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-	m_pSwapChainDescription.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-	m_pSwapChainDescription.Flags = 0;
 
-	auto handle = *DeviceResource()->WindowHandle;
-	m_pSwapChainDescription.OutputWindow = handle;
+	m_pSwapChainDescription.OutputWindow = *DeviceResource()->WindowHandle;
 
 	if (DeviceResource()->FullScreen)
 	{
@@ -150,13 +146,12 @@ HRESULT Renderer::CreateSwapChain()
 		return result;
 	}
 
-	result = DeviceResource()->SwapChain->GetBuffer(0, IID_PPV_ARGS(&m_pBackBuffer));
-	if (FAILED(result))
-	{
-		return result;
-	}
+	//D3D11_TEXTURE2D_DESC backBufferDesc = { 0 };
+	//ID3D11Texture2D* backBuffer = 0;
+	//backBuffer->GetDesc(&backBufferDesc);
+	//m_pBackBuffer = backBuffer;
 
-	result = GetDevice()->CreateRenderTargetView(m_pBackBuffer, NULL, &DeviceResource()->RenderTargetView);
+	result = DeviceResource()->SwapChain->GetBuffer(0, IID_PPV_ARGS(&m_pBackBuffer));
 	if (FAILED(result))
 	{
 		return result;
@@ -166,7 +161,7 @@ HRESULT Renderer::CreateSwapChain()
 	dxgiAdapter->Release();
 	dxgiFactory->Release();
 
-	return GetDevice()->CreateRenderTargetView(m_pBackBuffer, nullptr, &DeviceResource()->RenderTargetView);
+	return GetDevice()->CreateRenderTargetView(m_pBackBuffer, NULL, &DeviceResource()->RenderTargetView);
 }
 
 
@@ -325,19 +320,19 @@ HRESULT Renderer::CreateViewPort()
 {
 	CD3D11_VIEWPORT viewport;
 
-	GetDeviceContext()->RSSetViewports(1, &DeviceResource()->ViewPort);
-	viewport.Width = DeviceResource()->ScreenWidth;
-	viewport.Height = DeviceResource()->ScreenHeight;
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
 	viewport.TopLeftX = 0.0f;
 	viewport.TopLeftY = 0.0f;
+	viewport.Width = DeviceResource()->ScreenWidth;
+	viewport.Height = DeviceResource()->ScreenHeight;
+	viewport.MinDepth = D3D11_MIN_DEPTH;
+	viewport.MaxDepth = D3D11_MAX_DEPTH;
 
 	DeviceResource()->ViewPort = viewport;
 	GetDeviceContext()->RSSetViewports(1, &DeviceResource()->ViewPort);
 
 	return 0;
 }
+
 
 HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 {
@@ -465,6 +460,7 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
 	return result;
 }
 
+
 HRESULT Renderer::Render()
 {
 	auto context = DeviceResource()->DeviceContext;
@@ -490,4 +486,9 @@ HRESULT Renderer::Render()
 	DeviceResource()->SwapChain->Present(1, 0);
 
 	return 0;
+}
+
+HRESULT	Renderer::ResizeSwapChain(UINT32 newWidth, UINT32 newHeight)
+{
+	return DeviceResource()->SwapChain->ResizeBuffers(DeviceResource()->BufferCount, newWidth, newHeight, DXGI_FORMAT_B8G8R8A8_UNORM, DeviceResource()->SwapChainFlags);
 }

@@ -114,28 +114,39 @@ HRESULT Model::InitializeVertexBuffer()
 {
 	static const VertexPositionColor cube[] =
 	{
-		{ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
-		{ XMFLOAT3(-0.5f, -0.5f, 0.5f), XMFLOAT3(0.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(-0.5f, 0.5f, -0.5f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
-		{ XMFLOAT3(-0.5f, 0.5f, 0.5f), XMFLOAT3(0.0f, 1.0f, 1.0f) },
-		{ XMFLOAT3(0.5f, -0.5f, -0.5f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
-		{ XMFLOAT3(0.5f, -0.5f, 0.5f), XMFLOAT3(1.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(0.5f, 0.5f, -0.5f), XMFLOAT3(1.0f, 1.0f, 0.0f) },
-		{ XMFLOAT3(0.5f, 0.5f, 0.5f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+		// BOTTOM FACE
+		{ XMFLOAT3(-0.5f, -0.5f, -0.5f),	XMFLOAT3(0.0f, 0.0f, 0.0f) },
+		{ XMFLOAT3(0.5f, -0.5f, -0.5f),		XMFLOAT3(1.0f, 0.0f, 0.0f) },
+		{ XMFLOAT3(0.5f, -0.5f, 0.5f),		XMFLOAT3(1.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3(-0.5f, -0.5f, 0.5f),		XMFLOAT3(0.0f, 0.0f, 1.0f) },
+
+		// TOP FACE
+		{ XMFLOAT3(-0.5f, 0.5f, -0.5f),		XMFLOAT3(0.0f, 1.0f, 0.0f) },
+		{ XMFLOAT3(-0.5f, 0.5f, 0.5f),		XMFLOAT3(0.0f, 1.0f, 1.0f) },
+		{ XMFLOAT3(0.5f, 0.5f, -0.5f),		XMFLOAT3(1.0f, 1.0f, 0.0f) },
+		{ XMFLOAT3(0.5f, 0.5f, 0.5f),		XMFLOAT3(1.0f, 1.0f, 1.0f) },
+
+
 	};
+	D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
+	vertexBufferDesc.ByteWidth = sizeof(VertexPositionColor) * ARRAYSIZE(cube);
+	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDesc.CPUAccessFlags = 0;
+	vertexBufferDesc.MiscFlags = 0;
+	vertexBufferDesc.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
 	vertexBufferData.pSysMem = cube;
 	vertexBufferData.SysMemPitch = 0;
 	vertexBufferData.SysMemSlicePitch = 0;
 
-	CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(cube), D3D11_BIND_VERTEX_BUFFER);
 	return DeviceResource()->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &DeviceResource()->VertexBuffer);
 }
 
 HRESULT Model::InitializeIndexBuffer(int indeces[])
 {
-	D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
+	//D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
 	static const unsigned short cubeIndices[] =
 	{
 		0, 2, 1, 1, 2, 3, 4, 5, 6, 5, 7, 6,
@@ -145,16 +156,20 @@ HRESULT Model::InitializeIndexBuffer(int indeces[])
 
 	DeviceResource()->IndexCount = ARRAYSIZE(cubeIndices);
 
-	indexBufferData.pSysMem = &cubeIndices;
+	D3D11_BUFFER_DESC indexBufferDesc;
+	indexBufferDesc.ByteWidth = sizeof(unsigned short) * ARRAYSIZE(cubeIndices);
+	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	indexBufferDesc.CPUAccessFlags = 0;
+	indexBufferDesc.MiscFlags = 0;
+	indexBufferDesc.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA indexBufferData;
+	indexBufferData.pSysMem = cubeIndices;
 	indexBufferData.SysMemPitch = 0;
 	indexBufferData.SysMemSlicePitch = 0;
 
-	CD3D11_BUFFER_DESC indexBufferDesc(sizeof(indeces), D3D11_BIND_INDEX_BUFFER);
-
-	auto device = DeviceResource()->Device;
-	auto indexBuffer = DeviceResource()->IndexBuffer;
-
-	auto result = device->CreateBuffer(&indexBufferDesc, &indexBufferData, &indexBuffer);
+	auto result = DeviceResource()->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &DeviceResource()->IndexBuffer);
 	if (FAILED(result))
 	{
 		return result;

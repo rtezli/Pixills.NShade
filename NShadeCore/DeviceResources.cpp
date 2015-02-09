@@ -6,7 +6,10 @@ DeviceResources::DeviceResources(ID3D11Device* device, ID3D11DeviceContext* devi
 	Device = device;
 	DeviceContext = deviceContext;
 	Shaders = new ShaderSet();
-	SamplesCount = 4;
+	Quality = 0;
+	SamplesCount = 1;
+	BufferCount = 2;
+	SwapChainFlags = 0;
 	DefaultColor = Colors::DarkGray;
 }
 

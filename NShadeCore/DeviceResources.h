@@ -36,7 +36,10 @@ public:
 	ShaderSet*					Shaders;
 
 	D3D11_VIEWPORT				ViewPort;
+	int							SwapChainFlags;
+	int							Quality;
 	int							SamplesCount;
+	int							BufferCount;
 	int							IndexCount;
 	int							ScreenWidth;
 	int							ScreenHeight;

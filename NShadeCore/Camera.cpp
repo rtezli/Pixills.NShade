@@ -5,13 +5,13 @@ Camera::Camera(DeviceResources* resources)
 {
 	m_pDeviceResources = resources;
 
-	XMVECTORF32 eye = { 0.0f, 5.0f, 20.0, 0.0f };
+	XMVECTORF32 eye = { 0.0f, 5.0f, -10.0, 0.0f };
 	XMVECTORF32 at = { 0.0f, 0.0f, 0.0f, 0.0f };
 	XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
 
-	m_eyePosition = eye;
-	m_focusPosition = at;
-	m_upDirection = up;
+	m_eyePosition = &eye;
+	m_focusPosition = &at;
+	m_upDirection = &up;
 }
 
 Camera::~Camera()
@@ -32,7 +32,7 @@ void Camera::Initialize()
 XMFLOAT4X4 Camera::GetViewMatrix()
 {
 	XMFLOAT4X4 view;
-	auto matrix = XMMatrixTranspose(XMMatrixLookAtRH(m_eyePosition, m_focusPosition, m_upDirection));
+	auto matrix = XMMatrixTranspose(XMMatrixLookAtRH(*m_eyePosition, *m_focusPosition, *m_upDirection));
 	XMStoreFloat4x4(&view, matrix);
 	return view;
 }
