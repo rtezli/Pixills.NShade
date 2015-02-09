@@ -5,13 +5,13 @@ Camera::Camera(DeviceResources* resources)
 {
 	m_pDeviceResources = resources;
 
-	XMVECTORF32 eye = { 0.0f, 5.0f, -10.0, 0.0f };
-	XMVECTORF32 at = { 0.0f, 0.0f, 0.0f, 0.0f };
-	XMVECTORF32 up = { 0.0f, 1.0f, 0.0f, 0.0f };
+	XMVECTORF32 eyePosition		= { 0.0f, 5.0f, -10.0, 0.0f };
+	XMVECTORF32 focusPosition	= { 0.0f, 0.0f, 0.0f, 0.0f };
+	XMVECTORF32 upDirection		= { 0.0f, 1.0f, 0.0f, 0.0f };
 
-	m_eyePosition = &eye;
-	m_focusPosition = &at;
-	m_upDirection = &up;
+	m_eyePosition = &eyePosition;
+	m_focusPosition = &focusPosition;
+	m_upDirection = &upDirection;
 }
 
 Camera::~Camera()
