@@ -19,20 +19,12 @@ public:
 	float				GetAspectRatio(){ return m_pDeviceResources->ScreenWidth / m_pDeviceResources->ScreenHeight; };
 	float				GetFieldOfView(){ return 70.0f * XM_PI / 180.0f; };
 
-	XMMATRIX			GetViewMatrix()
-	{ 
-		return XMMatrixTranspose(XMMatrixLookAtRH(EyePosition, FocusPosition, UpDirection)); 
-	}
-
-	XMMATRIX			GetProjectionMatrix()
-	{ 
-		return XMMatrixTranspose(XMMatrixPerspectiveFovRH(GetFieldOfView(), GetAspectRatio(), m_pDeviceResources->NearZ, m_pDeviceResources->FarZ)); 
-	}
-
-	XMVECTORF32			EyePosition;
-	XMVECTORF32			FocusPosition;
-	XMVECTORF32			UpDirection;
+	XMFLOAT4X4 GetViewMatrix();
+	XMFLOAT4X4 GetProjectionMatrix();
 private:
 	DeviceResources*	m_pDeviceResources;
+	XMVECTORF32			m_eyePosition;
+	XMVECTORF32			m_focusPosition;
+	XMVECTORF32			m_upDirection;
 };
 
