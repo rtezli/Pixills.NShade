@@ -31,11 +31,12 @@ public:
 	Renderer(DeviceResources* pResources, bool useSwapChain);
 	~Renderer();
 public:
-	HRESULT	Render();
 	HRESULT	ResizeSwapChain(UINT32 newWidth, UINT32 newHeight);
 	HRESULT SetShaderParameters();
 	HRESULT	Initialize();
+	HRESULT	Render();
 public:
+	void						ClearScene();
 	ID3D11Device*				const GetDevice(){ return DeviceResource()->Device; }
 	ID3D11DeviceContext*		const GetDeviceContext(){ return DeviceResource()->DeviceContext; }
 	DeviceResources*			const DeviceResource(){ return m_pDeviceResources.get(); }

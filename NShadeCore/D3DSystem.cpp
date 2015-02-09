@@ -65,7 +65,7 @@ HRESULT D3DSystem::InitializeForWindow(
 	m_fullScreen = fullscreen;
 
 	RECT rect;
-	
+
 	GetWindowRect(*hwnd, &rect);
 	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, FALSE);
 
@@ -88,13 +88,13 @@ HRESULT D3DSystem::Initialize()
 		return result;
 	}
 
-	result = LoadModels();
+	result = CreateRenderer();
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	result = CreateRenderer();
+	result = LoadModels();
 	if (FAILED(result))
 	{
 		return result;
@@ -166,7 +166,7 @@ HRESULT D3DSystem::CreateDevice()
 	m_pDeviceResources->ScreenHeight = m_viewportHeight;
 	m_pDeviceResources->NearZ = 0.0f;
 	m_pDeviceResources->FarZ = 1000.0f;
- 
+
 	return createResult;
 }
 
@@ -192,23 +192,7 @@ HRESULT D3DSystem::CreateRenderer()
 
 void D3DSystem::Render()
 {
-	ClearScene();
-
-	// Apply Camera Changes
-	// Update world-, view-, projection matrix
-
 	m_pRenderer->Render();
-}
-
-void D3DSystem::ClearScene()
-{
-	auto context = m_pDeviceResources->DeviceContext;
-
-	context->UpdateSubresource(m_pDeviceResources->ConstBuffer, 0, NULL, m_pDeviceResources->ConstBufferData, 0, 0);
-	context->OMSetRenderTargets(1, &m_pDeviceResources->RenderTargetView, m_pDeviceResources->DepthStencilView); // use no depth stencil
-	context->ClearRenderTargetView(m_pDeviceResources->RenderTargetView, m_pDeviceResources->DefaultColor);
-	context->ClearDepthStencilView(m_pDeviceResources->DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-	context->IASetInputLayout(m_pDeviceResources->InputLayout);
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)

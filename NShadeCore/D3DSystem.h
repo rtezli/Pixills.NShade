@@ -17,7 +17,6 @@ public:
 	HRESULT InitializeForWindow(bool vsync, HWND* handle, bool fullscreen);
 	HRESULT InitializeWithWindow(int screenWidth, int screenHeight, bool vsync, bool fullscreen);
 	HRESULT Initialize();
-	void	ClearScene();
 	void	Render();
 private:
 	HRESULT					InitializeWindow(int screenWidth, int screenHeight);

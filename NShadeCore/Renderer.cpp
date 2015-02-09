@@ -29,57 +29,49 @@ HRESULT Renderer::Initialize()
 	//auto currentDisplayInformation = DisplayInformation::GetForCurrentView();
 	//DeviceResource()->Dpi = currentDisplayInformation->LogicalDpi;
 
-	auto result = SetVertexShader(m_standardVertexShader);
+	auto result = CreateSwapChain();
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	result = SetPixelShader(m_standardPixelShader);
+	result = CreateDepthBuffer();
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	if (m_useSwapChain)
+	result = CreateDepthStencil();
+	if (FAILED(result))
 	{
-		result = CreateSwapChain();
-		if (FAILED(result))
-		{
-			return result;
-		}
-
-		result = CreateDepthBuffer();
-		if (FAILED(result))
-		{
-			return result;
-		}
-
-		result = CreateDepthStencil();
-		if (FAILED(result))
-		{
-			return result;
-		}
-
-		result = CreateRasterizer();
-		if (FAILED(result))
-		{
-			return result;
-		}
-
-		result = CreateViewPort();
-		if (FAILED(result))
-		{
-			return result;
-		}
+		return result;
 	}
-	return result;
+
+	result = CreateRasterizer();
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	result = CreateViewPort();
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	result = SetVertexShader(m_standardVertexShader);
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	return SetPixelShader(m_standardPixelShader);
 }
 
 
 HRESULT Renderer::CreateSwapChainDesciption()
 {
-	OutputDebugString(L"CALL : Renderer::CreateSwapChainDesciption\n");
+	Helpers::DebugWriteLine(L"CALL : Renderer::CreateSwapChainDesciption\n");
 	ZeroMemory(&m_pSwapChainDescription, sizeof(m_pSwapChainDescription));
 
 	m_pSwapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
@@ -141,7 +133,7 @@ HRESULT Renderer::CreateSwapChain()
 		return result;
 	}
 
-	OutputDebugString(L"CALL : Renderer::CreateSwapChain-dxgiFactory->CreateSwapChain\n");
+	Helpers::DebugWriteLine(L"CALL : Renderer::CreateSwapChain\t\t\t(dxgiFactory->CreateSwapChain)\n");
 	result = dxgiFactory->CreateSwapChain(GetDevice(), &m_pSwapChainDescription, &DeviceResource()->SwapChain);
 	if (FAILED(result))
 	{
@@ -153,7 +145,7 @@ HRESULT Renderer::CreateSwapChain()
 	//backBuffer->GetDesc(&backBufferDesc);
 	//m_pBackBuffer = backBuffer;
 
-	OutputDebugString(L"CALL : Renderer::CreateSwapChain->SwapChain->GetBuffer\n");
+	Helpers::DebugWriteLine(L"CALL : Renderer::CreateSwapChain\t\t\t(SwapChain->GetBuffer)\n");
 	result = DeviceResource()->SwapChain->GetBuffer(0, IID_PPV_ARGS(&m_pBackBuffer));
 	if (FAILED(result))
 	{
@@ -163,14 +155,15 @@ HRESULT Renderer::CreateSwapChain()
 	dxgiDevice->Release();
 	dxgiAdapter->Release();
 	dxgiFactory->Release();
-	OutputDebugString(L"CALL : Renderer::CreateSwapChain->CreateRenderTargetView\n");
+
+	Helpers::DebugWriteLine(L"CALL : Renderer::CreateSwapChain\t\t\t(Device->CreateRenderTargetView)\n");
 	return GetDevice()->CreateRenderTargetView(m_pBackBuffer, NULL, &DeviceResource()->RenderTargetView);
 }
 
 
 HRESULT Renderer::CreateDepthBufferDescription()
 {
-	OutputDebugString(L"CALL : Renderer::CreateDepthBufferDescription\n");
+	Helpers::DebugWriteLine(L"CALL : Renderer::CreateDepthBufferDescription\n");
 	ZeroMemory(&m_pDepthBufferDesc, sizeof(m_pDepthBufferDesc));
 
 	m_pDepthBufferDesc.Width = DeviceResource()->ScreenWidth;
@@ -190,19 +183,20 @@ HRESULT Renderer::CreateDepthBufferDescription()
 
 HRESULT Renderer::CreateDepthBuffer()
 {
-	OutputDebugString(L"CALL : Renderer::CreateDepthBuffer\n");
+
 	auto result = CreateDepthBufferDescription();
 	if (FAILED(result))
 	{
 		return result;
 	}
+	Helpers::DebugWriteLine(L"CALL : Renderer::CreateSwapChainDesciption\t\t\t(Device->CreateTexture2D)\n");
 	return GetDevice()->CreateTexture2D(&m_pDepthBufferDesc, NULL, &m_pDepthStencilBuffer);
 }
 
 
 HRESULT Renderer::CreateDepthStencilDescription()
 {
-	OutputDebugString(L"CALL : Renderer::CreateDepthStencilDescription\n");
+	Helpers::DebugWriteLine(L"CALL : Renderer::CreateDepthStencilDescription\n");
 	ZeroMemory(&m_pDepthStencilDesc, sizeof(m_pDepthStencilDesc));
 
 	m_pDepthStencilDesc.DepthEnable = true;
@@ -223,7 +217,9 @@ HRESULT Renderer::CreateDepthStencilDescription()
 	m_pDepthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 	m_pDepthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
+	Helpers::DebugWriteLine(L"CALL : Renderer::CreateSwapChainDesciption\t\t\t(Device->CreateDepthStencilState)\n");
 	GetDevice()->CreateDepthStencilState(&m_pDepthStencilDesc, &m_pDepthStencilState);
+	Helpers::DebugWriteLine(L"CALL : Renderer::CreateSwapChainDesciption\t\t\t(Context->OMSetDepthStencilState)\n");
 	GetDeviceContext()->OMSetDepthStencilState(m_pDepthStencilState, 1);
 
 	return 0;
@@ -231,7 +227,7 @@ HRESULT Renderer::CreateDepthStencilDescription()
 
 HRESULT Renderer::CreateDepthStencilViewDescription()
 {
-	OutputDebugString(L"CALL : Renderer::CreateDepthStencilViewDescription\n");
+	Helpers::DebugWriteLine(L"CALL : Renderer::CreateDepthStencilViewDescription\n");
 	ZeroMemory(&m_pDepthStencilViewDesc, sizeof(m_pDepthStencilViewDesc));
 
 	m_pDepthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -243,7 +239,7 @@ HRESULT Renderer::CreateDepthStencilViewDescription()
 
 HRESULT Renderer::CreateDepthStencil()
 {
-	OutputDebugString(L"CALL : Renderer::CreateDepthStencil\n");
+	Helpers::DebugWriteLine(L"CALL : Renderer::CreateDepthStencil\n");
 	auto result = CreateDepthStencilDescription();
 	if (FAILED(result))
 	{
@@ -256,14 +252,14 @@ HRESULT Renderer::CreateDepthStencil()
 		return result;
 	}
 
-	OutputDebugString(L"CALL : Renderer::CreateDepthStencil->CreateDepthStencilView\n");
+	Helpers::DebugWriteLine(L"CALL : Renderer::CreateDepthStencil\t\t\t(Device->CreateDepthStencilView)\n");
 	result = GetDevice()->CreateDepthStencilView(m_pDepthStencilBuffer, &m_pDepthStencilViewDesc, &DeviceResource()->DepthStencilView);
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	OutputDebugString(L"CALL : Renderer::CreateDepthStencil->OMSetRenderTargets\n");
+	Helpers::DebugWriteLine(L"CALL : Renderer::CreateDepthStencil\t\t\t(Context->OMSetRenderTargets)\n");
 	GetDeviceContext()->OMSetRenderTargets(1, &DeviceResource()->RenderTargetView, DeviceResource()->DepthStencilView);
 
 	//D2D1_BITMAP_PROPERTIES1 bitmapProperties =
@@ -294,7 +290,7 @@ HRESULT Renderer::CreateDepthStencil()
 
 HRESULT Renderer::CreateRasterizerDescription()
 {
-	OutputDebugString(L"CALL : Renderer::CreateRasterizerDescription\n");
+	Helpers::DebugWriteLine(L"CALL : Renderer::CreateRasterizerDescription\n");
 	ZeroMemory(&m_pRasterizerDesc, sizeof(m_pRasterizerDesc));
 
 	m_pRasterizerDesc.AntialiasedLineEnable = false;
@@ -313,26 +309,28 @@ HRESULT Renderer::CreateRasterizerDescription()
 
 HRESULT Renderer::CreateRasterizer()
 {
-	OutputDebugString(L"CALL : Renderer::CreateRasterizer\n");
+	Helpers::DebugWriteLine(L"CALL : Renderer::CreateRasterizer\n");
 	auto result = CreateRasterizerDescription();
 	if (FAILED(result))
 	{
 		return result;
 	}
 
+	Helpers::DebugWriteLine(L"CALL : Renderer::CreateRasterizer\t\t\t(Device->CreateRasterizerState)\n");
 	result = GetDevice()->CreateRasterizerState(&m_pRasterizerDesc, &m_pRasterizerState);
 	if (FAILED(result))
 	{
 		return result;
 	}
 
+	Helpers::DebugWriteLine(L"CALL : Renderer::CreateRasterizer\t\t\t(Context->RSSetState)\n");
 	GetDeviceContext()->RSSetState(m_pRasterizerState);
 	return 0;
 }
 
 HRESULT Renderer::CreateViewPort()
 {
-	OutputDebugString(L"CALL : Renderer::CreateViewPort\n");
+	Helpers::DebugWriteLine(L"CALL : Renderer::CreateViewPort\n");
 	CD3D11_VIEWPORT viewport;
 
 	viewport.TopLeftX = 0.0f;
@@ -342,7 +340,9 @@ HRESULT Renderer::CreateViewPort()
 	viewport.MinDepth = D3D11_MIN_DEPTH;
 	viewport.MaxDepth = D3D11_MAX_DEPTH;
 
+	Helpers::DebugWriteLine(L"CALL : Renderer::CreateViewPort\t\t\t(Context->RSSetState)\n");
 	DeviceResource()->ViewPort = viewport;
+	Helpers::DebugWriteLine(L"CALL : Renderer::CreateViewPort\t\t\t(Context->RSSetViewports)\n");
 	GetDeviceContext()->RSSetViewports(1, &DeviceResource()->ViewPort);
 
 	return 0;
@@ -351,10 +351,11 @@ HRESULT Renderer::CreateViewPort()
 
 HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 {
-	OutputDebugString(L"CALL : Renderer::SetVertexShader\n");
+
 	auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
 	auto shaders = DeviceResource()->Shaders;
 
+	Helpers::DebugWriteLine(L"CALL : Renderer::SetVertexShader\t\t\t(Device->CreateVertexShader)\n");
 	auto result = GetDevice()->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &shaders->VertexShader);
 	if (FAILED(result))
 	{
@@ -367,6 +368,7 @@ HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
+	Helpers::DebugWriteLine(L"CALL : Renderer::SetVertexShader\t\t\t(Device->CreateInputLayout)\n");
 	return GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), vsByteCode->FileBytes, vsByteCode->Length, &DeviceResource()->InputLayout);
 }
 
@@ -425,10 +427,11 @@ HRESULT Renderer::CompileGeometryShader(LPCWSTR compiledShaderFile)
 
 HRESULT Renderer::SetPixelShader(LPCWSTR compiledShaderFile)
 {
-	OutputDebugString(L"CALL : Renderer::SetPixelShader\n");
+
 	auto psByteCode = File::ReadFileBytes(compiledShaderFile);
 	auto shaders = DeviceResource()->Shaders;
 
+	Helpers::DebugWriteLine(L"CALL : Renderer::SetVertexShader\t\t\t(Device->CreatePixelShader)\n");
 	return GetDevice()->CreatePixelShader(psByteCode->FileBytes, psByteCode->Length, NULL, &shaders->PixelShader);
 }
 
@@ -477,31 +480,37 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
 	return result;
 }
 
+void Renderer::ClearScene()
+{
+	auto context = DeviceResource()->DeviceContext;
+
+	context->UpdateSubresource(DeviceResource()->ConstBuffer, 0, nullptr, DeviceResource()->ConstBufferData, 0, 0);
+	context->OMSetRenderTargets(1, &DeviceResource()->RenderTargetView, DeviceResource()->DepthStencilView);
+	context->ClearRenderTargetView(DeviceResource()->RenderTargetView, DeviceResource()->DefaultColor);
+	context->ClearDepthStencilView(DeviceResource()->DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
 
 HRESULT Renderer::Render()
 {
-	auto context = DeviceResource()->DeviceContext;
+	ClearScene();
 
 	UINT stride = sizeof(VertexPositionColor);
 	UINT offset = 0;
 
-	// Render models
-	context->IASetVertexBuffers(0, 1, &DeviceResource()->VertexBuffer, &stride, &offset);
-	context->IASetIndexBuffer(DeviceResource()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	context->IASetInputLayout(DeviceResource()->InputLayout);
+	// Set model data
+	GetDeviceContext()->IASetInputLayout(DeviceResource()->InputLayout);
+	GetDeviceContext()->IASetVertexBuffers(0, 1, &DeviceResource()->VertexBuffer, &stride, &offset);
+	GetDeviceContext()->IASetIndexBuffer(DeviceResource()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	// Render shaders
-	context->VSSetShader(DeviceResource()->Shaders->VertexShader, nullptr, 0);
-	context->VSSetConstantBuffers(0, 1, &DeviceResource()->ConstBuffer);
+	// Set shader data
+	GetDeviceContext()->VSSetShader(DeviceResource()->Shaders->VertexShader, nullptr, 0);
+	GetDeviceContext()->VSSetConstantBuffers(0, 1, &DeviceResource()->ConstBuffer);
+	GetDeviceContext()->PSSetShader(DeviceResource()->Shaders->PixelShader, nullptr, 0);
+	GetDeviceContext()->DrawIndexed(DeviceResource()->IndexCount, 0, 0);
 
-	context->PSSetShader(DeviceResource()->Shaders->PixelShader, nullptr, 0);
-
-	context->DrawIndexed(DeviceResource()->IndexCount, 0, 0);
-
-	DeviceResource()->SwapChain->Present(1, 0);
-
-	return 0;
+	// Present
+	return DeviceResource()->SwapChain->Present(1, 0);
 }
 
 HRESULT	Renderer::ResizeSwapChain(UINT32 newWidth, UINT32 newHeight)
