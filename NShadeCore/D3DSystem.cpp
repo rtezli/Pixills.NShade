@@ -75,7 +75,7 @@ HRESULT D3DSystem::InitializeForWindow(
 	auto posX = (GetSystemMetrics(SM_CXSCREEN) - m_viewportWidth) / 2;
 	auto posY = (GetSystemMetrics(SM_CYSCREEN) - m_viewportHeight) / 2;
 
-	// ShowCursor(false);
+	//ShowCursor(false);
 
 	return Initialize();
 }
@@ -159,22 +159,24 @@ HRESULT D3DSystem::CreateDevice()
 
 	D3D11_VIEWPORT viewPort;
 	viewPort.Width = m_viewportWidth;
-	viewPort.Height = m_viewportWidth;
+	viewPort.Height = m_viewportHeight;
 	viewPort.TopLeftX = 0;
 	viewPort.TopLeftY = 0;
 	viewPort.MinDepth = D3D11_MIN_DEPTH;
 	viewPort.MaxDepth = D3D11_MAX_DEPTH;
 		
-	m_pDeviceResources = new DeviceResources(device, context);
+	auto resources = new DeviceResources(device, context);
 
-	m_pDeviceResources->WindowHandle = m_pWindowHandle;
-	m_pDeviceResources->FullScreen = m_fullScreen;
-	m_pDeviceResources->VSync = m_vSync;
+	resources->Device = device;
+	resources->DeviceContext = context;
+	resources->WindowHandle = m_pWindowHandle;
+	resources->FullScreen = m_fullScreen;
+	resources->VSync = m_vSync;
+	resources->ViewPort = new D3D11_VIEWPORT(viewPort);
+	resources->NearZ = 0.0f;
+	resources->FarZ = 1000.0f;
 
-	m_pDeviceResources->ViewPort = &viewPort;
-	
-	m_pDeviceResources->NearZ = 0.0f;
-	m_pDeviceResources->FarZ = 1000.0f;
+	m_pDeviceResources = resources;
 
 	return createResult;
 }
@@ -204,7 +206,7 @@ void D3DSystem::Render()
 	m_pRenderer->Render();
 }
 
-LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
+LRESULT CALLBACK MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
 	switch (umessage)
 	{

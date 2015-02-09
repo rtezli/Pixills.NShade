@@ -46,7 +46,7 @@ private:
 	bool									m_vSync;
 };
 
-static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+static LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 static D3DSystem* ApplicationHandle = 0;
 
 enum Perspective : char

@@ -19,6 +19,7 @@ public:
 	float				GetAspectRatio(){ return m_pDeviceResources->ViewPort->Width / m_pDeviceResources->ViewPort->Height; };
 	float				GetFieldOfView(){ return 70.0f * XM_PI / 180.0f; };
 
+	XMFLOAT4X4 GetWorldMatrix();
 	XMFLOAT4X4 GetViewMatrix();
 	XMFLOAT4X4 GetProjectionMatrix();
 private:

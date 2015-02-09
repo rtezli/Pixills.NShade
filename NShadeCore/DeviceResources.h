@@ -32,8 +32,6 @@ public:
 	ID3D11RasterizerState*		RasterizerState;
 
 	IDXGISwapChain*				SwapChain;
-	IDXGISurface*				DxgiBackBuffer;
-	ID2D1Bitmap*				D2dTargetBitmap;
 
 	ID3D11RenderTargetView*		RenderTargetView;
 	ID3D11DepthStencilView*		DepthStencilView;
@@ -50,9 +48,9 @@ public:
 	int							IndexCount;
 
 	float						Dpi;
-
 	float						NearZ;
 	float						FarZ;
+
 	bool						FullScreen;
 	bool						VSync;
 };

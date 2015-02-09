@@ -37,9 +37,9 @@ public:
 	HRESULT	Render();
 public:
 	void						ClearScene();
-	ID3D11Device*				const GetDevice(){ return DeviceResource()->Device; }
-	ID3D11DeviceContext*		const GetDeviceContext(){ return DeviceResource()->DeviceContext; }
-	DeviceResources*			const DeviceResource(){ return m_pDeviceResources.get(); }
+	ID3D11Device*				const GetDevice(){ return Resources()->Device; }
+	ID3D11DeviceContext*		const GetDeviceContext(){ return Resources()->DeviceContext; }
+	DeviceResources*			const Resources(){ return m_pDeviceResources; }
 private:
 	/* swap chain */
 	HRESULT	CreateSwapChainDesciption();
@@ -82,7 +82,7 @@ private:
 
 	HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
 private:
-	shared_ptr<DeviceResources>			m_pDeviceResources;
+	DeviceResources*					m_pDeviceResources;
 
 	LPCWSTR								m_standardVertexShader = L"VertexShader.cso";
 	LPCWSTR								m_standardPixelShader = L"PixelShader.cso";
