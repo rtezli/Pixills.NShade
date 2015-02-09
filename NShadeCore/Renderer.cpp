@@ -79,6 +79,7 @@ HRESULT Renderer::Initialize()
 
 HRESULT Renderer::CreateSwapChainDesciption()
 {
+	OutputDebugString(L"CALL : Renderer::CreateSwapChainDesciption\n");
 	ZeroMemory(&m_pSwapChainDescription, sizeof(m_pSwapChainDescription));
 
 	m_pSwapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
@@ -140,6 +141,7 @@ HRESULT Renderer::CreateSwapChain()
 		return result;
 	}
 
+	OutputDebugString(L"CALL : Renderer::CreateSwapChain-dxgiFactory->CreateSwapChain\n");
 	result = dxgiFactory->CreateSwapChain(GetDevice(), &m_pSwapChainDescription, &DeviceResource()->SwapChain);
 	if (FAILED(result))
 	{
@@ -151,6 +153,7 @@ HRESULT Renderer::CreateSwapChain()
 	//backBuffer->GetDesc(&backBufferDesc);
 	//m_pBackBuffer = backBuffer;
 
+	OutputDebugString(L"CALL : Renderer::CreateSwapChain->SwapChain->GetBuffer\n");
 	result = DeviceResource()->SwapChain->GetBuffer(0, IID_PPV_ARGS(&m_pBackBuffer));
 	if (FAILED(result))
 	{
@@ -160,13 +163,14 @@ HRESULT Renderer::CreateSwapChain()
 	dxgiDevice->Release();
 	dxgiAdapter->Release();
 	dxgiFactory->Release();
-
+	OutputDebugString(L"CALL : Renderer::CreateSwapChain->CreateRenderTargetView\n");
 	return GetDevice()->CreateRenderTargetView(m_pBackBuffer, NULL, &DeviceResource()->RenderTargetView);
 }
 
 
 HRESULT Renderer::CreateDepthBufferDescription()
 {
+	OutputDebugString(L"CALL : Renderer::CreateDepthBufferDescription\n");
 	ZeroMemory(&m_pDepthBufferDesc, sizeof(m_pDepthBufferDesc));
 
 	m_pDepthBufferDesc.Width = DeviceResource()->ScreenWidth;
@@ -186,6 +190,7 @@ HRESULT Renderer::CreateDepthBufferDescription()
 
 HRESULT Renderer::CreateDepthBuffer()
 {
+	OutputDebugString(L"CALL : Renderer::CreateDepthBuffer\n");
 	auto result = CreateDepthBufferDescription();
 	if (FAILED(result))
 	{
@@ -197,6 +202,7 @@ HRESULT Renderer::CreateDepthBuffer()
 
 HRESULT Renderer::CreateDepthStencilDescription()
 {
+	OutputDebugString(L"CALL : Renderer::CreateDepthStencilDescription\n");
 	ZeroMemory(&m_pDepthStencilDesc, sizeof(m_pDepthStencilDesc));
 
 	m_pDepthStencilDesc.DepthEnable = true;
@@ -225,6 +231,7 @@ HRESULT Renderer::CreateDepthStencilDescription()
 
 HRESULT Renderer::CreateDepthStencilViewDescription()
 {
+	OutputDebugString(L"CALL : Renderer::CreateDepthStencilViewDescription\n");
 	ZeroMemory(&m_pDepthStencilViewDesc, sizeof(m_pDepthStencilViewDesc));
 
 	m_pDepthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -236,22 +243,27 @@ HRESULT Renderer::CreateDepthStencilViewDescription()
 
 HRESULT Renderer::CreateDepthStencil()
 {
+	OutputDebugString(L"CALL : Renderer::CreateDepthStencil\n");
 	auto result = CreateDepthStencilDescription();
 	if (FAILED(result))
 	{
 		return result;
 	}
+
 	result = CreateDepthStencilViewDescription();
 	if (FAILED(result))
 	{
 		return result;
 	}
+
+	OutputDebugString(L"CALL : Renderer::CreateDepthStencil->CreateDepthStencilView\n");
 	result = GetDevice()->CreateDepthStencilView(m_pDepthStencilBuffer, &m_pDepthStencilViewDesc, &DeviceResource()->DepthStencilView);
 	if (FAILED(result))
 	{
 		return result;
 	}
 
+	OutputDebugString(L"CALL : Renderer::CreateDepthStencil->OMSetRenderTargets\n");
 	GetDeviceContext()->OMSetRenderTargets(1, &DeviceResource()->RenderTargetView, DeviceResource()->DepthStencilView);
 
 	//D2D1_BITMAP_PROPERTIES1 bitmapProperties =
@@ -282,6 +294,7 @@ HRESULT Renderer::CreateDepthStencil()
 
 HRESULT Renderer::CreateRasterizerDescription()
 {
+	OutputDebugString(L"CALL : Renderer::CreateRasterizerDescription\n");
 	ZeroMemory(&m_pRasterizerDesc, sizeof(m_pRasterizerDesc));
 
 	m_pRasterizerDesc.AntialiasedLineEnable = false;
@@ -300,6 +313,7 @@ HRESULT Renderer::CreateRasterizerDescription()
 
 HRESULT Renderer::CreateRasterizer()
 {
+	OutputDebugString(L"CALL : Renderer::CreateRasterizer\n");
 	auto result = CreateRasterizerDescription();
 	if (FAILED(result))
 	{
@@ -318,6 +332,7 @@ HRESULT Renderer::CreateRasterizer()
 
 HRESULT Renderer::CreateViewPort()
 {
+	OutputDebugString(L"CALL : Renderer::CreateViewPort\n");
 	CD3D11_VIEWPORT viewport;
 
 	viewport.TopLeftX = 0.0f;
@@ -336,6 +351,7 @@ HRESULT Renderer::CreateViewPort()
 
 HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 {
+	OutputDebugString(L"CALL : Renderer::SetVertexShader\n");
 	auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
 	auto shaders = DeviceResource()->Shaders;
 
@@ -409,6 +425,7 @@ HRESULT Renderer::CompileGeometryShader(LPCWSTR compiledShaderFile)
 
 HRESULT Renderer::SetPixelShader(LPCWSTR compiledShaderFile)
 {
+	OutputDebugString(L"CALL : Renderer::SetPixelShader\n");
 	auto psByteCode = File::ReadFileBytes(compiledShaderFile);
 	auto shaders = DeviceResource()->Shaders;
 
@@ -464,7 +481,6 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
 HRESULT Renderer::Render()
 {
 	auto context = DeviceResource()->DeviceContext;
-	context->UpdateSubresource(DeviceResource()->ConstBuffer, 0, NULL, DeviceResource()->ConstBufferData, 0, 0);
 
 	UINT stride = sizeof(VertexPositionColor);
 	UINT offset = 0;

@@ -31,6 +31,7 @@ void Camera::Initialize()
 
 XMFLOAT4X4 Camera::GetViewMatrix()
 {
+	OutputDebugString(L"CALL : Camera::GetViewMatrix\n");
 	XMFLOAT4X4 view;
 	auto matrix = XMMatrixTranspose(XMMatrixLookAtRH(*m_eyePosition, *m_focusPosition, *m_upDirection));
 	XMStoreFloat4x4(&view, matrix);
@@ -39,6 +40,7 @@ XMFLOAT4X4 Camera::GetViewMatrix()
 
 XMFLOAT4X4 Camera::GetProjectionMatrix()
 {
+	OutputDebugString(L"CALL : Camera::GetProjectionMatrix\n");
 	XMFLOAT4X4 projection;
 	auto matrix = XMMatrixTranspose(XMMatrixPerspectiveFovRH(GetFieldOfView(), GetAspectRatio(), m_pDeviceResources->NearZ, m_pDeviceResources->FarZ));
 	XMStoreFloat4x4(&projection, matrix);

@@ -88,6 +88,12 @@ HRESULT D3DSystem::Initialize()
 		return result;
 	}
 
+	result = LoadModels();
+	if (FAILED(result))
+	{
+		return result;
+	}
+
 	result = CreateRenderer();
 	if (FAILED(result))
 	{
@@ -100,19 +106,12 @@ HRESULT D3DSystem::Initialize()
 		return result;
 	}
 
-	result = LoadModels();
-	if (FAILED(result))
-	{
-		return result;
-	}
-
 	return result;
 }
 
 HRESULT D3DSystem::CreateDevice()
 {
 	UINT creationFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
-
 #if defined(_DEBUG)
 	creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
@@ -204,8 +203,12 @@ void D3DSystem::Render()
 void D3DSystem::ClearScene()
 {
 	auto context = m_pDeviceResources->DeviceContext;
+
+	context->UpdateSubresource(m_pDeviceResources->ConstBuffer, 0, NULL, m_pDeviceResources->ConstBufferData, 0, 0);
+	context->OMSetRenderTargets(1, &m_pDeviceResources->RenderTargetView, m_pDeviceResources->DepthStencilView); // use no depth stencil
 	context->ClearRenderTargetView(m_pDeviceResources->RenderTargetView, m_pDeviceResources->DefaultColor);
 	context->ClearDepthStencilView(m_pDeviceResources->DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	context->IASetInputLayout(m_pDeviceResources->InputLayout);
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)

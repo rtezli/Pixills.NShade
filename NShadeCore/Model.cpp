@@ -106,12 +106,14 @@ HRESULT Model::LoadModelFromOBJFile(char* fileName)
 
 HRESULT Model::InitializeConstantBuffer()
 {
+	OutputDebugString(L"CALL : Model::InitializeConstantBuffer\n");
 	CD3D11_BUFFER_DESC constantBufferDesc(sizeof(ConstantBufferData), D3D11_BIND_CONSTANT_BUFFER);
 	return DeviceResource()->Device->CreateBuffer(&constantBufferDesc, nullptr, &DeviceResource()->ConstBuffer);
 }
 
 HRESULT Model::InitializeVertexBuffer()
 {
+	OutputDebugString(L"CALL : Model::InitializeVertexBuffer\n");
 	static const VertexPositionColor cube[] =
 	{
 		// BOTTOM FACE
@@ -146,7 +148,7 @@ HRESULT Model::InitializeVertexBuffer()
 
 HRESULT Model::InitializeIndexBuffer(int indeces[])
 {
-	//D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
+	OutputDebugString(L"CALL : Model::InitializeIndexBuffer\n");
 	static const unsigned short cubeIndices[] =
 	{
 		0, 2, 1, 1, 2, 3, 4, 5, 6, 5, 7, 6,
@@ -169,6 +171,7 @@ HRESULT Model::InitializeIndexBuffer(int indeces[])
 	indexBufferData.SysMemPitch = 0;
 	indexBufferData.SysMemSlicePitch = 0;
 
+	OutputDebugString(L"CALL :  Model::InitializeIndexBuffer->Device->CreateBuffer\n");
 	auto result = DeviceResource()->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &DeviceResource()->IndexBuffer);
 	if (FAILED(result))
 	{
