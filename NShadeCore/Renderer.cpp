@@ -482,12 +482,13 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
 
 void Renderer::ClearScene()
 {
-	auto context = DeviceResource()->DeviceContext;
+	// Update the model data
+	// GetDeviceContext()->UpdateSubresource(DeviceResource()->ConstBuffer, 0, nullptr, DeviceResource()->ConstBufferData, 0, 0);
 
-	context->UpdateSubresource(DeviceResource()->ConstBuffer, 0, nullptr, DeviceResource()->ConstBufferData, 0, 0);
-	context->OMSetRenderTargets(1, &DeviceResource()->RenderTargetView, DeviceResource()->DepthStencilView);
-	context->ClearRenderTargetView(DeviceResource()->RenderTargetView, DeviceResource()->DefaultColor);
-	context->ClearDepthStencilView(DeviceResource()->DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	// Clear render targets and depth stencil
+	GetDeviceContext()->OMSetRenderTargets(1, &DeviceResource()->RenderTargetView, DeviceResource()->DepthStencilView);
+	GetDeviceContext()->ClearRenderTargetView(DeviceResource()->RenderTargetView, DeviceResource()->DefaultColor);
+	GetDeviceContext()->ClearDepthStencilView(DeviceResource()->DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 HRESULT Renderer::Render()
