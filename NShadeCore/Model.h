@@ -12,8 +12,8 @@ public:
 	HRESULT LoadModelFromOBJFile(char* fileName);
 	HRESULT	Initialize();
  
-	static VertexPositionColor Cube[];
-	static const vector<VertexPositionColor> Sphere;
+	static XMFLOAT3 Cube[];
+	static XMFLOAT3 Sphere[];
 private:
 	DeviceResources*			DeviceResource(){ return m_pDeviceResources.get(); }
 	HRESULT						InitializeVertexBuffer();

@@ -2,11 +2,11 @@
 
 #include "d3d11.h"
 
-struct VertexPositionColor
-{
-	DirectX::XMFLOAT3 Position;
-	DirectX::XMFLOAT3 Color;
-};
+//struct VertexPositionColor
+//{
+//	DirectX::XMFLOAT3 Position;
+//	DirectX::XMFLOAT3 Color;
+//};
 
 struct ConstantBufferData
 {

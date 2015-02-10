@@ -333,12 +333,10 @@ HRESULT Renderer::CreateViewPort()
 
 HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 {
-
 	auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
-	auto shaders = Resources()->Shaders;
 
 	Debug::WriteLine(L"CALL : Renderer::SetVertexShader\t\t\t(Device->CreateVertexShader)\n");
-	auto result = GetDevice()->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &shaders->VertexShader);
+	auto result = GetDevice()->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &Resources()->Shaders->VertexShader);
 	if (FAILED(result))
 	{
 		return result;
@@ -346,8 +344,8 @@ HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 
 	static const D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR"	, 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
 	Debug::WriteLine(L"CALL : Renderer::SetVertexShader\t\t\t(Device->CreateInputLayout)\n");
@@ -409,12 +407,10 @@ HRESULT Renderer::CompileGeometryShader(LPCWSTR compiledShaderFile)
 
 HRESULT Renderer::SetPixelShader(LPCWSTR compiledShaderFile)
 {
-
 	auto psByteCode = File::ReadFileBytes(compiledShaderFile);
-	auto shaders = Resources()->Shaders;
 
 	Debug::WriteLine(L"CALL : Renderer::SetVertexShader\t\t\t(Device->CreatePixelShader)\n");
-	return GetDevice()->CreatePixelShader(psByteCode->FileBytes, psByteCode->Length, NULL, &shaders->PixelShader);
+	return GetDevice()->CreatePixelShader(psByteCode->FileBytes, psByteCode->Length, NULL, &Resources()->Shaders->PixelShader);
 }
 
 HRESULT Renderer::CompilePixelShader(LPCWSTR compiledShaderFile)
@@ -469,7 +465,7 @@ HRESULT Renderer::Render()
 {
 	ClearScene();
 
-	UINT stride = sizeof(VertexPositionColor);
+	UINT stride = sizeof(XMFLOAT3);
 	UINT offset = 0;
 
 	// Set model data
