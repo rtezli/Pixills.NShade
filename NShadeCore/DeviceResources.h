@@ -40,10 +40,9 @@ public:
 	ShaderSet*					Shaders;
 
 	D3D11_VIEWPORT*				ViewPort;
+	RenderingQuality*			RenderQuality;
 
 	int							SwapChainFlags;
-	int							Quality;
-	int							SamplesCount;
 	int							BufferCount;
 	int							IndexCount;
 

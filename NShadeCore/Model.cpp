@@ -117,20 +117,16 @@ HRESULT Model::InitializeVertexBuffer()
 	Debug::WriteLine(L"CALL : Model::InitializeVertexBuffer\n");
 	static const VertexPositionColor cube[] =
 	{
-		// BOTTOM FACE
 		{ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
-		{ XMFLOAT3(0.5f, -0.5f, -0.5f),	 XMFLOAT3(1.0f, 0.0f, 0.0f) },
-		{ XMFLOAT3(0.5f, -0.5f, 0.5f),	 XMFLOAT3(1.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(-0.5f, -0.5f, 0.5f),	 XMFLOAT3(0.0f, 0.0f, 1.0f) },
-
-		//// TOP FACE
-		{ XMFLOAT3(-0.5f, 0.5f, -0.5f),	XMFLOAT3(0.0f, 1.0f, 0.0f) },
-		{ XMFLOAT3(-0.5f, 0.5f, 0.5f),	XMFLOAT3(0.0f, 1.0f, 1.0f) },
-		{ XMFLOAT3(0.5f, 0.5f, -0.5f),	XMFLOAT3(1.0f, 1.0f, 0.0f) },
-		{ XMFLOAT3(0.5f, 0.5f, 0.5f),   XMFLOAT3(1.0f, 1.0f, 1.0f) }
-
-
+		{ XMFLOAT3(-0.5f, -0.5f,  0.5f), XMFLOAT3(0.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3(-0.5f,  0.5f, -0.5f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+		{ XMFLOAT3(-0.5f,  0.5f,  0.5f), XMFLOAT3(0.0f, 1.0f, 1.0f) },
+		{ XMFLOAT3( 0.5f, -0.5f, -0.5f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
+		{ XMFLOAT3( 0.5f, -0.5f,  0.5f), XMFLOAT3(1.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3( 0.5f,  0.5f, -0.5f), XMFLOAT3(1.0f, 1.0f, 0.0f) },
+		{ XMFLOAT3( 0.5f,  0.5f,  0.5f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
 	};
+
 	D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
 	vertexBufferDesc.ByteWidth = sizeof(VertexPositionColor) * ARRAYSIZE(cube);
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;

@@ -94,4 +94,5 @@ private:
 	D3D11_RASTERIZER_DESC				m_pRasterizerDesc;
 
 	bool								m_useSwapChain;
+	bool								m_rasterizerUseMultiSampling;
 };

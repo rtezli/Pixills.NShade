@@ -7,6 +7,7 @@ Renderer::Renderer(DeviceResources* pResources, bool useSwapChain)
 	m_pDeviceResources = pResources;
 	m_pDeviceResources->Shaders = new ShaderSet();
 	m_useSwapChain = useSwapChain;
+	m_rasterizerUseMultiSampling = true;
 }
 
 Renderer::~Renderer()
@@ -16,9 +17,6 @@ Renderer::~Renderer()
 
 HRESULT Renderer::Initialize()
 {
-	//auto currentDisplayInformation = DisplayInformation::GetForCurrentView();
-	//DeviceResource()->Dpi = currentDisplayInformation->LogicalDpi;
-
 	auto result = CreateSwapChain();
 	if (FAILED(result))
 	{
@@ -64,17 +62,18 @@ HRESULT Renderer::CreateSwapChainDesciption()
 	Debug::WriteLine(L"CALL : Renderer::CreateSwapChainDesciption\n");
 	ZeroMemory(&m_pSwapChainDescription, sizeof(m_pSwapChainDescription));
 
-	m_pSwapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	m_pSwapChainDescription.BufferCount = Resources()->BufferCount;
-	m_pSwapChainDescription.SwapEffect = DXGI_SWAP_EFFECT_DISCARD; // DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL
-	m_pSwapChainDescription.Flags =  Resources()->SwapChainFlags;
+	m_pSwapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
-	m_pSwapChainDescription.SampleDesc.Quality = Resources()->Quality;
-	m_pSwapChainDescription.SampleDesc.Count = Resources()->SamplesCount;
+	m_pSwapChainDescription.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL; //DXGI_SWAP_EFFECT_DISCARD; 
+	m_pSwapChainDescription.Flags = Resources()->SwapChainFlags;
+
+	m_pSwapChainDescription.SampleDesc.Quality = Resources()->RenderQuality->Quality;
+	m_pSwapChainDescription.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
 
 	m_pSwapChainDescription.BufferDesc.Width = m_pDeviceResources->ViewPort->Width;
 	m_pSwapChainDescription.BufferDesc.Height = m_pDeviceResources->ViewPort->Height;
-	m_pSwapChainDescription.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	m_pSwapChainDescription.BufferDesc.Format = Resources()->RenderQuality->TextureFormat;
 	m_pSwapChainDescription.BufferDesc.RefreshRate.Numerator = 0;
 	m_pSwapChainDescription.BufferDesc.RefreshRate.Denominator = 1;
 	m_pSwapChainDescription.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
@@ -156,7 +155,7 @@ HRESULT Renderer::CreateDepthBufferDescription()
 	m_pDepthBufferDesc.Height = Resources()->ViewPort->Height;
 	m_pDepthBufferDesc.MipLevels = 1;
 	m_pDepthBufferDesc.ArraySize = 1;
-	m_pDepthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	m_pDepthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; //DXGI_FORMAT_B8G8R8A8_UNORM
 	m_pDepthBufferDesc.SampleDesc.Count = 1;
 	m_pDepthBufferDesc.SampleDesc.Quality = 0;
 	m_pDepthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -217,8 +216,8 @@ HRESULT Renderer::CreateDepthStencilViewDescription()
 	Debug::WriteLine(L"CALL : Renderer::CreateDepthStencilViewDescription\n");
 	ZeroMemory(&m_pDepthStencilViewDesc, sizeof(m_pDepthStencilViewDesc));
 
-	m_pDepthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	m_pDepthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	m_pDepthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; //DXGI_FORMAT_B8G8R8A8_UNORM
+	m_pDepthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS; // D3D11_DSV_DIMENSION_TEXTURE2D
 	m_pDepthStencilViewDesc.Texture2D.MipSlice = 0;
 
 	return 0;
@@ -241,7 +240,7 @@ HRESULT Renderer::CreateDepthStencil()
 
 
 	CD3D11_TEXTURE2D_DESC depthStencilDesc(
-		DXGI_FORMAT_D24_UNORM_S8_UINT,
+		DXGI_FORMAT_D24_UNORM_S8_UINT, //DXGI_FORMAT_B8G8R8A8_UNORM
 		lround(Resources()->ViewPort->Width),
 		lround(Resources()->ViewPort->Height),
 		1, // This depth stencil view has only one texture.
@@ -265,7 +264,7 @@ HRESULT Renderer::CreateDepthStencil()
 	D2D1_BITMAP_PROPERTIES1 bitmapProperties =
 		D2D1::BitmapProperties1(
 		D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
-		D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED),
+		D2D1::PixelFormat(Resources()->RenderQuality->TextureFormat, D2D1_ALPHA_MODE_PREMULTIPLIED),
 		Resources()->Dpi,
 		Resources()->Dpi);
 
@@ -287,14 +286,14 @@ HRESULT Renderer::CreateRasterizerDescription()
 	Debug::WriteLine(L"CALL : Renderer::CreateRasterizerDescription\n");
 	ZeroMemory(&m_pRasterizerDesc, sizeof(m_pRasterizerDesc));
 
-	m_pRasterizerDesc.AntialiasedLineEnable = false;
+	m_pRasterizerDesc.AntialiasedLineEnable = m_rasterizerUseMultiSampling;
 	m_pRasterizerDesc.CullMode = D3D11_CULL_BACK;
 	m_pRasterizerDesc.DepthBias = 0;
 	m_pRasterizerDesc.DepthBiasClamp = 0.0f;
 	m_pRasterizerDesc.DepthClipEnable = true;
 	m_pRasterizerDesc.FillMode = D3D11_FILL_SOLID;
 	m_pRasterizerDesc.FrontCounterClockwise = false;
-	m_pRasterizerDesc.MultisampleEnable = false;
+	m_pRasterizerDesc.MultisampleEnable = m_rasterizerUseMultiSampling;
 	m_pRasterizerDesc.ScissorEnable = false;
 	m_pRasterizerDesc.SlopeScaledDepthBias = 0.0f;
 
@@ -496,5 +495,5 @@ HRESULT Renderer::Render()
 
 HRESULT	Renderer::ResizeSwapChain(UINT32 newWidth, UINT32 newHeight)
 {
-	return Resources()->SwapChain->ResizeBuffers(Resources()->BufferCount, newWidth, newHeight, DXGI_FORMAT_B8G8R8A8_UNORM, Resources()->SwapChainFlags);
+	return Resources()->SwapChain->ResizeBuffers(Resources()->BufferCount, newWidth, newHeight, Resources()->RenderQuality->TextureFormat, Resources()->SwapChainFlags);
 }

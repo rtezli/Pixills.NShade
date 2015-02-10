@@ -165,6 +165,12 @@ HRESULT D3DSystem::CreateDevice()
 	viewPort.MinDepth = D3D11_MIN_DEPTH;
 	viewPort.MaxDepth = D3D11_MAX_DEPTH;
 		
+	UINT numQualityLevels1 = 0;
+	device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 2, &numQualityLevels1);
+
+	UINT numQualityLevels2 = 0;
+	device->CheckMultisampleQualityLevels(DXGI_FORMAT_D24_UNORM_S8_UINT, 2, &numQualityLevels2);
+ 
 	auto resources = new DeviceResources(device, context);
 
 	resources->Device = device;

@@ -8,6 +8,14 @@ struct VertexPositionColor
 	DirectX::XMFLOAT3 Color;
 };
 
+struct RenderingQuality
+{
+	UINT Quality;
+	UINT SampleCount;
+	DXGI_FORMAT TextureFormat;
+};
+
+
 struct ConstantBufferData
 {
 	DirectX::XMFLOAT4X4 world;
