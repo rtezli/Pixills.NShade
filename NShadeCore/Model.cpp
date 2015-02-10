@@ -153,17 +153,16 @@ HRESULT Model::InitializeIndexBuffer(int indeces[])
 	Debug::WriteLine(L"CALL : Model::InitializeIndexBuffer\n");
 	static const unsigned short cubeIndices[] =
 	{ 
-		0, 1, 2
-		//0, 2, 1, 1, 2, 3, 4, 5, 6, 5, 7, 6
-		//0, 2, 1, 1, 2, 3, 4, 5, 6, 5, 7, 6,
-		//0, 1, 5, 0, 5, 4, 2, 6, 7, 2, 7, 3,
-		//0, 4, 6, 0, 6, 2, 1, 3, 7, 1, 7, 5,
+		0, 2, 1, 1, 2, 3, 4, 5, 6, 5, 7, 6,
+		0, 2, 1, 1, 2, 3, 4, 5, 6, 5, 7, 6,
+		0, 1, 5, 0, 5, 4, 2, 6, 7, 2, 7, 3,
+		0, 4, 6, 0, 6, 2, 1, 3, 7, 1, 7, 5
 	};
 
 	DeviceResource()->IndexCount = ARRAYSIZE(cubeIndices);
 
 	D3D11_BUFFER_DESC indexBufferDesc;
-	indexBufferDesc.ByteWidth = sizeof(unsigned long) * ARRAYSIZE(cubeIndices);
+	indexBufferDesc.ByteWidth = sizeof(unsigned short) * ARRAYSIZE(cubeIndices);
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags = 0;
