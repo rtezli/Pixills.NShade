@@ -118,16 +118,16 @@ HRESULT Model::InitializeVertexBuffer()
 	static const XMFLOAT3 cube[] =
 	{
 		// BOTTOM FACE
-		{ XMFLOAT3(-0.5f, -0.5f, -0.5f)},
-		{ XMFLOAT3( 0.5f, -0.5f, -0.5f)},
-		{ XMFLOAT3( 0.5f, -0.5f,  0.5f)},
-		{ XMFLOAT3(-0.5f, -0.5f,  0.5f)},
+		{ XMFLOAT3(-0.5f, -0.5f, -0.5f) },
+		{ XMFLOAT3( 0.5f, -0.5f, -0.5f) },
+		{ XMFLOAT3( 0.5f, -0.5f,  0.5f) },
+		{ XMFLOAT3(-0.5f, -0.5f,  0.5f) },
 
 		// TOP FACE
-		{ XMFLOAT3(-0.5f, 0.5f, -0.5f)},
-		{ XMFLOAT3(-0.5f, 0.5f,  0.5f)},
-		{ XMFLOAT3( 0.5f, 0.5f, -0.5f)},
-		{ XMFLOAT3( 0.5f, 0.5f,  0.5f)}
+		{ XMFLOAT3(-0.5f, 0.5f, -0.5f) },
+		{ XMFLOAT3(-0.5f, 0.5f,  0.5f) },
+		{ XMFLOAT3( 0.5f, 0.5f, -0.5f) },
+		{ XMFLOAT3( 0.5f, 0.5f,  0.5f) }
 
 
 	};

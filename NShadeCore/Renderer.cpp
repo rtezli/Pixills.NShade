@@ -318,7 +318,12 @@ HRESULT Renderer::CreateRasterizer()
 	}
 
 	Debug::WriteLine(L"CALL : Renderer::CreateRasterizer\t\t\t(Context->RSSetState)\n");
+
+	// Set rasterizer
+	ID3D11RasterizerState* tempState = 0;
+
 	GetDeviceContext()->RSSetState(Resources()->RasterizerState);
+
 	return 0;
 }
 
@@ -453,7 +458,7 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
 void Renderer::ClearScene()
 {
 	// Update the model data
-	// GetDeviceContext()->UpdateSubresource(DeviceResource()->ConstBuffer, 0, nullptr, DeviceResource()->ConstBufferData, 0, 0);
+	GetDeviceContext()->UpdateSubresource(Resources()->ConstBuffer, 0, nullptr, Resources()->ConstBufferData, 0, 0);
 
 	// Clear render targets and depth stencil
 	GetDeviceContext()->OMSetRenderTargets(1, &Resources()->RenderTargetView, Resources()->DepthStencilView);
@@ -463,6 +468,7 @@ void Renderer::ClearScene()
 
 HRESULT Renderer::Render()
 {
+	// Clear
 	ClearScene();
 
 	UINT stride = sizeof(XMFLOAT3);
@@ -478,10 +484,14 @@ HRESULT Renderer::Render()
 	GetDeviceContext()->VSSetShader(Resources()->Shaders->VertexShader, nullptr, 0);
 	GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
 	GetDeviceContext()->PSSetShader(Resources()->Shaders->PixelShader, nullptr, 0);
-	GetDeviceContext()->DrawIndexed(36, 0, 0);
+	GetDeviceContext()->DrawIndexed(Resources()->IndexCount, 0, 0);
 
 	// Present
-	return Resources()->SwapChain->Present(1, 0);
+	auto result = Resources()->SwapChain->Present(1, 0);
+	if (FAILED(result))
+	{
+		return result;
+	}
 }
 
 HRESULT	Renderer::ResizeSwapChain(UINT32 newWidth, UINT32 newHeight)
