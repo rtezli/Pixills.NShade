@@ -164,13 +164,9 @@ HRESULT D3DSystem::CreateDevice()
 	viewPort.TopLeftY = 0;
 	viewPort.MinDepth = D3D11_MIN_DEPTH;
 	viewPort.MaxDepth = D3D11_MAX_DEPTH;
-		
-	UINT numQualityLevels1 = 0;
-	device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 2, &numQualityLevels1);
 
-	UINT numQualityLevels2 = 0;
-	device->CheckMultisampleQualityLevels(DXGI_FORMAT_D24_UNORM_S8_UINT, 2, &numQualityLevels2);
- 
+	CreateRenderQualitySettings(device);
+
 	auto resources = new DeviceResources(device, context);
 
 	resources->Device = device;
@@ -185,6 +181,60 @@ HRESULT D3DSystem::CreateDevice()
 	m_pDeviceResources = resources;
 
 	return createResult;
+}
+
+HRESULT D3DSystem::CreateRenderQualitySettings(ID3D11Device* device)
+{
+	UINT level = 0;
+	int index = 0;
+	HRESULT result;
+	vector<RenderingQuality> availableLevels;
+
+	RenderingQuality defaultQuality = { 0, 1, DXGI_FORMAT_R8G8B8A8_UNORM };
+	availableLevels.push_back(defaultQuality);
+
+	for (UINT i = 0; i <= 32; i++)
+	{
+		result  = device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, i, &level);
+		if (FAILED(result))
+		{
+
+		}
+		if (level > 0)
+		{
+			RenderingQuality quality = { level, i, DXGI_FORMAT_R8G8B8A8_UNORM };
+			availableLevels.push_back(quality);
+			index++;
+		}
+	}
+
+	for (UINT i = 0; i <= 32; i++)
+	{
+		result = device->CheckMultisampleQualityLevels(DXGI_FORMAT_B8G8R8A8_UNORM_SRGB, i, &level);
+		if (FAILED(result))
+		{
+			return result;
+		}
+		if (level > 0)
+		{
+			RenderingQuality quality = { level, i, DXGI_FORMAT_B8G8R8A8_UNORM_SRGB };
+			availableLevels.push_back(quality);
+			index++;
+		}
+	}
+
+	index = 0;
+	for (UINT i = 0; i <= 32; i++)
+	{
+		UINT level = 0;
+		device->CheckMultisampleQualityLevels(DXGI_FORMAT_D24_UNORM_S8_UINT, i, &level);
+		if (level > 0)
+		{
+			RenderingQuality quality = { level, i, DXGI_FORMAT_D24_UNORM_S8_UINT };
+			availableLevels.push_back(quality);
+			index++;
+		}
+	}
 }
 
 HRESULT D3DSystem::CreateCamera()

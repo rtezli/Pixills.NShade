@@ -65,7 +65,7 @@ HRESULT Renderer::CreateSwapChainDesciption()
 	m_pSwapChainDescription.BufferCount = Resources()->BufferCount;
 	m_pSwapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
-	m_pSwapChainDescription.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL; //DXGI_SWAP_EFFECT_DISCARD; 
+	m_pSwapChainDescription.SwapEffect = DXGI_SWAP_EFFECT_DISCARD; //DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL; 
 	m_pSwapChainDescription.Flags = Resources()->SwapChainFlags;
 
 	m_pSwapChainDescription.SampleDesc.Quality = Resources()->RenderQuality->Quality;
