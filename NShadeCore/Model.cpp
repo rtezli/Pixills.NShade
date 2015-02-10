@@ -116,17 +116,21 @@ HRESULT Model::InitializeVertexBuffer()
 	Helpers::DebugWriteLine(L"CALL : Model::InitializeVertexBuffer\n");
 	static const VertexPositionColor cube[] =
 	{
-		// BOTTOM FACE
-		{ XMFLOAT3(-0.5f, -0.5f, -0.5f),	XMFLOAT3(0.0f, 0.0f, 0.0f) },
-		{ XMFLOAT3(0.5f, -0.5f, -0.5f),		XMFLOAT3(1.0f, 0.0f, 0.0f) },
-		{ XMFLOAT3(0.5f, -0.5f, 0.5f),		XMFLOAT3(1.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(-0.5f, -0.5f, 0.5f),		XMFLOAT3(0.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3(-0.5f, 0.0f, 0.0f),	XMFLOAT3(1.0f, 0.0f, 0.0f) },
+		{ XMFLOAT3( 0.5f, 0.0f, 0.0f),	XMFLOAT3(1.0f, 0.0f, 0.0f) },
+		{ XMFLOAT3( 0.0f, 1.0f, 0.0f),	XMFLOAT3(1.0f, 0.0f, 0.0f) }
 
-		// TOP FACE
-		{ XMFLOAT3(-0.5f, 0.5f, -0.5f),		XMFLOAT3(0.0f, 1.0f, 0.0f) },
-		{ XMFLOAT3(-0.5f, 0.5f, 0.5f),		XMFLOAT3(0.0f, 1.0f, 1.0f) },
-		{ XMFLOAT3(0.5f, 0.5f, -0.5f),		XMFLOAT3(1.0f, 1.0f, 0.0f) },
-		{ XMFLOAT3(0.5f, 0.5f, 0.5f),		XMFLOAT3(1.0f, 1.0f, 1.0f) },
+		// BOTTOM FACE
+		//{ XMFLOAT3(-0.5f, -0.5f, -0.5f),	XMFLOAT3(0.0f, 0.0f, 0.0f) },
+		//{ XMFLOAT3(0.5f, -0.5f, -0.5f),	XMFLOAT3(1.0f, 0.0f, 0.0f) },
+		//{ XMFLOAT3(0.5f, -0.5f, 0.5f),	XMFLOAT3(1.0f, 0.0f, 1.0f) },
+		//{ XMFLOAT3(-0.5f, -0.5f, 0.5f),	XMFLOAT3(0.0f, 0.0f, 1.0f) },
+
+		//// TOP FACE
+		//{ XMFLOAT3(-0.5f, 0.5f, -0.5f),	XMFLOAT3(0.0f, 1.0f, 0.0f) },
+		//{ XMFLOAT3(-0.5f, 0.5f, 0.5f),	XMFLOAT3(0.0f, 1.0f, 1.0f) },
+		//{ XMFLOAT3(0.5f, 0.5f, -0.5f),	XMFLOAT3(1.0f, 1.0f, 0.0f) },
+		//{ XMFLOAT3(0.5f, 0.5f, 0.5f),		XMFLOAT3(1.0f, 1.0f, 1.0f) },
 
 
 	};
@@ -151,10 +155,11 @@ HRESULT Model::InitializeIndexBuffer(int indeces[])
 {
 	Helpers::DebugWriteLine(L"CALL : Model::InitializeIndexBuffer\n");
 	static const unsigned short cubeIndices[] =
-	{
-		0, 2, 1, 1, 2, 3, 4, 5, 6, 5, 7, 6,
-		0, 1, 5, 0, 5, 4, 2, 6, 7, 2, 7, 3,
-		0, 4, 6, 0, 6, 2, 1, 3, 7, 1, 7, 5,
+	{ 
+		0, 2, 1
+		//0, 2, 1, 1, 2, 3, 4, 5, 6, 5, 7, 6,
+		//0, 1, 5, 0, 5, 4, 2, 6, 7, 2, 7, 3,
+		//0, 4, 6, 0, 6, 2, 1, 3, 7, 1, 7, 5,
 	};
 
 	DeviceResource()->IndexCount = ARRAYSIZE(cubeIndices);

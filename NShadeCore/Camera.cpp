@@ -28,9 +28,9 @@ XMFLOAT4X4 Camera::GetWorldMatrix()
 
 XMFLOAT4X4 Camera::GetViewMatrix()
 {
-	XMVECTORF32 eyePosition = { 0.0f, 0.7f, 1.5f, 0.0f };
-	XMVECTORF32 focusPosition = { 0.0f, -0.1f, 0.0f, 0.0f };
-	XMVECTORF32 upDirection = { 0.0f, 1.0f, 0.0f, 0.0f };
+	XMVECTORF32 eyePosition		= { 0.0f, 0.7f, -5.0f, 0.0f };
+	XMVECTORF32 focusPosition	= { 0.0f, 0.0f,  0.0f, 0.0f };
+	XMVECTORF32 upDirection		= { 0.0f, 1.0f,  0.0f, 0.0f };
 
 	Helpers::DebugWriteLine(L"CALL : Camera::GetViewMatrix\n");
 	XMFLOAT4X4 view;
