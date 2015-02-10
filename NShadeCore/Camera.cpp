@@ -32,7 +32,7 @@ XMFLOAT4X4 Camera::GetViewMatrix()
 	XMVECTORF32 focusPosition	= { 0.0f, 0.0f,  0.0f, 0.0f };
 	XMVECTORF32 upDirection		= { 0.0f, 1.0f,  0.0f, 0.0f };
 
-	Helpers::DebugWriteLine(L"CALL : Camera::GetViewMatrix\n");
+	Debug::WriteLine(L"CALL : Camera::GetViewMatrix\n");
 	XMFLOAT4X4 view;
 	auto matrix = XMMatrixTranspose(XMMatrixLookAtRH(eyePosition, focusPosition, upDirection));
 	XMStoreFloat4x4(&view, matrix);
@@ -41,7 +41,7 @@ XMFLOAT4X4 Camera::GetViewMatrix()
 
 XMFLOAT4X4 Camera::GetProjectionMatrix()
 {
-	Helpers::DebugWriteLine(L"CALL : Camera::GetProjectionMatrix\n");
+	Debug::WriteLine(L"CALL : Camera::GetProjectionMatrix\n");
 
 	XMFLOAT4X4 projection;
 

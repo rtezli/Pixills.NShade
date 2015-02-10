@@ -59,9 +59,9 @@ namespace ScreenRotation
 		);
 }
 
-namespace Helpers
+namespace Debug
 {
-	static void DebugWriteLine(LPCWSTR message)
+	static void WriteLine(LPCWSTR message)
 	{
 #ifdef _PRINT_DEBUG
 		OutputDebugString(message);

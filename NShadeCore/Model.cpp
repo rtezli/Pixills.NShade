@@ -106,14 +106,14 @@ HRESULT Model::LoadModelFromOBJFile(char* fileName)
 
 HRESULT Model::InitializeConstantBuffer()
 {
-	Helpers::DebugWriteLine(L"CALL : Model::InitializeConstantBuffer\t\t\t(Device->CreateBuffer : Constant Buffer)\n");
+	Debug::WriteLine(L"CALL : Model::InitializeConstantBuffer\t\t\t(Device->CreateBuffer : Constant Buffer)\n");
 	CD3D11_BUFFER_DESC constantBufferDesc(sizeof(ConstantBufferData), D3D11_BIND_CONSTANT_BUFFER);
 	return DeviceResource()->Device->CreateBuffer(&constantBufferDesc, nullptr, &DeviceResource()->ConstBuffer);
 }
 
 HRESULT Model::InitializeVertexBuffer()
 {
-	Helpers::DebugWriteLine(L"CALL : Model::InitializeVertexBuffer\n");
+	Debug::WriteLine(L"CALL : Model::InitializeVertexBuffer\n");
 	static const VertexPositionColor cube[] =
 	{
 		{ XMFLOAT3(-0.5f, 0.0f, 0.0f),	XMFLOAT3(1.0f, 0.0f, 0.0f) },
@@ -147,16 +147,17 @@ HRESULT Model::InitializeVertexBuffer()
 	vertexBufferData.SysMemPitch = 0;
 	vertexBufferData.SysMemSlicePitch = 0;
 
-	Helpers::DebugWriteLine(L"CALL : Model::InitializeConstantBuffer\t\t\t(Device->CreateBuffer : Vertex Buffer)\n");
+	Debug::WriteLine(L"CALL : Model::InitializeConstantBuffer\t\t\t(Device->CreateBuffer : Vertex Buffer)\n");
 	return DeviceResource()->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &DeviceResource()->VertexBuffer);
 }
 
 HRESULT Model::InitializeIndexBuffer(int indeces[])
 {
-	Helpers::DebugWriteLine(L"CALL : Model::InitializeIndexBuffer\n");
+	Debug::WriteLine(L"CALL : Model::InitializeIndexBuffer\n");
 	static const unsigned short cubeIndices[] =
 	{ 
-		0, 2, 1
+		0, 1, 2
+		//0, 2, 1, 1, 2, 3, 4, 5, 6, 5, 7, 6
 		//0, 2, 1, 1, 2, 3, 4, 5, 6, 5, 7, 6,
 		//0, 1, 5, 0, 5, 4, 2, 6, 7, 2, 7, 3,
 		//0, 4, 6, 0, 6, 2, 1, 3, 7, 1, 7, 5,
@@ -165,7 +166,7 @@ HRESULT Model::InitializeIndexBuffer(int indeces[])
 	DeviceResource()->IndexCount = ARRAYSIZE(cubeIndices);
 
 	D3D11_BUFFER_DESC indexBufferDesc;
-	indexBufferDesc.ByteWidth = sizeof(unsigned short) * ARRAYSIZE(cubeIndices);
+	indexBufferDesc.ByteWidth = sizeof(unsigned long) * ARRAYSIZE(cubeIndices);
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags = 0;
@@ -177,7 +178,7 @@ HRESULT Model::InitializeIndexBuffer(int indeces[])
 	indexBufferData.SysMemPitch = 0;
 	indexBufferData.SysMemSlicePitch = 0;
 
-	Helpers::DebugWriteLine(L"CALL : Model::InitializeConstantBuffer\t\t\t(Device->CreateBuffer : Index Buffer)\n");
+	Debug::WriteLine(L"CALL : Model::InitializeConstantBuffer\t\t\t(Device->CreateBuffer : Index Buffer)\n");
 	auto result = DeviceResource()->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &DeviceResource()->IndexBuffer);
 	if (FAILED(result))
 	{
