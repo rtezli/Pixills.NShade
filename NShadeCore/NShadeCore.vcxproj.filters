@@ -121,4 +121,8 @@
     <FxCompile Include="PixelShader.hlsl" />
     <FxCompile Include="VertexShader.hlsl" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shader.vs" />
+    <None Include="shader.ps" />
+  </ItemGroup>
 </Project>

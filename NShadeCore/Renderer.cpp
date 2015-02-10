@@ -471,7 +471,7 @@ HRESULT Renderer::Render()
 	// Clear
 	ClearScene();
 
-	UINT stride = sizeof(XMFLOAT3);
+	UINT stride = sizeof(VertexPositionColor);
 	UINT offset = 0;
 
 	// Set model data

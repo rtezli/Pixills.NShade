@@ -53,14 +53,14 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 	}
 	fbxScene->Destroy();
 
-	XMFLOAT3* vertices[] = {0};
+	VertexPositionColor* vertices[] = { 0 };
 
 	m_initData.pSysMem = vertices;
 	m_initData.SysMemPitch = 0;
 	m_initData.SysMemSlicePitch = 0;
 
 	m_bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	m_bufferDesc.ByteWidth = sizeof(XMFLOAT3) * ARRAYSIZE(vertices);
+	m_bufferDesc.ByteWidth = sizeof(VertexPositionColor) * ARRAYSIZE(vertices);
 	m_bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	m_bufferDesc.CPUAccessFlags = 0;
 	m_bufferDesc.MiscFlags = 0;
@@ -90,14 +90,14 @@ HRESULT Model::LoadModelFromOBJFile(char* fileName)
 {
 	// TODO : Get the vertices from the file
 
-	XMFLOAT3* vertices[] = { 0 };
+	VertexPositionColor* vertices[] = { 0 };
 
 	m_initData.pSysMem = vertices;
 	m_initData.SysMemPitch = 0;
 	m_initData.SysMemSlicePitch = 0;
 
 	m_bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	m_bufferDesc.ByteWidth = sizeof(XMFLOAT3) * ARRAYSIZE(vertices);
+	m_bufferDesc.ByteWidth = sizeof(VertexPositionColor) * ARRAYSIZE(vertices);
 	m_bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	m_bufferDesc.CPUAccessFlags = 0;
 	m_bufferDesc.MiscFlags = 0;
@@ -115,24 +115,24 @@ HRESULT Model::InitializeConstantBuffer()
 HRESULT Model::InitializeVertexBuffer()
 {
 	Debug::WriteLine(L"CALL : Model::InitializeVertexBuffer\n");
-	static const XMFLOAT3 cube[] =
+	static const VertexPositionColor cube[] =
 	{
 		// BOTTOM FACE
-		{ XMFLOAT3(-0.5f, -0.5f, -0.5f) },
-		{ XMFLOAT3( 0.5f, -0.5f, -0.5f) },
-		{ XMFLOAT3( 0.5f, -0.5f,  0.5f) },
-		{ XMFLOAT3(-0.5f, -0.5f,  0.5f) },
+		{ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
+		{ XMFLOAT3(0.5f, -0.5f, -0.5f),	 XMFLOAT3(1.0f, 0.0f, 0.0f) },
+		{ XMFLOAT3(0.5f, -0.5f, 0.5f),	 XMFLOAT3(1.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3(-0.5f, -0.5f, 0.5f),	 XMFLOAT3(0.0f, 0.0f, 1.0f) },
 
-		// TOP FACE
-		{ XMFLOAT3(-0.5f, 0.5f, -0.5f) },
-		{ XMFLOAT3(-0.5f, 0.5f,  0.5f) },
-		{ XMFLOAT3( 0.5f, 0.5f, -0.5f) },
-		{ XMFLOAT3( 0.5f, 0.5f,  0.5f) }
+		//// TOP FACE
+		{ XMFLOAT3(-0.5f, 0.5f, -0.5f),	XMFLOAT3(0.0f, 1.0f, 0.0f) },
+		{ XMFLOAT3(-0.5f, 0.5f, 0.5f),	XMFLOAT3(0.0f, 1.0f, 1.0f) },
+		{ XMFLOAT3(0.5f, 0.5f, -0.5f),	XMFLOAT3(1.0f, 1.0f, 0.0f) },
+		{ XMFLOAT3(0.5f, 0.5f, 0.5f),   XMFLOAT3(1.0f, 1.0f, 1.0f) }
 
 
 	};
 	D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
-	vertexBufferDesc.ByteWidth = sizeof(XMFLOAT3) * ARRAYSIZE(cube);
+	vertexBufferDesc.ByteWidth = sizeof(VertexPositionColor) * ARRAYSIZE(cube);
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;

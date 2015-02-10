@@ -248,6 +248,10 @@
       <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</EnableDebuggingInformation>
     </FxCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shader.ps" />
+    <None Include="shader.vs" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\rxcpp.2.1.1\build\native\rxcpp.targets" Condition="Exists('..\packages\rxcpp.2.1.1\build\native\rxcpp.targets')" />
