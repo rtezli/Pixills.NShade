@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 8.00.0603 */
-/* at Wed Feb 11 07:46:48 2015
+/* at Wed Feb 11 08:15:26 2015
  */
 /* Compiler settings for NShadeATL.idl:
     Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 8.00.0603 

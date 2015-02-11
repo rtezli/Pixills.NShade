@@ -194,7 +194,7 @@ HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device* device)
 	HRESULT result;
 	vector<RenderingQuality> availableLevels;
 
-	RenderingQuality defaultQuality = { 0, 1, DXGI_FORMAT_R8G8B8A8_UNORM };
+	RenderingQuality defaultQuality = { 0, 1, DXGI_FORMAT_R8G8B8A8_UNORM, false };
 	availableLevels.push_back(defaultQuality);
 
 	for (UINT i = 0; i <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; i++)
@@ -202,12 +202,12 @@ HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device* device)
 		result = device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, i, &level);
 		if (SUCCEEDED(result))
 		{
-			if (level == 0)
+			if (level < 1)
 			{
 				continue;
 			}
 
-			RenderingQuality quality = { level, i, DXGI_FORMAT_R8G8B8A8_UNORM };
+			RenderingQuality quality = { level, i, DXGI_FORMAT_R8G8B8A8_UNORM, true };
 			availableLevels.push_back(quality);
 			index++;
 		}
@@ -218,12 +218,12 @@ HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device* device)
 		result = device->CheckMultisampleQualityLevels(DXGI_FORMAT_B8G8R8A8_UNORM_SRGB, i, &level);
 		if (SUCCEEDED(result))
 		{
-			if (level == 0)
+			if (level < 1)
 			{
 				continue;
 			}
 
-			RenderingQuality quality = { level, i, DXGI_FORMAT_B8G8R8A8_UNORM_SRGB };
+			RenderingQuality quality = { level, i, DXGI_FORMAT_B8G8R8A8_UNORM_SRGB, true };
 			availableLevels.push_back(quality);
 			index++;
 		}
@@ -236,12 +236,12 @@ HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device* device)
 		result = device->CheckMultisampleQualityLevels(DXGI_FORMAT_D24_UNORM_S8_UINT, i, &level);
 		if (SUCCEEDED(result))
 		{
-			if (level == 0)
+			if (level < 1)
 			{
 				continue;
 			}
 
-			RenderingQuality quality = { level, i, DXGI_FORMAT_D24_UNORM_S8_UINT };
+			RenderingQuality quality = { level, i, DXGI_FORMAT_D24_UNORM_S8_UINT, true };
 			availableLevels.push_back(quality);
 			index++;
 		}

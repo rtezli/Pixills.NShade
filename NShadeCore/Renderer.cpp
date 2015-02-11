@@ -8,6 +8,15 @@ Renderer::Renderer(DeviceResources* pResources, bool useSwapChain)
 	m_pDeviceResources->Shaders = new ShaderSet();
 	m_useSwapChain = useSwapChain;
 	m_rasterizerUseMultiSampling = true;
+
+	DXGI_FORMAT swapChainBufferFormat	= DXGI_FORMAT_B8G8R8A8_UNORM;
+
+	DXGI_FORMAT depthBufferFormat		= DXGI_FORMAT_D24_UNORM_S8_UINT;
+	DXGI_FORMAT depthSencilViewFormat	= DXGI_FORMAT_D24_UNORM_S8_UINT;
+	DXGI_FORMAT depthSencilFormat		= DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+	DXGI_FORMAT vertexPositionFormat	= DXGI_FORMAT_R32G32B32_FLOAT;
+	DXGI_FORMAT vertexColorFormat		= DXGI_FORMAT_R32G32B32_FLOAT;
 }
 
 Renderer::~Renderer()
@@ -157,7 +166,7 @@ HRESULT Renderer::CreateDepthBufferDescription()
 	m_pDepthBufferDesc.Height = Resources()->ViewPort->Height;
 	m_pDepthBufferDesc.MipLevels = 1;
 	m_pDepthBufferDesc.ArraySize = 1;
-	m_pDepthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; //DXGI_FORMAT_B8G8R8A8_UNORM
+	m_pDepthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	m_pDepthBufferDesc.SampleDesc.Count = 1;
 	m_pDepthBufferDesc.SampleDesc.Quality = 0;
 	m_pDepthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -218,7 +227,7 @@ HRESULT Renderer::CreateDepthStencilViewDescription()
 	Debug::WriteLine(L"CALL : Renderer::CreateDepthStencilViewDescription\n");
 	ZeroMemory(&m_pDepthStencilViewDesc, sizeof(m_pDepthStencilViewDesc));
 
-	m_pDepthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; //DXGI_FORMAT_B8G8R8A8_UNORM
+	m_pDepthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	m_pDepthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS; // D3D11_DSV_DIMENSION_TEXTURE2D
 	m_pDepthStencilViewDesc.Texture2D.MipSlice = 0;
 
@@ -242,7 +251,7 @@ HRESULT Renderer::CreateDepthStencil()
 
 
 	CD3D11_TEXTURE2D_DESC depthStencilDesc(
-		DXGI_FORMAT_D24_UNORM_S8_UINT, //DXGI_FORMAT_B8G8R8A8_UNORM
+		DXGI_FORMAT_D24_UNORM_S8_UINT,
 		lround(Resources()->ViewPort->Width),
 		lround(Resources()->ViewPort->Height),
 		1, // This depth stencil view has only one texture.
