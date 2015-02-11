@@ -192,23 +192,22 @@ D3D11_VIEWPORT* D3DSystem::CreateViewPort(HWND* hwnd)
 
 HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device* device)
 {
-	UINT level = 0;
+	UINT numberOfLevels = 0;
 	HRESULT result;
 	vector<RenderingQuality> availableLevels;
-	//vector<MSAA>* msaaOptions;
 
 	UINT maxSamples = D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT;
 
 	for (UINT i = maxSamples; i > 0; i--)
 	{
-		result = device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, i, &level);
+		result = device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, i, &numberOfLevels);
 		if (SUCCEEDED(result))
 		{
-			if (level < 1)
+			if (numberOfLevels < 1)
 			{
 				continue;
 			}
-			RenderingQuality quality = { i, level, DXGI_FORMAT_R8G8B8A8_UNORM, true };
+			RenderingQuality quality = { i, numberOfLevels - 1, DXGI_FORMAT_R8G8B8A8_UNORM, true };
 			availableLevels.push_back(quality);
 		}
 	}

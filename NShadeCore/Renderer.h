@@ -45,6 +45,7 @@ public:
 private:
 	/* swap chain */
 	HRESULT	CreateSwapChainDesciption();
+	HRESULT CreateSwapChainViewDesciption();
 	HRESULT CreateSwapChain();
 
 	/* constant buffer */
@@ -91,8 +92,13 @@ private:
 
 	DXGI_SWAP_CHAIN_DESC				m_pSwapChainDescription;
 	D3D11_TEXTURE2D_DESC				m_pDepthBufferDesc;
+
 	D3D11_DEPTH_STENCIL_DESC			m_pDepthStencilDesc;
 	D3D11_DEPTH_STENCIL_VIEW_DESC		m_pDepthStencilViewDesc;
+
+	D3D11_TEXTURE2D_DESC				m_pRenderTargetDesc;
+	D3D11_RENDER_TARGET_VIEW_DESC		m_pRenderTargetViewDesc;
+
 	D3D11_RASTERIZER_DESC				m_pRasterizerDesc;
 
 	bool								m_isInitialized;
