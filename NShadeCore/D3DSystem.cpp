@@ -64,17 +64,6 @@ HRESULT D3DSystem::InitializeForWindow(
 	m_vSync = vsync;
 	m_fullScreen = fullscreen;
 
-	RECT rect;
-
-	GetWindowRect(*hwnd, &rect);
-	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, FALSE);
-
-	m_viewportWidth = GetSystemMetrics(SM_CXSCREEN);
-	m_viewportHeight = GetSystemMetrics(SM_CYSCREEN);
-
-	auto posX = (GetSystemMetrics(SM_CXSCREEN) - m_viewportWidth) / 2;
-	auto posY = (GetSystemMetrics(SM_CYSCREEN) - m_viewportHeight) / 2;
-
 	//ShowCursor(false);
 
 	return Initialize();
@@ -157,28 +146,21 @@ HRESULT D3DSystem::CreateDevice()
 			&context);
 	}
 
-	D3D11_VIEWPORT viewPort;
-	viewPort.Width = m_viewportWidth;
-	viewPort.Height = m_viewportHeight;
-	viewPort.TopLeftX = 0;
-	viewPort.TopLeftY = 0;
-	viewPort.MinDepth = D3D11_MIN_DEPTH;
-	viewPort.MaxDepth = D3D11_MAX_DEPTH;
-
+ 
 	createResult = GetRenderQualitySettings(device);
 	if (FAILED(createResult))
 	{
 		return createResult;
 	}
 
-	auto resources = new DeviceResources(device, context);
-
+	auto viewport = CreateViewPort(m_pWindowHandle);
+	auto resources = new DeviceResources(device, context);	
+	resources->ViewPort = new D3D11_VIEWPORT(*viewport);
 	resources->Device = device;
 	resources->DeviceContext = context;
 	resources->WindowHandle = m_pWindowHandle;
 	resources->FullScreen = m_fullScreen;
 	resources->VSync = m_vSync;
-	resources->ViewPort = new D3D11_VIEWPORT(viewPort);
 	resources->NearZ = 0.0f;
 	resources->FarZ = 1000.0f;
 
@@ -187,17 +169,37 @@ HRESULT D3DSystem::CreateDevice()
 	return createResult;
 }
 
+D3D11_VIEWPORT* D3DSystem::CreateViewPort(HWND* hwnd)
+{
+	RECT rect;
+
+	GetWindowRect(*hwnd, &rect);
+	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, FALSE);
+
+	auto width = rect.right - rect.left;
+	auto height = rect.bottom - rect.top;
+
+	D3D11_VIEWPORT viewPort;
+	viewPort.Width = width;
+	viewPort.Height = height;
+	viewPort.TopLeftX = 0;
+	viewPort.TopLeftY = 0;
+	viewPort.MinDepth = D3D11_MIN_DEPTH;
+	viewPort.MaxDepth = D3D11_MAX_DEPTH;
+
+	return new D3D11_VIEWPORT(viewPort);
+}
+
 HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device* device)
 {
 	UINT level = 0;
-	int index = 0;
 	HRESULT result;
 	vector<RenderingQuality> availableLevels;
+	//vector<MSAA>* msaaOptions;
 
-	RenderingQuality defaultQuality = { 0, 1, DXGI_FORMAT_R8G8B8A8_UNORM, false };
-	availableLevels.push_back(defaultQuality);
+	UINT maxSamples = D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT;
 
-	for (UINT i = 0; i <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; i++)
+	for (UINT i = maxSamples; i > 0; i--)
 	{
 		result = device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, i, &level);
 		if (SUCCEEDED(result))
@@ -206,48 +208,42 @@ HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device* device)
 			{
 				continue;
 			}
-
-			RenderingQuality quality = { level, i, DXGI_FORMAT_R8G8B8A8_UNORM, true };
+			RenderingQuality quality = { i, level, DXGI_FORMAT_R8G8B8A8_UNORM, true };
 			availableLevels.push_back(quality);
-			index++;
-		}
-	}
-
-	for (UINT i = 0; i <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; i++)
-	{
-		result = device->CheckMultisampleQualityLevels(DXGI_FORMAT_B8G8R8A8_UNORM_SRGB, i, &level);
-		if (SUCCEEDED(result))
-		{
-			if (level < 1)
-			{
-				continue;
-			}
-
-			RenderingQuality quality = { level, i, DXGI_FORMAT_B8G8R8A8_UNORM_SRGB, true };
-			availableLevels.push_back(quality);
-			index++;
-		}
-	}
-
-	index = 0;
-	for (UINT i = 0; i <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; i++)
-	{
-		UINT level = 0;
-		result = device->CheckMultisampleQualityLevels(DXGI_FORMAT_D24_UNORM_S8_UINT, i, &level);
-		if (SUCCEEDED(result))
-		{
-			if (level < 1)
-			{
-				continue;
-			}
-
-			RenderingQuality quality = { level, i, DXGI_FORMAT_D24_UNORM_S8_UINT, true };
-			availableLevels.push_back(quality);
-			index++;
 		}
 	}
 
 	return result;
+}
+
+vector<MSAA>* D3DSystem::ProduceMsaaCapability(vector<MSAA>* options, int i)
+{
+	auto localOptions = *options;
+	auto masaa = MSAA_0X;
+	switch (i)
+	{
+	case 1:
+		masaa = MSAA_1X;
+	case 2:
+		masaa = MSAA_2X;
+	case 4:
+		masaa = MSAA_4X;
+	case 8:
+		masaa = MSAA_8X;
+	}
+	bool contains = false;
+	for (int i = 0; localOptions.size(); i++)
+	{
+		if (localOptions[i] == masaa)
+		{
+			contains = true;
+		}
+	}
+	if (!contains)
+	{
+		localOptions.push_back(masaa);
+	}
+	return new vector<MSAA>(localOptions);
 }
 
 HRESULT D3DSystem::CreateCamera()
@@ -275,29 +271,20 @@ void D3DSystem::Render()
 	m_pRenderer->Render();
 }
 
-LRESULT CALLBACK MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
+LRESULT D3DSystem::MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
 	switch (umessage)
 	{
-		// Check if the window is being destroyed.
-	case WM_DESTROY:
-	{
-		PostQuitMessage(0);
-		return 0;
-	}
+		case WM_SIZE:
+		{
+			auto viewPort = CreateViewPort(&hwnd);
+			m_pRenderer->Resize(viewPort);
 
-	// Check if the window is being closed.
-	case WM_CLOSE:
-	{
-		PostQuitMessage(0);
-		return 0;
-	}
-
-	// All other messages pass to the message handler in the system class.
-	default:
-	{
-		//return ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
-	}
+			return 0;
+		}
+		default:
+		{
+		}
 	}
 	return 0;
 }

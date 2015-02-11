@@ -35,11 +35,13 @@ public:
 	HRESULT SetShaderParameters();
 	HRESULT	Initialize();
 	HRESULT	Render();
+	HRESULT	Resize(D3D11_VIEWPORT* viewport);
 public:
 	void						ClearScene();
 	ID3D11Device*				const GetDevice(){ return Resources()->Device; }
 	ID3D11DeviceContext*		const GetDeviceContext(){ return Resources()->DeviceContext; }
 	DeviceResources*			const Resources(){ return m_pDeviceResources; }
+	bool						const Initialized(){ return m_isInitialized; };
 private:
 	/* swap chain */
 	HRESULT	CreateSwapChainDesciption();
@@ -93,6 +95,7 @@ private:
 	D3D11_DEPTH_STENCIL_VIEW_DESC		m_pDepthStencilViewDesc;
 	D3D11_RASTERIZER_DESC				m_pRasterizerDesc;
 
+	bool								m_isInitialized;
 	bool								m_useSwapChain;
 	bool								m_rasterizerUseMultiSampling;
 };

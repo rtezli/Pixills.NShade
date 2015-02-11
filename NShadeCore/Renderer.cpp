@@ -4,19 +4,20 @@
 
 Renderer::Renderer(DeviceResources* pResources, bool useSwapChain)
 {
+	m_isInitialized = false;
 	m_pDeviceResources = pResources;
 	m_pDeviceResources->Shaders = new ShaderSet();
 	m_useSwapChain = useSwapChain;
 	m_rasterizerUseMultiSampling = true;
 
-	DXGI_FORMAT swapChainBufferFormat	= DXGI_FORMAT_B8G8R8A8_UNORM;
+	DXGI_FORMAT swapChainBufferFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
 
-	DXGI_FORMAT depthBufferFormat		= DXGI_FORMAT_D24_UNORM_S8_UINT;
-	DXGI_FORMAT depthSencilViewFormat	= DXGI_FORMAT_D24_UNORM_S8_UINT;
-	DXGI_FORMAT depthSencilFormat		= DXGI_FORMAT_D24_UNORM_S8_UINT;
+	DXGI_FORMAT depthBufferFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	DXGI_FORMAT depthSencilViewFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	DXGI_FORMAT depthSencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
-	DXGI_FORMAT vertexPositionFormat	= DXGI_FORMAT_R32G32B32_FLOAT;
-	DXGI_FORMAT vertexColorFormat		= DXGI_FORMAT_R32G32B32_FLOAT;
+	DXGI_FORMAT vertexPositionFormat = DXGI_FORMAT_R32G32B32_FLOAT;
+	DXGI_FORMAT vertexColorFormat = DXGI_FORMAT_R32G32B32_FLOAT;
 }
 
 Renderer::~Renderer()
@@ -61,7 +62,7 @@ HRESULT Renderer::Initialize()
 	{
 		return result;
 	}
-
+	m_isInitialized = true;
 	return SetPixelShader(m_standardPixelShader);
 }
 
@@ -359,8 +360,8 @@ HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 
 	static const D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR"	, 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
 	Debug::WriteLine(L"CALL : Renderer::SetVertexShader\t\t\t(Device->CreateInputLayout)\n");
@@ -506,5 +507,16 @@ HRESULT Renderer::Render()
 
 HRESULT	Renderer::ResizeSwapChain(UINT32 newWidth, UINT32 newHeight)
 {
-	return Resources()->SwapChain->ResizeBuffers(Resources()->BufferCount, newWidth, newHeight, Resources()->RenderQuality->TextureFormat, Resources()->SwapChainFlags);
+	return Resources()->SwapChain->ResizeBuffers(Resources()->BufferCount, 0, 0, Resources()->RenderQuality->TextureFormat, Resources()->SwapChainFlags);
+}
+
+HRESULT Renderer::Resize(D3D11_VIEWPORT* viewPort)
+{
+	HRESULT result;
+	Resources()->ViewPort = viewPort;
+	if (NULL != Resources()->SwapChain && m_isInitialized)
+	{
+		result = Initialize();
+	}
+	return result;
 }

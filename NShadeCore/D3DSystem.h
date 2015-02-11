@@ -18,11 +18,14 @@ public:
 	HRESULT InitializeWithWindow(int screenWidth, int screenHeight, bool vsync, bool fullscreen);
 	HRESULT Initialize();
 	void	Render();
+	LRESULT MessageHandler(HWND, UINT, WPARAM, LPARAM);
 private:
 	HRESULT					InitializeWindow(int screenWidth, int screenHeight);
 	HRESULT					CreateDevice();
 	HRESULT					GetRenderQualitySettings(ID3D11Device* device);
+	vector<MSAA>* 			ProduceMsaaCapability(vector<MSAA>* msaaOptions, int i);
 	HRESULT					CreateCamera();
+	D3D11_VIEWPORT*			CreateViewPort(HWND* hwnd);
 	HRESULT					LoadModels();
 	HRESULT					CreateRenderer();
 private:
@@ -43,11 +46,11 @@ private:
 	float									m_viewportHeight;
 	float									m_nearZ;
 	float									m_farZ;
+
 	bool									m_fullScreen;
 	bool									m_vSync;
 };
 
-static LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 static D3DSystem* ApplicationHandle = 0;
 
 enum Perspective : char

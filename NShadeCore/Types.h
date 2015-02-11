@@ -25,6 +25,11 @@ enum MSAA
 	MSAA_8X = 8
 };
 
+struct MsaaOptions
+{
+	MSAA Msaa;
+	RenderingQuality Quality;
+};
 
 struct ConstantBufferData
 {
