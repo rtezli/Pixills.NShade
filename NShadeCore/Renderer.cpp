@@ -26,7 +26,14 @@ Renderer::~Renderer()
 
 HRESULT Renderer::Initialize()
 {
+
 	auto result = CreateSwapChain();
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	result = CreateRenderTarget();
 	if (FAILED(result))
 	{
 		return result;
@@ -78,7 +85,7 @@ HRESULT Renderer::CreateRenderTargetDesciption()
 	m_pRenderTargetDesc.SampleDesc.Quality = Resources()->RenderQuality->Quality;
 	m_pRenderTargetDesc.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
 	m_pRenderTargetDesc.Usage = D3D11_USAGE_DEFAULT;
-	m_pRenderTargetDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	m_pRenderTargetDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
 	m_pRenderTargetDesc.CPUAccessFlags = 0;
 	m_pRenderTargetDesc.MiscFlags = 0;
 
@@ -110,6 +117,7 @@ HRESULT Renderer::CreateRenderTarget()
 		return result;
 	}
 
+	return GetDevice()->CreateRenderTargetView(Resources()->BackBuffer, &m_pRenderTargetViewDesc, &Resources()->RenderTargetView);
 }
 
 
@@ -132,7 +140,7 @@ HRESULT Renderer::CreateSwapChainDesciption()
 	// MSAA settings D3D11_STANDARD_MULTISAMPLE_QUALITY_LEVELS
 	m_pSwapChainDescription.SampleDesc.Quality = Resources()->RenderQuality->Quality;
 	m_pSwapChainDescription.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
-	m_pSwapChainDescription.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;//Resources()->RenderQuality->TextureFormat;
+	m_pSwapChainDescription.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;//Resources()->RenderQuality->TextureFormat;
 	m_pSwapChainDescription.BufferDesc.Width = Resources()->ViewPort->Width;
 	m_pSwapChainDescription.BufferDesc.Height = Resources()->ViewPort->Height;
 
@@ -200,7 +208,7 @@ HRESULT Renderer::CreateSwapChain()
 
 	Debug::WriteLine(L"CALL : Renderer::CreateSwapChain\t\t\t(Device->CreateRenderTargetView)\n");
 
-	return GetDevice()->CreateRenderTargetView(Resources()->BackBuffer, &m_pRenderTargetViewDesc, &Resources()->RenderTargetView);
+
 }
 
 
