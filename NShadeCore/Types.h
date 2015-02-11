@@ -15,6 +15,15 @@ struct RenderingQuality
 	DXGI_FORMAT TextureFormat;
 };
 
+enum MSAA
+{
+	MSAA_0X = 0,
+	MSAA_1X = 1,
+	MSAA_2X = 2,
+	MSAA_4X = 4,
+	MSAA_8X = 8
+};
+
 
 struct ConstantBufferData
 {

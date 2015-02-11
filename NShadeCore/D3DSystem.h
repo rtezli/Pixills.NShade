@@ -21,7 +21,7 @@ public:
 private:
 	HRESULT					InitializeWindow(int screenWidth, int screenHeight);
 	HRESULT					CreateDevice();
-	HRESULT					CreateRenderQualitySettings(ID3D11Device* device);
+	HRESULT					GetRenderQualitySettings(ID3D11Device* device);
 	HRESULT					CreateCamera();
 	HRESULT					LoadModels();
 	HRESULT					CreateRenderer();

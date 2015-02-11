@@ -68,12 +68,14 @@ HRESULT Renderer::CreateSwapChainDesciption()
 	m_pSwapChainDescription.SwapEffect = DXGI_SWAP_EFFECT_DISCARD; //DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL; 
 	m_pSwapChainDescription.Flags = Resources()->SwapChainFlags;
 
+	// MSAA settings
 	m_pSwapChainDescription.SampleDesc.Quality = Resources()->RenderQuality->Quality;
 	m_pSwapChainDescription.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
+	m_pSwapChainDescription.BufferDesc.Format = Resources()->RenderQuality->TextureFormat;
 
 	m_pSwapChainDescription.BufferDesc.Width = m_pDeviceResources->ViewPort->Width;
 	m_pSwapChainDescription.BufferDesc.Height = m_pDeviceResources->ViewPort->Height;
-	m_pSwapChainDescription.BufferDesc.Format = Resources()->RenderQuality->TextureFormat;
+
 	m_pSwapChainDescription.BufferDesc.RefreshRate.Numerator = 0;
 	m_pSwapChainDescription.BufferDesc.RefreshRate.Denominator = 1;
 	m_pSwapChainDescription.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;

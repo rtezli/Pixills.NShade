@@ -165,7 +165,11 @@ HRESULT D3DSystem::CreateDevice()
 	viewPort.MinDepth = D3D11_MIN_DEPTH;
 	viewPort.MaxDepth = D3D11_MAX_DEPTH;
 
-	CreateRenderQualitySettings(device);
+	createResult = GetRenderQualitySettings(device);
+	if (FAILED(createResult))
+	{
+		return createResult;
+	}
 
 	auto resources = new DeviceResources(device, context);
 
@@ -183,7 +187,7 @@ HRESULT D3DSystem::CreateDevice()
 	return createResult;
 }
 
-HRESULT D3DSystem::CreateRenderQualitySettings(ID3D11Device* device)
+HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device* device)
 {
 	UINT level = 0;
 	int index = 0;
@@ -195,10 +199,10 @@ HRESULT D3DSystem::CreateRenderQualitySettings(ID3D11Device* device)
 
 	for (UINT i = 0; i <= 32; i++)
 	{
-		result  = device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, i, &level);
+		result = device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, i, &level);
 		if (FAILED(result))
 		{
-
+			continue;
 		}
 		if (level > 0)
 		{
@@ -213,7 +217,7 @@ HRESULT D3DSystem::CreateRenderQualitySettings(ID3D11Device* device)
 		result = device->CheckMultisampleQualityLevels(DXGI_FORMAT_B8G8R8A8_UNORM_SRGB, i, &level);
 		if (FAILED(result))
 		{
-			return result;
+			continue;
 		}
 		if (level > 0)
 		{
@@ -227,7 +231,11 @@ HRESULT D3DSystem::CreateRenderQualitySettings(ID3D11Device* device)
 	for (UINT i = 0; i <= 32; i++)
 	{
 		UINT level = 0;
-		device->CheckMultisampleQualityLevels(DXGI_FORMAT_D24_UNORM_S8_UINT, i, &level);
+		result = device->CheckMultisampleQualityLevels(DXGI_FORMAT_D24_UNORM_S8_UINT, i, &level);
+		if (FAILED(result))
+		{
+			continue;
+		}
 		if (level > 0)
 		{
 			RenderingQuality quality = { level, i, DXGI_FORMAT_D24_UNORM_S8_UINT };
@@ -235,6 +243,8 @@ HRESULT D3DSystem::CreateRenderQualitySettings(ID3D11Device* device)
 			index++;
 		}
 	}
+
+	return result;
 }
 
 HRESULT D3DSystem::CreateCamera()
