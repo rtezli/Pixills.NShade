@@ -11,7 +11,6 @@ Renderer::Renderer(DeviceResources* pResources, bool useSwapChain)
 	m_rasterizerUseMultiSampling = true;
 
 	DXGI_FORMAT swapChainBufferFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
-
 	DXGI_FORMAT depthBufferFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	DXGI_FORMAT depthSencilViewFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	DXGI_FORMAT depthSencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -67,6 +66,53 @@ HRESULT Renderer::Initialize()
 }
 
 
+HRESULT Renderer::CreateRenderTargetDesciption()
+{
+	ZeroMemory(&m_pRenderTargetDesc, sizeof(m_pRenderTargetDesc));
+
+	m_pRenderTargetDesc.Width = Resources()->ViewPort->Width;
+	m_pRenderTargetDesc.Height = Resources()->ViewPort->Height;
+	m_pRenderTargetDesc.MipLevels = 1;
+	m_pRenderTargetDesc.ArraySize = 1;
+	m_pRenderTargetDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;//Resources()->RenderQuality->TextureFormat;
+	m_pRenderTargetDesc.SampleDesc.Quality = Resources()->RenderQuality->Quality;
+	m_pRenderTargetDesc.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
+	m_pRenderTargetDesc.Usage = D3D11_USAGE_DEFAULT;
+	m_pRenderTargetDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	m_pRenderTargetDesc.CPUAccessFlags = 0;
+	m_pRenderTargetDesc.MiscFlags = 0;
+
+	ID3D11Texture2D* renderTarget = 0;
+
+	Debug::WriteLine(L"CALL : Renderer::CreateDepthStencil\t\t\t(Device->CreateDepthStencilView)\n");
+	return GetDevice()->CreateTexture2D(&m_pRenderTargetDesc, NULL, &renderTarget);
+}
+
+HRESULT Renderer::CreateRenderTargetViewDesciption()
+{
+	ZeroMemory(&m_pRenderTargetViewDesc, sizeof(m_pRenderTargetViewDesc));
+	m_pRenderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
+	m_pRenderTargetViewDesc.Format = m_pRenderTargetDesc.Format;
+	return 0;
+}
+
+HRESULT Renderer::CreateRenderTarget()
+{
+	auto result = CreateRenderTargetDesciption();
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	result = CreateRenderTargetViewDesciption();
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+}
+
+
 HRESULT Renderer::CreateSwapChainDesciption()
 {
 	Debug::WriteLine(L"CALL : Renderer::CreateSwapChainDesciption\n");
@@ -78,19 +124,17 @@ HRESULT Renderer::CreateSwapChainDesciption()
 	m_pSwapChainDescription.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	m_pSwapChainDescription.Flags = Resources()->SwapChainFlags;
 
-	// MSAA settings D3D11_STANDARD_MULTISAMPLE_QUALITY_LEVELS
-	m_pSwapChainDescription.SampleDesc.Quality = Resources()->RenderQuality->Quality;
-	m_pSwapChainDescription.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
-	m_pSwapChainDescription.BufferDesc.Format = Resources()->RenderQuality->TextureFormat;
-
-	m_pSwapChainDescription.BufferDesc.Width = m_pDeviceResources->ViewPort->Width;
-	m_pSwapChainDescription.BufferDesc.Height = m_pDeviceResources->ViewPort->Height;
-
 	m_pSwapChainDescription.BufferDesc.RefreshRate.Numerator = 0;
 	m_pSwapChainDescription.BufferDesc.RefreshRate.Denominator = 1;
 	m_pSwapChainDescription.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	m_pSwapChainDescription.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
- 
+
+	// MSAA settings D3D11_STANDARD_MULTISAMPLE_QUALITY_LEVELS
+	m_pSwapChainDescription.SampleDesc.Quality = Resources()->RenderQuality->Quality;
+	m_pSwapChainDescription.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
+	m_pSwapChainDescription.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;//Resources()->RenderQuality->TextureFormat;
+	m_pSwapChainDescription.BufferDesc.Width = Resources()->ViewPort->Width;
+	m_pSwapChainDescription.BufferDesc.Height = Resources()->ViewPort->Height;
 
 	auto handle = *Resources()->WindowHandle;
 	m_pSwapChainDescription.OutputWindow = handle;
@@ -106,40 +150,9 @@ HRESULT Renderer::CreateSwapChainDesciption()
 	return 0;
 }
 
-HRESULT Renderer::CreateSwapChainViewDesciption()
-{
-	ZeroMemory(&m_pRenderTargetDesc, sizeof(m_pRenderTargetDesc));
-
-	m_pRenderTargetDesc.Width = Resources()->ViewPort->Width;
-	m_pRenderTargetDesc.Height = Resources()->ViewPort->Height;
-	m_pRenderTargetDesc.MipLevels = 1;
-	m_pRenderTargetDesc.ArraySize = 1;
-	m_pRenderTargetDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	m_pRenderTargetDesc.SampleDesc.Quality = Resources()->RenderQuality->Quality;
-	m_pRenderTargetDesc.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
-	m_pRenderTargetDesc.Usage = D3D11_USAGE_DEFAULT;
-	m_pRenderTargetDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	m_pRenderTargetDesc.CPUAccessFlags = 0;
-	m_pRenderTargetDesc.MiscFlags = 0;
-
-	ZeroMemory(&m_pRenderTargetViewDesc, sizeof(m_pRenderTargetViewDesc));
-	m_pRenderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
-
-	ID3D11Texture2D* backBuffer = 0;
-
-	Debug::WriteLine(L"CALL : Renderer::CreateDepthStencil\t\t\t(Device->CreateDepthStencilView)\n");
-	return GetDevice()->CreateTexture2D(&m_pRenderTargetDesc, nullptr, &backBuffer);
-}
-
 HRESULT Renderer::CreateSwapChain()
 {
 	auto result = CreateSwapChainDesciption();
-	if (FAILED(result))
-	{
-		return result;
-	}
-
-	result = CreateSwapChainViewDesciption();
 	if (FAILED(result))
 	{
 		return result;
@@ -200,9 +213,9 @@ HRESULT Renderer::CreateDepthBufferDescription()
 	m_pDepthBufferDesc.Height = Resources()->ViewPort->Height;
 	m_pDepthBufferDesc.MipLevels = 1;
 	m_pDepthBufferDesc.ArraySize = 1;
-	m_pDepthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	m_pDepthBufferDesc.SampleDesc.Quality = 0;// Resources()->RenderQuality->Quality;
-	m_pDepthBufferDesc.SampleDesc.Count = 1;// Resources()->RenderQuality->SampleCount;
+	m_pDepthBufferDesc.Format = DXGI_FORMAT_D32_FLOAT;// Resources()->RenderQuality->TextureFormat;
+	m_pDepthBufferDesc.SampleDesc.Quality = Resources()->RenderQuality->Quality;
+	m_pDepthBufferDesc.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
 	m_pDepthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	m_pDepthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	m_pDepthBufferDesc.CPUAccessFlags = 0;
@@ -229,31 +242,49 @@ HRESULT Renderer::CreateDepthStencilDescription()
 	Debug::WriteLine(L"CALL : Renderer::CreateDepthStencilDescription\n");
 	ZeroMemory(&m_pDepthStencilDesc, sizeof(m_pDepthStencilDesc));
 
-	m_pDepthStencilDesc.DepthEnable = true;
-	m_pDepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	m_pDepthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	// MSAA settings D3D11_STANDARD_MULTISAMPLE_QUALITY_LEVELS
+	m_pDepthStencilDesc.ArraySize = 1;
+	m_pDepthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	m_pDepthStencilDesc.MipLevels = Resources()->RenderQuality->Quality > 0 ? 1 : 0;
+	m_pDepthStencilDesc.SampleDesc.Quality = Resources()->RenderQuality->Quality;
+	m_pDepthStencilDesc.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
+	m_pDepthStencilDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	m_pDepthStencilDesc.Width = Resources()->ViewPort->Width;
+	m_pDepthStencilDesc.Height = Resources()->ViewPort->Height;
 
-	m_pDepthStencilDesc.StencilEnable = true;
-	m_pDepthStencilDesc.StencilReadMask = 0xFF;
-	m_pDepthStencilDesc.StencilWriteMask = 0xFF;
+	return 0;
+}
 
-	m_pDepthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-	m_pDepthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-	m_pDepthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-	m_pDepthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+HRESULT Renderer::CreateDepthStencilStateDescription()
+{
+	Debug::WriteLine(L"CALL : Renderer::CreateDepthStencilStateDescription\n");
+	ZeroMemory(&m_pDepthStencilStateDesc, sizeof(m_pDepthStencilStateDesc));
 
-	m_pDepthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-	m_pDepthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-	m_pDepthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-	m_pDepthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	m_pDepthStencilStateDesc.DepthEnable = true;
+	m_pDepthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	m_pDepthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
+
+	m_pDepthStencilStateDesc.StencilEnable = true;
+	m_pDepthStencilStateDesc.StencilReadMask = 0xFF;
+	m_pDepthStencilStateDesc.StencilWriteMask = 0xFF;
+
+	m_pDepthStencilStateDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	m_pDepthStencilStateDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+	m_pDepthStencilStateDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	m_pDepthStencilStateDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	m_pDepthStencilStateDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	m_pDepthStencilStateDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+	m_pDepthStencilStateDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	m_pDepthStencilStateDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
 
 	Debug::WriteLine(L"CALL : Renderer::CreateSwapChainDesciption\t\t\t(Device->CreateDepthStencilState)\n");
-	GetDevice()->CreateDepthStencilState(&m_pDepthStencilDesc, &Resources()->DepthStencilState);
+	auto result = GetDevice()->CreateDepthStencilState(&m_pDepthStencilStateDesc, &Resources()->DepthStencilState);
 
 	Debug::WriteLine(L"CALL : Renderer::CreateSwapChainDesciption\t\t\t(Context->OMSetDepthStencilState)\n");
 	GetDeviceContext()->OMSetDepthStencilState(Resources()->DepthStencilState, 1);
-
-	return 0;
+	return result;
 }
 
 HRESULT Renderer::CreateDepthStencilViewDescription()
@@ -261,9 +292,10 @@ HRESULT Renderer::CreateDepthStencilViewDescription()
 	Debug::WriteLine(L"CALL : Renderer::CreateDepthStencilViewDescription\n");
 	ZeroMemory(&m_pDepthStencilViewDesc, sizeof(m_pDepthStencilViewDesc));
 
-	m_pDepthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	m_pDepthStencilViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
 	m_pDepthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;// D3D11_DSV_DIMENSION_TEXTURE2D;
 	m_pDepthStencilViewDesc.Texture2D.MipSlice = 0;
+
 	return 0;
 }
 
@@ -282,21 +314,16 @@ HRESULT Renderer::CreateDepthStencil()
 		return result;
 	}
 
-	ZeroMemory(&m_pDepthStencilDesc, sizeof(m_pDepthStencilDesc));
-
-	CD3D11_TEXTURE2D_DESC depthStencilDesc(
-		DXGI_FORMAT_D24_UNORM_S8_UINT,
-		lround(Resources()->ViewPort->Width),
-		lround(Resources()->ViewPort->Height),
-		1, // This depth stencil view has only one texture.
-		1, // Use a single mipmap level.
-		D3D11_BIND_DEPTH_STENCIL
-		);
+	result = CreateDepthStencilStateDescription();
+	if (FAILED(result))
+	{
+		return result;
+	}
 
 	ID3D11Texture2D* depthStencil = 0;
 
 	Debug::WriteLine(L"CALL : Renderer::CreateDepthStencil\t\t\t(Device->CreateDepthStencilView)\n");
-	result = GetDevice()->CreateTexture2D(&depthStencilDesc, nullptr, &depthStencil);
+	result = GetDevice()->CreateTexture2D(&m_pDepthStencilDesc, NULL, &depthStencil);
 
 	Debug::WriteLine(L"CALL : Renderer::CreateDepthStencil\t\t\t(Device->CreateDepthStencilView)\n");
 	result = GetDevice()->CreateDepthStencilView(depthStencil, &m_pDepthStencilViewDesc, &Resources()->DepthStencilView);
@@ -306,20 +333,20 @@ HRESULT Renderer::CreateDepthStencil()
 		return result;
 	}
 
-	//D2D1_BITMAP_PROPERTIES1 bitmapProperties =
-	//	D2D1::BitmapProperties1(
-	//	D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
-	//	D2D1::PixelFormat(Resources()->RenderQuality->TextureFormat, D2D1_ALPHA_MODE_PREMULTIPLIED),
-	//	Resources()->Dpi,
-	//	Resources()->Dpi);
+	// D2D1_BITMAP_PROPERTIES1 bitmapProperties =
+	// D2D1::BitmapProperties1(
+	// D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
+	// D2D1::PixelFormat(Resources()->RenderQuality->TextureFormat, D2D1_ALPHA_MODE_PREMULTIPLIED),
+	// Resources()->Dpi,
+	// Resources()->Dpi);
 
-	IDXGISurface2* dxgiBackBuffer;
-	Resources()->SwapChain->GetBuffer(0, IID_PPV_ARGS(&dxgiBackBuffer));
+	// IDXGISurface2* dxgiBackBuffer;
+	// Resources()->SwapChain->GetBuffer(0, IID_PPV_ARGS(&dxgiBackBuffer));
 
-	//ID2D1Bitmap1* targetBitmap;
-	//GetDeviceContext()->CreateBitmapFromDxgiSurface(dxgiBackBuffer,&bitmapProperties,&targetBitmap);
-	//GetDeviceContext()->SetTarget(targetBitmap);
-	//GetDeviceContext()->SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE);
+	// ID2D1Bitmap1* targetBitmap;
+	// GetDeviceContext()->CreateBitmapFromDxgiSurface(dxgiBackBuffer,&bitmapProperties,&targetBitmap);
+	// GetDeviceContext()->SetTarget(targetBitmap);
+	// GetDeviceContext()->SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE);
 
 	return 0;
 }
@@ -539,7 +566,7 @@ HRESULT Renderer::Render()
 
 HRESULT	Renderer::ResizeSwapChain(UINT32 newWidth, UINT32 newHeight)
 {
-	return Resources()->SwapChain->ResizeBuffers(Resources()->BufferCount, 0, 0, Resources()->RenderQuality->TextureFormat, Resources()->SwapChainFlags);
+	return Resources()->SwapChain->ResizeBuffers(Resources()->BufferCount, 0, 0, DXGI_FORMAT_D32_FLOAT, Resources()->SwapChainFlags);
 }
 
 HRESULT Renderer::Resize(D3D11_VIEWPORT* viewPort)

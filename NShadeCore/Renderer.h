@@ -43,9 +43,13 @@ public:
 	DeviceResources*			const Resources(){ return m_pDeviceResources; }
 	bool						const Initialized(){ return m_isInitialized; };
 private:
+	/* render target */
+	HRESULT CreateRenderTargetDesciption();
+	HRESULT CreateRenderTargetViewDesciption();
+	HRESULT CreateRenderTarget();
+
 	/* swap chain */
 	HRESULT	CreateSwapChainDesciption();
-	HRESULT CreateSwapChainViewDesciption();
 	HRESULT CreateSwapChain();
 
 	/* constant buffer */
@@ -59,6 +63,7 @@ private:
 	/* depth stencil */
 	HRESULT CreateDepthStencilDescription();
 	HRESULT CreateDepthStencilViewDescription();
+	HRESULT CreateDepthStencilStateDescription();
 	HRESULT CreateDepthStencil();
 
 	/* rasterizer */
@@ -90,10 +95,11 @@ private:
 	LPCWSTR								m_standardVertexShader = L"VertexShader.cso";
 	LPCWSTR								m_standardPixelShader = L"PixelShader.cso";
 
-	DXGI_SWAP_CHAIN_DESC				m_pSwapChainDescription;
 	D3D11_TEXTURE2D_DESC				m_pDepthBufferDesc;
+	DXGI_SWAP_CHAIN_DESC				m_pSwapChainDescription;
 
-	D3D11_DEPTH_STENCIL_DESC			m_pDepthStencilDesc;
+	D3D11_TEXTURE2D_DESC				m_pDepthStencilDesc;
+	D3D11_DEPTH_STENCIL_DESC			m_pDepthStencilStateDesc;
 	D3D11_DEPTH_STENCIL_VIEW_DESC		m_pDepthStencilViewDesc;
 
 	D3D11_TEXTURE2D_DESC				m_pRenderTargetDesc;
