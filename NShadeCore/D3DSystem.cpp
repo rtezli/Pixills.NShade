@@ -97,7 +97,7 @@ HRESULT D3DSystem::Initialize()
 	{
 		return result;
 	}
-	auto sc = rxsc::make_current_thread();
+	auto sc = rxsc::make_new_thread();
 	auto so = rx::synchronize_in_one_worker(sc);
 	rx::observable<>::interval(chrono::system_clock::now(), milliseconds(40), so)
 		.subscribe([this](int val)
