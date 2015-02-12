@@ -5,7 +5,7 @@
 #include "resource.h"
 //#include "D3DSystem.h"
 #include "api.h"
-HRESULT	Init3DSystem(HWND* window);
+HRESULT	Init3DSystem(HWND* pWindow, HINSTANCE* pHInstance);
 
 HWND m_hWnd = 0;
 D3DSystem* m_system = 0;

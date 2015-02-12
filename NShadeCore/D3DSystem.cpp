@@ -26,7 +26,7 @@ HRESULT D3DSystem::InitializeWithWindow(
 	{
 		return result;
 	}
-	return InitializeForWindow(vsync, m_pWindowHandle, fullscreen);
+	return InitializeForWindow(vsync, m_pHInstance, m_pWindowHandle, fullscreen);
 }
 
 HRESULT D3DSystem::InitializeWindow(int screenWidth, int screenHeight)
@@ -51,15 +51,18 @@ HRESULT D3DSystem::InitializeWindow(int screenWidth, int screenHeight)
 	{
 		return false;
 	}
+	m_pHInstance = &hInstance;
 	m_pWindowHandle = &handle;
 	return true;
 }
 
 HRESULT D3DSystem::InitializeForWindow(
 	bool vsync,
+	HINSTANCE* hInstance,
 	HWND* hwnd,
 	bool fullscreen)
 {
+	m_pHInstance = hInstance;
 	m_pWindowHandle = hwnd;
 	m_vSync = vsync;
 	m_fullScreen = fullscreen;
@@ -72,6 +75,12 @@ HRESULT D3DSystem::InitializeForWindow(
 HRESULT D3DSystem::Initialize()
 {
 	auto result = CreateDevice();
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	result = CreateInput();
 	if (FAILED(result))
 	{
 		return result;
@@ -159,6 +168,7 @@ HRESULT D3DSystem::CreateDevice()
 	resources->Device = device;
 	resources->DeviceContext = context;
 	resources->WindowHandle = m_pWindowHandle;
+	resources->WindowInstance = m_pHInstance;
 	resources->FullScreen = m_fullScreen;
 	resources->VSync = m_vSync;
 	resources->NearZ = 0.0f;
@@ -167,6 +177,12 @@ HRESULT D3DSystem::CreateDevice()
 	m_pDeviceResources = resources;
 
 	return createResult;
+}
+
+HRESULT D3DSystem::CreateInput()
+{
+	auto device = shared_ptr<Input>(new Input(m_pDeviceResources));
+	return device->Initialize();
 }
 
 D3D11_VIEWPORT* D3DSystem::CreateViewPort(HWND* hwnd)
@@ -212,6 +228,19 @@ HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device* device)
 		}
 	}
 
+	for (UINT i = maxSamples; i > 0; i--)
+	{
+		result = device->CheckMultisampleQualityLevels(DXGI_FORMAT_D24_UNORM_S8_UINT, i, &numberOfLevels);
+		if (SUCCEEDED(result))
+		{
+			if (numberOfLevels < 1)
+			{
+				continue;
+			}
+			RenderingQuality quality = { i, numberOfLevels - 1, DXGI_FORMAT_D24_UNORM_S8_UINT, DXGI_FORMAT_D32_FLOAT, true };
+			availableLevels.push_back(quality);
+		}
+	}
 	return result;
 }
 

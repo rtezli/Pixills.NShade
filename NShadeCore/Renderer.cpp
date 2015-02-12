@@ -207,8 +207,7 @@ HRESULT Renderer::CreateSwapChain()
 	dxgiFactory->Release();
 
 	Debug::WriteLine(L"CALL : Renderer::CreateSwapChain\t\t\t(Device->CreateRenderTargetView)\n");
-
-
+	return 0;
 }
 
 

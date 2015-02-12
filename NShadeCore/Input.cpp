@@ -1,19 +1,19 @@
 #include "stdafx.h"
 #include "input.h"
 
-Input::Input()
+Input::Input(DeviceResources* pDeviceResources)
 {
-
+	m_pDeviceResources = pDeviceResources;
 }
 
 Input::~Input()
 {
 }
 
-HRESULT Input::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeight)
+HRESULT Input::Initialize()
 {
 	auto result = DirectInput8Create(
-		hinstance,
+		*m_pDeviceResources->WindowInstance,
 		DIRECTINPUT_VERSION,
 		IID_IDirectInput8,
 		(void**)&m_pDirectInput, NULL);
@@ -23,8 +23,7 @@ HRESULT Input::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int s
 		return false;
 	}
 
-	auto keyboard = m_pKeyboard.get();
-	result = m_pDirectInput->CreateDevice(GUID_SysKeyboard, &keyboard, NULL);
+	result = m_pDirectInput->CreateDevice(GUID_SysKeyboard, &m_pKeyboard, NULL);
 	if (FAILED(result))
 	{
 		return false;
@@ -36,7 +35,7 @@ HRESULT Input::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int s
 		return false;
 	}
 
-	result = m_pKeyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+	result = m_pKeyboard->SetCooperativeLevel(*m_pDeviceResources->WindowHandle, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
 	if (FAILED(result))
 	{
 		return false;
@@ -47,8 +46,8 @@ HRESULT Input::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int s
 	{
 		return false;
 	}
-	auto mouse = m_pMouse.get();
-	result = m_pDirectInput->CreateDevice(GUID_SysMouse, &mouse, NULL);
+ 
+	result = m_pDirectInput->CreateDevice(GUID_SysMouse, &m_pKeyboard, NULL);
 	if (FAILED(result))
 	{
 		return false;
@@ -61,7 +60,7 @@ HRESULT Input::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int s
 	}
 
 	result = m_pMouse->SetDataFormat(&c_dfDIMouse);
-	result = m_pMouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	result = m_pMouse->SetCooperativeLevel(*m_pDeviceResources->WindowHandle, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 	if (FAILED(result))
 	{
 		return false;

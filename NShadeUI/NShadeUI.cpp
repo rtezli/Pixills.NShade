@@ -101,7 +101,7 @@ bool InitInstance(HINSTANCE hInstance, int nCmdShow)
 		return false;
 	}
 
-	auto result = Init3DSystem(&m_hWnd);
+	auto result = Init3DSystem(&m_hWnd, &hInst);
 
 	if (FAILED(result))
 	{
@@ -171,8 +171,8 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	return (INT_PTR)FALSE;
 }
 
-HRESULT Init3DSystem(HWND* pWindow)
+HRESULT Init3DSystem(HWND* pWindow, HINSTANCE* pHInstance)
 {
 	m_system = new D3DSystem();
-	return m_system->InitializeForWindow(false, pWindow, false);
+	return m_system->InitializeForWindow(false, pHInstance, pWindow, false);
 }

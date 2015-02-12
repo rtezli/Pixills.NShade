@@ -16,6 +16,7 @@ public:
 	DeviceResources(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 	~DeviceResources();
 public:
+	HINSTANCE*					WindowInstance;
 	HWND*						WindowHandle;
 	ID3D11Device*				Device;
 	ID3D11DeviceContext*		DeviceContext;

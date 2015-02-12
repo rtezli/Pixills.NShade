@@ -16,25 +16,27 @@ private:
 		XMFLOAT3 Move;
 	};
 public:
-	Input();
+	Input(DeviceResources* pDeviceResources);
 	~Input();
 public:
-	HRESULT Input::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeight);
+	HRESULT Initialize();
 	void(*OnInput)(MOVE_ROTATE_INPUT* move);
 private:
-	bool Input::Frame();
-	bool Input::ReadKeyboard();
-	bool Input::ReadMouse();
-	void Input::ProcessInput();
-	void Input::PublishInput(MOVE_ROTATE_INPUT* move){ (*OnInput)(move); }
+	bool	Frame();
+	bool	ReadKeyboard();
+	bool	ReadMouse();
+	void	ProcessInput();
+	void	PublishInput(MOVE_ROTATE_INPUT* move){ (*OnInput)(move); }
 private:
-	shared_ptr<IDirectInput8> m_pDirectInput = 0;
-	shared_ptr<IDirectInputDevice8> m_pKeyboard = 0;
-	shared_ptr<IDirectInputDevice8> m_pMouse = 0;
+	DeviceResources*		m_pDeviceResources;
+	IDirectInput8*			m_pDirectInput;
+	IDirectInputDevice8*	m_pKeyboard;
+	IDirectInputDevice8*	m_pMouse;
+	IDirectInputDevice8*	m_pKinectMaybe;
 
-	unsigned char m_keyboardState[256];
-	DIMOUSESTATE m_mouseState;
-	int m_ScreenWidth, m_ScreenHeight;
-	int m_MouseX, m_MouseY;
+	unsigned char			m_keyboardState[256];
+	DIMOUSESTATE			m_mouseState;
+	int						m_ScreenWidth, m_ScreenHeight;
+	int						m_MouseX, m_MouseY;
 };
 

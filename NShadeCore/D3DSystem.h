@@ -14,7 +14,7 @@ public:
 	D3DSystem();
 	~D3DSystem();
 public:
-	HRESULT InitializeForWindow(bool vsync, HWND* handle, bool fullscreen);
+	HRESULT InitializeForWindow(bool vsync, HINSTANCE*, HWND* handle, bool fullscreen);
 	HRESULT InitializeWithWindow(int screenWidth, int screenHeight, bool vsync, bool fullscreen);
 	HRESULT Initialize();
 	void	Render();
@@ -22,6 +22,7 @@ public:
 private:
 	HRESULT					InitializeWindow(int screenWidth, int screenHeight);
 	HRESULT					CreateDevice();
+	HRESULT					CreateInput();
 	HRESULT					GetRenderQualitySettings(ID3D11Device* device);
 	vector<MSAA>* 			ProduceMsaaCapability(vector<MSAA>* msaaOptions, int i);
 	HRESULT					CreateCamera();
@@ -30,6 +31,7 @@ private:
 	HRESULT					CreateRenderer();
 private:
 	DeviceResources*						m_pDeviceResources;
+	HINSTANCE*								m_pHInstance;
 	HWND*									m_pWindowHandle;
 
 	shared_ptr<Renderer>					m_pRenderer;
