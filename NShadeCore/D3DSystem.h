@@ -8,6 +8,8 @@
 #include "model.h"
 #include "input.h"
 
+using namespace std::chrono;
+
 EXTERN class API D3DSystem
 {
 public:
@@ -19,6 +21,9 @@ public:
 	HRESULT Initialize();
 	void	Render();
 	LRESULT MessageHandler(HWND, UINT, WPARAM, LPARAM);
+public:
+	rx::observable_base<void>		m_oRenderingTimer;
+	rx::observable_base<POINT>		m_oMousePositionStream;
 private:
 	HRESULT					InitializeWindow(int screenWidth, int screenHeight);
 	HRESULT					CreateDevice();
@@ -29,7 +34,10 @@ private:
 	D3D11_VIEWPORT*			CreateViewPort(HWND* hwnd);
 	HRESULT					LoadModels();
 	HRESULT					CreateRenderer();
+	HRESULT					AttachOnRotate();
+	HRESULT					DetachOnRotate();
 private:
+
 	DeviceResources*						m_pDeviceResources;
 	HINSTANCE*								m_pHInstance;
 	HWND*									m_pWindowHandle;

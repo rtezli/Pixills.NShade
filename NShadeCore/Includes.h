@@ -13,6 +13,7 @@
 #include "rx.hpp"
 namespace rx = rxcpp;
 namespace rxsub = rx::subjects;
+namespace rxssched = rxcpp::schedulers;
 
 #include "d3d11.h"
 #include "dxgi.h"

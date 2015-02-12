@@ -20,60 +20,93 @@ HRESULT Input::Initialize()
 
 	if (FAILED(result))
 	{
-		return false;
+		return result;
 	}
 
-	result = m_pDirectInput->CreateDevice(GUID_SysKeyboard, &m_pKeyboard, NULL);
+	result = CreateKeyboard();
 	if (FAILED(result))
 	{
-		return false;
+		return result;
+	}
+
+	result = CreateMouse();
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	result = CreateKinect();
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	return result;
+}
+
+HRESULT Input::CreateKeyboard()
+{
+	auto result = m_pDirectInput->CreateDevice(GUID_SysKeyboard, &m_pKeyboard, NULL);
+	if (FAILED(result))
+	{
+		return result;
 	}
 
 	result = m_pKeyboard->SetDataFormat(&c_dfDIKeyboard);
 	if (FAILED(result))
 	{
-		return false;
+		return result;
 	}
 
 	result = m_pKeyboard->SetCooperativeLevel(*m_pDeviceResources->WindowHandle, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
 	if (FAILED(result))
 	{
-		return false;
+		return result;
 	}
 
 	result = m_pKeyboard->Acquire();
 	if (FAILED(result))
 	{
-		return false;
+		return result;
 	}
- 
-	result = m_pDirectInput->CreateDevice(GUID_SysMouse, &m_pKeyboard, NULL);
+
+	return result;
+}
+
+HRESULT Input::CreateMouse()
+{
+	auto result = m_pDirectInput->CreateDevice(GUID_SysMouse, &m_pMouse, NULL);
 	if (FAILED(result))
 	{
-		return false;
+		return result;
 	}
 
 	result = m_pMouse->SetDataFormat(&c_dfDIMouse);
 	if (FAILED(result))
 	{
-		return false;
+		return result;
 	}
 
-	result = m_pMouse->SetDataFormat(&c_dfDIMouse);
 	result = m_pMouse->SetCooperativeLevel(*m_pDeviceResources->WindowHandle, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 	if (FAILED(result))
 	{
-		return false;
+		return result;
 	}
 
 	result = m_pMouse->Acquire();
 	if (FAILED(result))
 	{
-		return false;
+		return result;
 	}
 
-	return true;
+	return result;
 }
+
+HRESULT Input::CreateKinect()
+{
+	return 0;
+}
+
 
 bool Input::Frame()
 {

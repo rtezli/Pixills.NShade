@@ -20,6 +20,9 @@ public:
 	~Input();
 public:
 	HRESULT Initialize();
+	HRESULT CreateMouse();
+	HRESULT CreateKeyboard();
+	HRESULT CreateKinect();
 	void(*OnInput)(MOVE_ROTATE_INPUT* move);
 private:
 	bool	Frame();
@@ -38,5 +41,7 @@ private:
 	DIMOUSESTATE			m_mouseState;
 	int						m_ScreenWidth, m_ScreenHeight;
 	int						m_MouseX, m_MouseY;
+	float					m_moveGain;
+	float					m_rotateGain;
 };
 

@@ -74,6 +74,11 @@ HRESULT D3DSystem::InitializeForWindow(
 
 HRESULT D3DSystem::Initialize()
 {
+	//auto sc = rxssched::make_current_thread();
+	//auto so = rx::synchronize_in_one_worker(sc);
+	//auto now = sc.now();
+	//rx::observable<>::interval(now, milliseconds(40)).subscribe([](){ &D3DSystem::Render; });
+
 	auto result = CreateDevice();
 	if (FAILED(result))
 	{
@@ -155,7 +160,7 @@ HRESULT D3DSystem::CreateDevice()
 			&context);
 	}
 
- 
+
 	createResult = GetRenderQualitySettings(device);
 	if (FAILED(createResult))
 	{
@@ -163,7 +168,7 @@ HRESULT D3DSystem::CreateDevice()
 	}
 
 	auto viewport = CreateViewPort(m_pWindowHandle);
-	auto resources = new DeviceResources(device, context);	
+	auto resources = new DeviceResources(device, context);
 	resources->ViewPort = new D3D11_VIEWPORT(*viewport);
 	resources->Device = device;
 	resources->DeviceContext = context;
@@ -303,15 +308,63 @@ LRESULT D3DSystem::MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARA
 {
 	switch (umessage)
 	{
+		// window size changed
 		case WM_SIZE:
 		{
 			auto viewPort = CreateViewPort(&hwnd);
 			m_pRenderer->Resize(viewPort);
-
 			return 0;
 		}
-		default:
+
+		case WM_POINTERUPDATE:
 		{
+ 
+		}
+
+		// press pointer (left mouse button)
+		case WM_POINTERDOWN:
+		{
+			ShowCursor(FALSE);
+			POINT PointerPosition;
+			if (GetCursorPos(&PointerPosition))
+				return 0;
+		}
+
+		// release pointer (left mouse button)
+		case WM_POINTERUP:
+		{
+			ShowCursor(TRUE);
+			POINT PointerPosition;
+			if (GetCursorPos(&PointerPosition))
+				return 0;
+		}
+
+		// scrolling (mouse wheel)
+		case WM_POINTERWHEEL:
+		{
+			POINT pointerPosition;
+			if (GetCursorPos(&pointerPosition))
+			{
+				if (ScreenToClient(hwnd, &pointerPosition))
+				{
+
+				}
+			}
+		}
+		case WM_POINTERHWHEEL:
+		{
+			POINT pointerPosition;
+			if (GetCursorPos(&pointerPosition))
+			{
+				if (ScreenToClient(hwnd, &pointerPosition))
+				{
+
+				}
+			}
+		}
+		case WM_KEYDOWN:
+		{
+
 		}
 	}
 	return 0;
