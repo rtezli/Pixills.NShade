@@ -11,15 +11,12 @@ DeviceResources::DeviceResources(ID3D11Device* device, ID3D11DeviceContext* devi
 	Dpi = 96.00;
 
 	// TODO : Get available formats dynamically
-	RenderingQuality quality0 = { 0,  1, DXGI_FORMAT_B8G8R8A8_UNORM, false }; // Should work for everyone
-	RenderingQuality quality1 = { 1,  1, DXGI_FORMAT_B8G8R8A8_UNORM, false };
-	RenderingQuality quality2 = { 2,  5, DXGI_FORMAT_B8G8R8A8_UNORM, true };
-	RenderingQuality quality3 = { 4, 17, DXGI_FORMAT_B8G8R8A8_UNORM, true };
-	RenderingQuality quality4 = { 8, 17, DXGI_FORMAT_B8G8R8A8_UNORM, true };
+	RenderingQuality quality0 = {  0, 1, DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT, false }; // Should work for everyone
+	RenderingQuality quality2 = {  2, 2, DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT, true };
+	RenderingQuality quality4 = { 16, 4, DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT, true };
+	RenderingQuality quality8 = { 32, 8, DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT, true }; // Works on my machine ;)
 
-	RenderingQuality quality5 = { 0, 17, DXGI_FORMAT_D24_UNORM_S8_UINT, true };
-	RenderingQuality quality6 = { 1, 4, DXGI_FORMAT_D24_UNORM_S8_UINT, true };
-	RenderQuality = new RenderingQuality(quality6);
+	RenderQuality = new RenderingQuality(quality4);
 }
 
 DeviceResources::~DeviceResources()

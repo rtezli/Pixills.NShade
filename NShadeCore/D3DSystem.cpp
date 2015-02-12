@@ -207,7 +207,7 @@ HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device* device)
 			{
 				continue;
 			}
-			RenderingQuality quality = { i, numberOfLevels - 1, DXGI_FORMAT_R8G8B8A8_UNORM, true };
+			RenderingQuality quality = { i, numberOfLevels - 1, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_D32_FLOAT, true };
 			availableLevels.push_back(quality);
 		}
 	}

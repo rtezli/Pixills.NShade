@@ -81,7 +81,7 @@ HRESULT Renderer::CreateRenderTargetDesciption()
 	m_pRenderTargetDesc.Height = Resources()->ViewPort->Height;
 	m_pRenderTargetDesc.MipLevels = 1;
 	m_pRenderTargetDesc.ArraySize = 1;
-	m_pRenderTargetDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;//Resources()->RenderQuality->TextureFormat;
+	m_pRenderTargetDesc.Format =  Resources()->RenderQuality->TextureFormat;
 	m_pRenderTargetDesc.SampleDesc.Quality = Resources()->RenderQuality->Quality;
 	m_pRenderTargetDesc.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
 	m_pRenderTargetDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -140,7 +140,7 @@ HRESULT Renderer::CreateSwapChainDesciption()
 	// MSAA settings D3D11_STANDARD_MULTISAMPLE_QUALITY_LEVELS
 	m_pSwapChainDescription.SampleDesc.Quality = Resources()->RenderQuality->Quality;
 	m_pSwapChainDescription.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
-	m_pSwapChainDescription.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;//Resources()->RenderQuality->TextureFormat;
+	m_pSwapChainDescription.BufferDesc.Format = Resources()->RenderQuality->TextureFormat;
 	m_pSwapChainDescription.BufferDesc.Width = Resources()->ViewPort->Width;
 	m_pSwapChainDescription.BufferDesc.Height = Resources()->ViewPort->Height;
 
@@ -221,7 +221,7 @@ HRESULT Renderer::CreateDepthBufferDescription()
 	m_pDepthBufferDesc.Height = Resources()->ViewPort->Height;
 	m_pDepthBufferDesc.MipLevels = 1;
 	m_pDepthBufferDesc.ArraySize = 1;
-	m_pDepthBufferDesc.Format = DXGI_FORMAT_D32_FLOAT;// Resources()->RenderQuality->TextureFormat;
+	m_pDepthBufferDesc.Format = Resources()->RenderQuality->BufferFormat;
 	m_pDepthBufferDesc.SampleDesc.Quality = Resources()->RenderQuality->Quality;
 	m_pDepthBufferDesc.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
 	m_pDepthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -256,7 +256,7 @@ HRESULT Renderer::CreateDepthStencilDescription()
 	m_pDepthStencilDesc.MipLevels = Resources()->RenderQuality->Quality > 0 ? 1 : 0;
 	m_pDepthStencilDesc.SampleDesc.Quality = Resources()->RenderQuality->Quality;
 	m_pDepthStencilDesc.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
-	m_pDepthStencilDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	m_pDepthStencilDesc.Format = Resources()->RenderQuality->BufferFormat;
 	m_pDepthStencilDesc.Width = Resources()->ViewPort->Width;
 	m_pDepthStencilDesc.Height = Resources()->ViewPort->Height;
 
@@ -300,8 +300,8 @@ HRESULT Renderer::CreateDepthStencilViewDescription()
 	Debug::WriteLine(L"CALL : Renderer::CreateDepthStencilViewDescription\n");
 	ZeroMemory(&m_pDepthStencilViewDesc, sizeof(m_pDepthStencilViewDesc));
 
-	m_pDepthStencilViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
-	m_pDepthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;// D3D11_DSV_DIMENSION_TEXTURE2D;
+	m_pDepthStencilViewDesc.Format = Resources()->RenderQuality->BufferFormat;
+	m_pDepthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
 	m_pDepthStencilViewDesc.Texture2D.MipSlice = 0;
 
 	return 0;
@@ -574,7 +574,7 @@ HRESULT Renderer::Render()
 
 HRESULT	Renderer::ResizeSwapChain(UINT32 newWidth, UINT32 newHeight)
 {
-	return Resources()->SwapChain->ResizeBuffers(Resources()->BufferCount, 0, 0, DXGI_FORMAT_D32_FLOAT, Resources()->SwapChainFlags);
+	return Resources()->SwapChain->ResizeBuffers(Resources()->BufferCount, 0, 0, Resources()->RenderQuality->BufferFormat, Resources()->SwapChainFlags);
 }
 
 HRESULT Renderer::Resize(D3D11_VIEWPORT* viewPort)

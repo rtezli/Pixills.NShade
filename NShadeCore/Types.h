@@ -13,6 +13,7 @@ struct RenderingQuality
 	UINT Quality;
 	UINT SampleCount;
 	DXGI_FORMAT TextureFormat;
+	DXGI_FORMAT BufferFormat;
 	bool IsMultisamplingSettings;
 };
 
