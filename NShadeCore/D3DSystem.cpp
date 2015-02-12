@@ -74,10 +74,9 @@ HRESULT D3DSystem::InitializeForWindow(
 
 HRESULT D3DSystem::Initialize()
 {
-	//auto sc = rxssched::make_current_thread();
-	//auto so = rx::synchronize_in_one_worker(sc);
-	//auto now = sc.now();
-	//rx::observable<>::interval(now, milliseconds(40)).subscribe([](){ &D3DSystem::Render; });
+	auto sc = rxssched::make_current_thread();
+	auto now = sc.now();
+	auto timer = rx::observable<>::interval(now, milliseconds(40));
 
 	auto result = CreateDevice();
 	if (FAILED(result))
@@ -309,63 +308,63 @@ LRESULT D3DSystem::MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARA
 	switch (umessage)
 	{
 		// window size changed
-		case WM_SIZE:
-		{
-			auto viewPort = CreateViewPort(&hwnd);
-			m_pRenderer->Resize(viewPort);
+	case WM_SIZE:
+	{
+		auto viewPort = CreateViewPort(&hwnd);
+		m_pRenderer->Resize(viewPort);
+		return 0;
+	}
+
+	case WM_POINTERUPDATE:
+	{
+
+	}
+
+	// press pointer (left mouse button)
+	case WM_POINTERDOWN:
+	{
+		ShowCursor(FALSE);
+		POINT PointerPosition;
+		if (GetCursorPos(&PointerPosition))
 			return 0;
-		}
+	}
 
-		case WM_POINTERUPDATE:
-		{
- 
-		}
+	// release pointer (left mouse button)
+	case WM_POINTERUP:
+	{
+		ShowCursor(TRUE);
+		POINT PointerPosition;
+		if (GetCursorPos(&PointerPosition))
+			return 0;
+	}
 
-		// press pointer (left mouse button)
-		case WM_POINTERDOWN:
+	// scrolling (mouse wheel)
+	case WM_POINTERWHEEL:
+	{
+		POINT pointerPosition;
+		if (GetCursorPos(&pointerPosition))
 		{
-			ShowCursor(FALSE);
-			POINT PointerPosition;
-			if (GetCursorPos(&PointerPosition))
-				return 0;
-		}
-
-		// release pointer (left mouse button)
-		case WM_POINTERUP:
-		{
-			ShowCursor(TRUE);
-			POINT PointerPosition;
-			if (GetCursorPos(&PointerPosition))
-				return 0;
-		}
-
-		// scrolling (mouse wheel)
-		case WM_POINTERWHEEL:
-		{
-			POINT pointerPosition;
-			if (GetCursorPos(&pointerPosition))
+			if (ScreenToClient(hwnd, &pointerPosition))
 			{
-				if (ScreenToClient(hwnd, &pointerPosition))
-				{
 
-				}
 			}
 		}
-		case WM_POINTERHWHEEL:
+	}
+	case WM_POINTERHWHEEL:
+	{
+		POINT pointerPosition;
+		if (GetCursorPos(&pointerPosition))
 		{
-			POINT pointerPosition;
-			if (GetCursorPos(&pointerPosition))
+			if (ScreenToClient(hwnd, &pointerPosition))
 			{
-				if (ScreenToClient(hwnd, &pointerPosition))
-				{
 
-				}
 			}
 		}
-		case WM_KEYDOWN:
-		{
+	}
+	case WM_KEYDOWN:
+	{
 
-		}
+	}
 	}
 	return 0;
 }

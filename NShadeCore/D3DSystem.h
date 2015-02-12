@@ -21,9 +21,6 @@ public:
 	HRESULT Initialize();
 	void	Render();
 	LRESULT MessageHandler(HWND, UINT, WPARAM, LPARAM);
-public:
-	rx::observable_base<void>		m_oRenderingTimer;
-	rx::observable_base<POINT>		m_oMousePositionStream;
 private:
 	HRESULT					InitializeWindow(int screenWidth, int screenHeight);
 	HRESULT					CreateDevice();
@@ -37,7 +34,6 @@ private:
 	HRESULT					AttachOnRotate();
 	HRESULT					DetachOnRotate();
 private:
-
 	DeviceResources*						m_pDeviceResources;
 	HINSTANCE*								m_pHInstance;
 	HWND*									m_pWindowHandle;
