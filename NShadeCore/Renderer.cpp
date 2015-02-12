@@ -564,11 +564,7 @@ HRESULT Renderer::Render()
 	GetDeviceContext()->DrawIndexed(Resources()->IndexCount, 0, 0);
 
 	// Present
-	auto result = Resources()->SwapChain->Present(1, 0);
-	if (FAILED(result))
-	{
-		return result;
-	}
+	return Resources()->SwapChain->Present(1, 0);
 }
 
 HRESULT	Renderer::ResizeSwapChain(UINT32 newWidth, UINT32 newHeight)

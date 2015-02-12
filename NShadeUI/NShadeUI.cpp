@@ -51,7 +51,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
-			m_system->Render();
+			//m_system->Render();
 		}
 	}
 

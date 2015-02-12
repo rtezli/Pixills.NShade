@@ -20,6 +20,7 @@ public:
 	HRESULT InitializeWithWindow(int screenWidth, int screenHeight, bool vsync, bool fullscreen);
 	HRESULT Initialize();
 	void	Render();
+
 	LRESULT MessageHandler(HWND, UINT, WPARAM, LPARAM);
 private:
 	HRESULT					InitializeWindow(int screenWidth, int screenHeight);

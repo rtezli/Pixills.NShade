@@ -74,17 +74,7 @@ HRESULT D3DSystem::InitializeForWindow(
 
 HRESULT D3DSystem::Initialize()
 {
-	auto sc = rxssched::make_current_thread();
-	auto now = sc.now();
-	auto timer = rx::observable<>::interval(now, milliseconds(40));
-
 	auto result = CreateDevice();
-	if (FAILED(result))
-	{
-		return result;
-	}
-
-	result = CreateInput();
 	if (FAILED(result))
 	{
 		return result;
@@ -107,7 +97,14 @@ HRESULT D3DSystem::Initialize()
 	{
 		return result;
 	}
-
+	auto sc = rxsc::make_current_thread();
+	auto so = rx::synchronize_in_one_worker(sc);
+	rx::observable<>::interval(chrono::system_clock::now(), milliseconds(40), so)
+		.subscribe([this](int val)
+		{ 
+			D3DSystem::Render();
+		}
+	);
 	return result;
 }
 
@@ -300,6 +297,7 @@ HRESULT D3DSystem::CreateRenderer()
 
 void D3DSystem::Render()
 {
+	// Update Mouse Events
 	m_pRenderer->Render();
 }
 

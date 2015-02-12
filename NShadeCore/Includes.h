@@ -10,10 +10,13 @@
 #include "targetver.h"
 #include "windows.h"
 
+#include "ppltasks.h"
+using namespace concurrency;
+
 #include "rx.hpp"
 namespace rx = rxcpp;
+namespace rxsc = rxcpp::schedulers;
 namespace rxsub = rx::subjects;
-namespace rxssched = rxcpp::schedulers;
 
 #include "d3d11.h"
 #include "dxgi.h"
