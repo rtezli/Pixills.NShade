@@ -16,12 +16,11 @@ public:
 	D3DSystem();
 	~D3DSystem();
 public:
-	HRESULT InitializeForWindow(bool vsync, HINSTANCE*, HWND* handle, bool fullscreen);
+	HRESULT InitializeForWindow(bool vsync, HINSTANCE*, HWND* window, bool fullscreen);
 	HRESULT InitializeWithWindow(int screenWidth, int screenHeight, bool vsync, bool fullscreen);
+	LRESULT MessageHandler(HWND* hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
 	HRESULT Initialize();
 	void	Render();
-
-	LRESULT MessageHandler(HWND, UINT, WPARAM, LPARAM);
 private:
 	HRESULT					InitializeWindow(int screenWidth, int screenHeight);
 	HRESULT					CreateDevice();

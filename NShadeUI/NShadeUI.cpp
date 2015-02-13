@@ -9,9 +9,9 @@ namespace rxsc = rxcpp::schedulers;
 #define MAX_LOADSTRING 100
 
 // Global Variables:
-HINSTANCE hInst;								// current instance
-TCHAR szTitle[MAX_LOADSTRING];					// The title bar text
-TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
+HINSTANCE	hInst;							// current instance
+TCHAR		szTitle[MAX_LOADSTRING];		// The title bar text
+TCHAR		szWindowClass[MAX_LOADSTRING];	// the main window class name
 
 // Forward declarations of functions included in this code module:
 ATOM				MyRegisterClass(HINSTANCE hInstance);
@@ -119,7 +119,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	int wmId, wmEvent;
 	PAINTSTRUCT ps;
 	HDC hdc;
-	m_system->MessageHandler(hWnd, message, wParam, lParam);
+	// Forward event to D3D System
+	m_system->MessageHandler(&hWnd, message, wParam, lParam);
 	switch (message)
 	{
 	case WM_COMMAND:

@@ -74,6 +74,11 @@ HRESULT D3DSystem::InitializeForWindow(
 
 HRESULT D3DSystem::Initialize()
 {
+	POINT p;
+	GetCursorPos(&p);
+	m_lastPointerPosition = &p;
+	m_trackInput = false;
+
 	auto result = CreateDevice();
 	if (FAILED(result))
 	{
@@ -163,8 +168,9 @@ HRESULT D3DSystem::CreateDevice()
 		return createResult;
 	}
 
-	auto viewport = CreateViewPort(m_pWindowHandle);
 	auto resources = new DeviceResources(device, context);
+	auto viewport = CreateViewPort(m_pWindowHandle);
+
 	resources->ViewPort = new D3D11_VIEWPORT(*viewport);
 	resources->Device = device;
 	resources->DeviceContext = context;
@@ -300,74 +306,89 @@ void D3DSystem::Render()
 	m_pRenderer->Render();
 }
 
-LRESULT D3DSystem::MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
+LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPARAM lParam)
 {
-	switch (umessage)
+	if (this == NULL)
 	{
-		// window size changed
-	case WM_SIZE:
-	{
-		auto viewPort = CreateViewPort(&hwnd);
-		m_pRenderer->Resize(viewPort);
 		return 0;
 	}
 
-	case WM_POINTERUPDATE:
+	//auto sender = (long)lParam >> 12;
+	//auto handle = (int)&hWnd >> 12;
+
+	//if (sender != 0)
+	//{
+	//	return 0;
+	//}
+	switch (umessage)
 	{
-		if (m_trackInput)
+		// window size changed
+		case WM_SIZE:
 		{
+			//auto viewPort = CreateViewPort(hWnd);
+			//m_pRenderer->Resize(viewPort);
+			//return 0;
+		}
+
+		// press pointer (left mouse button)
+		case WM_LBUTTONDOWN:
+		{
+			Debug::WriteLine(L"EVENT : WM_LBUTTONDOWN\n");
+			ShowCursor(FALSE);
+			m_trackInput = true;
 			POINT pointerPosition;
 			auto result = GetCursorPos(&pointerPosition);
 			if (FAILED(result))
 			{
 				return result;
 			}
-			auto point = *m_lastPointerPosition;
-			auto deltaX = point.x - pointerPosition.x;
-			auto deltay = point.y - pointerPosition.y;
+			m_lastPointerPosition = &pointerPosition;
 			return 0;
 		}
-	}
 
-	// press pointer (left mouse button)
-	case WM_POINTERDOWN:
-	{
-		ShowCursor(FALSE);
-		m_trackInput = true;
-		POINT pointerPosition;
-		auto result = GetCursorPos(&pointerPosition);
-		if (FAILED(result))
+		// release pointer (left mouse button)
+		case WM_LBUTTONUP:
 		{
-			return result;
+			Debug::WriteLine(L"EVENT : WM_LBUTTONUP\n");
+			ShowCursor(TRUE);
+			m_trackInput = false;
+			return 0;
 		}
-		m_lastPointerPosition = &pointerPosition;
-		return 0;
-	}
 
-	// release pointer (left mouse button)
-	case WM_POINTERUP:
-	{
-		ShowCursor(TRUE);
-		m_trackInput = false;
-	}
+		// scrolling (mouse wheel)
+		case WM_POINTERWHEEL:
+		{
+			POINT pointerPosition;
+			if (GetCursorPos(&pointerPosition))
+			{
 
-	// scrolling (mouse wheel)
-	case WM_POINTERWHEEL:
-	{
-		POINT pointerPosition;
-		if (GetCursorPos(&pointerPosition))
+			}
+		}
+		case WM_POINTERHWHEEL:
 		{
 
 		}
-	}
-	case WM_POINTERHWHEEL:
-	{
+		case WM_KEYDOWN:
+		{
 
-	}
-	case WM_KEYDOWN:
-	{
-
-	}
+		}
+		// move pointer (move mouse)
+		case WM_MOUSEMOVE:
+		{
+			if (m_trackInput)
+			{
+				POINT pointerPosition;
+				auto result = GetCursorPos(&pointerPosition);
+				if (FAILED(result))
+				{
+					return result;
+				}
+				auto point = *m_lastPointerPosition;
+				auto deltaX = point.x - pointerPosition.x;
+				auto deltay = point.y - pointerPosition.y;
+			}
+			return 0;
+		}
 	}
 	return 0;
 }
