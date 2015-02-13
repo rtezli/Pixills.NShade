@@ -2,6 +2,14 @@
 
 #include "d3d11.h"
 
+enum Perspective : char
+{
+	UNDEFINED = 0,
+	FIRST_PERSON = 1,
+	THIRD_PERSON = 2,
+	ISOMETRIC = 3
+};
+
 struct VertexPositionColor
 {
 	DirectX::XMFLOAT3 Position;
@@ -17,7 +25,7 @@ struct RenderingQuality
 	bool IsMultisamplingSettings;
 };
 
-enum MSAA
+enum MSAA : char
 {
 	SIMPLEST_POSSIBLE = 9,
 	MSAA_0X = 0,

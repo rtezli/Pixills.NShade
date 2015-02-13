@@ -57,13 +57,3 @@ private:
 	bool									m_fullScreen;
 	bool									m_vSync;
 };
-
-static D3DSystem* ApplicationHandle = 0;
-
-enum Perspective : char
-{
-	UNDEFINED = 0,
-	FIRST_PERSON = 1,
-	THIRD_PERSON = 2,
-	ISOMETRIC = 3
-};
