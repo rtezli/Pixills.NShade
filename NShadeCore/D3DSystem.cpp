@@ -101,9 +101,9 @@ HRESULT D3DSystem::Initialize()
 	auto so = rx::synchronize_in_one_worker(sc);
 	rx::observable<>::interval(sc.now(), FPS(25), so)
 		.subscribe([this](int val)
-		{ 
-			D3DSystem::Render();
-		}
+	{
+		D3DSystem::Render();
+	}
 	);
 	return result;
 }
@@ -297,7 +297,6 @@ HRESULT D3DSystem::CreateRenderer()
 
 void D3DSystem::Render()
 {
-	// Update Mouse Events
 	m_pRenderer->Render();
 }
 
@@ -315,25 +314,37 @@ LRESULT D3DSystem::MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARA
 
 	case WM_POINTERUPDATE:
 	{
-
+		if (m_trackInput)
+		{
+			POINT pointerPosition;
+			if (GetCursorPos(&pointerPosition))
+			{
+				return 0;
+			}
+			auto point = *m_lastPointerPosition;
+			auto deltaX = point.x - pointerPosition.x;
+			auto deltay = point.y - pointerPosition.y;
+		}
 	}
 
 	// press pointer (left mouse button)
 	case WM_POINTERDOWN:
 	{
 		ShowCursor(FALSE);
-		POINT PointerPosition;
-		if (GetCursorPos(&PointerPosition))
+		m_trackInput = true;
+		POINT pointerPosition;
+		if (GetCursorPos(&pointerPosition))
+		{
 			return 0;
+		}
+		m_lastPointerPosition = &pointerPosition;
 	}
 
 	// release pointer (left mouse button)
 	case WM_POINTERUP:
 	{
 		ShowCursor(TRUE);
-		POINT PointerPosition;
-		if (GetCursorPos(&PointerPosition))
-			return 0;
+		m_trackInput = false;
 	}
 
 	// scrolling (mouse wheel)
@@ -342,22 +353,12 @@ LRESULT D3DSystem::MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARA
 		POINT pointerPosition;
 		if (GetCursorPos(&pointerPosition))
 		{
-			if (ScreenToClient(hwnd, &pointerPosition))
-			{
-
-			}
+ 
 		}
 	}
 	case WM_POINTERHWHEEL:
 	{
-		POINT pointerPosition;
-		if (GetCursorPos(&pointerPosition))
-		{
-			if (ScreenToClient(hwnd, &pointerPosition))
-			{
 
-			}
-		}
 	}
 	case WM_KEYDOWN:
 	{

@@ -38,7 +38,7 @@ private:
 	DeviceResources*						m_pDeviceResources;
 	HINSTANCE*								m_pHInstance;
 	HWND*									m_pWindowHandle;
-
+	POINT*									m_lastPointerPosition;
 	shared_ptr<Renderer>					m_pRenderer;
 	shared_ptr<Camera>						m_pCamera;
 	shared_ptr<Input>						m_pInputDevices;
@@ -56,4 +56,5 @@ private:
 
 	bool									m_fullScreen;
 	bool									m_vSync;
+	bool									m_trackInput;
 };
