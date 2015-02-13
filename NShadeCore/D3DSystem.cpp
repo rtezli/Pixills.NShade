@@ -317,13 +317,15 @@ LRESULT D3DSystem::MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARA
 		if (m_trackInput)
 		{
 			POINT pointerPosition;
-			if (GetCursorPos(&pointerPosition))
+			auto result = GetCursorPos(&pointerPosition);
+			if (FAILED(result))
 			{
-				return 0;
+				return result;
 			}
 			auto point = *m_lastPointerPosition;
 			auto deltaX = point.x - pointerPosition.x;
 			auto deltay = point.y - pointerPosition.y;
+			return 0;
 		}
 	}
 
@@ -333,11 +335,13 @@ LRESULT D3DSystem::MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARA
 		ShowCursor(FALSE);
 		m_trackInput = true;
 		POINT pointerPosition;
-		if (GetCursorPos(&pointerPosition))
+		auto result = GetCursorPos(&pointerPosition);
+		if (FAILED(result))
 		{
-			return 0;
+			return result;
 		}
 		m_lastPointerPosition = &pointerPosition;
+		return 0;
 	}
 
 	// release pointer (left mouse button)
@@ -353,7 +357,7 @@ LRESULT D3DSystem::MessageHandler(HWND hwnd, UINT umessage, WPARAM wparam, LPARA
 		POINT pointerPosition;
 		if (GetCursorPos(&pointerPosition))
 		{
- 
+
 		}
 	}
 	case WM_POINTERHWHEEL:
