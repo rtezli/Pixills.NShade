@@ -303,7 +303,9 @@ HRESULT D3DSystem::CreateRenderer()
 
 void D3DSystem::Render()
 {
+	m_pCamera->Move(m_lastPointerPosition);
 	m_pRenderer->Render();
+	m_lastPointerPosition = new POINT();
 }
 
 LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPARAM lParam)
@@ -334,7 +336,6 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 		case WM_LBUTTONDOWN:
 		{
 			Debug::WriteLine(L"EVENT : WM_LBUTTONDOWN\n");
-			ShowCursor(FALSE);
 			m_trackInput = true;
 			POINT pointerPosition;
 			auto result = GetCursorPos(&pointerPosition);
@@ -350,7 +351,7 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 		case WM_LBUTTONUP:
 		{
 			Debug::WriteLine(L"EVENT : WM_LBUTTONUP\n");
-			ShowCursor(TRUE);
+			auto cursor = 0;
 			m_trackInput = false;
 			return 0;
 		}
@@ -377,15 +378,15 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 		{
 			if (m_trackInput)
 			{
+				Debug::WriteLine(L"EVENT : WM_MOUSEMOVE\n");
 				POINT pointerPosition;
 				auto result = GetCursorPos(&pointerPosition);
 				if (FAILED(result))
 				{
 					return result;
 				}
-				auto point = *m_lastPointerPosition;
-				auto deltaX = point.x - pointerPosition.x;
-				auto deltay = point.y - pointerPosition.y;
+				m_lastPointerPosition->x -= pointerPosition.x;
+				m_lastPointerPosition->y -= pointerPosition.y;
 			}
 			return 0;
 		}

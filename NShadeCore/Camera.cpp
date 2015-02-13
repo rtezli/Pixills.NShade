@@ -4,6 +4,9 @@
 Camera::Camera(DeviceResources* resources)
 {
 	m_pDeviceResources = resources;
+	m_eyePosition = new XMVECTORF32{ 1.0f, 1.0f, -3.0f, 0.0f };
+	m_focusPosition = new XMVECTORF32{ 0.0f, 0.0f, 0.0f, 0.0f };
+	m_upDirection = new XMVECTORF32{ 0.0f, 1.0f, 0.0f, 0.0f };
 }
 
 Camera::~Camera()
@@ -28,13 +31,9 @@ XMFLOAT4X4 Camera::GetWorldMatrix()
 
 XMFLOAT4X4 Camera::GetViewMatrix()
 {
-	XMVECTORF32 eyePosition		= { 1.0f, 1.0f, -3.0f, 0.0f };
-	XMVECTORF32 focusPosition	= { 0.0f, 0.0f,  0.0f, 0.0f };
-	XMVECTORF32 upDirection		= { 0.0f, 1.0f,  0.0f, 0.0f };
-
 	Debug::WriteLine(L"CALL : Camera::GetViewMatrix\n");
 	XMFLOAT4X4 view;
-	auto matrix = XMMatrixTranspose(XMMatrixLookAtRH(eyePosition, focusPosition, upDirection));
+	auto matrix = XMMatrixTranspose(XMMatrixLookAtRH(*m_eyePosition, *m_focusPosition, *m_upDirection));
 	XMStoreFloat4x4(&view, matrix);
 	return view;
 }
@@ -73,17 +72,13 @@ void Camera::RotateVertical(float Angle)
 
 }
 
-void Camera::MoveX(float Angle)
+void Camera::Move(POINT* p)
 {
-
-}
-
-void Camera::MoveY(float Angle)
-{
-
-}
-
-void Camera::MoveZ(float Angle)
-{
-
+	auto mv = (0,1) * p->x;
+	auto radius = sqrt(pow(p->x, 2) + pow(p->y, 2));
+	auto angle = atan(p->y / p->x);
+	angle += mv;
+	auto x = sin(angle) * radius;
+	auto z = sqrt(pow(radius, 2) + pow(p->y, 2));
+	m_eyePosition = new XMVECTORF32{ x, 1.0f, z, 0.0f };
 }
