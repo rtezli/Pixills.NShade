@@ -76,7 +76,7 @@ HRESULT D3DSystem::Initialize()
 {
 	POINT p;
 	GetCursorPos(&p);
-	m_lastPointerPosition = &p;
+	m_lastPointerPosition = new POINT{ 0.0, 0.0 };
 	m_trackInput = false;
 
 	auto result = CreateDevice();
@@ -314,82 +314,78 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 	{
 		return 0;
 	}
+	if (lParam == 0)
+	{
+		return 0;
+	}
 
-	//auto sender = (long)lParam >> 12;
-	//auto handle = (int)&hWnd >> 12;
-
-	//if (sender != 0)
-	//{
-	//	return 0;
-	//}
 	switch (umessage)
 	{
-		// window size changed
-		case WM_SIZE:
-		{
-			//auto viewPort = CreateViewPort(hWnd);
-			//m_pRenderer->Resize(viewPort);
-			//return 0;
-		}
+	case WM_SIZE:
+	{
+		//auto viewPort = CreateViewPort(hWnd);
+		//m_pRenderer->Resize(viewPort);
+		return 0;
+	}
 
-		// press pointer (left mouse button)
-		case WM_LBUTTONDOWN:
+	// press pointer (left mouse button)
+	case WM_LBUTTONDOWN:
+	{
+		SetCapture(*m_pWindowHandle);
+		ShowCursor(false);
+		m_trackInput = true;
+		POINT pointerPosition;
+		auto result = GetCursorPos(&pointerPosition);
+		if (FAILED(result))
 		{
-			Debug::WriteLine(L"EVENT : WM_LBUTTONDOWN\n");
-			m_trackInput = true;
+			return result;
+		}
+		m_lastPointerPosition = &pointerPosition;
+		return 0;
+	}
+
+	// release pointer (left mouse button)
+	case WM_LBUTTONUP:
+	{
+		ReleaseCapture();
+		ShowCursor(true);
+		auto cursor = 0;
+		m_trackInput = false;
+	}
+
+	// scrolling (mouse wheel)
+	case WM_POINTERWHEEL:
+	{
+		POINT pointerPosition;
+		if (GetCursorPos(&pointerPosition))
+		{
+
+		}
+	}
+	case WM_POINTERHWHEEL:
+	{
+
+	}
+	case WM_KEYDOWN:
+	{
+
+	}
+	// move pointer (move mouse)
+	case WM_MOUSEMOVE:
+	{
+		if (m_trackInput)
+		{
 			POINT pointerPosition;
 			auto result = GetCursorPos(&pointerPosition);
 			if (FAILED(result))
 			{
 				return result;
 			}
-			m_lastPointerPosition = &pointerPosition;
-			return 0;
+			m_lastPointerPosition->x -= pointerPosition.x;
+			m_lastPointerPosition->y -= pointerPosition.y;
 		}
-
-		// release pointer (left mouse button)
-		case WM_LBUTTONUP:
-		{
-			Debug::WriteLine(L"EVENT : WM_LBUTTONUP\n");
-			auto cursor = 0;
-			m_trackInput = false;
-			return 0;
-		}
-
-		// scrolling (mouse wheel)
-		case WM_POINTERWHEEL:
-		{
-			POINT pointerPosition;
-			if (GetCursorPos(&pointerPosition))
-			{
-
-			}
-		}
-		case WM_POINTERHWHEEL:
-		{
-
-		}
-		case WM_KEYDOWN:
-		{
-
-		}
-		// move pointer (move mouse)
-		case WM_MOUSEMOVE:
-		{
-			if (m_trackInput)
-			{
-				Debug::WriteLine(L"EVENT : WM_MOUSEMOVE\n");
-				POINT pointerPosition;
-				auto result = GetCursorPos(&pointerPosition);
-				if (FAILED(result))
-				{
-					return result;
-				}
-				m_lastPointerPosition->x -= pointerPosition.x;
-				m_lastPointerPosition->y -= pointerPosition.y;
-			}
-			return 0;
-		}
+		return 0;
+	}
 	}
 	return 0;
 }
