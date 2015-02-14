@@ -81,8 +81,8 @@ void Camera::Move(POINT* p)
 		return;
 	}
 
-	auto moderationX = 0.001;
-	auto moderationY = 0.0009;
+	auto moderationX = 0.00001;
+	auto moderationY = 0.00009;
 
 	auto hMove = p->x * moderationX;
 	auto vMove = p->y * moderationY;
@@ -94,20 +94,20 @@ void Camera::Move(POINT* p)
 	auto radius = sqrt(pow(currentX, 2) + pow(currentZ, 2));
 
 	double currentAngle = atan(currentX / currentZ);
-	int newAngle = currentAngle + hMove;
+	auto newAngle = currentAngle + hMove;
 
 	if (newAngle > 360)
 	{
-		newAngle = 0 + (360 % newAngle);
+		newAngle = 0.0 + fmod(360.00, newAngle);
 	}
 
 	if (newAngle < 0)
 	{
-		newAngle = 360 - (360 % newAngle);
+		newAngle = 360.00 - fmod(360.00, newAngle);
 	}
 
 	auto newZ = radius * sin(newAngle) * -1.0;
-	auto newX = sqrt(pow(newZ, 2) + pow(radius, 2));
+	auto newX = sqrt(pow(radius, 2) - pow(newZ, 2));
 
 	m_eyePosition = new XMVECTOR{ newX, 1.0f, newZ, 0.0f };
 
