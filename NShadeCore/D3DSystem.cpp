@@ -334,7 +334,7 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 	case WM_LBUTTONDOWN:
 	{
 		SetCapture(*m_pWindowHandle);
-		ShowCursor(false);
+		//ShowCursor(false);
 		m_trackInput = true;
 
 		POINT p;
@@ -351,7 +351,7 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 	case WM_LBUTTONUP:
 	{
 		ReleaseCapture();
-		ShowCursor(true);
+		//ShowCursor(true);
 		m_trackInput = false;
 	}
 

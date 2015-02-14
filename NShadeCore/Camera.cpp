@@ -19,9 +19,9 @@ void Camera::Initialize()
 	auto z = m_radius * sin(m_hAngle * -1);
 	auto x = sqrt(pow(m_radius, 2) - pow(z, 2));
 
-	m_eyePosition	= new XMVECTOR{ x, 1.0f, z, 0.0f };
+	m_eyePosition = new XMVECTOR{ x, 1.0f, z, 0.0f };
 	m_focusPosition = new XMVECTOR{ 0.0f, 0.0f, 0.0f, 0.0f };
-	m_upDirection	= new XMVECTOR{ 0.0f, 1.0f, 0.0f, 0.0f };
+	m_upDirection = new XMVECTOR{ 0.0f, 1.0f, 0.0f, 0.0f };
 
 	m_pDeviceResources->ConstBufferData = new ConstantBufferData();
 	Update();
@@ -63,8 +63,6 @@ XMFLOAT4X4 Camera::GetProjectionMatrix()
 	XMMATRIX orientationMatrix = XMLoadFloat4x4(&orientation);
 
 	XMStoreFloat4x4(&projection, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
-	//auto matrix = XMMatrixTranspose(XMMatrixPerspectiveFovRH(GetFieldOfView(), GetAspectRatio(), m_pDeviceResources->NearZ, m_pDeviceResources->FarZ));
-	//XMStoreFloat4x4(&projection, matrix);
 	return projection;
 }
 
@@ -80,21 +78,12 @@ void Camera::RotateVertical(float Angle)
 
 void Camera::Move(POINT* p)
 {
-	if (p == NULL)
-	{
-		return;
-	}
-	if (p->x == 0)
-	{
-		return;
-	}
-
 	auto moderationH = 0.01;
 	auto moderationV = 0.09;
 
 	m_hAngle += p->x * moderationH;
 	m_vAngle += p->y * moderationV;
-	
+
 	//if (m_hAngle >= 360)
 	//{
 	//	m_hAngle = 0.0 + m_hAngle - 360;
@@ -103,12 +92,22 @@ void Camera::Move(POINT* p)
 	//{
 	//	m_hAngle = 360.00 + m_hAngle;
 	//}
-	
-	auto newZ = m_radius * sin(m_hAngle * -1);
+
+	auto newZ = m_radius * sin(m_hAngle);
 	auto newX = sqrt(pow(m_radius, 2) - pow(newZ, 2));
 
-	m_eyePosition = new XMVECTOR{ newX, 1.0f, newZ, 0.0f };
+	auto dbg = std::string();
+	
+/*	dbg.append(" Z : ");
+	dbg.append(newZ);
+	dbg.append(" X : ");
+	dbg.append(newX);
+	dbg.append(" Angle : ");
+	dbg.append(m_hAngle);
+	Debug::WriteLineS(dbg)*/;
 
+	m_eyePosition = new XMVECTOR{ newX, 1.0f, newZ, 0.0f };
+	//Debug::WriteLineS(ang);
 	Update();
 }
 

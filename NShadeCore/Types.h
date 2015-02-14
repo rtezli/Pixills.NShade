@@ -101,4 +101,13 @@ namespace Debug
 		OutputDebugString(message);
 #endif
 	}
+
+	static void WriteLineS(std::wstring message)
+	{
+		message.append(L"\n");
+		LPCWSTR str = message.c_str();
+#ifdef _PRINT_DEBUG
+		OutputDebugString(str);
+#endif
+	}
 }

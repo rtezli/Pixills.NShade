@@ -6,6 +6,7 @@
 #include "vector"
 #include "iostream"
 #include "fstream"
+#include "string"
 
 #include "targetver.h"
 #include "windows.h"
