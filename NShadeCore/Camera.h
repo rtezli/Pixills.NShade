@@ -25,5 +25,8 @@ private:
 	XMVECTOR*			m_eyePosition;
 	XMVECTOR*			m_focusPosition;
 	XMVECTOR*			m_upDirection;
+	float				m_hAngle;
+	float				m_vAngle;
+	float				m_radius;
 };
 

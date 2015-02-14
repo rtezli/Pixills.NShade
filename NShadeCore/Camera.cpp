@@ -4,9 +4,6 @@
 Camera::Camera(DeviceResources* resources)
 {
 	m_pDeviceResources = resources;
-	m_eyePosition = new XMVECTOR{ 1.0f, 1.0f, -3.0f, 0.0f };
-	m_focusPosition = new XMVECTOR{ 0.0f, 0.0f, 0.0f, 0.0f };
-	m_upDirection = new XMVECTOR{ 0.0f, 1.0f, 0.0f, 0.0f };
 }
 
 Camera::~Camera()
@@ -15,6 +12,17 @@ Camera::~Camera()
 
 void Camera::Initialize()
 {
+	m_radius = 3;
+	m_hAngle = 0;
+	m_vAngle = 0;
+
+	auto z = m_radius * sin(m_hAngle * -1);
+	auto x = sqrt(pow(m_radius, 2) - pow(z, 2));
+
+	m_eyePosition	= new XMVECTOR{ x, 1.0f, z, 0.0f };
+	m_focusPosition = new XMVECTOR{ 0.0f, 0.0f, 0.0f, 0.0f };
+	m_upDirection	= new XMVECTOR{ 0.0f, 1.0f, 0.0f, 0.0f };
+
 	m_pDeviceResources->ConstBufferData = new ConstantBufferData();
 	Update();
 }
@@ -81,33 +89,23 @@ void Camera::Move(POINT* p)
 		return;
 	}
 
-	auto moderationXZ = 0.00001;
-	auto moderationY = 0.00009;
+	auto moderationH = 0.01;
+	auto moderationV = 0.09;
 
-	auto hMove = p->x * moderationXZ;
-	auto vMove = p->y * moderationY;
-
-	float currentX = XMVectorGetX(*m_eyePosition);
-	float currentY = XMVectorGetY(*m_eyePosition);
-	float currentZ = XMVectorGetZ(*m_eyePosition);
-
-	auto radius = sqrt(pow(currentX, 2) + pow(currentZ, 2));
-
-	double currentAngle = atan2(currentZ, currentX);
-	auto newAngle = currentAngle + hMove;
-
-	if (newAngle > 360)
-	{
-		newAngle = 0.0 + newAngle - 360;
-	}
-
-	if (newAngle < 0)
-	{
-		newAngle = 360.00 + newAngle;
-	}
-
-	auto newZ = radius * sin(newAngle);
-	auto newX = sqrt(pow(radius, 2) - pow(newZ, 2));
+	m_hAngle += p->x * moderationH;
+	m_vAngle += p->y * moderationV;
+	
+	//if (m_hAngle >= 360)
+	//{
+	//	m_hAngle = 0.0 + m_hAngle - 360;
+	//}
+	//if (m_hAngle <= 0)
+	//{
+	//	m_hAngle = 360.00 + m_hAngle;
+	//}
+	
+	auto newZ = m_radius * sin(m_hAngle * -1);
+	auto newX = sqrt(pow(m_radius, 2) - pow(newZ, 2));
 
 	m_eyePosition = new XMVECTOR{ newX, 1.0f, newZ, 0.0f };
 

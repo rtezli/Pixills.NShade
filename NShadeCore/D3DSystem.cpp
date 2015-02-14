@@ -303,9 +303,7 @@ HRESULT D3DSystem::CreateRenderer()
 
 void D3DSystem::Render()
 {
-	m_pCamera->Move(m_lastPointerPosition);
 	m_pRenderer->Render();
-	m_lastPointerPosition = new POINT();
 }
 
 LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPARAM lParam)
@@ -321,6 +319,10 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 
 	switch (umessage)
 	{
+	case WM_ACTIVATE:
+	{
+		return 0;
+	}
 	case WM_SIZE:
 	{
 		//auto viewPort = CreateViewPort(hWnd);
@@ -334,11 +336,14 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 		SetCapture(*m_pWindowHandle);
 		ShowCursor(false);
 		m_trackInput = true;
-		auto result = GetCursorPos(m_lastPointerPosition);
+
+		POINT p;
+		auto result = GetCursorPos(&p);
 		if (FAILED(result))
 		{
 			return result;
 		}
+		m_lastPointerPosition = new POINT(p);
 		return 0;
 	}
 
@@ -347,18 +352,13 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 	{
 		ReleaseCapture();
 		ShowCursor(true);
-		auto cursor = 0;
 		m_trackInput = false;
 	}
 
 	// scrolling (mouse wheel)
 	case WM_POINTERWHEEL:
 	{
-		POINT pointerPosition;
-		if (GetCursorPos(&pointerPosition))
-		{
 
-		}
 	}
 	case WM_POINTERHWHEEL:
 	{
@@ -373,14 +373,17 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 	{
 		if (m_trackInput)
 		{
-			POINT pointerPosition;
-			auto result = GetCursorPos(&pointerPosition);
+			POINT p;
+			auto result = GetCursorPos(&p);
 			if (FAILED(result))
 			{
 				return result;
 			}
-			m_lastPointerPosition->x = m_lastPointerPosition->x + pointerPosition.x;
-			m_lastPointerPosition->y = m_lastPointerPosition->y + pointerPosition.y;
+			auto offsetH = p.x - m_lastPointerPosition->x;
+			auto offsetV = p.y - m_lastPointerPosition->y;
+			auto offset = new POINT{offsetH, offsetV};
+			m_pCamera->Move(offset);
+			m_lastPointerPosition = new POINT(p);
 		}
 		return 0;
 	}
