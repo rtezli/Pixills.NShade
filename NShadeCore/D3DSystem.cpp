@@ -334,13 +334,11 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 		SetCapture(*m_pWindowHandle);
 		ShowCursor(false);
 		m_trackInput = true;
-		POINT pointerPosition;
-		auto result = GetCursorPos(&pointerPosition);
+		auto result = GetCursorPos(m_lastPointerPosition);
 		if (FAILED(result))
 		{
 			return result;
 		}
-		m_lastPointerPosition = &pointerPosition;
 		return 0;
 	}
 
@@ -381,8 +379,8 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 			{
 				return result;
 			}
-			m_lastPointerPosition->x -= pointerPosition.x;
-			m_lastPointerPosition->y -= pointerPosition.y;
+			m_lastPointerPosition->x = m_lastPointerPosition->x + pointerPosition.x;
+			m_lastPointerPosition->y = m_lastPointerPosition->y + pointerPosition.y;
 		}
 		return 0;
 	}
