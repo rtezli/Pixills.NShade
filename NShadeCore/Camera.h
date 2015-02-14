@@ -22,8 +22,8 @@ public:
 	XMFLOAT4X4 GetProjectionMatrix();
 private:
 	DeviceResources*	m_pDeviceResources;
-	XMVECTORF32*		m_eyePosition;
-	XMVECTORF32*		m_focusPosition;
-	XMVECTORF32*		m_upDirection;
+	XMVECTOR*			m_eyePosition;
+	XMVECTOR*			m_focusPosition;
+	XMVECTOR*			m_upDirection;
 };
 
