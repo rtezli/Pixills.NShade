@@ -12,43 +12,26 @@ Camera::~Camera()
 
 void Camera::Initialize()
 {
-	m_radius = 3;
-	m_hAngle = 0;
-	m_vAngle = 0;
+	m_pWorldMatrix		= new XMFLOAT4X4();
+	m_pViewMatrix		= new XMFLOAT4X4();
+	m_pProjectionMatrix = new XMFLOAT4X4();
+
+	m_radius = 3.0f;
+	m_hAngle = 0.0f;
+	m_vAngle = 0.0f;
 
 	auto z = m_radius * sin(m_hAngle * -1);
 	auto x = sqrt(pow(m_radius, 2) - pow(z, 2));
 
-	m_eyePosition = new XMVECTOR{ x, 1.0f, z, 0.0f };
-	m_focusPosition = new XMVECTOR{ 0.0f, 0.0f, 0.0f, 0.0f };
-	m_upDirection = new XMVECTOR{ 0.0f, 1.0f, 0.0f, 0.0f };
+	m_eyePosition = new XMVECTOR{ x, 1.0f, z };
+	m_focusPosition = new XMVECTOR{ 0.0f, 0.0f, 0.0f };
+	m_upDirection = new XMVECTOR{ 0.0f, 1.0f, 0.0f };
 
-	m_pDeviceResources->ConstBufferData = new ConstantBufferData();
-	Update();
-}
+	auto wMatrix = XMMatrixTranspose(XMMatrixIdentity());
+	XMStoreFloat4x4(m_pWorldMatrix, wMatrix);
 
-XMFLOAT4X4 Camera::GetWorldMatrix()
-{
-	XMFLOAT4X4 view;
-	auto matrix = XMMatrixTranspose(XMMatrixIdentity());
-	XMStoreFloat4x4(&view, matrix);
-	return view;
-}
-
-XMFLOAT4X4 Camera::GetViewMatrix()
-{
-	Debug::WriteLine(L"CALL : Camera::GetViewMatrix\n");
-	XMFLOAT4X4 view;
-	auto matrix = XMMatrixTranspose(XMMatrixLookAtRH(*m_eyePosition, *m_focusPosition, *m_upDirection));
-	XMStoreFloat4x4(&view, matrix);
-	return view;
-}
-
-XMFLOAT4X4 Camera::GetProjectionMatrix()
-{
-	Debug::WriteLine(L"CALL : Camera::GetProjectionMatrix\n");
-
-	XMFLOAT4X4 projection;
+	auto vMatrix = XMMatrixTranspose(XMMatrixLookAtRH(*m_eyePosition, *m_focusPosition, *m_upDirection));
+	XMStoreFloat4x4(m_pViewMatrix, vMatrix);
 
 	float fovAngleY = GetFieldOfView();
 	float aspectRatio = GetAspectRatio();
@@ -58,12 +41,13 @@ XMFLOAT4X4 Camera::GetProjectionMatrix()
 		fovAngleY *= 2.0f;
 	}
 
-	XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 0.01f, 100.0f);
-	XMFLOAT4X4 orientation = ScreenRotation::Rotation0;
-	XMMATRIX orientationMatrix = XMLoadFloat4x4(&orientation);
+	XMMATRIX	perspectiveMatrix = XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 0.01f, 100.0f);
+	XMFLOAT4X4	orientation = ScreenRotation::Rotation0;
+	XMMATRIX	orientationMatrix = XMLoadFloat4x4(&orientation);
 
-	XMStoreFloat4x4(&projection, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
-	return projection;
+	XMStoreFloat4x4(m_pProjectionMatrix, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
+
+	Update();
 }
 
 void Camera::RotateHorizontal(float Angle)
@@ -81,39 +65,28 @@ void Camera::Move(POINT* p)
 	auto moderationH = 0.01;
 	auto moderationV = 0.09;
 
-	m_hAngle += p->x * moderationH;
-	m_vAngle += p->y * moderationV;
+	auto m_hAngle = p->x * moderationH;
+	auto m_vAngle = p->y * moderationV;
 
-	//if (m_hAngle >= 360)
-	//{
-	//	m_hAngle = 0.0 + m_hAngle - 360;
-	//}
-	//if (m_hAngle <= 0)
-	//{
-	//	m_hAngle = 360.00 + m_hAngle;
-	//}
-
-	auto newZ = m_radius * sin(m_hAngle);
-	auto newX = sqrt(pow(m_radius, 2) - pow(newZ, 2));
-
-	auto dbg = std::string();
-	
-/*	dbg.append(" Z : ");
-	dbg.append(newZ);
-	dbg.append(" X : ");
-	dbg.append(newX);
-	dbg.append(" Angle : ");
-	dbg.append(m_hAngle);
-	Debug::WriteLineS(dbg)*/;
-
-	m_eyePosition = new XMVECTOR{ newX, 1.0f, newZ, 0.0f };
-	//Debug::WriteLineS(ang);
+	XMStoreFloat4x4(m_pWorldMatrix, XMMatrixTranspose(XMMatrixRotationY(m_hAngle)));
 	Update();
+}
+
+void Camera::Rotate(POINT* p)
+{
+	auto moderationH = 0.001;
+	auto moderationV = 0.009;
+
+	m_hAngle = m_hAngle + p->x * moderationH;
+	m_vAngle = m_vAngle + p->y * moderationV;
+
+
+	XMStoreFloat4x4(m_pWorldMatrix, XMMatrixTranspose(XMMatrixRotationY(m_hAngle)));
+	m_pDeviceResources->ConstBufferData->world = *m_pWorldMatrix;
 }
 
 void Camera::Update()
 {
-	m_pDeviceResources->ConstBufferData->world = GetWorldMatrix();
-	m_pDeviceResources->ConstBufferData->view = GetViewMatrix();
-	m_pDeviceResources->ConstBufferData->projection = GetProjectionMatrix();
+	ConstantBufferData constBuffer = { *m_pWorldMatrix, *m_pViewMatrix, *m_pProjectionMatrix };
+	m_pDeviceResources->ConstBufferData = new ConstantBufferData(constBuffer);
 }

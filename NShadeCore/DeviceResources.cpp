@@ -18,7 +18,7 @@ DeviceResources::DeviceResources(ID3D11Device* device, ID3D11DeviceContext* devi
 
 	RenderingQuality quality42 = { 16, 4, DXGI_FORMAT_R16G16B16A16_UNORM, DXGI_FORMAT_D32_FLOAT, true };
 
-	RenderQuality = new RenderingQuality(quality0);
+	RenderQuality = new RenderingQuality(quality4);
 }
 
 DeviceResources::~DeviceResources()

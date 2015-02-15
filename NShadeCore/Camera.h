@@ -13,14 +13,14 @@ public:
 	void				RotateHorizontal(float angle);
 	void				RotateVertical(float angle);
 	void				Move(POINT* p);
+	void				Rotate(POINT* p);
 	void				Update();
 	float				GetAspectRatio(){ return m_pDeviceResources->ViewPort->Width / m_pDeviceResources->ViewPort->Height; };
 	float				GetFieldOfView(){ return 70.0f * XM_PI / 180.0f; };
-
-	XMFLOAT4X4 GetWorldMatrix();
-	XMFLOAT4X4 GetViewMatrix();
-	XMFLOAT4X4 GetProjectionMatrix();
 private:
+	XMFLOAT4X4*			m_pWorldMatrix;
+	XMFLOAT4X4*			m_pViewMatrix;
+	XMFLOAT4X4*			m_pProjectionMatrix;
 	DeviceResources*	m_pDeviceResources;
 	XMVECTOR*			m_eyePosition;
 	XMVECTOR*			m_focusPosition;

@@ -334,9 +334,7 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 	case WM_LBUTTONDOWN:
 	{
 		SetCapture(*m_pWindowHandle);
-		//ShowCursor(false);
-		m_trackInput = true;
-
+		ShowCursor(false);
 		POINT p;
 		auto result = GetCursorPos(&p);
 		if (FAILED(result))
@@ -344,6 +342,7 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 			return result;
 		}
 		m_lastPointerPosition = new POINT(p);
+		m_trackInput = true;
 		return 0;
 	}
 
@@ -351,7 +350,6 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 	case WM_LBUTTONUP:
 	{
 		ReleaseCapture();
-		//ShowCursor(true);
 		m_trackInput = false;
 	}
 
@@ -381,8 +379,8 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 			}
 			auto offsetH = p.x - m_lastPointerPosition->x;
 			auto offsetV = p.y - m_lastPointerPosition->y;
-			auto offset = new POINT{offsetH, offsetV};
-			m_pCamera->Move(offset);
+			auto offset = new POINT{ offsetH, offsetV };
+			m_pCamera->Rotate(offset);
 			m_lastPointerPosition = new POINT(p);
 		}
 		return 0;

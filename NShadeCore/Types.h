@@ -102,10 +102,31 @@ namespace Debug
 #endif
 	}
 
-	static void WriteLineS(std::wstring message)
+	static void WriteLine(std::wstring message)
 	{
 		message.append(L"\n");
 		LPCWSTR str = message.c_str();
+#ifdef _PRINT_DEBUG
+		OutputDebugString(str);
+#endif
+	}
+
+	static void WriteLine(float message)
+	{
+		auto mes = std::to_wstring(message);
+		mes.append(L"\n");
+		LPCWSTR str = mes.c_str();
+#ifdef _PRINT_DEBUG
+		OutputDebugString(str);
+#endif
+	}
+
+	static void WriteLine(std::wstring m1, float m2)
+	{
+		auto mes = std::to_wstring(m2);
+		m1.append(mes);
+		m1.append(L"\n");
+		LPCWSTR str = m1.c_str();
 #ifdef _PRINT_DEBUG
 		OutputDebugString(str);
 #endif

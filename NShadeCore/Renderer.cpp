@@ -548,6 +548,11 @@ HRESULT Renderer::Render()
 	// Clear
 	ClearScene();
 
+	if (!m_isInitialized)
+	{
+		return 0;
+	}
+
 	UINT stride = sizeof(VertexPositionColor);
 	UINT offset = 0;
 
