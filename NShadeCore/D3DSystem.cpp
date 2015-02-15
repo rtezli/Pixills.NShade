@@ -334,7 +334,7 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 	case WM_LBUTTONDOWN:
 	{
 		SetCapture(*m_pWindowHandle);
-		ShowCursor(false);
+		//ShowCursor(false);
 		POINT p;
 		auto result = GetCursorPos(&p);
 		if (FAILED(result))
