@@ -45,21 +45,25 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 	auto fbxScene = FbxScene::Create(sdkManager, "");
 
 	auto result = fbxImporter->Initialize(fileName, -1, sdkManager->GetIOSettings());
-	if (FAILED(result))
+	if (!result)
 	{
 		return result;
 	}
 	result = fbxImporter->Import(fbxScene);
-	if (FAILED(result))
+	if (!result)
 	{
 		return result;
 	}
 
 	auto fbxRootNode = fbxScene->GetRootNode();
+
 	FbxGeometry* geometry = 0;
 	FbxArray<FbxVector4>* pointArray;
 
-	for (auto i = 0; i < fbxRootNode->GetChildCount(); i++)
+	auto mesh = fbxRootNode->GetMesh();
+
+	auto count = fbxRootNode->GetChildCount();
+	for (auto i = 0; i < count; i++)
 	{
 		auto child = fbxRootNode->GetChild(i);
 		auto pMesh = (FbxMesh*)child->GetNodeAttribute();
@@ -75,7 +79,6 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 			newVector->z = (float)point.mData[2];
 		}
 	}
-	fbxScene->Destroy();
 
 	Vertex* vertices[] = { 0 };
 
@@ -88,6 +91,11 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 	m_bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	m_bufferDesc.CPUAccessFlags = 0;
 	m_bufferDesc.MiscFlags = 0;
+
+	fbxScene->Destroy();
+	fbxRootNode->Destroy();
+	sdkManager->Destroy();
+	fbxImporter->Destroy();
 
 	return 0;
 }
