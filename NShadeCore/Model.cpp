@@ -53,14 +53,14 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 	}
 	fbxScene->Destroy();
 
-	VertexPositionColor* vertices[] = { 0 };
+	Vertex* vertices[] = { 0 };
 
 	m_initData.pSysMem = vertices;
 	m_initData.SysMemPitch = 0;
 	m_initData.SysMemSlicePitch = 0;
 
 	m_bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	m_bufferDesc.ByteWidth = sizeof(VertexPositionColor) * ARRAYSIZE(vertices);
+	m_bufferDesc.ByteWidth = sizeof(Vertex) * ARRAYSIZE(vertices);
 	m_bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	m_bufferDesc.CPUAccessFlags = 0;
 	m_bufferDesc.MiscFlags = 0;
@@ -90,14 +90,14 @@ HRESULT Model::LoadModelFromOBJFile(char* fileName)
 {
 	// TODO : Get the vertices from the file
 
-	VertexPositionColor* vertices[] = { 0 };
+	Vertex* vertices[] = { 0 };
 
 	m_initData.pSysMem = vertices;
 	m_initData.SysMemPitch = 0;
 	m_initData.SysMemSlicePitch = 0;
 
 	m_bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	m_bufferDesc.ByteWidth = sizeof(VertexPositionColor) * ARRAYSIZE(vertices);
+	m_bufferDesc.ByteWidth = sizeof(Vertex) * ARRAYSIZE(vertices);
 	m_bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	m_bufferDesc.CPUAccessFlags = 0;
 	m_bufferDesc.MiscFlags = 0;
@@ -113,7 +113,7 @@ HRESULT Model::InitializeConstantBuffer()
 
 HRESULT Model::InitializeVertexBuffer()
 {
-	static const VertexPositionColor cube[] =
+	static const Vertex cube[] =
 	{
 		{ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
 		{ XMFLOAT3(-0.5f, -0.5f, 0.5f), XMFLOAT3(0.0f, 0.0f, 1.0f) },
@@ -126,7 +126,7 @@ HRESULT Model::InitializeVertexBuffer()
 	};
 
 	D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
-	vertexBufferDesc.ByteWidth = sizeof(VertexPositionColor) * ARRAYSIZE(cube);
+	vertexBufferDesc.ByteWidth = sizeof(Vertex) * ARRAYSIZE(cube);
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
@@ -178,7 +178,7 @@ HRESULT Model::CreateVertexAndIndexBuffer(XMFLOAT3* vertices)
 {
 	long size = 0;
 	int* indexBuffer = new int[size];
-	VertexPositionColor* vertexBuffer = new VertexPositionColor[size];
+	Vertex* vertexBuffer = new Vertex[size];
 
 	for (long i = 0; i < size; i++)
 	{

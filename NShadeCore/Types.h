@@ -10,10 +10,12 @@ enum Perspective : char
 	ISOMETRIC = 3
 };
 
-struct VertexPositionColor
+struct Vertex
 {
 	DirectX::XMFLOAT3 Position;
 	DirectX::XMFLOAT3 Color;
+	DirectX::XMFLOAT3 UV;
+	DirectX::XMFLOAT3 Normal;
 };
 
 struct RenderingQuality

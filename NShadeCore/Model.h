@@ -13,8 +13,8 @@ public:
 	HRESULT CreateVertexAndIndexBuffer(XMFLOAT3 vertices[]);
 	HRESULT	Initialize();
  
-	static VertexPositionColor Cube[];
-	static VertexPositionColor Sphere[];
+	static Vertex Cube[];
+	static Vertex Sphere[];
 private:
 	DeviceResources*			DeviceResource(){ return m_pDeviceResources.get(); }
 	HRESULT						InitializeVertexBuffer();
