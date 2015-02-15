@@ -13,7 +13,13 @@ Model::~Model()
 
 HRESULT Model::Initialize()
 {
-	auto result = InitializeVertexBuffer();
+	auto result = LoadModelFromFBXFile("teapot.fbx");
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	result = InitializeVertexBuffer();
 	if (FAILED(result))
 	{
 		return result;
@@ -30,25 +36,43 @@ HRESULT Model::Initialize()
 
 HRESULT Model::LoadModelFromFBXFile(char* fileName)
 {
+	auto sdkManager = FbxManager::Create();
 
-	FbxScene* fbxScene = ImportFbx(fileName);
-	FbxNode* fbxRootNode = fbxScene->GetRootNode();
+	auto fbxIOsettings = FbxIOSettings::Create(sdkManager, IOSROOT);
+	sdkManager->SetIOSettings(fbxIOsettings);
+
+	auto fbxImporter = FbxImporter::Create(sdkManager, "");
+	auto fbxScene = FbxScene::Create(sdkManager, "");
+
+	auto result = fbxImporter->Initialize(fileName, -1, sdkManager->GetIOSettings());
+	if (FAILED(result))
+	{
+		return result;
+	}
+	result = fbxImporter->Import(fbxScene);
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	auto fbxRootNode = fbxScene->GetRootNode();
 	FbxGeometry* geometry = 0;
 	FbxArray<FbxVector4>* pointArray;
 
-	auto count = fbxRootNode->GetChildCount();
-	for (auto i = 0; i < count; i++)
+	for (auto i = 0; i < fbxRootNode->GetChildCount(); i++)
 	{
 		auto child = fbxRootNode->GetChild(i);
-		FbxMesh* pMesh = (FbxMesh*)child->GetNodeAttribute();
+		auto pMesh = (FbxMesh*)child->GetNodeAttribute();
 		pointArray = &geometry->mControlPoints;
 
 		auto size = pointArray->Size();
 		for (auto n = 0; n < size; n++)
 		{
 			auto point = pointArray->GetAt(i);
-			auto data = point.mData;
-			XMVECTOR newVector = { (float)data[0], (float)data[1], (float)data[2], (float)data[3] };
+			auto newVector = new XMFLOAT3();
+			newVector->x = (float)point.mData[0];
+			newVector->y = (float)point.mData[1];
+			newVector->z = (float)point.mData[2];
 		}
 	}
 	fbxScene->Destroy();
