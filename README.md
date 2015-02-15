@@ -39,7 +39,7 @@ Visual Studio Community 2013 should work too. It is available for free
 Coordinates
 -
 
-Here the left-handed cartesian cooradinate system is used
+Here the ~~left-hand~~ right-hand cartesian cooradinate system is used
 
 Other Helpful Tools
 -
