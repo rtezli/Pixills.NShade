@@ -50,25 +50,9 @@ void Camera::Initialize()
 	Update();
 }
 
-void Camera::RotateHorizontal(float Angle)
-{
-
-}
-
-void Camera::RotateVertical(float Angle)
-{
-
-}
-
 void Camera::Move(POINT* p)
 {
-	auto moderationH = 0.01;
-	auto moderationV = 0.09;
-
-	auto m_hAngle = p->x * moderationH;
-	auto m_vAngle = p->y * moderationV;
-
-	XMStoreFloat4x4(m_pWorldMatrix, XMMatrixTranspose(XMMatrixRotationY(m_hAngle)));
+	XMStoreFloat4x4(m_pWorldMatrix, XMMatrixTranspose(XMMatrixTranslation(p->x, 0.0, p->y)));
 	Update();
 }
 
@@ -79,7 +63,6 @@ void Camera::Rotate(POINT* p)
 
 	m_hAngle = m_hAngle + p->x * moderationH;
 	m_vAngle = m_vAngle + p->y * moderationV;
-
 
 	XMStoreFloat4x4(m_pWorldMatrix, XMMatrixTranspose(XMMatrixRotationY(m_hAngle)));
 	m_pDeviceResources->ConstBufferData->world = *m_pWorldMatrix;

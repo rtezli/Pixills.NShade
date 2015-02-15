@@ -10,6 +10,7 @@ public:
 	~Model();
 	HRESULT LoadModelFromFBXFile(char* fileName);
 	HRESULT LoadModelFromOBJFile(char* fileName);
+	HRESULT CreateVertexAndIndexBuffer(XMFLOAT3 vertices[]);
 	HRESULT	Initialize();
  
 	static VertexPositionColor Cube[];

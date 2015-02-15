@@ -26,7 +26,6 @@ Renderer::~Renderer()
 
 HRESULT Renderer::Initialize()
 {
-
 	auto result = CreateSwapChain();
 	if (FAILED(result))
 	{
@@ -91,7 +90,6 @@ HRESULT Renderer::CreateRenderTargetDesciption()
 
 	ID3D11Texture2D* renderTarget = 0;
 
-	Debug::WriteLine(L"CALL : Renderer::CreateDepthStencil\t\t\t(Device->CreateDepthStencilView)\n");
 	return GetDevice()->CreateTexture2D(&m_pRenderTargetDesc, NULL, &renderTarget);
 }
 
@@ -123,7 +121,6 @@ HRESULT Renderer::CreateRenderTarget()
 
 HRESULT Renderer::CreateSwapChainDesciption()
 {
-	Debug::WriteLine(L"CALL : Renderer::CreateSwapChainDesciption\n");
 	ZeroMemory(&m_pSwapChainDescription, sizeof(m_pSwapChainDescription));
 
 	m_pSwapChainDescription.BufferCount = Resources()->BufferCount;
@@ -137,7 +134,6 @@ HRESULT Renderer::CreateSwapChainDesciption()
 	m_pSwapChainDescription.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	m_pSwapChainDescription.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
-	// MSAA settings D3D11_STANDARD_MULTISAMPLE_QUALITY_LEVELS
 	m_pSwapChainDescription.SampleDesc.Quality = Resources()->RenderQuality->Quality;
 	m_pSwapChainDescription.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
 	m_pSwapChainDescription.BufferDesc.Format = Resources()->RenderQuality->TextureFormat;
@@ -188,14 +184,12 @@ HRESULT Renderer::CreateSwapChain()
 		return result;
 	}
 
-	Debug::WriteLine(L"CALL : Renderer::CreateSwapChain\t\t\t(dxgiFactory->CreateSwapChain)\n");
 	result = dxgiFactory->CreateSwapChain(GetDevice(), &m_pSwapChainDescription, &Resources()->SwapChain);
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	Debug::WriteLine(L"CALL : Renderer::CreateSwapChain\t\t\t(SwapChain->GetBuffer)\n");
 	result = Resources()->SwapChain->GetBuffer(0, IID_PPV_ARGS(&Resources()->BackBuffer));
 	if (FAILED(result))
 	{
@@ -206,14 +200,12 @@ HRESULT Renderer::CreateSwapChain()
 	dxgiAdapter->Release();
 	dxgiFactory->Release();
 
-	Debug::WriteLine(L"CALL : Renderer::CreateSwapChain\t\t\t(Device->CreateRenderTargetView)\n");
 	return 0;
 }
 
 
 HRESULT Renderer::CreateDepthBufferDescription()
 {
-	Debug::WriteLine(L"CALL : Renderer::CreateDepthBufferDescription\n");
 	ZeroMemory(&m_pDepthBufferDesc, sizeof(m_pDepthBufferDesc));
 
 	m_pDepthBufferDesc.Width = Resources()->ViewPort->Width;
@@ -239,17 +231,14 @@ HRESULT Renderer::CreateDepthBuffer()
 	{
 		return result;
 	}
-	Debug::WriteLine(L"CALL : Renderer::CreateSwapChainDesciption\t\t\t(Device->CreateTexture2D)\n");
 	return GetDevice()->CreateTexture2D(&m_pDepthBufferDesc, NULL, &Resources()->DepthStencilBuffer);
 }
 
 
 HRESULT Renderer::CreateDepthStencilDescription()
 {
-	Debug::WriteLine(L"CALL : Renderer::CreateDepthStencilDescription\n");
 	ZeroMemory(&m_pDepthStencilDesc, sizeof(m_pDepthStencilDesc));
 
-	// MSAA settings D3D11_STANDARD_MULTISAMPLE_QUALITY_LEVELS
 	m_pDepthStencilDesc.ArraySize = 1;
 	m_pDepthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	m_pDepthStencilDesc.MipLevels = Resources()->RenderQuality->Quality > 0 ? 1 : 0;
@@ -264,7 +253,6 @@ HRESULT Renderer::CreateDepthStencilDescription()
 
 HRESULT Renderer::CreateDepthStencilStateDescription()
 {
-	Debug::WriteLine(L"CALL : Renderer::CreateDepthStencilStateDescription\n");
 	ZeroMemory(&m_pDepthStencilStateDesc, sizeof(m_pDepthStencilStateDesc));
 
 	m_pDepthStencilStateDesc.DepthEnable = true;
@@ -285,18 +273,14 @@ HRESULT Renderer::CreateDepthStencilStateDescription()
 	m_pDepthStencilStateDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 	m_pDepthStencilStateDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-
-	Debug::WriteLine(L"CALL : Renderer::CreateSwapChainDesciption\t\t\t(Device->CreateDepthStencilState)\n");
 	auto result = GetDevice()->CreateDepthStencilState(&m_pDepthStencilStateDesc, &Resources()->DepthStencilState);
 
-	Debug::WriteLine(L"CALL : Renderer::CreateSwapChainDesciption\t\t\t(Context->OMSetDepthStencilState)\n");
 	GetDeviceContext()->OMSetDepthStencilState(Resources()->DepthStencilState, 1);
 	return result;
 }
 
 HRESULT Renderer::CreateDepthStencilViewDescription()
 {
-	Debug::WriteLine(L"CALL : Renderer::CreateDepthStencilViewDescription\n");
 	ZeroMemory(&m_pDepthStencilViewDesc, sizeof(m_pDepthStencilViewDesc));
 
 	m_pDepthStencilViewDesc.Format = Resources()->RenderQuality->BufferFormat;
@@ -308,7 +292,6 @@ HRESULT Renderer::CreateDepthStencilViewDescription()
 
 HRESULT Renderer::CreateDepthStencil()
 {
-	Debug::WriteLine(L"CALL : Renderer::CreateDepthStencil\n");
 	auto result = CreateDepthStencilDescription();
 	if (FAILED(result))
 	{
@@ -329,10 +312,7 @@ HRESULT Renderer::CreateDepthStencil()
 
 	ID3D11Texture2D* depthStencil = 0;
 
-	Debug::WriteLine(L"CALL : Renderer::CreateDepthStencil\t\t\t(Device->CreateDepthStencilView)\n");
 	result = GetDevice()->CreateTexture2D(&m_pDepthStencilDesc, NULL, &depthStencil);
-
-	Debug::WriteLine(L"CALL : Renderer::CreateDepthStencil\t\t\t(Device->CreateDepthStencilView)\n");
 	result = GetDevice()->CreateDepthStencilView(depthStencil, &m_pDepthStencilViewDesc, &Resources()->DepthStencilView);
 
 	if (FAILED(result))
@@ -361,7 +341,6 @@ HRESULT Renderer::CreateDepthStencil()
 
 HRESULT Renderer::CreateRasterizerDescription()
 {
-	Debug::WriteLine(L"CALL : Renderer::CreateRasterizerDescription\n");
 	ZeroMemory(&m_pRasterizerDesc, sizeof(m_pRasterizerDesc));
 
 	m_pRasterizerDesc.AntialiasedLineEnable = m_rasterizerUseMultiSampling;
@@ -380,25 +359,20 @@ HRESULT Renderer::CreateRasterizerDescription()
 
 HRESULT Renderer::CreateRasterizer()
 {
-	Debug::WriteLine(L"CALL : Renderer::CreateRasterizer\n");
 	auto result = CreateRasterizerDescription();
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	Debug::WriteLine(L"CALL : Renderer::CreateRasterizer\t\t\t(Device->CreateRasterizerState)\n");
 	result = GetDevice()->CreateRasterizerState(&m_pRasterizerDesc, &Resources()->RasterizerState);
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	Debug::WriteLine(L"CALL : Renderer::CreateRasterizer\t\t\t(Context->RSSetState)\n");
-
 	// Set rasterizer
 	ID3D11RasterizerState* tempState = 0;
-
 	GetDeviceContext()->RSSetState(Resources()->RasterizerState);
 
 	return 0;
@@ -406,7 +380,6 @@ HRESULT Renderer::CreateRasterizer()
 
 HRESULT Renderer::CreateViewPort()
 {
-	Debug::WriteLine(L"CALL : Renderer::CreateViewPort\t\t\t(Context->RSSetViewports)\n");
 	GetDeviceContext()->RSSetViewports(1, Resources()->ViewPort);
 
 	return 0;
@@ -416,9 +389,8 @@ HRESULT Renderer::CreateViewPort()
 HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 {
 	auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
-
-	Debug::WriteLine(L"CALL : Renderer::SetVertexShader\t\t\t(Device->CreateVertexShader)\n");
 	auto result = GetDevice()->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &Resources()->Shaders->VertexShader);
+	
 	if (FAILED(result))
 	{
 		return result;
@@ -430,7 +402,6 @@ HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
-	Debug::WriteLine(L"CALL : Renderer::SetVertexShader\t\t\t(Device->CreateInputLayout)\n");
 	return GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), vsByteCode->FileBytes, vsByteCode->Length, &Resources()->InputLayout);
 }
 
@@ -490,8 +461,6 @@ HRESULT Renderer::CompileGeometryShader(LPCWSTR compiledShaderFile)
 HRESULT Renderer::SetPixelShader(LPCWSTR compiledShaderFile)
 {
 	auto psByteCode = File::ReadFileBytes(compiledShaderFile);
-
-	Debug::WriteLine(L"CALL : Renderer::SetVertexShader\t\t\t(Device->CreatePixelShader)\n");
 	return GetDevice()->CreatePixelShader(psByteCode->FileBytes, psByteCode->Length, NULL, &Resources()->Shaders->PixelShader);
 }
 
@@ -511,7 +480,6 @@ HRESULT Renderer::CompilePixelShader(LPCWSTR compiledShaderFile)
 HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile)
 {
 	ID3DBlob* shaderBlob = 0;
-
 	UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
 
 #if defined( DEBUG ) || defined( _DEBUG )

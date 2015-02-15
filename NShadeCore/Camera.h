@@ -10,8 +10,6 @@ public:
 	~Camera();
 public:
 	void				Initialize();
-	void				RotateHorizontal(float angle);
-	void				RotateVertical(float angle);
 	void				Move(POINT* p);
 	void				Rotate(POINT* p);
 	void				Update();

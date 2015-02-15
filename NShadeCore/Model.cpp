@@ -19,7 +19,7 @@ HRESULT Model::Initialize()
 		return result;
 	}
 
-	result = InitializeIndexBuffer(NULL); 
+	result = InitializeIndexBuffer(NULL);
 	if (FAILED(result))
 	{
 		return result;
@@ -107,24 +107,22 @@ HRESULT Model::LoadModelFromOBJFile(char* fileName)
 
 HRESULT Model::InitializeConstantBuffer()
 {
-	Debug::WriteLine(L"CALL : Model::InitializeConstantBuffer\t\t\t(Device->CreateBuffer : Constant Buffer)\n");
 	CD3D11_BUFFER_DESC constantBufferDesc(sizeof(ConstantBufferData), D3D11_BIND_CONSTANT_BUFFER);
 	return DeviceResource()->Device->CreateBuffer(&constantBufferDesc, nullptr, &DeviceResource()->ConstBuffer);
 }
 
 HRESULT Model::InitializeVertexBuffer()
 {
-	Debug::WriteLine(L"CALL : Model::InitializeVertexBuffer\n");
 	static const VertexPositionColor cube[] =
 	{
 		{ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
-		{ XMFLOAT3(-0.5f, -0.5f,  0.5f), XMFLOAT3(0.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(-0.5f,  0.5f, -0.5f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
-		{ XMFLOAT3(-0.5f,  0.5f,  0.5f), XMFLOAT3(0.0f, 1.0f, 1.0f) },
-		{ XMFLOAT3( 0.5f, -0.5f, -0.5f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
-		{ XMFLOAT3( 0.5f, -0.5f,  0.5f), XMFLOAT3(1.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3( 0.5f,  0.5f, -0.5f), XMFLOAT3(1.0f, 1.0f, 0.0f) },
-		{ XMFLOAT3( 0.5f,  0.5f,  0.5f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+		{ XMFLOAT3(-0.5f, -0.5f, 0.5f), XMFLOAT3(0.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3(-0.5f, 0.5f, -0.5f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+		{ XMFLOAT3(-0.5f, 0.5f, 0.5f), XMFLOAT3(0.0f, 1.0f, 1.0f) },
+		{ XMFLOAT3(0.5f, -0.5f, -0.5f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
+		{ XMFLOAT3(0.5f, -0.5f, 0.5f), XMFLOAT3(1.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3(0.5f, 0.5f, -0.5f), XMFLOAT3(1.0f, 1.0f, 0.0f) },
+		{ XMFLOAT3(0.5f, 0.5f, 0.5f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
 	};
 
 	D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
@@ -140,15 +138,13 @@ HRESULT Model::InitializeVertexBuffer()
 	vertexBufferData.SysMemPitch = 0;
 	vertexBufferData.SysMemSlicePitch = 0;
 
-	Debug::WriteLine(L"CALL : Model::InitializeConstantBuffer\t\t\t(Device->CreateBuffer : Vertex Buffer)\n");
 	return DeviceResource()->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &DeviceResource()->VertexBuffer);
 }
 
 HRESULT Model::InitializeIndexBuffer(int indeces[])
 {
-	Debug::WriteLine(L"CALL : Model::InitializeIndexBuffer\n");
 	static const unsigned short cubeIndices[] =
-	{ 
+	{
 		0, 2, 1, 1, 2, 3, 4, 5, 6, 5, 7, 6,
 		0, 2, 1, 1, 2, 3, 4, 5, 6, 5, 7, 6,
 		0, 1, 5, 0, 5, 4, 2, 6, 7, 2, 7, 3,
@@ -170,11 +166,24 @@ HRESULT Model::InitializeIndexBuffer(int indeces[])
 	indexBufferData.SysMemPitch = 0;
 	indexBufferData.SysMemSlicePitch = 0;
 
-	Debug::WriteLine(L"CALL : Model::InitializeConstantBuffer\t\t\t(Device->CreateBuffer : Index Buffer)\n");
 	auto result = DeviceResource()->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &DeviceResource()->IndexBuffer);
 	if (FAILED(result))
 	{
 		return result;
 	}
 	return result;
+}
+
+HRESULT Model::CreateVertexAndIndexBuffer(XMFLOAT3* vertices)
+{
+	long size = 0;
+	int* indexBuffer = new int[size];
+	VertexPositionColor* vertexBuffer = new VertexPositionColor[size];
+
+	for (long i = 0; i < size; i++)
+	{
+		vertexBuffer[i].Position = vertices[i];
+		indexBuffer[i] = i;
+	}
+	return 0;
 }
