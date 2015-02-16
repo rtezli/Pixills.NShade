@@ -50,34 +50,66 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 	{
 		return result;
 	}
+
 	result = fbxImporter->Import(fbxScene);
+	fbxImporter->Destroy();
+
 	if (!result)
 	{
 		return result;
 	}
 
 	auto fbxRootNode = fbxScene->GetRootNode();
-
-	FbxGeometry* geometry = 0;
-	FbxArray<FbxVector4>* pointArray;
-
-	auto mesh = fbxRootNode->GetMesh();
-
 	auto count = fbxRootNode->GetChildCount();
+
+	auto rootMesh = fbxRootNode->GetMesh();
+	auto rootGeometry = fbxRootNode->GetGeometry();
+
+	auto modelVertices = new vector<Vertex>();
+
+	// The scene maybe
 	for (auto i = 0; i < count; i++)
 	{
 		auto child = fbxRootNode->GetChild(i);
-		auto pMesh = (FbxMesh*)child->GetNodeAttribute();
-		pointArray = &geometry->mControlPoints;
+		auto childName = child->GetName();
+		auto childCount = child->GetChildCount();
 
-		auto size = pointArray->Size();
-		for (auto n = 0; n < size; n++)
+		// For each model in the scene
+		for (auto k = 0; k < childCount; k++)
 		{
-			auto point = pointArray->GetAt(i);
-			auto newVector = new XMFLOAT3();
-			newVector->x = (float)point.mData[0];
-			newVector->y = (float)point.mData[1];
-			newVector->z = (float)point.mData[2];
+			child = child->GetChild(k);
+
+			Debug::WriteLine("FBX : Loading child", childName);
+
+			auto childMesh = child->GetMesh();
+			auto childPolygonCount = childMesh->GetPolygonCount();
+
+			// TODO : Add material
+
+			//For each polygon in the model
+			for (auto n = 0; n < childPolygonCount; n++)
+			{
+				auto polySize = childMesh->GetPolygonSize(n);
+				//For each point in a polygon get :  cooradinates, normals and index
+				for (auto p = 0; p < polySize; p++)
+				{
+					FbxVector4 normal;
+					auto vertexPoint	= childMesh->GetPolygonVertex(n, p);
+					auto vertexIndex	= childMesh->GetPolygonVertexIndex(p);
+					auto vertexNormal	= childMesh->GetPolygonVertexNormal(n, p, normal);
+					auto point = childMesh->GetControlPointAt(vertexPoint);
+
+					auto newVertex = new Vertex();
+					auto position = new XMFLOAT3{ (float)point.mData[0], (float)point.mData[1], (float)point.mData[2] };
+
+					newVertex->Position = *position;
+					// TODO : Remove color from vertex and apply real model material
+					newVertex->Color	= XMFLOAT3{ 0.9f, 0.7f, 1.0f };
+					newVertex->Normal	= XMFLOAT3{ (float)normal.mData[0], (float)normal.mData[1], (float)normal.mData[2] };
+					newVertex->UV		= XMFLOAT3{ 0.0f, 0.0f, 0.0f };
+					modelVertices->push_back(*newVertex);
+				}
+			}
 		}
 	}
 
@@ -93,10 +125,8 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 	m_bufferDesc.CPUAccessFlags = 0;
 	m_bufferDesc.MiscFlags = 0;
 
-	fbxScene->Destroy();
-	fbxRootNode->Destroy();
-	sdkManager->Destroy();
-	fbxImporter->Destroy();
+	//fbxScene->Destroy();
+	//fbxRootNode->Destroy();
 
 	return 0;
 }

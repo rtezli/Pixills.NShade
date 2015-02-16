@@ -108,10 +108,19 @@ namespace Debug
 #endif
 	}
 
+	static void WriteLine(const char* m1, const char* m2)
+	{
+#ifdef _DEBUG
+		//auto mes = new wstring(message);
+		//auto cstr = mes->c_str();
+		//LPCWSTR str = cstr;
+		//OutputDebugString(mes->c_str());
+#endif
+	}
+
 	static void WriteLine(wstring message)
 	{
 #ifdef _DEBUG
-		message.append(L"\n");
 		LPCWSTR str = message.c_str();
 		OutputDebugString(str);
 #endif
