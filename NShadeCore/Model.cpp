@@ -13,7 +13,7 @@ Model::~Model()
 
 HRESULT Model::Initialize()
 {
-	auto result = LoadModelFromFBXFile("teapot.fbx");
+	auto result = LoadModelFromFBXFile("../Models/teapot.fbx");
 	if (FAILED(result))
 	{
 		return result;
@@ -36,6 +36,7 @@ HRESULT Model::Initialize()
 
 HRESULT Model::LoadModelFromFBXFile(char* fileName)
 {
+	Debug::WriteCurrentDir();
 	auto sdkManager = FbxManager::Create();
 
 	auto fbxIOsettings = FbxIOSettings::Create(sdkManager, IOSROOT);

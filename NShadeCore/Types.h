@@ -1,5 +1,6 @@
 #pragma once
 
+#include "windows.h"
 #include "d3d11.h"
 
 enum Perspective : char
@@ -131,6 +132,15 @@ namespace Debug
 		LPCWSTR str = m1.c_str();
 #ifdef _PRINT_DEBUG
 		OutputDebugString(str);
+#endif
+	}
+	static void WriteCurrentDir()
+	{
+		wchar_t wtext[MAX_PATH];
+		LPWSTR result = wtext;
+		GetCurrentDirectory(MAX_PATH, result);
+#ifdef _PRINT_DEBUG
+		OutputDebugString(result);
 #endif
 	}
 }
