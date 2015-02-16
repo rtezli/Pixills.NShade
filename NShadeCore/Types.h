@@ -3,6 +3,9 @@
 #include "windows.h"
 #include "d3d11.h"
 
+using namespace std;
+using namespace DirectX;
+
 enum Perspective : char
 {
 	UNDEFINED = 0,
@@ -13,10 +16,10 @@ enum Perspective : char
 
 struct Vertex
 {
-	DirectX::XMFLOAT3 Position;
-	DirectX::XMFLOAT3 Color;
-	DirectX::XMFLOAT3 UV;
-	DirectX::XMFLOAT3 Normal;
+	XMFLOAT3 Position;
+	XMFLOAT3 Color;
+	XMFLOAT3 UV;
+	XMFLOAT3 Normal;
 };
 
 struct RenderingQuality
@@ -47,9 +50,9 @@ struct MsaaOptions
 
 struct ConstantBufferData
 {
-	DirectX::XMFLOAT4X4 world;
-	DirectX::XMFLOAT4X4 view;
-	DirectX::XMFLOAT4X4 projection;
+	XMFLOAT4X4 world;
+	XMFLOAT4X4 view;
+	XMFLOAT4X4 projection;
 };
 
 struct ShaderSet
@@ -64,7 +67,7 @@ struct ShaderSet
 
 namespace ScreenRotation
 {
-	static const DirectX::XMFLOAT4X4 Rotation0(
+	static const XMFLOAT4X4 Rotation0(
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
@@ -72,7 +75,7 @@ namespace ScreenRotation
 		);
 
 	// 90-degree Z-rotation
-	static const DirectX::XMFLOAT4X4 Rotation90(
+	static const XMFLOAT4X4 Rotation90(
 		0.0f, 1.0f, 0.0f, 0.0f,
 		-1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
@@ -80,7 +83,7 @@ namespace ScreenRotation
 		);
 
 	// 180-degree Z-rotation
-	static const DirectX::XMFLOAT4X4 Rotation180(
+	static const XMFLOAT4X4 Rotation180(
 		-1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, -1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
@@ -88,7 +91,7 @@ namespace ScreenRotation
 		);
 
 	// 270-degree Z-rotation
-	static const DirectX::XMFLOAT4X4 Rotation270(
+	static const XMFLOAT4X4 Rotation270(
 		0.0f, -1.0f, 0.0f, 0.0f,
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
@@ -100,46 +103,46 @@ namespace Debug
 {
 	static void WriteLine(LPCWSTR message)
 	{
-#ifdef _PRINT_DEBUG
+#ifdef _DEBUG
 		OutputDebugString(message);
 #endif
 	}
 
-	static void WriteLine(std::wstring message)
+	static void WriteLine(wstring message)
 	{
+#ifdef _DEBUG
 		message.append(L"\n");
 		LPCWSTR str = message.c_str();
-#ifdef _PRINT_DEBUG
 		OutputDebugString(str);
 #endif
 	}
 
 	static void WriteLine(float message)
 	{
-		auto mes = std::to_wstring(message);
+#ifdef _DEBUG
+		auto mes = to_wstring(message);
 		mes.append(L"\n");
 		LPCWSTR str = mes.c_str();
-#ifdef _PRINT_DEBUG
 		OutputDebugString(str);
 #endif
 	}
 
-	static void WriteLine(std::wstring m1, float m2)
+	static void WriteLine(wstring m1, float m2)
 	{
-		auto mes = std::to_wstring(m2);
+#ifdef _DEBUG
+		auto mes = to_wstring(m2);
 		m1.append(mes);
 		m1.append(L"\n");
 		LPCWSTR str = m1.c_str();
-#ifdef _PRINT_DEBUG
 		OutputDebugString(str);
 #endif
 	}
 	static void WriteCurrentDir()
 	{
+#ifdef _DEBUG
 		wchar_t wtext[MAX_PATH];
 		LPWSTR result = wtext;
 		GetCurrentDirectory(MAX_PATH, result);
-#ifdef _PRINT_DEBUG
 		OutputDebugString(result);
 #endif
 	}

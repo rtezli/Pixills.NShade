@@ -1,3 +1,5 @@
+#pragma once
+
 #define WIN32_LEAN_AND_MEAN
 
 #define DIRECTINPUT_VERSION 0x0800
