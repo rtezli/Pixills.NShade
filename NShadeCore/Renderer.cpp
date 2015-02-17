@@ -344,7 +344,7 @@ HRESULT Renderer::CreateRasterizerDescription()
 	ZeroMemory(&m_pRasterizerDesc, sizeof(m_pRasterizerDesc));
 
 	m_pRasterizerDesc.AntialiasedLineEnable = m_rasterizerUseMultiSampling;
-	m_pRasterizerDesc.CullMode = D3D11_CULL_FRONT; // D3D11_CULL_NONE
+	m_pRasterizerDesc.CullMode = D3D11_CULL_BACK; //D3D11_CULL_NONE;//
 	m_pRasterizerDesc.DepthBias = 0;
 	m_pRasterizerDesc.DepthBiasClamp = 0.0f;
 	m_pRasterizerDesc.DepthClipEnable = true;
@@ -527,14 +527,16 @@ HRESULT Renderer::Render()
 	// Set model data
 	GetDeviceContext()->IASetInputLayout(Resources()->InputLayout);
 	GetDeviceContext()->IASetVertexBuffers(0, 1, &Resources()->VertexBuffer, &stride, &offset);
-	GetDeviceContext()->IASetIndexBuffer(Resources()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+	GetDeviceContext()->IASetIndexBuffer(Resources()->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Set shader data
 	GetDeviceContext()->VSSetShader(Resources()->Shaders->VertexShader, nullptr, 0);
 	GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
 	GetDeviceContext()->PSSetShader(Resources()->Shaders->PixelShader, nullptr, 0);
+
 	GetDeviceContext()->DrawIndexed(Resources()->IndexCount, 0, 0);
+	//GetDeviceContext()->Draw(Resources()->VertexCount, 0);
 
 	// Present
 	return Resources()->SwapChain->Present(1, 0);

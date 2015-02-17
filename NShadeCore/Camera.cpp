@@ -16,7 +16,7 @@ void Camera::Initialize()
 	m_pViewMatrix		= new XMFLOAT4X4();
 	m_pProjectionMatrix = new XMFLOAT4X4();
 
-	m_radius = 3.0f;
+	m_radius = 10.0f;
 	m_hAngle = 0.0f;
 	m_vAngle = 0.0f;
 

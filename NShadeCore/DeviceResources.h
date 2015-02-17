@@ -46,6 +46,7 @@ public:
 	int							SwapChainFlags;
 	int							BufferCount;
 	int							IndexCount;
+	int							VertexCount;
 
 	float						Dpi;
 	float						NearZ;
