@@ -91,15 +91,15 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 			for (auto n = 0; n < childPolygonCount; n++)
 			{
 				auto polySize = childMesh->GetPolygonSize(n);
-				auto vertexIndex = childMesh->GetPolygonVertexIndex(n);
 
 				//For each point in a polygon get :  cooradinates, normals and index
-				for (auto p = vertexIndex; p < polySize; p++)
+				for (auto p = 0; p < polySize; p++)
 				{
 					FbxVector4 normal;
 					auto vertexPoint	= childMesh->GetPolygonVertex(n, p);
 					auto vertexNormal	= childMesh->GetPolygonVertexNormal(n, p, normal);
-					auto point = childMesh->GetControlPointAt(vertexPoint);
+					auto point			= childMesh->GetControlPointAt(vertexPoint);
+					auto index			= childMesh->GetPolygonVertexIndex(p);
 
 					auto newVertex = new Vertex();
 					auto position = new XMFLOAT3{ (float)point.mData[0], (float)point.mData[1], (float)point.mData[2] };
@@ -111,7 +111,7 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 					newVertex->UV		= XMFLOAT3{ 0.0f, 0.0f, 0.0f };
 
 					modelVertices->push_back(*newVertex);
-					modelIndexes->push_back(p);
+					modelIndexes->push_back(index);
 				}
 			}
 		}
