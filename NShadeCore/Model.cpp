@@ -66,9 +66,6 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 	auto fbxRootNode = fbxScene->GetRootNode();
 	auto count = fbxRootNode->GetChildCount();
 
-	auto rootMesh = fbxRootNode->GetMesh();
-	auto rootGeometry = fbxRootNode->GetGeometry();
-
 	auto modelVertices = new vector<Vertex>();
 	auto modelIndexes = new vector<unsigned short>();
 
