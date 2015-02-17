@@ -82,24 +82,23 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 
 			Debug::WriteLine("FBX : Loading child", childName);
 
-			auto childMesh = child->GetMesh();
-			auto childPolygonCount = childMesh->GetPolygonCount();
+			auto childMesh		= child->GetMesh();
+			auto polygonCount	= childMesh->GetPolygonCount();
 
 			// TODO : Add material
 
 			//For each polygon in the model
-			for (auto n = 0; n < childPolygonCount; n++)
+			for (auto p = 0; p < polygonCount; p++)
 			{
-				auto polySize = childMesh->GetPolygonSize(n);
+				auto vertexCount = childMesh->GetPolygonSize(p);
 
 				//For each point in a polygon get :  cooradinates, normals and index
-				for (auto p = 0; p < polySize; p++)
+				for (auto v = 0; v < vertexCount; v++)
 				{
 					FbxVector4 normal;
-					auto vertexPoint	= childMesh->GetPolygonVertex(n, p);
-					auto vertexNormal	= childMesh->GetPolygonVertexNormal(n, p, normal);
+					auto vertexPoint	= childMesh->GetPolygonVertex(p, v);
+					auto vertexNormal	= childMesh->GetPolygonVertexNormal(p, v, normal);
 					auto point			= childMesh->GetControlPointAt(vertexPoint);
-					auto index			= childMesh->GetPolygonVertexIndex(p);
 
 					auto newVertex = new Vertex();
 					auto position = new XMFLOAT3{ (float)point.mData[0], (float)point.mData[1], (float)point.mData[2] };
@@ -111,7 +110,7 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 					newVertex->UV		= XMFLOAT3{ 0.0f, 0.0f, 0.0f };
 
 					modelVertices->push_back(*newVertex);
-					modelIndexes->push_back(index);
+					modelIndexes->push_back(vertexPoint);
 				}
 			}
 		}
