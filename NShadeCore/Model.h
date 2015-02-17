@@ -20,7 +20,6 @@ private:
 	HRESULT						InitializeVertexBuffer();
 	HRESULT						InitializeIndexBuffer(int indeces[]);
 	HRESULT						InitializeConstantBuffer();
-	FbxScene*					ImportFbx(char* fileName);
 private:
 	unsigned short				m_indexCount = 0;
 	D3D11_BUFFER_DESC			m_bufferDesc;

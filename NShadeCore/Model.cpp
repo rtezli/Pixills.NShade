@@ -70,7 +70,7 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 	auto rootGeometry = fbxRootNode->GetGeometry();
 
 	auto modelVertices = new vector<Vertex>();
-	auto modelIndexes = new vector<int>();
+	auto modelIndexes = new vector<unsigned short>();
 
 	// The scene maybe
 	for (auto s = 0; s < count; s++)
@@ -88,59 +88,31 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 
 			auto childMesh = child->GetMesh();	
 			auto childVertexCount = childMesh->GetPolygonVertexCount();
-			// TODO : Add material
-
-			// auto polygonCount = childMesh->GetPolygonCount();
-			// auto indexCount = 0;
-			// For each polygon in the model
-			// for (auto p = 0; p < polygonCount; p++)
-			// {
-			//	auto vertexCount = childMesh->GetPolygonSize(p);
-
-			//	//For each point in a polygon get :  cooradinates, normals and index
-			//	for (auto v = 0; v < vertexCount; v++)
-			//	{
-			//		FbxVector4 normal;
-			//		auto vertexIndex = childMesh->GetPolygonVertex(p, v);
-			//		auto vertexNormal = childMesh->GetPolygonVertexNormal(p, v, normal);
-			//		auto point = childMesh->GetControlPointAt(vertexIndex);
-
-			//		auto newVertex = new Vertex();
-			//		newVertex->Position = XMFLOAT3{ (float)point.mData[0], (float)point.mData[1], (float)point.mData[2] };
-			//		newVertex->Color = XMFLOAT3{ 0.9f, 0.7f, 1.0f }; // TODO : Remove color from vertex and apply real model material
-			//		newVertex->Normal = XMFLOAT3{ (float)normal.mData[0], (float)normal.mData[1], (float)normal.mData[2] };
-			//		newVertex->UV = XMFLOAT3{ 0.0f, 0.0f, 0.0f };
-
-			//		modelVertices->push_back(*newVertex);
-			//		indexCount++;
-			//	}
-			//}
-
 			auto childMeshIndexes = childMesh->GetPolygonVertices();
 			auto exsitingPoints = new vector<int>();
-			for (auto i = 0; i < childVertexCount; i++)
+
+			// For each vertex in the model
+			for (auto v = 0; v < childVertexCount; v++)
 			{
-				auto index = childMeshIndexes[i];
-				modelIndexes->push_back(index);
+				auto index = childMeshIndexes[v];
+				modelIndexes->push_back((unsigned short)index);
 				auto exists = find(exsitingPoints->begin(), exsitingPoints->end(), index) != exsitingPoints->end();
 				if (!exists)
 				{
 					exsitingPoints->push_back(index);
 
-					// FbxVector4 normal;
-					// newVertex->Normal = XMFLOAT3{ (float)normal.mData[0], (float)normal.mData[1], (float)normal.mData[2] };
-
 					auto point = childMesh->GetControlPointAt(index);
 					auto newVertex = new Vertex();
 					newVertex->Position = XMFLOAT3{(float)point.mData[0], (float)point.mData[1], (float)point.mData[2]};
-					newVertex->Color = XMFLOAT3{ 0.9f, 0.7f, 1.0f }; // TODO : Remove color from vertex and apply real model material
+					newVertex->Color = XMFLOAT3{ 0.9f, 0.7f, 1.0f };
 					newVertex->UV = XMFLOAT3{ 0.0f, 0.0f, 0.0f };
 					modelVertices->push_back(*newVertex);
 				}
 			}
-			auto foo = false;
 		}
 	}
+
+	DeviceResource()->IndexCount = modelVertices->size();
 
 	D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
 	vertexBufferDesc.ByteWidth = sizeof(Vertex) * modelVertices->size();
@@ -151,7 +123,7 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 	vertexBufferDesc.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
-	vertexBufferData.pSysMem = modelVertices;
+	vertexBufferData.pSysMem = &modelVertices[0];
 	vertexBufferData.SysMemPitch = 0;
 	vertexBufferData.SysMemSlicePitch = 0;
 
@@ -164,7 +136,7 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 	DeviceResource()->IndexCount = modelIndexes->size();
 
 	D3D11_BUFFER_DESC indexBufferDesc = { 0 };
-	indexBufferDesc.ByteWidth = sizeof(int) * DeviceResource()->IndexCount;
+	indexBufferDesc.ByteWidth = sizeof(unsigned short) * DeviceResource()->IndexCount;
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags = 0;
@@ -172,7 +144,7 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 	indexBufferDesc.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
-	indexBufferData.pSysMem = modelIndexes;
+	indexBufferData.pSysMem = &modelIndexes[0];
 	indexBufferData.SysMemPitch = 0;
 	indexBufferData.SysMemSlicePitch = 0;
 
@@ -180,24 +152,6 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 	// fbxRootNode->Destroy();
 
 	return DeviceResource()->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &DeviceResource()->IndexBuffer);
-}
-
-FbxScene* Model::ImportFbx(char *fileName)
-{
-	auto lSdkManager = FbxManager::Create();
-
-	FbxIOSettings * ios = FbxIOSettings::Create(lSdkManager, IOSROOT);
-	ios->SetBoolProp(IMP_FBX_MATERIAL, true);
-	ios->SetBoolProp(IMP_FBX_TEXTURE, true);
-
-	auto lScene = FbxScene::Create(lSdkManager, "");
-
-	FbxImporter* lImporter = FbxImporter::Create(lSdkManager, "");
-	lImporter->Initialize(fileName, -1, ios);
-	lImporter->Import(lScene);
-	lImporter->Destroy();
-
-	return lScene;
 }
 
 HRESULT Model::LoadModelFromOBJFile(char* fileName)
@@ -301,3 +255,31 @@ HRESULT Model::CreateVertexAndIndexBuffer(XMFLOAT3* vertices)
 	}
 	return 0;
 }
+
+// TODO : Add material
+
+// auto polygonCount = childMesh->GetPolygonCount();
+// auto indexCount = 0;
+// For each polygon in the model
+// for (auto p = 0; p < polygonCount; p++)
+// {
+//	auto vertexCount = childMesh->GetPolygonSize(p);
+
+//	//For each point in a polygon get :  cooradinates, normals and index
+//	for (auto v = 0; v < vertexCount; v++)
+//	{
+//		FbxVector4 normal;
+//		auto vertexIndex = childMesh->GetPolygonVertex(p, v);
+//		auto vertexNormal = childMesh->GetPolygonVertexNormal(p, v, normal);
+//		auto point = childMesh->GetControlPointAt(vertexIndex);
+
+//		auto newVertex = new Vertex();
+//		newVertex->Position = XMFLOAT3{ (float)point.mData[0], (float)point.mData[1], (float)point.mData[2] };
+//		newVertex->Color = XMFLOAT3{ 0.9f, 0.7f, 1.0f }; // TODO : Remove color from vertex and apply real model material
+//		newVertex->Normal = XMFLOAT3{ (float)normal.mData[0], (float)normal.mData[1], (float)normal.mData[2] };
+//		newVertex->UV = XMFLOAT3{ 0.0f, 0.0f, 0.0f };
+
+//		modelVertices->push_back(*newVertex);
+//		indexCount++;
+//	}
+//}

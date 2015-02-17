@@ -344,7 +344,7 @@ HRESULT Renderer::CreateRasterizerDescription()
 	ZeroMemory(&m_pRasterizerDesc, sizeof(m_pRasterizerDesc));
 
 	m_pRasterizerDesc.AntialiasedLineEnable = m_rasterizerUseMultiSampling;
-	m_pRasterizerDesc.CullMode = D3D11_CULL_NONE;
+	m_pRasterizerDesc.CullMode = D3D11_CULL_BACK; // D3D11_CULL_NONE
 	m_pRasterizerDesc.DepthBias = 0;
 	m_pRasterizerDesc.DepthBiasClamp = 0.0f;
 	m_pRasterizerDesc.DepthClipEnable = true;
@@ -527,7 +527,7 @@ HRESULT Renderer::Render()
 	// Set model data
 	GetDeviceContext()->IASetInputLayout(Resources()->InputLayout);
 	GetDeviceContext()->IASetVertexBuffers(0, 1, &Resources()->VertexBuffer, &stride, &offset);
-	GetDeviceContext()->IASetIndexBuffer(Resources()->IndexBuffer, DXGI_FORMAT_R32_SINT, 0);
+	GetDeviceContext()->IASetIndexBuffer(Resources()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
 	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Set shader data
