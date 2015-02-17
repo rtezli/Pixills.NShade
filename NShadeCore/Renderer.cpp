@@ -80,7 +80,7 @@ HRESULT Renderer::CreateRenderTargetDesciption()
 	m_pRenderTargetDesc.Height = Resources()->ViewPort->Height;
 	m_pRenderTargetDesc.MipLevels = 1;
 	m_pRenderTargetDesc.ArraySize = 1;
-	m_pRenderTargetDesc.Format =  Resources()->RenderQuality->TextureFormat;
+	m_pRenderTargetDesc.Format = Resources()->RenderQuality->TextureFormat;
 	m_pRenderTargetDesc.SampleDesc.Quality = Resources()->RenderQuality->Quality;
 	m_pRenderTargetDesc.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
 	m_pRenderTargetDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -344,7 +344,7 @@ HRESULT Renderer::CreateRasterizerDescription()
 	ZeroMemory(&m_pRasterizerDesc, sizeof(m_pRasterizerDesc));
 
 	m_pRasterizerDesc.AntialiasedLineEnable = m_rasterizerUseMultiSampling;
-	m_pRasterizerDesc.CullMode = D3D11_CULL_BACK;
+	m_pRasterizerDesc.CullMode = D3D11_CULL_NONE;
 	m_pRasterizerDesc.DepthBias = 0;
 	m_pRasterizerDesc.DepthBiasClamp = 0.0f;
 	m_pRasterizerDesc.DepthClipEnable = true;
@@ -390,7 +390,7 @@ HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 {
 	auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
 	auto result = GetDevice()->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &Resources()->Shaders->VertexShader);
-	
+
 	if (FAILED(result))
 	{
 		return result;
@@ -527,7 +527,7 @@ HRESULT Renderer::Render()
 	// Set model data
 	GetDeviceContext()->IASetInputLayout(Resources()->InputLayout);
 	GetDeviceContext()->IASetVertexBuffers(0, 1, &Resources()->VertexBuffer, &stride, &offset);
-	GetDeviceContext()->IASetIndexBuffer(Resources()->IndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+	GetDeviceContext()->IASetIndexBuffer(Resources()->IndexBuffer, DXGI_FORMAT_R32_SINT, 0);
 	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Set shader data

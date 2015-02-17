@@ -136,7 +136,7 @@ HRESULT D3DSystem::CreateDevice()
 
 	auto createResult = D3D11CreateDevice(
 		nullptr,
-		D3D_DRIVER_TYPE_HARDWARE,
+		D3D_DRIVER_TYPE_WARP, //D3D_DRIVER_TYPE_HARDWARE,
 		0,
 		creationFlags,
 		featureLevels,
@@ -150,7 +150,7 @@ HRESULT D3DSystem::CreateDevice()
 	{
 		createResult = D3D11CreateDevice(
 			nullptr,
-			D3D_DRIVER_TYPE_WARP,
+			D3D_DRIVER_TYPE_SOFTWARE,
 			0,
 			creationFlags,
 			featureLevels,
@@ -231,6 +231,20 @@ HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device* device)
 				continue;
 			}
 			RenderingQuality quality = { i, numberOfLevels - 1, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_D32_FLOAT, true };
+			availableLevels.push_back(quality);
+		}
+	}
+
+	for (UINT i = maxSamples; i > 0; i--)
+	{
+		result = device->CheckMultisampleQualityLevels(DXGI_FORMAT_R16G16B16A16_UNORM, i, &numberOfLevels);
+		if (SUCCEEDED(result))
+		{
+			if (numberOfLevels < 1)
+			{
+				continue;
+			}
+			RenderingQuality quality = { i, numberOfLevels - 1, DXGI_FORMAT_R16G16B16A16_UNORM, DXGI_FORMAT_D32_FLOAT, true };
 			availableLevels.push_back(quality);
 		}
 	}

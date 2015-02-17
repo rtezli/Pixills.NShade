@@ -19,17 +19,17 @@ HRESULT Model::Initialize()
 		return result;
 	}
 
-	result = InitializeVertexBuffer();
-	if (FAILED(result))
-	{
-		return result;
-	}
+	//auto result = InitializeVertexBuffer();
+	//if (FAILED(result))
+	//{
+	//	return result;
+	//}
 
-	result = InitializeIndexBuffer(NULL);
-	if (FAILED(result))
-	{
-		return result;
-	}
+	//result = InitializeIndexBuffer(NULL);
+	//if (FAILED(result))
+	//{
+	//	return result;
+	//}
 
 	return InitializeConstantBuffer();
 }
@@ -41,6 +41,10 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 
 	auto fbxIOsettings = FbxIOSettings::Create(sdkManager, IOSROOT);
 	sdkManager->SetIOSettings(fbxIOsettings);
+	fbxIOsettings->SetBoolProp(IMP_FBX_MATERIAL,	false);
+	fbxIOsettings->SetBoolProp(IMP_FBX_TEXTURE,		false);
+	fbxIOsettings->SetBoolProp(IMP_FBX_ANIMATION,	false);
+	fbxIOsettings->SetBoolProp(IMP_FBX_TEXTURE,		false);
 
 	auto fbxImporter = FbxImporter::Create(sdkManager, "");
 	auto fbxScene = FbxScene::Create(sdkManager, "");
@@ -66,53 +70,75 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 	auto rootGeometry = fbxRootNode->GetGeometry();
 
 	auto modelVertices = new vector<Vertex>();
-	auto modelIndexes = new vector<unsigned short>();
+	auto modelIndexes = new vector<int>();
 
 	// The scene maybe
-	for (auto i = 0; i < count; i++)
+	for (auto s = 0; s < count; s++)
 	{
-		auto child = fbxRootNode->GetChild(i);
+		auto child = fbxRootNode->GetChild(s);
 		auto childName = child->GetName();
 		auto childCount = child->GetChildCount();
 
 		// For each model in the scene
-		for (auto k = 0; k < childCount; k++)
+		for (auto c = 0; c < childCount; c++)
 		{
-			child = child->GetChild(k);
+			child = child->GetChild(c);
 
 			Debug::WriteLine("FBX : Loading child", childName);
 
-			auto childMesh		= child->GetMesh();
-			auto polygonCount	= childMesh->GetPolygonCount();
-
+			auto childMesh = child->GetMesh();	
+			auto childVertexCount = childMesh->GetPolygonVertexCount();
 			// TODO : Add material
 
-			//For each polygon in the model
-			for (auto p = 0; p < polygonCount; p++)
+			// auto polygonCount = childMesh->GetPolygonCount();
+			// auto indexCount = 0;
+			// For each polygon in the model
+			// for (auto p = 0; p < polygonCount; p++)
+			// {
+			//	auto vertexCount = childMesh->GetPolygonSize(p);
+
+			//	//For each point in a polygon get :  cooradinates, normals and index
+			//	for (auto v = 0; v < vertexCount; v++)
+			//	{
+			//		FbxVector4 normal;
+			//		auto vertexIndex = childMesh->GetPolygonVertex(p, v);
+			//		auto vertexNormal = childMesh->GetPolygonVertexNormal(p, v, normal);
+			//		auto point = childMesh->GetControlPointAt(vertexIndex);
+
+			//		auto newVertex = new Vertex();
+			//		newVertex->Position = XMFLOAT3{ (float)point.mData[0], (float)point.mData[1], (float)point.mData[2] };
+			//		newVertex->Color = XMFLOAT3{ 0.9f, 0.7f, 1.0f }; // TODO : Remove color from vertex and apply real model material
+			//		newVertex->Normal = XMFLOAT3{ (float)normal.mData[0], (float)normal.mData[1], (float)normal.mData[2] };
+			//		newVertex->UV = XMFLOAT3{ 0.0f, 0.0f, 0.0f };
+
+			//		modelVertices->push_back(*newVertex);
+			//		indexCount++;
+			//	}
+			//}
+
+			auto childMeshIndexes = childMesh->GetPolygonVertices();
+			auto exsitingPoints = new vector<int>();
+			for (auto i = 0; i < childVertexCount; i++)
 			{
-				auto vertexCount = childMesh->GetPolygonSize(p);
-
-				//For each point in a polygon get :  cooradinates, normals and index
-				for (auto v = 0; v < vertexCount; v++)
+				auto index = childMeshIndexes[i];
+				modelIndexes->push_back(index);
+				auto exists = find(exsitingPoints->begin(), exsitingPoints->end(), index) != exsitingPoints->end();
+				if (!exists)
 				{
-					FbxVector4 normal;
-					auto vertexPoint	= childMesh->GetPolygonVertex(p, v);
-					auto vertexNormal	= childMesh->GetPolygonVertexNormal(p, v, normal);
-					auto point			= childMesh->GetControlPointAt(vertexPoint);
+					exsitingPoints->push_back(index);
 
+					// FbxVector4 normal;
+					// newVertex->Normal = XMFLOAT3{ (float)normal.mData[0], (float)normal.mData[1], (float)normal.mData[2] };
+
+					auto point = childMesh->GetControlPointAt(index);
 					auto newVertex = new Vertex();
-					auto position = new XMFLOAT3{ (float)point.mData[0], (float)point.mData[1], (float)point.mData[2] };
-
-					newVertex->Position = *position;
-					// TODO : Remove color from vertex and apply real model material
-					newVertex->Color	= XMFLOAT3{ 0.9f, 0.7f, 1.0f };
-					newVertex->Normal	= XMFLOAT3{ (float)normal.mData[0], (float)normal.mData[1], (float)normal.mData[2] };
-					newVertex->UV		= XMFLOAT3{ 0.0f, 0.0f, 0.0f };
-
+					newVertex->Position = XMFLOAT3{(float)point.mData[0], (float)point.mData[1], (float)point.mData[2]};
+					newVertex->Color = XMFLOAT3{ 0.9f, 0.7f, 1.0f }; // TODO : Remove color from vertex and apply real model material
+					newVertex->UV = XMFLOAT3{ 0.0f, 0.0f, 0.0f };
 					modelVertices->push_back(*newVertex);
-					modelIndexes->push_back(vertexPoint);
 				}
 			}
+			auto foo = false;
 		}
 	}
 
@@ -137,15 +163,15 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 
 	DeviceResource()->IndexCount = modelIndexes->size();
 
-	D3D11_BUFFER_DESC indexBufferDesc;
-	indexBufferDesc.ByteWidth = sizeof(unsigned short) * DeviceResource()->IndexCount;
+	D3D11_BUFFER_DESC indexBufferDesc = { 0 };
+	indexBufferDesc.ByteWidth = sizeof(int) * DeviceResource()->IndexCount;
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags = 0;
 	indexBufferDesc.MiscFlags = 0;
 	indexBufferDesc.StructureByteStride = 0;
 
-	D3D11_SUBRESOURCE_DATA indexBufferData;
+	D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
 	indexBufferData.pSysMem = modelIndexes;
 	indexBufferData.SysMemPitch = 0;
 	indexBufferData.SysMemSlicePitch = 0;
@@ -231,9 +257,9 @@ HRESULT Model::InitializeVertexBuffer()
 
 HRESULT Model::InitializeIndexBuffer(int indeces[])
 {
+	// 6 faces * 4 vertices = 24 vertices. 
 	static const unsigned short cubeIndices[] =
 	{
-		0, 2, 1, 1, 2, 3, 4, 5, 6, 5, 7, 6,
 		0, 2, 1, 1, 2, 3, 4, 5, 6, 5, 7, 6,
 		0, 1, 5, 0, 5, 4, 2, 6, 7, 2, 7, 3,
 		0, 4, 6, 0, 6, 2, 1, 3, 7, 1, 7, 5
