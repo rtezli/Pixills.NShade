@@ -45,18 +45,18 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 	auto fbxImporter = FbxImporter::Create(sdkManager, "");
 	auto fbxScene = FbxScene::Create(sdkManager, "");
 
-	auto result = fbxImporter->Initialize(fileName, -1, sdkManager->GetIOSettings());
-	if (!result)
+	auto success = fbxImporter->Initialize(fileName, -1, sdkManager->GetIOSettings());
+	if (!success)
 	{
-		return result;
+		return success;
 	}
 
-	result = fbxImporter->Import(fbxScene);
+	success = fbxImporter->Import(fbxScene);
 	fbxImporter->Destroy();
 
-	if (!result)
+	if (!success)
 	{
-		return result;
+		return success;
 	}
 
 	auto fbxRootNode = fbxScene->GetRootNode();
@@ -66,6 +66,7 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 	auto rootGeometry = fbxRootNode->GetGeometry();
 
 	auto modelVertices = new vector<Vertex>();
+	auto modelIndexes = new vector<unsigned short>();
 
 	// The scene maybe
 	for (auto i = 0; i < count; i++)
@@ -90,12 +91,13 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 			for (auto n = 0; n < childPolygonCount; n++)
 			{
 				auto polySize = childMesh->GetPolygonSize(n);
+				auto vertexIndex = childMesh->GetPolygonVertexIndex(n);
+
 				//For each point in a polygon get :  cooradinates, normals and index
-				for (auto p = 0; p < polySize; p++)
+				for (auto p = vertexIndex; p < polySize; p++)
 				{
 					FbxVector4 normal;
 					auto vertexPoint	= childMesh->GetPolygonVertex(n, p);
-					auto vertexIndex	= childMesh->GetPolygonVertexIndex(p);
 					auto vertexNormal	= childMesh->GetPolygonVertexNormal(n, p, normal);
 					auto point = childMesh->GetControlPointAt(vertexPoint);
 
@@ -107,28 +109,52 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 					newVertex->Color	= XMFLOAT3{ 0.9f, 0.7f, 1.0f };
 					newVertex->Normal	= XMFLOAT3{ (float)normal.mData[0], (float)normal.mData[1], (float)normal.mData[2] };
 					newVertex->UV		= XMFLOAT3{ 0.0f, 0.0f, 0.0f };
+
 					modelVertices->push_back(*newVertex);
+					modelIndexes->push_back(p);
 				}
 			}
 		}
 	}
 
-	Vertex* vertices[] = { 0 };
+	D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
+	vertexBufferDesc.ByteWidth = sizeof(Vertex) * modelVertices->size();
+	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDesc.CPUAccessFlags = 0;
+	vertexBufferDesc.MiscFlags = 0;
+	vertexBufferDesc.StructureByteStride = 0;
 
-	m_initData.pSysMem = vertices;
-	m_initData.SysMemPitch = 0;
-	m_initData.SysMemSlicePitch = 0;
+	D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
+	vertexBufferData.pSysMem = modelVertices;
+	vertexBufferData.SysMemPitch = 0;
+	vertexBufferData.SysMemSlicePitch = 0;
 
-	m_bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	m_bufferDesc.ByteWidth = sizeof(Vertex) * ARRAYSIZE(vertices);
-	m_bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	m_bufferDesc.CPUAccessFlags = 0;
-	m_bufferDesc.MiscFlags = 0;
+	auto result = DeviceResource()->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &DeviceResource()->VertexBuffer);
+	if (FAILED(result))
+	{
+		return result;
+	}
 
-	//fbxScene->Destroy();
-	//fbxRootNode->Destroy();
+	DeviceResource()->IndexCount = modelIndexes->size();
 
-	return 0;
+	D3D11_BUFFER_DESC indexBufferDesc;
+	indexBufferDesc.ByteWidth = sizeof(unsigned short) * DeviceResource()->IndexCount;
+	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	indexBufferDesc.CPUAccessFlags = 0;
+	indexBufferDesc.MiscFlags = 0;
+	indexBufferDesc.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA indexBufferData;
+	indexBufferData.pSysMem = modelIndexes;
+	indexBufferData.SysMemPitch = 0;
+	indexBufferData.SysMemSlicePitch = 0;
+
+	// fbxScene->Destroy();
+	// fbxRootNode->Destroy();
+
+	return DeviceResource()->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &DeviceResource()->IndexBuffer);
 }
 
 FbxScene* Model::ImportFbx(char *fileName)
