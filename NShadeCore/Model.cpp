@@ -106,9 +106,9 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 				auto newVertex = new Vertex();
 
 				newVertex->Position = ConvertFbxVector4ToXMFLOAT3(&point, &axisSystem, 1.0);
-				newVertex->Color	= XMFLOAT3{ 0.9f, 0.7f, 1.0f };
-				newVertex->UV		= XMFLOAT2{ 0.0f, 0.0f };
-				newVertex->Normal	= XMFLOAT2{ 0.0f, 0.0f };
+				newVertex->Color = XMFLOAT3{ 0.9f, 0.7f, 1.0f };
+				newVertex->UV = XMFLOAT2{ 0.0f, 0.0f };
+				newVertex->Normal = XMFLOAT2{ 0.0f, 0.0f };
 
 				modelVertices->push_back(*newVertex);
 			}
@@ -265,14 +265,20 @@ HRESULT Model::InitializeVertexBuffer()
 {
 	static const Vertex cube[] =
 	{
-		{ XMFLOAT3(-0.5f, -0.5f, -0.5f),  XMFLOAT3(0.0f, 0.0f, 0.0f) },
-		{ XMFLOAT3(-0.5f, -0.5f,  0.5f),  XMFLOAT3(0.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(-0.5f,  0.5f, -0.5f),  XMFLOAT3(0.0f, 1.0f, 0.0f) },
-		{ XMFLOAT3(-0.5f,  0.5f,  0.5f),  XMFLOAT3(0.0f, 1.0f, 1.0f) },
-		{ XMFLOAT3( 0.5f, -0.5f, -0.5f),  XMFLOAT3(1.0f, 0.0f, 0.0f) },
-		{ XMFLOAT3( 0.5f, -0.5f,  0.5f),  XMFLOAT3(1.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3( 0.5f,  0.5f, -0.5f),  XMFLOAT3(1.0f, 1.0f, 0.0f) },
-		{ XMFLOAT3( 0.5f,  0.5f,  0.5f),  XMFLOAT3(1.0f, 1.0f, 1.0f) },
+		{ XMFLOAT3(-0.5f, 0.0f, -0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
+		{ XMFLOAT3(-0.5f, 0.0f, 0.5f), XMFLOAT3(0.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3(-0.5f, 1.0f, -0.5f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+		{ XMFLOAT3(-0.5f, 1.0f, 0.5f), XMFLOAT3(0.0f, 1.0f, 1.0f) },
+		{ XMFLOAT3(0.5f, 0.0f, -0.5f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
+		{ XMFLOAT3(0.5f, 0.0f, 0.5f), XMFLOAT3(1.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3(0.5f, 1.0f, -0.5f), XMFLOAT3(1.0f, 1.0f, 0.0f) },
+		{ XMFLOAT3(0.5f, 1.0f, 0.5f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+
+		{ XMFLOAT3(-15.0f, 0.0f, -15.0f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
+		{ XMFLOAT3( 15.0f, 0.0f, -15.0f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
+		{ XMFLOAT3( 15.0f, 0.0f,  15.0f), XMFLOAT3(0.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3(-15.0f, 0.0f,  15.0f), XMFLOAT3(0.0f, 0.0f, 1.0f) }
+
 	};
 
 	D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
@@ -298,7 +304,11 @@ HRESULT Model::InitializeIndexBuffer(int indeces[])
 	{
 		0, 2, 1, 1, 2, 3, 4, 5, 6, 5, 7, 6,
 		0, 1, 5, 0, 5, 4, 2, 6, 7, 2, 7, 3,
-		0, 4, 6, 0, 6, 2, 1, 3, 7, 1, 7, 5
+		0, 4, 6, 0, 6, 2, 1, 3, 7, 1, 7, 5,
+
+		8, 10, 11, 8, 9, 10//, 2, 3, 4, 5, 6, 5, 7, 6,
+		//0, 1, 5, 0, 5, 4, 2, 6, 7, 2, 7, 3,
+		//0, 4, 6, 0, 6, 2,
 	};
 
 	DeviceResource()->IndexCount = ARRAYSIZE(cubeIndices);

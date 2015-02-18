@@ -23,7 +23,7 @@ void Camera::Initialize()
 	auto z = m_radius * sin(m_hAngle * -1);
 	auto x = sqrt(pow(m_radius, 2) - pow(z, 2));
 
-	m_eyePosition = new XMVECTOR{ x, 1.0f, z };
+	m_eyePosition = new XMVECTOR{ x, 2.0f, z };
 	m_focusPosition = new XMVECTOR{ 0.0f, 0.0f, 0.0f };
 	m_upDirection = new XMVECTOR{ 0.0f, 1.0f, 0.0f };
 
@@ -38,7 +38,7 @@ void Camera::Initialize()
 
 	if (aspectRatio < 1.0f)
 	{
-		fovAngleY *= 2.0f;
+		fovAngleY *= 1.0f;
 	}
 
 	XMMATRIX	perspectiveMatrix = XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 0.01f, 100.0f);
