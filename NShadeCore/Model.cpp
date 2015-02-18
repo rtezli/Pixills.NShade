@@ -13,23 +13,23 @@ Model::~Model()
 
 HRESULT Model::Initialize()
 {
-	auto result = LoadModelFromFBXFile("../Models/teapot.fbx");
+	//auto result = LoadModelFromFBXFile("../Models/teapot.fbx");
+	//if (FAILED(result))
+	//{
+	//	return result;
+	//}
+
+	auto result = InitializeVertexBuffer();
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	//auto result = InitializeVertexBuffer();
-	//if (FAILED(result))
-	//{
-	//	return result;
-	//}
-
-	//result = InitializeIndexBuffer(NULL);
-	//if (FAILED(result))
-	//{
-	//	return result;
-	//}
+	result = InitializeIndexBuffer(NULL);
+	if (FAILED(result))
+	{
+		return result;
+	}
 
 	return InitializeConstantBuffer();
 }
@@ -105,7 +105,7 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 				auto point = controlPoints[cp];
 				auto newVertex = new Vertex();
 
-				newVertex->Position = ConvertFbxVector4ToXMFLOAT4(&point, &axisSystem, 1.0);
+				newVertex->Position = ConvertFbxVector4ToXMFLOAT3(&point, &axisSystem, 1.0);
 				newVertex->Color	= XMFLOAT3{ 0.9f, 0.7f, 1.0f };
 				newVertex->UV		= XMFLOAT2{ 0.0f, 0.0f };
 				newVertex->Normal	= XMFLOAT2{ 0.0f, 0.0f };
@@ -185,7 +185,7 @@ HRESULT Model::LoadModelFromOBJFile(char* fileName)
 	return 0;
 }
 
-XMFLOAT4 Model::ConvertFbxVector4ToXMFLOAT4(FbxVector4* coordinate, FbxAxisSystem* axisSystem, float scale)
+XMFLOAT3 Model::ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisSystem* axisSystem, float scale)
 {
 	bool rightHanded = true;
 	auto coordSystem = axisSystem->GetCoorSystem();
@@ -217,12 +217,11 @@ XMFLOAT4 Model::ConvertFbxVector4ToXMFLOAT4(FbxVector4* coordinate, FbxAxisSyste
 		frontInverter = -1;
 	}
 
-	auto l = 0.0f;
 	auto x = 0.0f;
 	auto y = 0.0f;
 	auto z = 0.0f;
 
-	XMFLOAT4 dxVector;
+	XMFLOAT3 dxVector;
 
 	if (xFront)
 	{
@@ -238,12 +237,11 @@ XMFLOAT4 Model::ConvertFbxVector4ToXMFLOAT4(FbxVector4* coordinate, FbxAxisSyste
 		z = coordinate->mData[1] * scale;
 	}
 
-	dxVector = XMFLOAT4
+	dxVector = XMFLOAT3
 	{
 		static_cast<float>(x),
 		static_cast<float>(y),
-		static_cast<float>(z),
-		static_cast<float>(l)
+		static_cast<float>(z)
 	};
 	return dxVector;
 }
@@ -267,14 +265,14 @@ HRESULT Model::InitializeVertexBuffer()
 {
 	static const Vertex cube[] =
 	{
-		{ XMFLOAT4(-0.5f, -0.5f, -0.5f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
-		{ XMFLOAT4(-0.5f, -0.5f, 0.5f, 0.0f), XMFLOAT3(0.0f, 0.0f, 1.0f) },
-		{ XMFLOAT4(-0.5f, 0.5f, -0.5f, 0.0f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
-		{ XMFLOAT4(-0.5f, 0.5f, 0.5f, 0.0f), XMFLOAT3(0.0f, 1.0f, 1.0f) },
-		{ XMFLOAT4(0.5f, -0.5f, -0.5f, 0.0f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
-		{ XMFLOAT4(0.5f, -0.5f, 0.5f, 0.0f), XMFLOAT3(1.0f, 0.0f, 1.0f) },
-		{ XMFLOAT4(0.5f, 0.5f, -0.5f, 0.0f), XMFLOAT3(1.0f, 1.0f, 0.0f) },
-		{ XMFLOAT4(0.5f, 0.5f, 0.5f, 0.0f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+		{ XMFLOAT3(-0.5f, -0.5f, -0.5f),  XMFLOAT3(0.0f, 0.0f, 0.0f) },
+		{ XMFLOAT3(-0.5f, -0.5f,  0.5f),  XMFLOAT3(0.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3(-0.5f,  0.5f, -0.5f),  XMFLOAT3(0.0f, 1.0f, 0.0f) },
+		{ XMFLOAT3(-0.5f,  0.5f,  0.5f),  XMFLOAT3(0.0f, 1.0f, 1.0f) },
+		{ XMFLOAT3( 0.5f, -0.5f, -0.5f),  XMFLOAT3(1.0f, 0.0f, 0.0f) },
+		{ XMFLOAT3( 0.5f, -0.5f,  0.5f),  XMFLOAT3(1.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3( 0.5f,  0.5f, -0.5f),  XMFLOAT3(1.0f, 1.0f, 0.0f) },
+		{ XMFLOAT3( 0.5f,  0.5f,  0.5f),  XMFLOAT3(1.0f, 1.0f, 1.0f) },
 	};
 
 	D3D11_BUFFER_DESC vertexBufferDesc = { 0 };

@@ -16,7 +16,7 @@ enum Perspective : char
 
 struct Vertex
 {
-	XMFLOAT4 Position;
+	XMFLOAT3 Position;
 	XMFLOAT3 Color;
 	XMFLOAT2 UV;
 	XMFLOAT2 Normal;

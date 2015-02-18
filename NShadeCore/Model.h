@@ -17,7 +17,7 @@ public:
 	static Vertex Cube[];
 	static Vertex Sphere[];
 private:
-	XMFLOAT4					ConvertFbxVector4ToXMFLOAT4(FbxVector4* coordinate, FbxAxisSystem* axisSystem, float scale);
+	XMFLOAT3					ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisSystem* axisSystem, float scale);
 	DeviceResources*			DeviceResource(){ return m_pDeviceResources.get(); }
 	HRESULT						InitializeVertexBuffer();
 	HRESULT						InitializeIndexBuffer(int indeces[]);
