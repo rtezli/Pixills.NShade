@@ -10,8 +10,6 @@ public:
 	Model(DeviceResources* pResources);
 	~Model();
 	HRESULT LoadModelFromFBXFile(char* fileName);
-	HRESULT LoadModelFromFBXFileO(char* fileName);
-	HRESULT LoadModelFromFBXFileS(char* fileName);
 	HRESULT LoadModelFromOBJFile(char* fileName);
 	HRESULT CreateVertexAndIndexBuffer(XMFLOAT3 vertices[]);
 	HRESULT	Initialize();
@@ -19,7 +17,7 @@ public:
 	static Vertex Cube[];
 	static Vertex Sphere[];
 private:
-	XMFLOAT3					ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisSystem* axisSystem, float scale);
+	XMFLOAT4					ConvertFbxVector4ToXMFLOAT4(FbxVector4* coordinate, FbxAxisSystem* axisSystem, float scale);
 	DeviceResources*			DeviceResource(){ return m_pDeviceResources.get(); }
 	HRESULT						InitializeVertexBuffer();
 	HRESULT						InitializeIndexBuffer(int indeces[]);
