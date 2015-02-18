@@ -2,6 +2,7 @@
 
 #include "includes.h"
 #include "fbxsdk.h"
+#include "fbxsdk\scene\fbxaxissystem.h"
 
 class Model
 {

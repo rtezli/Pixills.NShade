@@ -333,8 +333,10 @@ HRESULT Model::LoadModelFromFBXFileO(char* fileName)
 	fbxIOsettings->SetBoolProp(IMP_FBX_ANIMATION, false);
 	fbxIOsettings->SetBoolProp(IMP_FBX_TEXTURE, false);
 
+
 	auto fbxImporter = FbxImporter::Create(sdkManager, "");
 	auto fbxScene = FbxScene::Create(sdkManager, "");
+
 
 	auto success = fbxImporter->Initialize(fileName, -1, sdkManager->GetIOSettings());
 	if (!success)
@@ -342,7 +344,45 @@ HRESULT Model::LoadModelFromFBXFileO(char* fileName)
 		return success;
 	}
 
+	//auto dx = FbxAxisSystem::DirectX;
+	//dx.ConvertScene(fbxScene);
+
 	success = fbxImporter->Import(fbxScene);
+
+	int upDirection;
+	auto uVector = fbxScene->GetGlobalSettings().GetAxisSystem().GetUpVector(upDirection);
+	if (uVector != FbxAxisSystem::EUpVector::eYAxis)
+	{		
+		// Y is not up
+		if (upDirection <= 0)
+		{
+			// up is not positive
+		}
+
+	}
+
+	int frontDirection;
+	auto fVector = fbxScene->GetGlobalSettings().GetAxisSystem().GetFrontVector(frontDirection);
+	if (fVector != FbxAxisSystem::EFrontVector::eParityOdd)
+	{
+		// Not right handed
+		if (frontDirection > 0)
+		{
+			// front is not negative
+		}
+	}
+
+	auto cSystem = fbxScene->GetGlobalSettings().GetAxisSystem().GetCoorSystem();
+	if (cSystem != FbxAxisSystem::ECoordSystem::eRightHanded)
+	{
+		// Not right handed
+	}
+
+	if (!success)
+	{
+		return success;
+	}
+
 	fbxImporter->Destroy();
 
 	if (!success)
@@ -351,7 +391,9 @@ HRESULT Model::LoadModelFromFBXFileO(char* fileName)
 	}
 
 	auto fbxRootNode = fbxScene->GetRootNode();
+
 	auto count = fbxRootNode->GetChildCount();
+	auto geometry = fbxRootNode->GetGeometry();
 
 	auto modelVertices = new vector<Vertex>();
 	auto modelIndexes = new vector<unsigned int>();
@@ -369,7 +411,7 @@ HRESULT Model::LoadModelFromFBXFileO(char* fileName)
 			auto child = node->GetChild(c);
 			auto childMesh = child->GetMesh();
 			auto polygonCount = childMesh->GetPolygonVertexCount();
- 
+
 			//For each polygon in the model
 			for (auto p = 0; p < polygonCount; p++)
 			{
@@ -379,9 +421,9 @@ HRESULT Model::LoadModelFromFBXFileO(char* fileName)
 				for (auto v = 0; v < vertexCount; v++)
 				{
 					FbxVector4 normal;
-					auto vertexIndex	= childMesh->GetPolygonVertex(p, v);
-					auto point			= childMesh->GetControlPointAt(vertexIndex);
-					auto vertexNormal	= childMesh->GetPolygonVertexNormal(p, v, normal);
+					auto vertexIndex = childMesh->GetPolygonVertex(p, v);
+					auto point = childMesh->GetControlPointAt(vertexIndex);
+					auto vertexNormal = childMesh->GetPolygonVertexNormal(p, v, normal);
 
 					auto exists = find(usedIndexes->begin(), usedIndexes->end(), vertexIndex) != usedIndexes->end();
 					if (!exists)
@@ -391,9 +433,9 @@ HRESULT Model::LoadModelFromFBXFileO(char* fileName)
 						auto newVertex = new Vertex();
 						newVertex->Position = XMFLOAT3
 						{
-							static_cast<float>(point.mData[0]),
+							static_cast<float>(point.mData[2] * -1),
 							static_cast<float>(point.mData[1]),
-							static_cast<float>(point.mData[2])
+							static_cast<float>(point.mData[0])
 						};
 
 						newVertex->Color = XMFLOAT3
