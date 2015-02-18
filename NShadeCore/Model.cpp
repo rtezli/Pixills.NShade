@@ -265,22 +265,23 @@ HRESULT Model::InitializeVertexBuffer()
 {
 	static const Vertex cube[] =
 	{
-		{ XMFLOAT3(-0.5f, 0.0f, -0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
-		{ XMFLOAT3(-0.5f, 0.0f, 0.5f), XMFLOAT3(0.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(-0.5f, 1.0f, -0.5f), XMFLOAT3(0.0f, 1.0f, 0.0f) },
-		{ XMFLOAT3(-0.5f, 1.0f, 0.5f), XMFLOAT3(0.0f, 1.0f, 1.0f) },
-		{ XMFLOAT3(0.5f, 0.0f, -0.5f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
-		{ XMFLOAT3(0.5f, 0.0f, 0.5f), XMFLOAT3(1.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(0.5f, 1.0f, -0.5f), XMFLOAT3(1.0f, 1.0f, 0.0f) },
-		{ XMFLOAT3(0.5f, 1.0f, 0.5f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+		{ XMFLOAT3(-0.5f, 0.0f, -0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
+		{ XMFLOAT3(-0.5f, 0.0f,  0.5f), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
+		{ XMFLOAT3(-0.5f, 1.0f, -0.5f), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
+		{ XMFLOAT3(-0.5f, 1.0f,  0.5f), XMFLOAT3(0.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
 
-		{ XMFLOAT3(-15.0f, 0.0f, -15.0f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
-		{ XMFLOAT3( 15.0f, 0.0f, -15.0f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
-		{ XMFLOAT3( 15.0f, 0.0f,  15.0f), XMFLOAT3(0.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(-15.0f, 0.0f,  15.0f), XMFLOAT3(0.0f, 0.0f, 1.0f) }
+		{ XMFLOAT3( 0.5f, 0.0f, -0.5f), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
+		{ XMFLOAT3( 0.5f, 0.0f,  0.5f), XMFLOAT3(1.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
+		{ XMFLOAT3( 0.5f, 1.0f, -0.5f), XMFLOAT3(1.0f, 1.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
+		{ XMFLOAT3( 0.5f, 1.0f,  0.5f), XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
+
+		{ XMFLOAT3(-15.0f, 0.0f, -15.0f), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
+		{ XMFLOAT3(15.0f, 0.0f, -15.0f),  XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
+		{ XMFLOAT3(15.0f, 0.0f, 15.0f),   XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
+		{ XMFLOAT3(-15.0f, 0.0f, 15.0f),  XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
 
 	};
-
+ 
 	D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
 	vertexBufferDesc.ByteWidth = sizeof(Vertex) * ARRAYSIZE(cube);
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -302,13 +303,19 @@ HRESULT Model::InitializeIndexBuffer(int indeces[])
 	// 6 faces * 4 vertices = 24 vertices. 
 	static const unsigned int cubeIndices[] =
 	{
-		0, 2, 1, 1, 2, 3, 4, 5, 6, 5, 7, 6,
-		0, 1, 5, 0, 5, 4, 2, 6, 7, 2, 7, 3,
-		0, 4, 6, 0, 6, 2, 1, 3, 7, 1, 7, 5,
+		0, 2, 1, 1, 2, 3, // Face 1 (2 Polygons)
+		4, 5, 6, 5, 7, 6, // Face 2 (2 Polygons)
+		0, 1, 5, 0, 5, 4, // Face 3 (2 Polygons)
+		2, 6, 7, 2, 7, 3, // Face 4 (2 Polygons)
+		0, 4, 6, 0, 6, 2, // Face 5 (2 Polygons)
+		1, 3, 7, 1, 7, 5, // Face 6 (2 Polygons)
 
-		8, 10, 11, 8, 9, 10//, 2, 3, 4, 5, 6, 5, 7, 6,
-		//0, 1, 5, 0, 5, 4, 2, 6, 7, 2, 7, 3,
-		//0, 4, 6, 0, 6, 2,
+		8, 10, 11, 8, 9, 10 // F7 (The Plane)
+	};
+
+	static const unsigned int polygonIndices[] =
+	{
+		0, 3, 6, 9, 12, 15, 18, 21 24, 27, 30
 	};
 
 	DeviceResource()->IndexCount = ARRAYSIZE(cubeIndices);

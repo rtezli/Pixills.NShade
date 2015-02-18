@@ -18,8 +18,8 @@ struct Vertex
 {
 	XMFLOAT3 Position;
 	XMFLOAT3 Color;
+	XMFLOAT3 Normal;
 	XMFLOAT2 UV;
-	XMFLOAT2 Normal;
 };
 
 struct RenderingQuality
