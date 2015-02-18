@@ -108,7 +108,7 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 				newVertex->Position = ConvertFbxVector4ToXMFLOAT3(&point, &axisSystem, 1.0);
 				newVertex->Color = XMFLOAT3{ 0.9f, 0.7f, 1.0f };
 				newVertex->UV = XMFLOAT2{ 0.0f, 0.0f };
-				newVertex->Normal = XMFLOAT2{ 0.0f, 0.0f };
+				newVertex->Normal = XMFLOAT3{ 0.0f, 0.0f, 0.0f };
 
 				modelVertices->push_back(*newVertex);
 			}
@@ -311,11 +311,6 @@ HRESULT Model::InitializeIndexBuffer(int indeces[])
 		1, 3, 7, 1, 7, 5, // Face 6 (2 Polygons)
 
 		8, 10, 11, 8, 9, 10 // F7 (The Plane)
-	};
-
-	static const unsigned int polygonIndices[] =
-	{
-		0, 3, 6, 9, 12, 15, 18, 21 24, 27, 30
 	};
 
 	DeviceResource()->IndexCount = ARRAYSIZE(cubeIndices);
