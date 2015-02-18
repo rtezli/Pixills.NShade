@@ -15,10 +15,11 @@ public:
 	HRESULT LoadModelFromOBJFile(char* fileName);
 	HRESULT CreateVertexAndIndexBuffer(XMFLOAT3 vertices[]);
 	HRESULT	Initialize();
- 
+
 	static Vertex Cube[];
 	static Vertex Sphere[];
 private:
+	XMFLOAT3					ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisSystem* axisSystem, float scale);
 	DeviceResources*			DeviceResource(){ return m_pDeviceResources.get(); }
 	HRESULT						InitializeVertexBuffer();
 	HRESULT						InitializeIndexBuffer(int indeces[]);

@@ -349,34 +349,7 @@ HRESULT Model::LoadModelFromFBXFileO(char* fileName)
 
 	success = fbxImporter->Import(fbxScene);
 
-	int upDirection;
-	auto uVector = fbxScene->GetGlobalSettings().GetAxisSystem().GetUpVector(upDirection);
-	if (uVector != FbxAxisSystem::EUpVector::eYAxis)
-	{		
-		// Y is not up
-		if (upDirection <= 0)
-		{
-			// up is not positive
-		}
-
-	}
-
-	int frontDirection;
-	auto fVector = fbxScene->GetGlobalSettings().GetAxisSystem().GetFrontVector(frontDirection);
-	if (fVector != FbxAxisSystem::EFrontVector::eParityOdd)
-	{
-		// Not right handed
-		if (frontDirection > 0)
-		{
-			// front is not negative
-		}
-	}
-
-	auto cSystem = fbxScene->GetGlobalSettings().GetAxisSystem().GetCoorSystem();
-	if (cSystem != FbxAxisSystem::ECoordSystem::eRightHanded)
-	{
-		// Not right handed
-	}
+	auto axisSystem = fbxScene->GetGlobalSettings().GetAxisSystem();
 
 	if (!success)
 	{
@@ -384,11 +357,6 @@ HRESULT Model::LoadModelFromFBXFileO(char* fileName)
 	}
 
 	fbxImporter->Destroy();
-
-	if (!success)
-	{
-		return success;
-	}
 
 	auto fbxRootNode = fbxScene->GetRootNode();
 
@@ -410,33 +378,35 @@ HRESULT Model::LoadModelFromFBXFileO(char* fileName)
 		{
 			auto child = node->GetChild(c);
 			auto childMesh = child->GetMesh();
-			auto polygonCount = childMesh->GetPolygonVertexCount();
+			auto controlPoints	= childMesh->GetControlPoints();
+			auto polygonCount	= childMesh->GetPolygonCount();
 
 			//For each polygon in the model
 			for (auto p = 0; p < polygonCount; p++)
 			{
 				auto vertexCount = childMesh->GetPolygonSize(p);
-
+ 
 				//For each point in a polygon get :  cooradinates, normals and index
 				for (auto v = 0; v < vertexCount; v++)
 				{
 					FbxVector4 normal;
-					auto vertexIndex = childMesh->GetPolygonVertex(p, v);
-					auto point = childMesh->GetControlPointAt(vertexIndex);
-					auto vertexNormal = childMesh->GetPolygonVertexNormal(p, v, normal);
+					auto vertexIndex	= childMesh->GetPolygonVertex(p, v);
+					
+					if (vertexIndex == -1)
+					{
+						continue;
+					}
 
 					auto exists = find(usedIndexes->begin(), usedIndexes->end(), vertexIndex) != usedIndexes->end();
 					if (!exists)
 					{
 						usedIndexes->push_back(vertexIndex);
 
-						auto newVertex = new Vertex();
-						newVertex->Position = XMFLOAT3
-						{
-							static_cast<float>(point.mData[2] * -1),
-							static_cast<float>(point.mData[1]),
-							static_cast<float>(point.mData[0])
-						};
+						childMesh->GetPolygonVertexNormal(p, v, normal);
+						auto point			= controlPoints[vertexIndex];
+						auto newVertex		= new Vertex();
+
+						newVertex->Position = ConvertFbxVector4ToXMFLOAT3(&point, &axisSystem, 1.0);
 
 						newVertex->Color = XMFLOAT3
 						{
@@ -462,7 +432,7 @@ HRESULT Model::LoadModelFromFBXFileO(char* fileName)
 			}
 		}
 	}
-
+	// 2 and 12 is equal
 	DeviceResource()->IndexCount = modelIndexes->size();
 	DeviceResource()->VertexCount = modelVertices->size();
 
@@ -523,6 +493,66 @@ HRESULT Model::LoadModelFromOBJFile(char* fileName)
 	m_bufferDesc.MiscFlags = 0;
 
 	return 0;
+}
+
+XMFLOAT3 Model::ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisSystem* axisSystem, float scale)
+{
+	bool rightHanded = true;
+	auto coordSystem = axisSystem->GetCoorSystem();
+	if (coordSystem != FbxAxisSystem::ECoordSystem::eRightHanded)
+	{
+		rightHanded = false;
+	}
+
+	bool yUp = true;
+	bool xFront = false;
+
+	int upInverter = 1;
+	int upVectorSign;
+	auto upVector = axisSystem->GetUpVector(upVectorSign);
+	if (upVectorSign != -1)
+	{
+		upInverter = -1;
+	}
+	if (upVector != FbxAxisSystem::eYAxis)
+	{
+		yUp = false;
+	}
+
+	int frontInverter = 1;
+	int frontVectorSign;
+	auto frontVector = axisSystem->GetFrontVector(frontVectorSign);
+	if (frontVectorSign != -1)
+	{
+		frontInverter = -1;
+	}
+
+	XMFLOAT3 dxVector;
+	if (xFront)
+	{
+		auto x = coordinate->mData[2] * scale;
+		auto y = coordinate->mData[1] * upInverter * scale;
+		auto z = coordinate->mData[0] * frontInverter * scale;
+		dxVector = XMFLOAT3
+		{
+			static_cast<float>(x),
+			static_cast<float>(y),
+			static_cast<float>(z)
+		};
+	}
+	else
+	{
+		auto x = coordinate->mData[0] * scale;
+		auto y = coordinate->mData[1] * upInverter * scale;
+		auto z = coordinate->mData[2] * frontInverter * scale;
+		dxVector = XMFLOAT3
+		{
+			static_cast<float>(x),
+			static_cast<float>(y),
+			static_cast<float>(z)
+		};
+	}
+	return dxVector;
 }
 
 HRESULT Model::InitializeConstantBuffer()
