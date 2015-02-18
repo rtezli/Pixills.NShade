@@ -226,17 +226,16 @@ XMFLOAT4 Model::ConvertFbxVector4ToXMFLOAT4(FbxVector4* coordinate, FbxAxisSyste
 
 	if (xFront)
 	{
-		l = coordinate->mData[3];
 		x = coordinate->mData[2] * scale;
 		y = coordinate->mData[1] * upInverter * scale;
 		z = coordinate->mData[0] * frontInverter * scale;
 	}
 	else
 	{
+		// Flip y and z to convert from RH to LH
 		x = coordinate->mData[0] * scale;
-		y = coordinate->mData[1] * upInverter * scale;
-		z = coordinate->mData[2] * frontInverter * scale;
-		l = coordinate->mData[3];
+		y = coordinate->mData[2] * scale;
+		z = coordinate->mData[1] * scale;
 	}
 
 	dxVector = XMFLOAT4
