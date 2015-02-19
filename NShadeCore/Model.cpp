@@ -13,7 +13,7 @@ Model::~Model()
 
 HRESULT Model::Initialize()
 {
-	auto result = LoadModelFromFBXFileO("../Models/teapot.fbx");
+	auto result = LoadModelFromFBXFile("../Models/teapot.fbx");
 	if (FAILED(result))
 	{
 		return result;
@@ -41,6 +41,7 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 
 	auto fbxIOsettings = FbxIOSettings::Create(sdkManager, IOSROOT);
 	sdkManager->SetIOSettings(fbxIOsettings);
+
 	fbxIOsettings->SetBoolProp(IMP_FBX_MATERIAL, false);
 	fbxIOsettings->SetBoolProp(IMP_FBX_TEXTURE, false);
 	fbxIOsettings->SetBoolProp(IMP_FBX_ANIMATION, false);
@@ -64,15 +65,97 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 	}
 
 	auto axisSystem = fbxScene->GetGlobalSettings().GetAxisSystem();
-
 	auto fbxRootNode = fbxScene->GetRootNode();
+
+	return TraverseAndStoreFbxNode1(fbxRootNode, &axisSystem);
+}
+
+HRESULT Model::TraverseAndStoreFbxNode1(FbxNode* fbxRootNode, FbxAxisSystem* axisSystem)
+{
 	auto count = fbxRootNode->GetChildCount();
 
 	auto modelVertices = new vector<Vertex>();
 	auto modelIndexes = new vector<unsigned int>();
 
-
 	// The scene maybe
+	for (auto s = 0; s < count; s++)
+	{
+		auto node = fbxRootNode->GetChild(s);
+		auto childName = node->GetName();
+		auto childCount = node->GetChildCount();
+
+		for (auto c = 0; c < childCount; c++)
+		{
+			auto child = node->GetChild(c);
+			auto childMesh = child->GetMesh();
+			auto controlPoints = childMesh->GetControlPoints();
+			auto controlPointsCount = childMesh->GetControlPointsCount();
+			auto polygonCount = childMesh->GetPolygonCount();
+
+			for (auto cp = 0; cp < controlPointsCount; cp++)
+			{
+				auto point = controlPoints[cp];
+				auto newVertex = new Vertex();
+				newVertex->Position = ConvertFbxVector4ToXMFLOAT3(&point, axisSystem, 1.0);
+				modelVertices->push_back(*newVertex);
+			}
+
+			//For each polygon in the model
+			for (auto p = 0; p < polygonCount; p++)
+			{
+				auto vertexCount = childMesh->GetPolygonSize(p);
+
+				//For each point in a polygon get :  cooradinates, normals and index
+				for (auto v = 0; v < vertexCount; v++)
+				{
+					auto vertexIndex = childMesh->GetPolygonVertex(p, v);
+
+					if (vertexIndex == -1)
+					{
+						continue;
+					}
+
+					auto newVertex = &modelVertices->at(vertexIndex);
+
+					FbxVector4 normal;
+					childMesh->GetPolygonVertexNormal(p, v, normal);
+
+					auto point = controlPoints[vertexIndex];
+
+
+					newVertex->Color = XMFLOAT3
+					{
+						0.9f, 0.7f, 1.0f
+					};
+
+					newVertex->Normal = XMFLOAT3
+					{
+						static_cast<float>(normal.mData[0]),
+						static_cast<float>(normal.mData[1]),
+						static_cast<float>(normal.mData[2])
+					};
+
+					newVertex->UV = XMFLOAT2
+					{
+						0.0f, 0.0f
+					};
+
+					modelIndexes->push_back(vertexIndex);
+				}
+			}
+		}
+	}
+
+	return FillVertexAndIndexBuffer(modelVertices, modelIndexes);
+}
+
+HRESULT Model::TraverseAndStoreFbxNode2(FbxNode* fbxRootNode, FbxAxisSystem* axisSystem)
+{
+	auto count = fbxRootNode->GetChildCount();
+
+	auto modelVertices = new vector<Vertex>();
+	auto modelIndexes = new vector<unsigned int>();
+
 	for (auto s = 0; s < count; s++)
 	{
 		auto child = fbxRootNode->GetChild(s);
@@ -105,7 +188,7 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 				auto point = controlPoints[cp];
 				auto newVertex = new Vertex();
 
-				newVertex->Position = ConvertFbxVector4ToXMFLOAT3(&point, &axisSystem, 1.0);
+				newVertex->Position = ConvertFbxVector4ToXMFLOAT3(&point, axisSystem, 1.0);
 				newVertex->Color = XMFLOAT3{ 0.9f, 0.7f, 1.0f };
 				newVertex->UV = XMFLOAT2{ 0.0f, 0.0f };
 				newVertex->Normal = XMFLOAT3{ 0.0f, 0.0f, 0.0f };
@@ -120,168 +203,11 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 		}
 	}
 
-	if (modelVertices->size() <= 0)
-	{
-		return 0;
-	}
-
-	//reverse(modelVertices->begin(), modelVertices->end());
-
-	DeviceResource()->IndexCount = modelIndexes->size();
-	DeviceResource()->VertexCount = modelVertices->size();
-
-	D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
-	vertexBufferDesc.ByteWidth = sizeof(Vertex) * modelVertices->size();
-	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesc.CPUAccessFlags = 0;
-	vertexBufferDesc.MiscFlags = 0;
-	vertexBufferDesc.StructureByteStride = 0;
-
-	D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
-	vertexBufferData.pSysMem = &modelVertices[0];
-	vertexBufferData.SysMemPitch = 0;
-	vertexBufferData.SysMemSlicePitch = 0;
-
-	auto result = DeviceResource()->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &DeviceResource()->VertexBuffer);
-	if (FAILED(result))
-	{
-		return result;
-	}
-
-	D3D11_BUFFER_DESC indexBufferDesc = { 0 };
-	indexBufferDesc.ByteWidth = sizeof(unsigned int) * DeviceResource()->IndexCount;
-	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	indexBufferDesc.CPUAccessFlags = 0;
-	indexBufferDesc.MiscFlags = 0;
-	indexBufferDesc.StructureByteStride = 0;
-
-	D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
-	indexBufferData.pSysMem = &modelIndexes[0];
-	indexBufferData.SysMemPitch = 0;
-	indexBufferData.SysMemSlicePitch = 0;
-
-	// fbxScene->Destroy();
-	// fbxRootNode->Destroy();
-
-	return DeviceResource()->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &DeviceResource()->IndexBuffer);
+	return FillVertexAndIndexBuffer(modelVertices, modelIndexes);
 }
 
-HRESULT Model::LoadModelFromFBXFileO(char* fileName)
+HRESULT Model::FillVertexAndIndexBuffer(vector<Vertex>* modelVertices, vector<unsigned int>* modelIndexes)
 {
-	auto sdkManager = FbxManager::Create();
-
-	auto fbxIOsettings = FbxIOSettings::Create(sdkManager, IOSROOT);
-	sdkManager->SetIOSettings(fbxIOsettings);
-	fbxIOsettings->SetBoolProp(IMP_FBX_MATERIAL, false);
-	fbxIOsettings->SetBoolProp(IMP_FBX_TEXTURE, false);
-	fbxIOsettings->SetBoolProp(IMP_FBX_ANIMATION, false);
-	fbxIOsettings->SetBoolProp(IMP_FBX_TEXTURE, false);
-
-
-	auto fbxImporter = FbxImporter::Create(sdkManager, "");
-	auto fbxScene = FbxScene::Create(sdkManager, "");
-
-
-	auto success = fbxImporter->Initialize(fileName, -1, sdkManager->GetIOSettings());
-	if (!success)
-	{
-		return success;
-	}
-
-	//auto dx = FbxAxisSystem::DirectX;
-	//dx.ConvertScene(fbxScene);
-
-	success = fbxImporter->Import(fbxScene);
-
-	auto axisSystem = fbxScene->GetGlobalSettings().GetAxisSystem();
-
-	if (!success)
-	{
-		return success;
-	}
-
-	fbxImporter->Destroy();
-
-	auto fbxRootNode = fbxScene->GetRootNode();
-
-	auto count = fbxRootNode->GetChildCount();
-	auto geometry = fbxRootNode->GetGeometry();
-
-	auto modelVertices = new vector<Vertex>();
-	auto modelIndexes = new vector<unsigned int>();
-
-	// The scene maybe
-	for (auto s = 0; s < count; s++)
-	{
-		auto node = fbxRootNode->GetChild(s);
-		auto childName = node->GetName();
-		auto childCount = node->GetChildCount();
-
-		for (auto c = 0; c < childCount; c++)
-		{
-			auto child = node->GetChild(c);
-			auto childMesh = child->GetMesh();
-			auto controlPoints = childMesh->GetControlPoints();
-			auto controlPointsCount = childMesh->GetControlPointsCount();
-			auto polygonCount = childMesh->GetPolygonCount();
-
-			for (auto cp = 0; cp < controlPointsCount; cp++)
-			{
-				auto point = controlPoints[cp];
-				auto newVertex = new Vertex();
-				newVertex->Position = ConvertFbxVector4ToXMFLOAT3(&point, &axisSystem, 1.0);
-				modelVertices->push_back(*newVertex);
-			}
-
-			//For each polygon in the model
-			for (auto p = 0; p < polygonCount; p++)
-			{
-				auto vertexCount = childMesh->GetPolygonSize(p);
-
-				//For each point in a polygon get :  cooradinates, normals and index
-				for (auto v = 0; v < vertexCount; v++)
-				{
-					auto vertexIndex = childMesh->GetPolygonVertex(p, v);
-
-					if (vertexIndex == -1)
-					{
-						continue;
-					}
-
-					auto newVertex = &modelVertices->at(vertexIndex);
-
-					FbxVector4 normal;
-					childMesh->GetPolygonVertexNormal(p, v, normal);
-
-					auto point = controlPoints[vertexIndex];
-			
-
-					newVertex->Color = XMFLOAT3
-					{
-						0.9f, 0.7f, 1.0f
-					};
-
-					newVertex->Normal = XMFLOAT3
-					{
-						static_cast<float>(normal.mData[0]),
-						static_cast<float>(normal.mData[1]),
-						static_cast<float>(normal.mData[2])
-					};
-
-					newVertex->UV = XMFLOAT2
-					{
-						0.0f, 0.0f
-					};
-
-					modelIndexes->push_back(vertexIndex);
-				}
-			}
-		}
-	}
-
-	// 2 and 12 is equal ?
 	DeviceResource()->IndexCount = modelIndexes->size();
 	DeviceResource()->VertexCount = modelVertices->size();
 
