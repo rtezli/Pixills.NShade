@@ -10,6 +10,7 @@ public:
 	Model(DeviceResources* pResources);
 	~Model();
 	HRESULT LoadModelFromFBXFile(char* fileName);
+	HRESULT LoadModelFromFBXFileO(char* fileName);
 	HRESULT LoadModelFromOBJFile(char* fileName);
 	HRESULT CreateVertexAndIndexBuffer(XMFLOAT3 vertices[]);
 	HRESULT	Initialize();
