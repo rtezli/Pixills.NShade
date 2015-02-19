@@ -191,8 +191,10 @@ HRESULT Model::TraverseAndStoreFbxNode2(vector<FbxNode*>* nodes, FbxAxisSystem* 
 	{
 		auto child = nodes->at(m);
 		auto childMesh = child->GetMesh();
+
 		auto vertexCount = childMesh->GetPolygonVertexCount();
 		auto vertexIndexes = childMesh->GetPolygonVertices();
+
 		auto controlPoints = childMesh->GetControlPoints();
 		auto controlPointsCount = childMesh->GetControlPointsCount();
 
