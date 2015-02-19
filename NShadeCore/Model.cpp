@@ -13,7 +13,7 @@ Model::~Model()
 
 HRESULT Model::Initialize()
 {
-	auto result = LoadModelFromFBXFile("../Models/teapot.fbx");
+	auto result = LoadModelFromFBXFile("../Models/cube.fbx");
 	if (FAILED(result))
 	{
 		return result;
@@ -67,81 +67,115 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 	auto axisSystem = fbxScene->GetGlobalSettings().GetAxisSystem();
 	auto fbxRootNode = fbxScene->GetRootNode();
 
-	return TraverseAndStoreFbxNode1(fbxRootNode, &axisSystem);
+	auto rootNodeAttribute = fbxRootNode->GetNodeAttribute();
+	FbxNodeAttribute::EType rootNodeTypeName = rootNodeAttribute == NULL ? FbxNodeAttribute::eUnknown : rootNodeAttribute->GetAttributeType();
+	
+	auto mesh = new vector<FbxNode*>();
+	TraverseChildren(fbxRootNode, mesh);
+	return TraverseAndStoreFbxNode1(mesh, &axisSystem);
 }
 
-HRESULT Model::TraverseAndStoreFbxNode1(FbxNode* fbxRootNode, FbxAxisSystem* axisSystem)
+HRESULT Model::TraverseChildren(FbxNode* node, vector<FbxNode*>* mesh)
 {
-	auto count = fbxRootNode->GetChildCount();
+	auto count = node->GetChildCount();
+	for (auto s = 0; s < count; s++)
+	{
+		node = node->GetChild(s);
+		count = node->GetChildCount();
+		auto nodeAttribute = node->GetNodeAttribute();
+		FbxNodeAttribute::EType nodeType = nodeAttribute == NULL 
+			? FbxNodeAttribute::eUnknown 
+			: nodeAttribute->GetAttributeType();
+
+		if (nodeType == FbxNodeAttribute::eMesh)
+		{
+			mesh->push_back(node);
+		}
+		else
+		{
+			for (auto c = 0; c < count; c++)
+			{
+				node = node->GetChild(s);
+				nodeAttribute = node->GetNodeAttribute();
+				nodeType = nodeAttribute == NULL
+					? FbxNodeAttribute::eUnknown 
+					: nodeAttribute->GetAttributeType();
+
+				if (nodeType == FbxNodeAttribute::eMesh)
+				{
+					mesh->push_back(node);
+				}
+			}
+		}
+	}
+	return 0;
+}
+
+HRESULT Model::TraverseAndStoreFbxNode1(vector<FbxNode*>* nodes, FbxAxisSystem* axisSystem)
+{
+	auto count = nodes->size();
 
 	auto modelVertices = new vector<Vertex>();
 	auto modelIndexes = new vector<unsigned int>();
 
 	// The scene maybe
-	for (auto s = 0; s < count; s++)
+	for (auto i = 0; i < count; i++)
 	{
-		auto node = fbxRootNode->GetChild(s);
-		auto childName = node->GetName();
-		auto childCount = node->GetChildCount();
+		auto child = nodes->at(i);
+		auto childMesh = child->GetMesh();
+		auto controlPoints = childMesh->GetControlPoints();
+		auto controlPointsCount = childMesh->GetControlPointsCount();
+		auto polygonCount = childMesh->GetPolygonCount();
 
-		for (auto c = 0; c < childCount; c++)
+		for (auto cp = 0; cp < controlPointsCount; cp++)
 		{
-			auto child = node->GetChild(c);
-			auto childMesh = child->GetMesh();
-			auto controlPoints = childMesh->GetControlPoints();
-			auto controlPointsCount = childMesh->GetControlPointsCount();
-			auto polygonCount = childMesh->GetPolygonCount();
+			auto point = controlPoints[cp];
+			auto newVertex = new Vertex();
+			newVertex->Position = ConvertFbxVector4ToXMFLOAT3(&point, axisSystem, 1.0);
+			modelVertices->push_back(*newVertex);
+		}
 
-			for (auto cp = 0; cp < controlPointsCount; cp++)
+		//For each polygon in the model
+		for (auto p = 0; p < polygonCount; p++)
+		{
+			auto vertexCount = childMesh->GetPolygonSize(p);
+
+			//For each point in a polygon get :  cooradinates, normals and index
+			for (auto v = 0; v < vertexCount; v++)
 			{
-				auto point = controlPoints[cp];
-				auto newVertex = new Vertex();
-				newVertex->Position = ConvertFbxVector4ToXMFLOAT3(&point, axisSystem, 1.0);
-				modelVertices->push_back(*newVertex);
-			}
+				auto vertexIndex = childMesh->GetPolygonVertex(p, v);
 
-			//For each polygon in the model
-			for (auto p = 0; p < polygonCount; p++)
-			{
-				auto vertexCount = childMesh->GetPolygonSize(p);
-
-				//For each point in a polygon get :  cooradinates, normals and index
-				for (auto v = 0; v < vertexCount; v++)
+				if (vertexIndex == -1)
 				{
-					auto vertexIndex = childMesh->GetPolygonVertex(p, v);
-
-					if (vertexIndex == -1)
-					{
-						continue;
-					}
-
-					auto newVertex = &modelVertices->at(vertexIndex);
-
-					FbxVector4 normal;
-					childMesh->GetPolygonVertexNormal(p, v, normal);
-
-					auto point = controlPoints[vertexIndex];
-
-
-					newVertex->Color = XMFLOAT3
-					{
-						0.9f, 0.7f, 1.0f
-					};
-
-					newVertex->Normal = XMFLOAT3
-					{
-						static_cast<float>(normal.mData[0]),
-						static_cast<float>(normal.mData[1]),
-						static_cast<float>(normal.mData[2])
-					};
-
-					newVertex->UV = XMFLOAT2
-					{
-						0.0f, 0.0f
-					};
-
-					modelIndexes->push_back(vertexIndex);
+					continue;
 				}
+
+				auto newVertex = &modelVertices->at(vertexIndex);
+
+				FbxVector4 normal;
+				childMesh->GetPolygonVertexNormal(p, v, normal);
+
+				auto point = controlPoints[vertexIndex];
+
+
+				newVertex->Color = XMFLOAT3
+				{
+					0.9f, 0.7f, 1.0f
+				};
+
+				newVertex->Normal = XMFLOAT3
+				{
+					static_cast<float>(normal.mData[0]),
+					static_cast<float>(normal.mData[1]),
+					static_cast<float>(normal.mData[2])
+				};
+
+				newVertex->UV = XMFLOAT2
+				{
+					0.0f, 0.0f
+				};
+
+				modelIndexes->push_back(vertexIndex);
 			}
 		}
 	}
