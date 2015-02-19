@@ -18,7 +18,7 @@ public:
 	static Vertex Sphere[];
 private:
 	HRESULT						TraverseAndStoreFbxNode1(vector<FbxNode*>* nodes, FbxAxisSystem* axisSystem);
-	HRESULT						TraverseAndStoreFbxNode2(FbxNode* fbxRootNode, FbxAxisSystem* axisSystem);
+	HRESULT						TraverseAndStoreFbxNode2(vector<FbxNode*>* nodes, FbxAxisSystem* axisSystem);
 	HRESULT						TraverseChildren(FbxNode* node, vector<FbxNode*>* mesh);
 	HRESULT						FillVertexAndIndexBuffer(vector<Vertex>* modelVertices, vector<unsigned int>* modelIndexes);
 	XMFLOAT3					ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisSystem* axisSystem, float scale);

@@ -72,7 +72,7 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 
 	auto mesh = new vector<FbxNode*>();
 	TraverseChildren(fbxRootNode, mesh);
-	return TraverseAndStoreFbxNode1(mesh, &axisSystem);
+	return TraverseAndStoreFbxNode2(mesh, &axisSystem);
 }
 
 HRESULT Model::TraverseChildren(FbxNode* node, vector<FbxNode*>* mesh)
@@ -126,25 +126,26 @@ HRESULT Model::TraverseAndStoreFbxNode1(vector<FbxNode*>* nodes, FbxAxisSystem* 
 		auto wipeMode = childMesh->GetWipeMode();
 		auto polygonCount = childMesh->GetPolygonCount();
 
-		 auto controlPoints = childMesh->GetControlPoints();
-		 auto controlPointsCount = childMesh->GetControlPointsCount();
-		 for (auto cp = 0; cp < controlPointsCount; cp++)
-		 {
-		 	auto point = controlPoints[cp];
-		 	auto newVertex = new Vertex();
-		 	newVertex->Position = ConvertFbxVector4ToXMFLOAT3(&point, axisSystem, 1.0f);
-		 	modelVertices->push_back(*newVertex);
-		 }
+		auto controlPoints = childMesh->GetControlPoints();
+		auto controlPointsCount = childMesh->GetControlPointsCount();
+
+		for (auto cp = 0; cp < controlPointsCount; cp++)
+		{
+			auto point = controlPoints[cp];
+			auto newVertex = new Vertex();
+			newVertex->Position = ConvertFbxVector4ToXMFLOAT3(&point, axisSystem, 1.0f);
+			modelVertices->push_back(*newVertex);
+		}
+
+		auto isTriangleMesh = childMesh->IsTriangleMesh();
 
 		//For each polygon in the model
 		for (auto p = 0; p < polygonCount; p++)
 		{
-			auto startIndex = childMesh->GetPolygonVertexIndex(p);
 			auto polygonVertices = childMesh->GetPolygonVertices();
 
 			//For each point in a polygon get :  cooradinates, normals and index
-			auto endIndex = startIndex + childMesh->GetPolygonSize(p);
-			for (auto v = startIndex; v < endIndex; v++)
+			for (auto v = 0; v < 3; v++)
 			{
 				auto vertexIndex = polygonVertices[v];
 				auto newVertex = &modelVertices->at(vertexIndex);
@@ -178,58 +179,41 @@ HRESULT Model::TraverseAndStoreFbxNode1(vector<FbxNode*>* nodes, FbxAxisSystem* 
 	return FillVertexAndIndexBuffer(modelVertices, modelIndexes);
 }
 
-HRESULT Model::TraverseAndStoreFbxNode2(FbxNode* fbxRootNode, FbxAxisSystem* axisSystem)
+HRESULT Model::TraverseAndStoreFbxNode2(vector<FbxNode*>* nodes, FbxAxisSystem* axisSystem)
 {
-	auto count = fbxRootNode->GetChildCount();
+	auto count = nodes->size();
 
 	auto modelVertices = new vector<Vertex>();
 	auto modelIndexes = new vector<unsigned int>();
 
-	for (auto s = 0; s < count; s++)
+	// For each model in the scene
+	for (auto m = 0; m < count; m++)
 	{
-		auto child = fbxRootNode->GetChild(s);
-		auto childName = child->GetName();
-		auto childCount = child->GetChildCount();
+		auto child = nodes->at(m);
+		auto childMesh = child->GetMesh();
+		auto vertexCount = childMesh->GetPolygonVertexCount();
+		auto vertexIndexes = childMesh->GetPolygonVertices();
+		auto controlPoints = childMesh->GetControlPoints();
+		auto controlPointsCount = childMesh->GetControlPointsCount();
 
-		// For each model in the scene
-		for (auto m = 0; m < childCount; m++)
+		for (auto cp = 0; cp < controlPointsCount; cp++)
 		{
-			child = child->GetChild(m);
+			auto point = controlPoints[cp];
+			auto newVertex = new Vertex();
 
-			if (child->GetNodeAttribute() == NULL)
-				continue;
+			newVertex->Position = ConvertFbxVector4ToXMFLOAT3(&point, axisSystem, 1.0);
+			newVertex->Color = XMFLOAT3{ 0.9f, 0.7f, 1.0f };
+			newVertex->UV = XMFLOAT2{ 0.0f, 0.0f };
+			newVertex->Normal = XMFLOAT3{ 0.0f, 0.0f, 0.0f };
 
-			auto attributeType = child->GetNodeAttribute()->GetAttributeType();
-
-			if (attributeType != FbxNodeAttribute::eMesh)
-				continue;
-
-			Debug::WriteLine("FBX : Loading child", childName);
-
-			auto childMesh = child->GetMesh();
-			auto vertexCount = childMesh->GetPolygonVertexCount();
-			auto vertexIndexes = childMesh->GetPolygonVertices();
-			auto controlPoints = childMesh->GetControlPoints();
-			auto controlPointsCount = childMesh->GetControlPointsCount();
-
-			for (auto cp = 0; cp < controlPointsCount; cp++)
-			{
-				auto point = controlPoints[cp];
-				auto newVertex = new Vertex();
-
-				newVertex->Position = ConvertFbxVector4ToXMFLOAT3(&point, axisSystem, 1.0);
-				newVertex->Color = XMFLOAT3{ 0.9f, 0.7f, 1.0f };
-				newVertex->UV = XMFLOAT2{ 0.0f, 0.0f };
-				newVertex->Normal = XMFLOAT3{ 0.0f, 0.0f, 0.0f };
-
-				modelVertices->push_back(*newVertex);
-			}
-
-			for (auto v = 0; v < vertexCount; v++)
-			{
-				modelIndexes->push_back(vertexIndexes[v]);
-			}
+			modelVertices->push_back(*newVertex);
 		}
+
+		for (auto v = 0; v < vertexCount; v++)
+		{
+			modelIndexes->push_back(vertexIndexes[v]);
+		}
+
 	}
 
 	return FillVertexAndIndexBuffer(modelVertices, modelIndexes);
