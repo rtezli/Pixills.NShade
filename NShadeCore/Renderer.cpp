@@ -344,7 +344,7 @@ HRESULT Renderer::CreateRasterizerDescription()
 	ZeroMemory(&m_pRasterizerDesc, sizeof(m_pRasterizerDesc));
 
 	m_pRasterizerDesc.AntialiasedLineEnable = m_rasterizerUseMultiSampling;
-	m_pRasterizerDesc.CullMode = D3D11_CULL_BACK; //D3D11_CULL_NONE;//
+	m_pRasterizerDesc.CullMode = D3D11_CULL_NONE;// D3D11_CULL_BACK; //
 	m_pRasterizerDesc.DepthBias = 0;
 	m_pRasterizerDesc.DepthBiasClamp = 0.0f;
 	m_pRasterizerDesc.DepthClipEnable = true;
@@ -399,7 +399,7 @@ HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 	static const D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR"	, 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
 	return GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), vsByteCode->FileBytes, vsByteCode->Length, &Resources()->InputLayout);

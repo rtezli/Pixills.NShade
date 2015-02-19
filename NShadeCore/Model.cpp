@@ -69,7 +69,7 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 
 	auto rootNodeAttribute = fbxRootNode->GetNodeAttribute();
 	FbxNodeAttribute::EType rootNodeTypeName = rootNodeAttribute == NULL ? FbxNodeAttribute::eUnknown : rootNodeAttribute->GetAttributeType();
-	
+
 	auto mesh = new vector<FbxNode*>();
 	TraverseChildren(fbxRootNode, mesh);
 	return TraverseAndStoreFbxNode1(mesh, &axisSystem);
@@ -83,8 +83,8 @@ HRESULT Model::TraverseChildren(FbxNode* node, vector<FbxNode*>* mesh)
 		node = node->GetChild(s);
 		count = node->GetChildCount();
 		auto nodeAttribute = node->GetNodeAttribute();
-		FbxNodeAttribute::EType nodeType = nodeAttribute == NULL 
-			? FbxNodeAttribute::eUnknown 
+		FbxNodeAttribute::EType nodeType = nodeAttribute == NULL
+			? FbxNodeAttribute::eUnknown
 			: nodeAttribute->GetAttributeType();
 
 		if (nodeType == FbxNodeAttribute::eMesh)
@@ -98,7 +98,7 @@ HRESULT Model::TraverseChildren(FbxNode* node, vector<FbxNode*>* mesh)
 				node = node->GetChild(s);
 				nodeAttribute = node->GetNodeAttribute();
 				nodeType = nodeAttribute == NULL
-					? FbxNodeAttribute::eUnknown 
+					? FbxNodeAttribute::eUnknown
 					: nodeAttribute->GetAttributeType();
 
 				if (nodeType == FbxNodeAttribute::eMesh)
@@ -123,40 +123,35 @@ HRESULT Model::TraverseAndStoreFbxNode1(vector<FbxNode*>* nodes, FbxAxisSystem* 
 	{
 		auto child = nodes->at(i);
 		auto childMesh = child->GetMesh();
-		auto controlPoints = childMesh->GetControlPoints();
-		auto controlPointsCount = childMesh->GetControlPointsCount();
 		auto polygonCount = childMesh->GetPolygonCount();
 
-		for (auto cp = 0; cp < controlPointsCount; cp++)
-		{
-			auto point = controlPoints[cp];
-			auto newVertex = new Vertex();
-			newVertex->Position = ConvertFbxVector4ToXMFLOAT3(&point, axisSystem, 1.0);
-			modelVertices->push_back(*newVertex);
-		}
+		 auto controlPoints = childMesh->GetControlPoints();
+		 auto controlPointsCount = childMesh->GetControlPointsCount();
+		 for (auto cp = 0; cp < controlPointsCount; cp++)
+		 {
+		 	auto point = controlPoints[cp];
+		 	auto newVertex = new Vertex();
+		 	newVertex->Position = ConvertFbxVector4ToXMFLOAT3(&point, axisSystem, 1.0f);
+		 	modelVertices->push_back(*newVertex);
+		 }
+		//auto vertices = childMesh->GetPolygonVertices();
 
 		//For each polygon in the model
 		for (auto p = 0; p < polygonCount; p++)
 		{
-			auto vertexCount = childMesh->GetPolygonSize(p);
+			auto startIndex = childMesh->GetPolygonVertexIndex(p);
+			auto polygonVertices = childMesh->GetPolygonVertices();
 
 			//For each point in a polygon get :  cooradinates, normals and index
-			for (auto v = 0; v < vertexCount; v++)
+			auto endIndex = startIndex + childMesh->GetPolygonSize(p);
+			for (auto v = startIndex; v < endIndex; v++)
 			{
-				auto vertexIndex = childMesh->GetPolygonVertex(p, v);
-
-				if (vertexIndex == -1)
-				{
-					continue;
-				}
-
+				auto vertexIndex = polygonVertices[v];
 				auto newVertex = &modelVertices->at(vertexIndex);
+				auto point = childMesh->GetControlPointAt(vertexIndex);
 
 				FbxVector4 normal;
 				childMesh->GetPolygonVertexNormal(p, v, normal);
-
-				auto point = controlPoints[vertexIndex];
-
 
 				newVertex->Color = XMFLOAT3
 				{
@@ -316,24 +311,24 @@ XMFLOAT3 Model::ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisSyste
 	bool yUp = true;
 	bool xFront = false;
 
-	int upInverter = 1;
+	int upInverter = 1.0;
 	int upVectorSign;
 	auto upVector = axisSystem->GetUpVector(upVectorSign);
 	if (upVectorSign != -1)
 	{
-		upInverter = -1;
+		upInverter = -1.0;
 	}
 	if (upVector != FbxAxisSystem::eYAxis)
 	{
 		yUp = false;
 	}
 
-	int frontInverter = 1;
+	int frontInverter = 1.0;
 	int frontVectorSign;
 	auto frontVector = axisSystem->GetFrontVector(frontVectorSign);
 	if (frontVectorSign != -1)
 	{
-		frontInverter = -1;
+		frontInverter = -1.0;
 	}
 
 	auto x = 0.0f;
@@ -353,7 +348,7 @@ XMFLOAT3 Model::ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisSyste
 		// Flip y and z to convert from RH to LH
 		x = coordinate->mData[0] * scale;
 		y = coordinate->mData[1] * scale;
-		z = coordinate->mData[2] * frontInverter * scale;
+		z = coordinate->mData[2] * -1.0 * scale;
 	}
 
 	dxVector = XMFLOAT3
