@@ -23,7 +23,7 @@ void Camera::Initialize()
 	auto z = m_radius * sin(m_hAngle * -1);
 	auto x = sqrt(pow(m_radius, 2) - pow(z, 2));
 
-	m_eyePosition = new XMVECTOR{ x, 2.0f, z };
+	m_eyePosition = new XMVECTOR{ 0.0f, 2.0f, m_radius };
 	m_focusPosition = new XMVECTOR{ 0.0f, 0.0f, 0.0f };
 	m_upDirection = new XMVECTOR{ 0.0f, 1.0f, 0.0f };
 

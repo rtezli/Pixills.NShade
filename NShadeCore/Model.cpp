@@ -123,6 +123,7 @@ HRESULT Model::TraverseAndStoreFbxNode1(vector<FbxNode*>* nodes, FbxAxisSystem* 
 	{
 		auto child = nodes->at(i);
 		auto childMesh = child->GetMesh();
+		auto wipeMode = childMesh->GetWipeMode();
 		auto polygonCount = childMesh->GetPolygonCount();
 
 		 auto controlPoints = childMesh->GetControlPoints();
@@ -134,7 +135,6 @@ HRESULT Model::TraverseAndStoreFbxNode1(vector<FbxNode*>* nodes, FbxAxisSystem* 
 		 	newVertex->Position = ConvertFbxVector4ToXMFLOAT3(&point, axisSystem, 1.0f);
 		 	modelVertices->push_back(*newVertex);
 		 }
-		//auto vertices = childMesh->GetPolygonVertices();
 
 		//For each polygon in the model
 		for (auto p = 0; p < polygonCount; p++)
