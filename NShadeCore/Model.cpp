@@ -13,23 +13,23 @@ Model::~Model()
 
 HRESULT Model::Initialize()
 {
-	auto result = LoadModelFromFBXFile("../Models/cube.fbx");
+	//auto result = LoadModelFromFBXFile("../Models/cube.fbx");
+	//if (FAILED(result))
+	//{
+	//	return result;
+	//}
+
+	auto result = InitializeVertexBuffer();
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	//auto result = InitializeVertexBuffer();
-	//if (FAILED(result))
-	//{
-	//	return result;
-	//}
-
-	//result = InitializeIndexBuffer(NULL);
-	//if (FAILED(result))
-	//{
-	//	return result;
-	//}
+	result = InitializeIndexBuffer(NULL);
+	if (FAILED(result))
+	{
+		return result;
+	}
 
 	return InitializeConstantBuffer();
 }
@@ -50,7 +50,15 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 	auto fbxImporter = FbxImporter::Create(sdkManager, "");
 	auto fbxScene = FbxScene::Create(sdkManager, "");
 
-	auto success = fbxImporter->Initialize(fileName, -1, sdkManager->GetIOSettings());
+	auto geometryConverter = new FbxGeometryConverter(sdkManager);
+
+	auto success = geometryConverter->Triangulate(fbxScene, true);
+	if (!success)
+	{
+		return success;
+	}
+
+	success = fbxImporter->Initialize(fileName, -1, sdkManager->GetIOSettings());
 	if (!success)
 	{
 		return success;
@@ -72,7 +80,8 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 
 	auto mesh = new vector<FbxNode*>();
 	TraverseChildren(fbxRootNode, mesh);
-	return TraverseAndStoreFbxNode2(mesh, &axisSystem);
+
+	return TraverseAndStoreFbxNode1(mesh, &axisSystem);
 }
 
 HRESULT Model::TraverseChildren(FbxNode* node, vector<FbxNode*>* mesh)
@@ -116,49 +125,42 @@ HRESULT Model::TraverseAndStoreFbxNode1(vector<FbxNode*>* nodes, FbxAxisSystem* 
 	auto count = nodes->size();
 
 	auto modelVertices = new vector<Vertex>();
-	auto modelIndexes = new vector<unsigned int>();
+	auto modelIndecies = new vector<unsigned int>();
 
 	// The scene maybe
-	for (auto i = 0; i < count; i++)
+	for (unsigned int i = 0; i < count; i++)
 	{
 		auto child = nodes->at(i);
-		auto childMesh = child->GetMesh();
-		auto wipeMode = childMesh->GetWipeMode();
-		auto polygonCount = childMesh->GetPolygonCount();
 
-		auto controlPoints = childMesh->GetControlPoints();
-		auto controlPointsCount = childMesh->GetControlPointsCount();
+		auto mesh = child->GetMesh();
+		auto controlPoints = mesh->GetControlPoints();
+		auto controlPointsCount = mesh->GetControlPointsCount();
 
+		// Copy all control points
 		for (auto cp = 0; cp < controlPointsCount; cp++)
 		{
 			auto point = controlPoints[cp];
 			auto newVertex = new Vertex();
+			// Set vertex position (and invert Z)
 			newVertex->Position = ConvertFbxVector4ToXMFLOAT3(&point, axisSystem, 1.0f);
 			modelVertices->push_back(*newVertex);
 		}
 
-		auto isTriangleMesh = childMesh->IsTriangleMesh();
+		auto polygonCount = mesh->GetPolygonCount();
 
 		//For each polygon in the model
 		for (auto p = 0; p < polygonCount; p++)
 		{
-			auto polygonVertices = childMesh->GetPolygonVertices();
-
+			auto polygonSize = mesh->GetPolygonSize(p);
 			//For each point in a polygon get :  cooradinates, normals and index
-			for (auto v = 0; v < 3; v++)
+			for (auto v = 0; v < polygonSize; v++)
 			{
-				auto vertexIndex = polygonVertices[v];
+				auto vertexIndex = mesh->GetPolygonVertex(p, v);
 				auto newVertex = &modelVertices->at(vertexIndex);
-				auto point = childMesh->GetControlPointAt(vertexIndex);
 
+				// Create the normal
 				FbxVector4 normal;
-				childMesh->GetPolygonVertexNormal(p, v, normal);
-
-				newVertex->Color = XMFLOAT3
-				{
-					0.9f, 0.7f, 1.0f
-				};
-
+				mesh->GetPolygonVertexNormal(p, v, normal);
 				newVertex->Normal = XMFLOAT3
 				{
 					static_cast<float>(normal.mData[0]),
@@ -166,17 +168,24 @@ HRESULT Model::TraverseAndStoreFbxNode1(vector<FbxNode*>* nodes, FbxAxisSystem* 
 					static_cast<float>(normal.mData[2])
 				};
 
+				// Use a standard color for all vertices
+				newVertex->Color = XMFLOAT3
+				{
+					0.9f, 0.7f, 1.0f
+				};
+
+				// Dont set that now
 				newVertex->UV = XMFLOAT2
 				{
 					0.0f, 0.0f
 				};
 
-				modelIndexes->push_back(vertexIndex);
+				modelIndecies->push_back(vertexIndex);
 			}
 		}
 	}
 
-	return FillVertexAndIndexBuffer(modelVertices, modelIndexes);
+	return FillVertexAndIndexBuffer(modelVertices, modelIndecies);
 }
 
 HRESULT Model::TraverseAndStoreFbxNode2(vector<FbxNode*>* nodes, FbxAxisSystem* axisSystem)
@@ -187,7 +196,7 @@ HRESULT Model::TraverseAndStoreFbxNode2(vector<FbxNode*>* nodes, FbxAxisSystem* 
 	auto modelIndexes = new vector<unsigned int>();
 
 	// For each model in the scene
-	for (auto m = 0; m < count; m++)
+	for (unsigned int m = 0; m < count; m++)
 	{
 		auto child = nodes->at(m);
 		auto childMesh = child->GetMesh();
@@ -268,19 +277,34 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<Vertex>* modelVertices, vector<un
 
 HRESULT Model::LoadModelFromOBJFile(char* fileName)
 {
-	// TODO : Get the vertices from the file
+	fstream stream;	
+	stream.open(fileName, ios::in | ios::binary);
+	if (stream.good())
+	{
+		const int MAX_CHARS_PER_LINE = 512;
+		const int MAX_TOKENS_PER_LINE = 20;
+		const char* const DELIMITER = " ";
 
-	Vertex* vertices[] = { 0 };
+		while (!stream.eof())
+		{
+			char buf[MAX_CHARS_PER_LINE];
+			stream.getline(buf, MAX_CHARS_PER_LINE);
 
-	m_initData.pSysMem = vertices;
-	m_initData.SysMemPitch = 0;
-	m_initData.SysMemSlicePitch = 0;
-
-	m_bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	m_bufferDesc.ByteWidth = sizeof(Vertex) * ARRAYSIZE(vertices);
-	m_bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	m_bufferDesc.CPUAccessFlags = 0;
-	m_bufferDesc.MiscFlags = 0;
+			const char* token[MAX_TOKENS_PER_LINE] = {};
+			token[0] = strtok(buf, DELIMITER);
+			if (token[0]) // zero if line is blank
+			{
+				for (n = 1; n < MAX_TOKENS_PER_LINE; n++)
+				{
+					token[n] = strtok(0, DELIMITER); // subsequent tokens
+					if (!token[n])
+					{
+						break;
+					}
+				}
+			}
+		}
+	}
 
 	return 0;
 }
@@ -334,7 +358,7 @@ XMFLOAT3 Model::ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisSyste
 		// Flip y and z to convert from RH to LH
 		x = coordinate->mData[0] * scale;
 		y = coordinate->mData[1] * scale;
-		z = coordinate->mData[2] * -1.0 * scale;
+		z = coordinate->mData[2] * scale * -1.0;
 	}
 
 	dxVector = XMFLOAT3
