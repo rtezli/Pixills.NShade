@@ -18,6 +18,7 @@ HRESULT Model::Initialize()
 	//{
 	//	return result;
 	//}
+
 	auto result = LoadModelFromOBJFile("../Models/teapot.obj");
 	if (FAILED(result))
 	{
@@ -128,7 +129,7 @@ HRESULT Model::TraverseAndStoreFbxNode1(vector<FbxNode*>* nodes, FbxAxisSystem* 
 {
 	auto count = nodes->size();
 
-	auto modelVertices = new vector<Vertex>();
+	auto modelVertices = new vector<nshade::Vertex>();
 	auto modelIndecies = new vector<unsigned int>();
 
 	// The scene maybe
@@ -144,7 +145,7 @@ HRESULT Model::TraverseAndStoreFbxNode1(vector<FbxNode*>* nodes, FbxAxisSystem* 
 		for (auto cp = 0; cp < controlPointsCount; cp++)
 		{
 			auto point = controlPoints[cp];
-			auto newVertex = new Vertex();
+			auto newVertex = new nshade::Vertex();
 			// Set vertex position (and invert Z)
 			newVertex->Position = ConvertFbxVector4ToXMFLOAT3(&point, axisSystem, 1.0f);
 			modelVertices->push_back(*newVertex);
@@ -196,7 +197,7 @@ HRESULT Model::TraverseAndStoreFbxNode2(vector<FbxNode*>* nodes, FbxAxisSystem* 
 {
 	auto count = nodes->size();
 
-	auto modelVertices = new vector<Vertex>();
+	auto modelVertices = new vector<nshade::Vertex>();
 	auto modelIndexes = new vector<unsigned int>();
 
 	// For each model in the scene
@@ -214,7 +215,7 @@ HRESULT Model::TraverseAndStoreFbxNode2(vector<FbxNode*>* nodes, FbxAxisSystem* 
 		for (auto cp = 0; cp < controlPointsCount; cp++)
 		{
 			auto point = controlPoints[cp];
-			auto newVertex = new Vertex();
+			auto newVertex = new nshade::Vertex();
 
 			newVertex->Position = ConvertFbxVector4ToXMFLOAT3(&point, axisSystem, 1.0);
 			newVertex->Color = XMFLOAT3{ 0.9f, 0.7f, 1.0f };
@@ -234,13 +235,13 @@ HRESULT Model::TraverseAndStoreFbxNode2(vector<FbxNode*>* nodes, FbxAxisSystem* 
 	return FillVertexAndIndexBuffer(modelVertices, modelIndexes);
 }
 
-HRESULT Model::FillVertexAndIndexBuffer(vector<Vertex>* modelVertices, vector<unsigned int>* modelIndexes)
+HRESULT Model::FillVertexAndIndexBuffer(vector<nshade::Vertex>* modelVertices, vector<unsigned int>* modelIndexes)
 {
 	DeviceResource()->IndexCount = modelIndexes->size();
 	DeviceResource()->VertexCount = modelVertices->size();
 
 	D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
-	vertexBufferDesc.ByteWidth = sizeof(Vertex) * modelVertices->size();
+	vertexBufferDesc.ByteWidth = sizeof(nshade::Vertex) * modelVertices->size();
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
@@ -281,61 +282,85 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<Vertex>* modelVertices, vector<un
 
 HRESULT Model::LoadModelFromOBJFile(char* fileName)
 {
-	fstream stream;
-	stream.open(fileName, ios::in | ios::binary);
-	if (stream.good())
+	auto fileLines = File::ReadFileLines(fileName);
+	if (fileLines.empty())
 	{
-		const int MAX_CHARS_PER_LINE = 512;
-		const int MAX_TOKENS_PER_LINE = 20;
-		const char* const DELIMITER = " ";
+		return 0;
+	}
 
-		while (!stream.eof())
+	vector<string> parts;
+
+	auto vertices = new vector<nshade::Vertex>();
+	auto indices = new vector<unsigned int>();
+	auto polygons = new vector<nshade::Polygon>();
+
+	for (unsigned long i = 0; i < fileLines.size(); i++)
+	{
+		auto vertex = new nshade::Vertex();
+		string line = fileLines.at(i);
+		boost::split(parts, line, boost::is_any_of(" "));
+
+		if (parts.empty()) // if line is blank
 		{
-			char* buffer;
-			stream.getline(buffer, MAX_CHARS_PER_LINE);
+			continue;
+		}
 
-			istringstream bufferString(buffer);
-			istream_iterator<string> first(bufferString), last;
-			vector<string> parts;
-			copy(first, last, back_inserter(parts));
-
-
-			if (parts[0].c_str()) // if line is blank
-			{
-				continue;
-			}
-
-			if (parts[0] == "v")
-			{
-				auto x = atof(parts[0].c_str());
-				auto y = atof(parts[1].c_str());
-				auto z = atof(parts[2].c_str());
-				break;
-			}
-			else if (parts[0] == "vt")
-			{
-				auto x = atof(parts[0].c_str());
-				auto y = atof(parts[1].c_str());
-				break;
-			}
-			else if (parts[0] == "vn")
-			{
-				auto x = atof(parts[0].c_str());
-				auto y = atof(parts[1].c_str());
-				auto z = atof(parts[2].c_str());
-				break;
-			}
-			else if (parts[0] == "f")
-			{
-				auto x = atof(parts[0].c_str());
-				auto y = atof(parts[1].c_str());
-				auto z = atof(parts[2].c_str());
-				break;
-			}
+		if (parts[0] == "v")
+		{
+			auto x = boost::lexical_cast<float>(parts.at(1));
+			auto y = boost::lexical_cast<float>(parts.at(2));
+			auto z = boost::lexical_cast<float>(parts.at(3));
+			XMFLOAT3 position(x, y, z);
+			vertex->Position = position;
+			vertex->Color = XMFLOAT3(1.0f, 1.0f, 1.0f);
+			vertices->push_back(*vertex);
 		}
 	}
 
-	return 0;
+	for (unsigned long i = 0; i < fileLines.size(); i++)
+	{
+		// UV coords
+		auto vertex = new nshade::Vertex();
+		if (parts[0] == "vt")
+		{
+			auto x = boost::lexical_cast<float>(parts.at(1));
+			auto y = boost::lexical_cast<float>(parts.at(2));
+			XMFLOAT2 uv(x, y);
+			vertex->UV = uv;
+		}
+	}
+	for (unsigned long i = 0; i < fileLines.size(); i++)
+	{
+		// Normals
+		auto vertex = new nshade::Vertex();
+		if (parts[0] == "vn")
+		{
+			auto x = boost::lexical_cast<float>(parts.at(1));
+			auto y = boost::lexical_cast<float>(parts.at(2));
+			auto z = boost::lexical_cast<float>(parts.at(3));
+			XMFLOAT3 normal(x, y, z);
+			vertex->Normal = normal;
+		}
+	}
+	for (unsigned long i = 0; i < fileLines.size(); i++)
+	{
+		// Polygons
+		if (parts[0] == "f")
+		{
+			auto i1 = boost::lexical_cast<unsigned int>(parts.at(1));
+			auto i2 = boost::lexical_cast<unsigned int>(parts.at(2));
+			auto i3 = boost::lexical_cast<unsigned int>(parts.at(3));
+
+			nshade::Polygon polygon = { i1, i2, i3 };
+
+			indices->push_back(i1);
+			indices->push_back(i2);
+			indices->push_back(i3);
+
+			polygons->push_back(polygon);
+		}
+	}
+	return FillVertexAndIndexBuffer(vertices, indices);
 }
 
 XMFLOAT3 Model::ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisSystem* axisSystem, float scale)
@@ -416,7 +441,7 @@ HRESULT Model::InitializeConstantBuffer()
 
 HRESULT Model::InitializeVertexBuffer()
 {
-	static const Vertex cube[] =
+	static const nshade::Vertex cube[] =
 	{
 		{ XMFLOAT3(-0.5f, 0.0f, -0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
 		{ XMFLOAT3(-0.5f, 0.0f, 0.5f), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
@@ -436,7 +461,7 @@ HRESULT Model::InitializeVertexBuffer()
 	};
 
 	D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
-	vertexBufferDesc.ByteWidth = sizeof(Vertex) * ARRAYSIZE(cube);
+	vertexBufferDesc.ByteWidth = sizeof(nshade::Vertex) * ARRAYSIZE(cube);
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;

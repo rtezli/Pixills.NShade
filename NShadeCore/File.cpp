@@ -66,3 +66,22 @@ struct FILE_BYTE_RESULT* File::ReadFileBytes(LPCWSTR fileName)
 		return result;
 	}
 }
+
+vector<string> File::ReadFileLines(CHAR* fileName)
+{
+	ifstream stream(fileName);
+
+	vector<string> lines;
+	lines.clear();
+
+	if (stream.good())
+	{
+		string line;
+		while (!(stream.eof()))
+		{	
+			getline(stream, line);
+			lines.push_back(line);
+		}
+	}
+	return lines;
+}

@@ -13,14 +13,23 @@ enum Perspective : char
 	THIRD_PERSON = 2,
 	ISOMETRIC = 3
 };
+namespace nshade{
+	struct Vertex
+	{
+		XMFLOAT3 Position;
+		XMFLOAT3 Color;
+		XMFLOAT3 Normal;
+		XMFLOAT2 UV;
+	};
 
-struct Vertex
-{
-	XMFLOAT3 Position;
-	XMFLOAT3 Color;
-	XMFLOAT3 Normal;
-	XMFLOAT2 UV;
-};
+	struct Polygon
+	{
+		unsigned int P1;
+		unsigned int P2;
+		unsigned int P3;
+	};
+}
+
 
 struct RenderingQuality
 {

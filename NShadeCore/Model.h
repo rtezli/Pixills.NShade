@@ -1,8 +1,12 @@
 #pragma once
+#pragma warning( disable : 4996 ) 
 
 #include "includes.h"
 #include "fbxsdk.h"
-#include "fbxsdk\scene\fbxaxissystem.h"
+#include "fbxsdk/scene/fbxaxissystem.h"
+#include "boost/algorithm/string.hpp"
+#include "boost/algorithm/string.hpp"
+#include "boost/lexical_cast.hpp"
 
 class Model
 {
@@ -14,13 +18,13 @@ public:
 	HRESULT CreateVertexAndIndexBuffer(XMFLOAT3 vertices[]);
 	HRESULT	Initialize();
 
-	static Vertex Cube[];
-	static Vertex Sphere[];
+	static nshade::Vertex Cube[];
+	static nshade::Vertex Sphere[];
 private:
 	HRESULT						TraverseAndStoreFbxNode1(vector<FbxNode*>* nodes, FbxAxisSystem* axisSystem);
 	HRESULT						TraverseAndStoreFbxNode2(vector<FbxNode*>* nodes, FbxAxisSystem* axisSystem);
 	HRESULT						TraverseChildren(FbxNode* node, vector<FbxNode*>* mesh);
-	HRESULT						FillVertexAndIndexBuffer(vector<Vertex>* modelVertices, vector<unsigned int>* modelIndexes);
+	HRESULT						FillVertexAndIndexBuffer(vector<nshade::Vertex>* modelVertices, vector<unsigned int>* modelIndexes);
 	XMFLOAT3					ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisSystem* axisSystem, float scale);
 	DeviceResources*			DeviceResource(){ return m_pDeviceResources.get(); }
 	HRESULT						InitializeVertexBuffer();
@@ -33,3 +37,4 @@ private:
 	shared_ptr<DeviceResources>	m_pDeviceResources;
 };
 
+#pragma warning( restore : 4996 ) 

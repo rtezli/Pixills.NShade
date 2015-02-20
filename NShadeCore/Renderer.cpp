@@ -521,7 +521,7 @@ HRESULT Renderer::Render()
 		return 0;
 	}
 
-	UINT stride = sizeof(Vertex);
+	UINT stride = sizeof(nshade::Vertex);
 	UINT offset = 0;
 
 	// Set model data

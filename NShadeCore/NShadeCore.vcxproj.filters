@@ -124,5 +124,6 @@
   <ItemGroup>
     <None Include="shader.vs" />
     <None Include="shader.ps" />
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
