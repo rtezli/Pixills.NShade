@@ -127,7 +127,8 @@ HRESULT FbxParser::TraverseAndStoreFbxNode1(vector<FbxNode*>* nodes, FbxAxisSyst
 		{
 			auto polygonSize = mesh->GetPolygonSize(p);
 			//For each point in a polygon get :  cooradinates, normals and index
-			for (auto v = 0; v < polygonSize; v++)
+			//for (auto v = 0; v < polygonSize; v++)
+			for (auto v = polygonSize - 1; v >= 0; v--)
 			{
 				auto vertexIndex = mesh->GetPolygonVertex(p, v);
 				auto newVertex = vertices->at(vertexIndex);
@@ -158,6 +159,7 @@ HRESULT FbxParser::TraverseAndStoreFbxNode1(vector<FbxNode*>* nodes, FbxAxisSyst
 			}
 		}
 	}
+	//reverse(indices->begin(), indices->end());
 	return 0;
 }
 
@@ -210,24 +212,24 @@ XMFLOAT3 FbxParser::ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisS
 	bool yUp = true;
 	bool xFront = false;
 
-	int upInverter = 1.0;
+	int upInverter = 1.0f;
 	int upVectorSign;
 	auto upVector = axisSystem->GetUpVector(upVectorSign);
-	if (upVectorSign != -1)
+	if (upVectorSign != 1)
 	{
-		upInverter = -1.0;
+		upInverter = -1.0f;
 	}
 	if (upVector != FbxAxisSystem::eYAxis)
 	{
 		yUp = false;
 	}
 
-	int frontInverter = 1.0;
+	int frontInverter = 1.0f;
 	int frontVectorSign;
 	auto frontVector = axisSystem->GetFrontVector(frontVectorSign);
 	if (frontVectorSign != -1)
 	{
-		frontInverter = -1.0;
+		frontInverter = -1.0f;
 	}
 
 	auto x = 0.0f;
@@ -239,15 +241,14 @@ XMFLOAT3 FbxParser::ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisS
 	if (xFront)
 	{
 		x = coordinate->mData[2] * scale;
-		y = coordinate->mData[1] * upInverter * scale;
-		z = coordinate->mData[0] * frontInverter * scale;
+		y = coordinate->mData[1] * scale;// *upInverter;
+		z = coordinate->mData[0] * scale;// *frontInverter;
 	}
 	else
 	{
-		// Flip y and z to convert from RH to LH
 		x = coordinate->mData[0] * scale;
-		y = coordinate->mData[1] * scale;
-		z = coordinate->mData[2] * scale * -1.0;
+		y = coordinate->mData[1] * scale;// * upInverter;
+		z = coordinate->mData[2] * scale;// * frontInverter;
 	}
 
 	dxVector = XMFLOAT3

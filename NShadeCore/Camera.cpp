@@ -30,7 +30,7 @@ void Camera::Initialize()
 	auto wMatrix = XMMatrixTranspose(XMMatrixIdentity());
 	XMStoreFloat4x4(m_pWorldMatrix, wMatrix);
 
-	auto vMatrix = XMMatrixTranspose(XMMatrixLookAtRH(*m_eyePosition, *m_focusPosition, *m_upDirection));
+	auto vMatrix = XMMatrixTranspose(XMMatrixLookAtLH(*m_eyePosition, *m_focusPosition, *m_upDirection));
 	XMStoreFloat4x4(m_pViewMatrix, vMatrix);
 
 	float fovAngleY = GetFieldOfView();
@@ -41,7 +41,7 @@ void Camera::Initialize()
 		fovAngleY *= 1.0f;
 	}
 
-	XMMATRIX	perspectiveMatrix = XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 0.01f, 100.0f);
+	XMMATRIX	perspectiveMatrix = XMMatrixPerspectiveFovLH(fovAngleY, aspectRatio, 0.0001f, 100.0f);
 	XMFLOAT4X4	orientation = ScreenRotation::Rotation0;
 	XMMATRIX	orientationMatrix = XMLoadFloat4x4(&orientation);
 

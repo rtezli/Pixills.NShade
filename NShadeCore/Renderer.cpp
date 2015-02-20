@@ -345,26 +345,20 @@ HRESULT Renderer::CreateRasterizerDescription()
 
 	ZeroMemory(&m_pRasterizerDesc, sizeof(m_pRasterizerDesc));
 
-	if (isRightHand)
-	{
-		m_pRasterizerDesc.CullMode = D3D11_CULL_FRONT;
-		m_pRasterizerDesc.FrontCounterClockwise = true;
-	}
-	else
-	{
-		m_pRasterizerDesc.CullMode = D3D11_CULL_BACK; // D3D11_CULL_NONE;//
-		m_pRasterizerDesc.FrontCounterClockwise = false;
-	}
-
 	m_pRasterizerDesc.AntialiasedLineEnable = m_rasterizerUseMultiSampling;
 	m_pRasterizerDesc.DepthBias = 0;
 	m_pRasterizerDesc.DepthBiasClamp = 0.0f;
 	m_pRasterizerDesc.DepthClipEnable = true;
 	m_pRasterizerDesc.FillMode = D3D11_FILL_SOLID;
+	//m_pRasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;
 
 	m_pRasterizerDesc.MultisampleEnable = m_rasterizerUseMultiSampling;
 	m_pRasterizerDesc.ScissorEnable = false;
 	m_pRasterizerDesc.SlopeScaledDepthBias = 0.0f;
+
+	// Straight LH
+	m_pRasterizerDesc.CullMode = D3D11_CULL_BACK;//D3D11_CULL_FRONT; //D3D11_CULL_NONE;// 
+	m_pRasterizerDesc.FrontCounterClockwise = true;
 
 	return 0;
 }

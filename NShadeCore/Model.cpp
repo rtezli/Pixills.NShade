@@ -13,17 +13,18 @@ Model::~Model()
 
 HRESULT Model::Initialize()
 {
-	//auto result = LoadModelFromFBXFile("../Models/cube.fbx");
+	auto result = LoadModelFromFBXFile("../Models/teapot.fbx");
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	//auto result = LoadModelFromOBJFile("../Models/cube.obj", true);
 	//if (FAILED(result))
 	//{
 	//	return result;
 	//}
 
-	auto result = LoadModelFromOBJFile("../Models/cube.obj", true);
-	if (FAILED(result))
-	{
-		return result;
-	}
 	//auto result = InitializeVertexBuffer();
 	//if (FAILED(result))
 	//{
@@ -202,6 +203,47 @@ HRESULT Model::CreateVertexAndIndexBuffer(XMFLOAT3* vertices)
 	//	indexBuffer[i] = i;
 	//}
 	return 0;
+}
+
+HRESULT Model::CreateHorizontalPlane(float* size, XMFLOAT3* position)
+{
+	auto indices = new vector<unsigned int>();
+	auto vertices = new vector<nshade::Vertex>();
+
+	float halfSize = size / 2;
+	for (auto i = 0; i < 2; i++)
+	{
+		for (auto j = 0; j < 2; j++)
+		{
+			auto vertex = new nshade::Vertex();
+			vertex->Position = FbxFloat(halfSize + i, halfSize, halfSize + j);
+			vertices->push_back(vertex);
+		}
+	}
+
+	return FillVertexAndIndexBuffer(vertices, indices);
+}
+
+HRESULT Model::CreateCube(float* size)
+{
+	auto indices = new vector<unsigned int>();
+	auto vertices = new vector<nshade::Vertex>();
+
+	float halfSize = size / 2;
+	for (auto i = 0; i < 2; i++)
+	{
+		for (auto j = 0; j < 2; j++)
+		{
+			for (auto k = 0; k < 2; k++)
+			{
+				auto vertex = new nshade::Vertex();
+				vertex->Position = FbxFloat(halfSize + k, halfSize + j, halfSize + k);
+				vertices->push_back(vertex);
+			}
+		}
+	}
+
+	return FillVertexAndIndexBuffer(vertices, indices);
 }
 
 // TODO : Add material

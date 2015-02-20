@@ -10,6 +10,8 @@ public:
 	HRESULT LoadModelFromFBXFile(char* fileName);
 	HRESULT LoadModelFromOBJFile(char* fileName, bool isRightHand);
 	HRESULT CreateVertexAndIndexBuffer(XMFLOAT3 vertices[]);
+	HRESULT CreateHorizontalPlane(float* size);
+	HRESULT CreateHorizontalPlane(float* size);
 	HRESULT	Initialize();
 
 	static nshade::Vertex Cube[];
