@@ -18,18 +18,22 @@ HRESULT Model::Initialize()
 	//{
 	//	return result;
 	//}
-
-	auto result = InitializeVertexBuffer();
+	auto result = LoadModelFromOBJFile("../Models/teapot.obj");
 	if (FAILED(result))
 	{
 		return result;
 	}
+	//auto result = InitializeVertexBuffer();
+	//if (FAILED(result))
+	//{
+	//	return result;
+	//}
 
-	result = InitializeIndexBuffer(NULL);
-	if (FAILED(result))
-	{
-		return result;
-	}
+	//result = InitializeIndexBuffer(NULL);
+	//if (FAILED(result))
+	//{
+	//	return result;
+	//}
 
 	return InitializeConstantBuffer();
 }
@@ -277,7 +281,7 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<Vertex>* modelVertices, vector<un
 
 HRESULT Model::LoadModelFromOBJFile(char* fileName)
 {
-	fstream stream;	
+	fstream stream;
 	stream.open(fileName, ios::in | ios::binary);
 	if (stream.good())
 	{
@@ -287,21 +291,46 @@ HRESULT Model::LoadModelFromOBJFile(char* fileName)
 
 		while (!stream.eof())
 		{
-			char buf[MAX_CHARS_PER_LINE];
-			stream.getline(buf, MAX_CHARS_PER_LINE);
+			char* buffer;
+			stream.getline(buffer, MAX_CHARS_PER_LINE);
 
-			const char* token[MAX_TOKENS_PER_LINE] = {};
-			token[0] = strtok(buf, DELIMITER);
-			if (token[0]) // zero if line is blank
+			istringstream bufferString(buffer);
+			istream_iterator<string> first(bufferString), last;
+			vector<string> parts;
+			copy(first, last, back_inserter(parts));
+
+
+			if (parts[0].c_str()) // if line is blank
 			{
-				for (n = 1; n < MAX_TOKENS_PER_LINE; n++)
-				{
-					token[n] = strtok(0, DELIMITER); // subsequent tokens
-					if (!token[n])
-					{
-						break;
-					}
-				}
+				continue;
+			}
+
+			if (parts[0] == "v")
+			{
+				auto x = atof(parts[0].c_str());
+				auto y = atof(parts[1].c_str());
+				auto z = atof(parts[2].c_str());
+				break;
+			}
+			else if (parts[0] == "vt")
+			{
+				auto x = atof(parts[0].c_str());
+				auto y = atof(parts[1].c_str());
+				break;
+			}
+			else if (parts[0] == "vn")
+			{
+				auto x = atof(parts[0].c_str());
+				auto y = atof(parts[1].c_str());
+				auto z = atof(parts[2].c_str());
+				break;
+			}
+			else if (parts[0] == "f")
+			{
+				auto x = atof(parts[0].c_str());
+				auto y = atof(parts[1].c_str());
+				auto z = atof(parts[2].c_str());
+				break;
 			}
 		}
 	}
