@@ -75,6 +75,12 @@
     <ClInclude Include="RenderingPipeline.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ObjParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -114,6 +120,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RenderingPipeline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

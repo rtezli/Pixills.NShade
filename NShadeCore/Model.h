@@ -1,12 +1,6 @@
 #pragma once
-#pragma warning( disable : 4996 ) 
 
 #include "includes.h"
-#include "fbxsdk.h"
-#include "fbxsdk/scene/fbxaxissystem.h"
-#include "boost/algorithm/string.hpp"
-#include "boost/algorithm/string.hpp"
-#include "boost/lexical_cast.hpp"
 
 class Model
 {
@@ -36,5 +30,3 @@ private:
 	D3D11_SUBRESOURCE_DATA		m_initData;
 	shared_ptr<DeviceResources>	m_pDeviceResources;
 };
-
-#pragma warning( restore : 4996 ) 
