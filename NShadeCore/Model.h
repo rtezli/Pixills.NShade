@@ -14,7 +14,7 @@ public:
 	Model(DeviceResources* pResources);
 	~Model();
 	HRESULT LoadModelFromFBXFile(char* fileName);
-	HRESULT LoadModelFromOBJFile(char* fileName);
+	HRESULT LoadModelFromOBJFile(char* fileName, bool isRightHand);
 	HRESULT CreateVertexAndIndexBuffer(XMFLOAT3 vertices[]);
 	HRESULT	Initialize();
 

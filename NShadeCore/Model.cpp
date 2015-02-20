@@ -19,7 +19,7 @@ HRESULT Model::Initialize()
 	//	return result;
 	//}
 
-	auto result = LoadModelFromOBJFile("../Models/teapot.obj");
+	auto result = LoadModelFromOBJFile("../Models/teapot.obj", true);
 	if (FAILED(result))
 	{
 		return result;
@@ -280,7 +280,7 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<nshade::Vertex>* modelVertices, v
 	return DeviceResource()->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &DeviceResource()->IndexBuffer);
 }
 
-HRESULT Model::LoadModelFromOBJFile(char* fileName)
+HRESULT Model::LoadModelFromOBJFile(char* fileName, bool isRightHand)
 {
 	auto fileLines = File::ReadFileLines(fileName);
 	if (fileLines.empty())
@@ -307,10 +307,21 @@ HRESULT Model::LoadModelFromOBJFile(char* fileName)
 
 		if (parts[0] == "v")
 		{
+			XMFLOAT3 position;
 			auto x = boost::lexical_cast<float>(parts.at(1));
 			auto y = boost::lexical_cast<float>(parts.at(2));
 			auto z = boost::lexical_cast<float>(parts.at(3));
-			XMFLOAT3 position(x, y, z);
+
+			if (isRightHand)
+			{
+				z = z * -1.0f;
+				position = XMFLOAT3(x, y, z);
+			}
+			else
+			{
+				position = XMFLOAT3(x, y, z);
+			}
+
 			vertex->Position = position;
 			vertex->Color = XMFLOAT3(1.0f, 1.0f, 1.0f);
 			vertices->push_back(*vertex);
@@ -325,6 +336,12 @@ HRESULT Model::LoadModelFromOBJFile(char* fileName)
 		{
 			auto x = boost::lexical_cast<float>(parts.at(1));
 			auto y = boost::lexical_cast<float>(parts.at(2));
+
+			if (isRightHand)
+			{
+				y = 1.0f - y;
+			}
+
 			XMFLOAT2 uv(x, y);
 			vertex->UV = uv;
 		}
@@ -338,6 +355,12 @@ HRESULT Model::LoadModelFromOBJFile(char* fileName)
 			auto x = boost::lexical_cast<float>(parts.at(1));
 			auto y = boost::lexical_cast<float>(parts.at(2));
 			auto z = boost::lexical_cast<float>(parts.at(3));
+
+			if (isRightHand)
+			{
+				z = z * -1.0f;
+			}
+
 			XMFLOAT3 normal(x, y, z);
 			vertex->Normal = normal;
 		}
@@ -351,15 +374,28 @@ HRESULT Model::LoadModelFromOBJFile(char* fileName)
 			auto i2 = boost::lexical_cast<unsigned int>(parts.at(2));
 			auto i3 = boost::lexical_cast<unsigned int>(parts.at(3));
 
-			nshade::Polygon polygon = { i1, i2, i3 };
+			nshade::Polygon polygon;
 
-			indices->push_back(i1);
-			indices->push_back(i2);
-			indices->push_back(i3);
+			if (isRightHand)
+			{
+				polygon = { i3, i2, i1 };
+
+				indices->push_back(i3);
+				indices->push_back(i2);
+				indices->push_back(i1);
+			}
+			else
+			{
+				polygon = { i1, i2, i3 };
+				indices->push_back(i1);
+				indices->push_back(i2);
+				indices->push_back(i3);
+			}
 
 			polygons->push_back(polygon);
 		}
 	}
+
 	return FillVertexAndIndexBuffer(vertices, indices);
 }
 
