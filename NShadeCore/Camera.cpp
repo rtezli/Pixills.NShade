@@ -16,14 +16,14 @@ void Camera::Initialize()
 	m_pViewMatrix		= new XMFLOAT4X4();
 	m_pProjectionMatrix = new XMFLOAT4X4();
 
-	m_radius = 5.0f;
+	m_radius = 4.0f;
 	m_hAngle = 0.0f;
 	m_vAngle = 0.0f;
 
 	auto z = m_radius * sin(m_hAngle * -1);
 	auto x = sqrt(pow(m_radius, 2) - pow(z, 2));
 
-	m_eyePosition = new XMVECTOR{ 0.0f, 5.0f, m_radius };
+	m_eyePosition = new XMVECTOR{ 0.0f, 3.0f, m_radius };
 	m_focusPosition = new XMVECTOR{ 0.0f, 0.0f, 0.0f };
 	m_upDirection = new XMVECTOR{ 0.0f, 1.0f, 0.0f };
 
@@ -41,7 +41,7 @@ void Camera::Initialize()
 		fovAngleY *= 1.0f;
 	}
 
-	XMMATRIX	perspectiveMatrix = XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 0.1f, 100.0f);
+	XMMATRIX	perspectiveMatrix = XMMatrixPerspectiveFovRH(90.00f, aspectRatio, 0.1f, 100.0f);
 	XMFLOAT4X4	orientation = ScreenRotation::Rotation0;
 	XMMATRIX	orientationMatrix = XMLoadFloat4x4(&orientation);
 
