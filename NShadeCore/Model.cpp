@@ -50,11 +50,15 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 
 HRESULT Model::FillVertexAndIndexBuffer(vector<nshade::Vertex>* modelVertices, vector<unsigned int>* modelIndexes)
 {
-	DeviceResource()->IndexCount = modelIndexes->size();
 	DeviceResource()->VertexCount = modelVertices->size();
+	DeviceResource()->IndexCount = modelIndexes->size();
+
+	nshade::Vertex* vertexArr;
+	vertexArr = (nshade::Vertex*)malloc(DeviceResource()->VertexCount * sizeof(nshade::Vertex));
+	copy(modelVertices->begin(), modelVertices->end(), vertexArr);
 
 	D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
-	vertexBufferDesc.ByteWidth = sizeof(nshade::Vertex) * modelVertices->size();
+	vertexBufferDesc.ByteWidth = sizeof(nshade::Vertex) * DeviceResource()->VertexCount;
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
@@ -62,7 +66,7 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<nshade::Vertex>* modelVertices, v
 	vertexBufferDesc.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
-	vertexBufferData.pSysMem = modelVertices;
+	vertexBufferData.pSysMem = vertexArr;
 	vertexBufferData.SysMemPitch = 0;
 	vertexBufferData.SysMemSlicePitch = 0;
 
@@ -72,7 +76,9 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<nshade::Vertex>* modelVertices, v
 		return result;
 	}
 
-	DeviceResource()->IndexCount = modelIndexes->size();
+	unsigned int* indexArr;
+	indexArr = (unsigned int*)malloc(DeviceResource()->IndexCount * sizeof(unsigned int));
+	copy(modelIndexes->begin(), modelIndexes->end(), indexArr);
 
 	D3D11_BUFFER_DESC indexBufferDesc = { 0 };
 	indexBufferDesc.ByteWidth = sizeof(unsigned int) * DeviceResource()->IndexCount;
@@ -83,12 +89,9 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<nshade::Vertex>* modelVertices, v
 	indexBufferDesc.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
-	indexBufferData.pSysMem = &modelIndexes[0];
+	indexBufferData.pSysMem = indexArr;
 	indexBufferData.SysMemPitch = 0;
 	indexBufferData.SysMemSlicePitch = 0;
-
-	// fbxScene->Destroy();
-	// fbxRootNode->Destroy();
 
 	return DeviceResource()->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &DeviceResource()->IndexBuffer);
 }

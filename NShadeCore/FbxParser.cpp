@@ -57,7 +57,7 @@ HRESULT FbxParser::Read(char* fileName, vector<nshade::Vertex>* vertices, vector
 	auto mesh = new vector<FbxNode*>();
 	FbxParser::TraverseChildren(fbxRootNode, mesh);
 
-	FbxParser::TraverseAndStoreFbxNode1(mesh, &axisSystem, vertices, indices);
+	FbxParser::TraverseAndStoreFbxNode2(mesh, &axisSystem, vertices, indices);
 	return 0;
 }
 
@@ -127,10 +127,11 @@ HRESULT FbxParser::TraverseAndStoreFbxNode1(vector<FbxNode*>* nodes, FbxAxisSyst
 		{
 			auto polygonSize = mesh->GetPolygonSize(p);
 			//For each point in a polygon get :  cooradinates, normals and index
-			//for (auto v = 0; v < polygonSize; v++)
-			for (auto v = polygonSize - 1; v >= 0; v--)
+			for (auto v = 0; v < polygonSize; v++)
+			//for (auto v = polygonSize - 1; v >= 0; v--)
 			{
 				auto vertexIndex = mesh->GetPolygonVertex(p, v);
+				auto point = controlPoints[vertexIndex];
 				auto newVertex = vertices->at(vertexIndex);
 
 				// Create the normal
@@ -194,7 +195,7 @@ HRESULT FbxParser::TraverseAndStoreFbxNode2(vector<FbxNode*>* nodes, FbxAxisSyst
 
 		for (auto v = 0; v < vertexCount; v++)
 		{
-			indices->push_back(vertexIndexes[v]);
+			indices->push_back(static_cast<unsigned int>(vertexIndexes[v]));
 		}
 	}
 	return 0;
@@ -240,15 +241,15 @@ XMFLOAT3 FbxParser::ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisS
 
 	if (xFront)
 	{
-		x = coordinate->mData[2] * scale;
-		y = coordinate->mData[1] * scale;// *upInverter;
-		z = coordinate->mData[0] * scale;// *frontInverter;
+		x = coordinate->mData[2];
+		y = coordinate->mData[1];// *upInverter;
+		z = coordinate->mData[0];// *frontInverter;
 	}
 	else
 	{
-		x = coordinate->mData[0] * scale;
-		y = coordinate->mData[1] * scale;// * upInverter;
-		z = coordinate->mData[2] * scale;// * frontInverter;
+		x = coordinate->mData[0];
+		y = coordinate->mData[1];// * upInverter;
+		z = coordinate->mData[2];// * frontInverter;
 	}
 
 	dxVector = XMFLOAT3

@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning( disable : 4996 )
 
 #include "includes.h"
 
@@ -32,3 +33,5 @@ private:
 	D3D11_SUBRESOURCE_DATA		m_initData;
 	shared_ptr<DeviceResources>	m_pDeviceResources;
 };
+
+#pragma warning( restore : 4996 )
