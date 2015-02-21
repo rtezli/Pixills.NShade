@@ -92,8 +92,8 @@ private:
 private:
 	DeviceResources*					m_pDeviceResources;
 
-	LPCWSTR								m_standardVertexShader = L"VertexShader.cso";
-	LPCWSTR								m_standardPixelShader = L"PixelShader.cso";
+	LPCWSTR								m_standardVertexShader = L"../Debug/VertexShader.cso";
+	LPCWSTR								m_standardPixelShader = L"../Debug/PixelShader.cso";
 
 	D3D11_TEXTURE2D_DESC				m_pDepthBufferDesc;
 	DXGI_SWAP_CHAIN_DESC				m_pSwapChainDescription;

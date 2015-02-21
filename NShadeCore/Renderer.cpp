@@ -395,7 +395,7 @@ HRESULT Renderer::CreateViewPort()
 HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 {
 	//ID3D11ClassLinkage linkage;
- 
+	Debug::WriteCurrentDir();
 	auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
 	auto result = GetDevice()->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &Resources()->Shaders->VertexShader);
 
@@ -542,17 +542,20 @@ HRESULT Renderer::Render()
 	// Set multiple buffers here ? i.e. each for one model since some shaders are not applied to all models
 	GetDeviceContext()->IASetVertexBuffers(0, 1, &Resources()->VertexBuffer, &stride, &offset);
 	GetDeviceContext()->IASetIndexBuffer(Resources()->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
 	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Set shader data
-	GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
+	
 
 	// Set multiple shaders here ?
-	GetDeviceContext()->VSSetShader(Resources()->Shaders->VertexShader, nullptr, 0);
-	//GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
-	GetDeviceContext()->PSSetShader(Resources()->Shaders->PixelShader, nullptr, 0);
+	auto vs = Resources()->Shaders->VertexShader;
+	auto ps = Resources()->Shaders->PixelShader;
 
+	GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
+	GetDeviceContext()->VSSetShader(vs, NULL, 0);
+	
+	GetDeviceContext()->PSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
+	GetDeviceContext()->PSSetShader(ps, NULL, 0);
 	GetDeviceContext()->DrawIndexed(Resources()->IndexCount, 0, 0);
 
 	// Present

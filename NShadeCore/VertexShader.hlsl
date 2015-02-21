@@ -1,8 +1,8 @@
 cbuffer ConstantBufferData : register(b0)
 {
-	matrix world;
-	matrix view;
-	matrix projection;
+	float4x4 world;
+	float4x4 view;
+	float4x4 projection;
 };
 
 
@@ -16,7 +16,7 @@ struct VertexShaderInput
 	float4 lightPosition		: POSITION1;
 };
 
-struct VertexShaderOutput
+struct PixelShaderInput
 {
 	float4 vertexPosition	: SV_POSITION;
 	float4 vertexColor		: COLOR0;
@@ -25,9 +25,9 @@ struct VertexShaderOutput
 	float4 lightPosition	: POSITION1;
 };
 
-VertexShaderOutput main(VertexShaderInput input)
+PixelShaderInput main(VertexShaderInput input)
 {
-	VertexShaderOutput vertexShaderOutput;
+	PixelShaderInput vertexShaderOutput;
 	float4 position = float4(input.vertexPosition, 1.0f);
 
 	position = mul(position, world);
@@ -36,9 +36,9 @@ VertexShaderOutput main(VertexShaderInput input)
 
 	vertexShaderOutput.vertexPosition = position;
 	vertexShaderOutput.vertexColor = input.vertexColor;
-	vertexShaderOutput.normal = mul(input.normal, world);
+	vertexShaderOutput.normal = mul(float4(input.normal, 0.0f), world);
 	vertexShaderOutput.ambientColor = input.ambientColor;
-	vertexShaderOutput.lightPosition = input.lightPosition;
+	vertexShaderOutput.lightPosition = mul(input.lightPosition, world);
 
 	return vertexShaderOutput;
 }

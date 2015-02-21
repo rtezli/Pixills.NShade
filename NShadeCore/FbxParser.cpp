@@ -147,7 +147,7 @@ HRESULT FbxParser::TraverseAndStoreFbxNode(vector<FbxNode*>* nodes, FbxAxisSyste
 				// Use a standard color for all vertices
 				newVertex->Color = XMFLOAT4
 				{
-					0.9f, 0.7f, 1.0f, 1.0f
+					1.0f, 0.5f, 1.0f, 1.0f
 				};
 
 				// Dont set that now
