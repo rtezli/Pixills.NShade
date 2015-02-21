@@ -17,9 +17,21 @@ namespace nshade{
 	struct Vertex
 	{
 		XMFLOAT3 Position;
-		XMFLOAT3 Color;
+		XMFLOAT4 Color;
 		XMFLOAT3 Normal;
 		XMFLOAT2 UV;
+	};
+
+	struct Light
+	{
+		XMFLOAT4 Color;
+		XMFLOAT4 Position;
+	};
+
+	struct VertexShaderInput
+	{
+		Vertex Vertex;
+		Light Light;
 	};
 
 	struct Polygon

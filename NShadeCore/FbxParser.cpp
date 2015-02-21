@@ -57,7 +57,7 @@ HRESULT FbxParser::Read(char* fileName, vector<nshade::Vertex>* vertices, vector
 	auto mesh = new vector<FbxNode*>();
 	FbxParser::TraverseChildren(fbxRootNode, mesh);
 
-	FbxParser::TraverseAndStoreFbxNode2(mesh, &axisSystem, vertices, indices);
+	FbxParser::TraverseAndStoreFbxNode(mesh, &axisSystem, vertices, indices);
 	return 0;
 }
 
@@ -97,7 +97,7 @@ HRESULT FbxParser::TraverseChildren(FbxNode* node, vector<FbxNode*>* mesh)
 	return 0;
 }
 
-HRESULT FbxParser::TraverseAndStoreFbxNode1(vector<FbxNode*>* nodes, FbxAxisSystem* axisSystem, vector<nshade::Vertex>* vertices, vector<unsigned int>* indices)
+HRESULT FbxParser::TraverseAndStoreFbxNode(vector<FbxNode*>* nodes, FbxAxisSystem* axisSystem, vector<nshade::Vertex>* vertices, vector<unsigned int>* indices)
 {
 	auto count = nodes->size();
 
@@ -126,18 +126,18 @@ HRESULT FbxParser::TraverseAndStoreFbxNode1(vector<FbxNode*>* nodes, FbxAxisSyst
 		for (auto p = 0; p < polygonCount; p++)
 		{
 			auto polygonSize = mesh->GetPolygonSize(p);
+
 			//For each point in a polygon get :  cooradinates, normals and index
 			for (auto v = 0; v < polygonSize; v++)
-			//for (auto v = polygonSize - 1; v >= 0; v--)
 			{
 				auto vertexIndex = mesh->GetPolygonVertex(p, v);
 				auto point = controlPoints[vertexIndex];
-				auto newVertex = vertices->at(vertexIndex);
+				auto newVertex = new nshade::Vertex(vertices->at(vertexIndex));
 
 				// Create the normal
 				FbxVector4 normal;
 				mesh->GetPolygonVertexNormal(p, v, normal);
-				newVertex.Normal = XMFLOAT3
+				newVertex->Normal = XMFLOAT3
 				{
 					static_cast<float>(normal.mData[0]),
 					static_cast<float>(normal.mData[1]),
@@ -145,59 +145,22 @@ HRESULT FbxParser::TraverseAndStoreFbxNode1(vector<FbxNode*>* nodes, FbxAxisSyst
 				};
 
 				// Use a standard color for all vertices
-				newVertex.Color = XMFLOAT3
+				newVertex->Color = XMFLOAT4
 				{
-					0.9f, 0.7f, 1.0f
+					0.9f, 0.7f, 1.0f, 1.0f
 				};
 
 				// Dont set that now
-				newVertex.UV = XMFLOAT2
+				newVertex->UV = XMFLOAT2
 				{
 					0.0f, 0.0f
 				};
-
+				vertices->at(vertexIndex) = *newVertex;
 				indices->push_back(vertexIndex);
 			}
 		}
 	}
 	//reverse(indices->begin(), indices->end());
-	return 0;
-}
-
-HRESULT FbxParser::TraverseAndStoreFbxNode2(vector<FbxNode*>* nodes, FbxAxisSystem* axisSystem, vector<nshade::Vertex>* vertices, vector<unsigned int>* indices)
-{
-	auto count = nodes->size();
-
-	// For each model in the scene
-	for (unsigned int m = 0; m < count; m++)
-	{
-		auto child = nodes->at(m);
-		auto childMesh = child->GetMesh();
-
-		auto vertexCount = childMesh->GetPolygonVertexCount();
-		auto vertexIndexes = childMesh->GetPolygonVertices();
-
-		auto controlPoints = childMesh->GetControlPoints();
-		auto controlPointsCount = childMesh->GetControlPointsCount();
-
-		for (auto cp = 0; cp < controlPointsCount; cp++)
-		{
-			auto point = controlPoints[cp];
-			auto newVertex = new nshade::Vertex();
-
-			newVertex->Position = FbxParser::ConvertFbxVector4ToXMFLOAT3(&point, axisSystem, 1.0);
-			newVertex->Color = XMFLOAT3{ 0.9f, 0.7f, 1.0f };
-			newVertex->UV = XMFLOAT2{ 0.0f, 0.0f };
-			newVertex->Normal = XMFLOAT3{ 0.0f, 0.0f, 0.0f };
-
-			vertices->push_back(*newVertex);
-		}
-
-		for (auto v = 0; v < vertexCount; v++)
-		{
-			indices->push_back(static_cast<unsigned int>(vertexIndexes[v]));
-		}
-	}
 	return 0;
 }
 

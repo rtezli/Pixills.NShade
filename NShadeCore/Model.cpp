@@ -50,15 +50,30 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 
 HRESULT Model::FillVertexAndIndexBuffer(vector<nshade::Vertex>* modelVertices, vector<unsigned int>* modelIndexes)
 {
+	nshade::Light light = { XMFLOAT4{ 5.0f, 5.0f, 0.0f, 1.0f }, XMFLOAT4{ 1.0f, 0.7f, 0.7f, 1.0f } };
+
+	auto input = new  vector<nshade::VertexShaderInput>();
+
+	for (unsigned int i = 0; i < modelVertices->size(); i++)
+	{
+		auto vertex = modelVertices->at(i);
+
+		auto vertexInput = new nshade::VertexShaderInput();
+		vertexInput->Vertex = vertex;
+		vertexInput->Light = light;
+
+		input->push_back(*vertexInput);
+	}
+
 	DeviceResource()->VertexCount = modelVertices->size();
 	DeviceResource()->IndexCount = modelIndexes->size();
 
-	nshade::Vertex* vertexArr;
-	vertexArr = (nshade::Vertex*)malloc(DeviceResource()->VertexCount * sizeof(nshade::Vertex));
-	copy(modelVertices->begin(), modelVertices->end(), vertexArr);
+	nshade::VertexShaderInput* vertexArr;
+	vertexArr = (nshade::VertexShaderInput*)malloc(DeviceResource()->VertexCount * sizeof(nshade::VertexShaderInput));
+	copy(input->begin(), input->end(), vertexArr);
 
 	D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
-	vertexBufferDesc.ByteWidth = sizeof(nshade::Vertex) * DeviceResource()->VertexCount;
+	vertexBufferDesc.ByteWidth = sizeof(nshade::VertexShaderInput) * DeviceResource()->VertexCount;
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
@@ -123,20 +138,20 @@ HRESULT Model::InitializeVertexBuffer()
 {
 	static const nshade::Vertex cube[] =
 	{
-		{ XMFLOAT3(-0.5f, 0.0f, -0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
-		{ XMFLOAT3(-0.5f, 0.0f, 0.5f), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
-		{ XMFLOAT3(-0.5f, 1.0f, -0.5f), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
-		{ XMFLOAT3(-0.5f, 1.0f, 0.5f), XMFLOAT3(0.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
+		{ XMFLOAT3(-0.5f, 0.0f, -0.5f), XMFLOAT4(0.0f, 0.0f, 0.0, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
+		{ XMFLOAT3(-0.5f, 0.0f, 0.5f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
+		{ XMFLOAT3(-0.5f, 1.0f, -0.5f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
+		{ XMFLOAT3(-0.5f, 1.0f, 0.5f), XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
 
-		{ XMFLOAT3(0.5f, 0.0f, -0.5f), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
-		{ XMFLOAT3(0.5f, 0.0f, 0.5f), XMFLOAT3(1.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
-		{ XMFLOAT3(0.5f, 1.0f, -0.5f), XMFLOAT3(1.0f, 1.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
-		{ XMFLOAT3(0.5f, 1.0f, 0.5f), XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
+		{ XMFLOAT3(0.5f, 0.0f, -0.5f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
+		{ XMFLOAT3(0.5f, 0.0f, 0.5f), XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
+		{ XMFLOAT3(0.5f, 1.0f, -0.5f), XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
+		{ XMFLOAT3(0.5f, 1.0f, 0.5f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
 
-		{ XMFLOAT3(-15.0f, 0.0f, -15.0f), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
-		{ XMFLOAT3(15.0f, 0.0f, -15.0f), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
-		{ XMFLOAT3(15.0f, 0.0f, 15.0f), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
-		{ XMFLOAT3(-15.0f, 0.0f, 15.0f), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
+		{ XMFLOAT3(-15.0f, 0.0f, -15.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
+		{ XMFLOAT3(15.0f, 0.0f, -15.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
+		{ XMFLOAT3(15.0f, 0.0f, 15.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
+		{ XMFLOAT3(-15.0f, 0.0f, 15.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) },
 
 	};
 

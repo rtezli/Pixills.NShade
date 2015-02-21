@@ -54,7 +54,7 @@ HRESULT ObjParser::Parse(vector<nshade::Vertex>* vertices, vector<unsigned int>*
 			}
 
 			vertex->Position = position;
-			vertex->Color = XMFLOAT3(1.0f, 1.0f, 1.0f);
+			vertex->Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 			vertices->push_back(*vertex);
 		}
 	}

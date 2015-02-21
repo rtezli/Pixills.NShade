@@ -394,6 +394,8 @@ HRESULT Renderer::CreateViewPort()
 
 HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 {
+	//ID3D11ClassLinkage linkage;
+ 
 	auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
 	auto result = GetDevice()->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &Resources()->Shaders->VertexShader);
 
@@ -404,8 +406,12 @@ HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 
 	static const D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "POSITION",	0, DXGI_FORMAT_R32G32B32_FLOAT, 0,		D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // Vertex position
+		{ "COLOR",		0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,	D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // Vertex color
+		{ "NORMAL",		0, DXGI_FORMAT_R32G32B32_FLOAT, 0,		D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // Normal vector
+		{ "TEXCOORD",	0, DXGI_FORMAT_R32G32_FLOAT, 0,			D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // Texture UV
+		{ "COLOR",		1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,	D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // Ambient Light color where w is intensity
+		{ "POSITION",	1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,   D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }  // Point light position w is intensity
 	};
 
 	return GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), vsByteCode->FileBytes, vsByteCode->Length, &Resources()->InputLayout);
@@ -527,22 +533,27 @@ HRESULT Renderer::Render()
 		return 0;
 	}
 
-	UINT stride = sizeof(nshade::Vertex);
+	UINT stride = sizeof(nshade::VertexShaderInput);
 	UINT offset = 0;
 
 	// Set model data
 	GetDeviceContext()->IASetInputLayout(Resources()->InputLayout);
+	
+	// Set multiple buffers here ? i.e. each for one model since some shaders are not applied to all models
 	GetDeviceContext()->IASetVertexBuffers(0, 1, &Resources()->VertexBuffer, &stride, &offset);
 	GetDeviceContext()->IASetIndexBuffer(Resources()->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
 	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Set shader data
-	GetDeviceContext()->VSSetShader(Resources()->Shaders->VertexShader, nullptr, 0);
 	GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
+
+	// Set multiple shaders here ?
+	GetDeviceContext()->VSSetShader(Resources()->Shaders->VertexShader, nullptr, 0);
+	//GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
 	GetDeviceContext()->PSSetShader(Resources()->Shaders->PixelShader, nullptr, 0);
 
 	GetDeviceContext()->DrawIndexed(Resources()->IndexCount, 0, 0);
-	//GetDeviceContext()->Draw(Resources()->VertexCount, 0);
 
 	// Present
 	return Resources()->SwapChain->Present(1, 0);
