@@ -205,7 +205,7 @@ HRESULT Model::CreateVertexAndIndexBuffer(XMFLOAT3* vertices)
 	return 0;
 }
 
-HRESULT Model::CreateHorizontalPlane(float* size, XMFLOAT3* position)
+HRESULT Model::CreateHorizontalPlane(float size, XMFLOAT3* position)
 {
 	auto indices = new vector<unsigned int>();
 	auto vertices = new vector<nshade::Vertex>();
@@ -215,16 +215,16 @@ HRESULT Model::CreateHorizontalPlane(float* size, XMFLOAT3* position)
 	{
 		for (auto j = 0; j < 2; j++)
 		{
-			auto vertex = new nshade::Vertex();
-			vertex->Position = FbxFloat(halfSize + i, halfSize, halfSize + j);
-			vertices->push_back(vertex);
+			XMFLOAT3 pos{ halfSize + i, halfSize, halfSize + j };
+			auto vertex = new nshade::Vertex{ pos };
+			vertices->push_back(*vertex);
 		}
 	}
 
 	return FillVertexAndIndexBuffer(vertices, indices);
 }
 
-HRESULT Model::CreateCube(float* size)
+HRESULT Model::CreateCube(float size, XMFLOAT3* position)
 {
 	auto indices = new vector<unsigned int>();
 	auto vertices = new vector<nshade::Vertex>();
@@ -236,9 +236,9 @@ HRESULT Model::CreateCube(float* size)
 		{
 			for (auto k = 0; k < 2; k++)
 			{
-				auto vertex = new nshade::Vertex();
-				vertex->Position = FbxFloat(halfSize + k, halfSize + j, halfSize + k);
-				vertices->push_back(vertex);
+				XMFLOAT3 pos{ halfSize + i, halfSize, halfSize + j };
+				auto vertex = new nshade::Vertex{ pos };
+				vertices->push_back(*vertex);
 			}
 		}
 	}
