@@ -22,18 +22,6 @@ namespace nshade{
 		XMFLOAT2 UV;
 	};
 
-	struct Light
-	{
-		XMFLOAT4 Color;
-		XMFLOAT4 Position;
-	};
-
-	struct VertexShaderInput
-	{
-		Vertex Vertex;
-		Light Light;
-	};
-
 	struct Polygon
 	{
 		unsigned int P1;
@@ -42,6 +30,26 @@ namespace nshade{
 	};
 }
 
+enum LightType : char
+{
+	Undefined	= 0,
+	Point		= 1,
+	Spot		= 2,
+	Directional = 3
+};
+
+
+struct Light
+{
+	XMFLOAT4 Color;
+	XMFLOAT4 Position;
+};
+
+struct VertexShaderInput
+{
+	nshade::Vertex Vertex;
+	Light Light;
+};
 
 struct RenderingQuality
 {

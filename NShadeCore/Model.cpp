@@ -50,15 +50,15 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 
 HRESULT Model::FillVertexAndIndexBuffer(vector<nshade::Vertex>* modelVertices, vector<unsigned int>* modelIndexes)
 {
-	nshade::Light light = { XMFLOAT4{ 5.0f, 5.0f, 0.0f, 1.0f }, XMFLOAT4{ 1.0f, 0.7f, 0.7f, 1.0f } };
+	Light light = { XMFLOAT4{ 5.0f, 5.0f, 0.0f, 1.0f }, XMFLOAT4{ 1.0f, 0.7f, 0.7f, 1.0f } };
 
-	auto input = new  vector<nshade::VertexShaderInput>();
+	auto input = new  vector<VertexShaderInput>();
 
 	for (unsigned int i = 0; i < modelVertices->size(); i++)
 	{
 		auto vertex = modelVertices->at(i);
 
-		auto vertexInput = new nshade::VertexShaderInput();
+		auto vertexInput = new VertexShaderInput();
 		vertexInput->Vertex = vertex;
 		vertexInput->Light = light;
 
@@ -68,12 +68,12 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<nshade::Vertex>* modelVertices, v
 	DeviceResource()->VertexCount = modelVertices->size();
 	DeviceResource()->IndexCount = modelIndexes->size();
 
-	nshade::VertexShaderInput* vertexArr;
-	vertexArr = (nshade::VertexShaderInput*)malloc(DeviceResource()->VertexCount * sizeof(nshade::VertexShaderInput));
+	VertexShaderInput* vertexArr;
+	vertexArr = (VertexShaderInput*)malloc(DeviceResource()->VertexCount * sizeof(VertexShaderInput));
 	copy(input->begin(), input->end(), vertexArr);
 
 	D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
-	vertexBufferDesc.ByteWidth = sizeof(nshade::VertexShaderInput) * DeviceResource()->VertexCount;
+	vertexBufferDesc.ByteWidth = sizeof(VertexShaderInput) * DeviceResource()->VertexCount;
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;

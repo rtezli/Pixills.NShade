@@ -2,6 +2,7 @@
 #pragma warning( disable : 4996 )
 
 #include "includes.h"
+#include "material.h"
 
 class Model
 {
@@ -32,6 +33,7 @@ private:
 	D3D11_BUFFER_DESC			m_bufferDesc;
 	D3D11_SUBRESOURCE_DATA		m_initData;
 	shared_ptr<DeviceResources>	m_pDeviceResources;
+	Material*					m_pMaterial;
 };
 
 #pragma warning( restore : 4996 )

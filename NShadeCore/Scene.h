@@ -11,7 +11,12 @@ public:
 	HRESULT Render();
 public:
 	XMFLOAT3* AmbientColor;
-	nshade::Light* Lights;
-	Model* Models;
+	vector<Light>			Lights;
+	vector<Model>			Models;
+	vector<ShaderSet>		Shaders;
+	vector<ShaderSet>		GlobalShaders;
+	vector<ShaderSet>		Materials;
+	vector<nshade::Vertex>	Vertices;
+	vector<unsigned int>	Indices;
 };
 

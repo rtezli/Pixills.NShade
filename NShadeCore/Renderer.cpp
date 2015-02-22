@@ -533,7 +533,7 @@ HRESULT Renderer::Render()
 		return 0;
 	}
 
-	UINT stride = sizeof(nshade::VertexShaderInput);
+	UINT stride = sizeof(VertexShaderInput);
 	UINT offset = 0;
 
 	// Set model data
@@ -542,8 +542,8 @@ HRESULT Renderer::Render()
 	// Set multiple buffers here ? i.e. each for one model since some shaders are not applied to all models
 	GetDeviceContext()->IASetVertexBuffers(0, 1, &Resources()->VertexBuffer, &stride, &offset);
 	GetDeviceContext()->IASetIndexBuffer(Resources()->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	// Set shader data
 	
 
