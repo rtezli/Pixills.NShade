@@ -42,10 +42,10 @@ HRESULT D3DSystem::InitializeWindow(int screenWidth, int screenHeight)
 		screenWidth,
 		CW_USEDEFAULT,
 		screenHeight,
-		NULL,
-		NULL,
+		nullptr,
+		nullptr,
 		hInstance,
-		NULL);
+		nullptr);
 
 	if (!handle)
 	{
@@ -136,7 +136,7 @@ HRESULT D3DSystem::CreateDevice()
 
 	auto createResult = D3D11CreateDevice(
 		nullptr,
-		D3D_DRIVER_TYPE_WARP, //D3D_DRIVER_TYPE_HARDWARE,
+		D3D_DRIVER_TYPE_HARDWARE, // D3D_DRIVER_TYPE_WARP, //
 		0,
 		creationFlags,
 		featureLevels,
@@ -322,7 +322,7 @@ void D3DSystem::Render()
 
 LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPARAM lParam)
 {
-	if (this == NULL)
+	if (this == nullptr)
 	{
 		return 0;
 	}

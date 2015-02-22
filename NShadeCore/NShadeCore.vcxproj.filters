@@ -81,10 +81,10 @@
     <ClInclude Include="ObjParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FbxParser.h">
+    <ClInclude Include="Material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
+    <ClInclude Include="FbxReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -131,10 +131,10 @@
     <ClCompile Include="ObjParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FbxParser.cpp">
+    <ClCompile Include="Material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
+    <ClCompile Include="FbxReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

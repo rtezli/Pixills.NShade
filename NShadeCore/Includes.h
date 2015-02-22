@@ -32,4 +32,4 @@ namespace rxsub = rx::subjects;
 #include "types.h"
 #include "file.h"
 #include "objparser.h"
-#include "fbxparser.h"
+#include "fbxreader.h"

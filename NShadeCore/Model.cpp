@@ -44,7 +44,7 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 {
 	auto indices = new vector<unsigned int>();
 	auto vertices = new vector<nshade::Vertex>();
-	FbxParser::Read(fileName, vertices, indices);
+	nshade::FbxReader::Read(fileName, vertices, indices);
 	return FillVertexAndIndexBuffer(vertices, indices);
 }
 

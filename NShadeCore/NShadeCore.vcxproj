@@ -184,7 +184,7 @@
     <ClInclude Include="Defines.h" />
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="Export.h" />
-    <ClInclude Include="FbxParser.h" />
+    <ClInclude Include="FbxReader.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="FpsTextRenderer.h" />
     <ClInclude Include="Includes.h" />
@@ -218,7 +218,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="FbxParser.cpp" />
+    <ClCompile Include="FbxReader.cpp" />
     <ClCompile Include="File.cpp" />
     <ClCompile Include="FpsTextRenderer.cpp" />
     <ClCompile Include="Input.cpp" />

@@ -1,17 +1,16 @@
 #include "stdafx.h"
 
-#include "fbxparser.h"
+#include "fbxreader.h"
 
-
-FbxParser::FbxParser()
+nshade::FbxReader::FbxReader()
 {
 }
 
-FbxParser::~FbxParser()
+nshade::FbxReader::~FbxReader()
 {
 }
 
-HRESULT FbxParser::Read(char* fileName, vector<nshade::Vertex>* vertices, vector<unsigned int>* indices)
+HRESULT nshade::FbxReader::Read(char* fileName, vector<nshade::Vertex>* vertices, vector<unsigned int>* indices)
 {
 	auto sdkManager = FbxManager::Create();
 
@@ -55,13 +54,13 @@ HRESULT FbxParser::Read(char* fileName, vector<nshade::Vertex>* vertices, vector
 	FbxNodeAttribute::EType rootNodeTypeName = rootNodeAttribute == NULL ? FbxNodeAttribute::eUnknown : rootNodeAttribute->GetAttributeType();
 
 	auto mesh = new vector<FbxNode*>();
-	FbxParser::TraverseChildren(fbxRootNode, mesh);
+	nshade::FbxReader::TraverseChildren(fbxRootNode, mesh);
 
-	FbxParser::TraverseAndStoreFbxNode(mesh, &axisSystem, vertices, indices);
+	nshade::FbxReader::TraverseAndStoreFbxNode(mesh, &axisSystem, vertices, indices);
 	return 0;
 }
 
-HRESULT FbxParser::TraverseChildren(FbxNode* node, vector<FbxNode*>* mesh)
+HRESULT nshade::FbxReader::TraverseChildren(FbxNode* node, vector<FbxNode*>* mesh)
 {
 	auto count = node->GetChildCount();
 	for (auto s = 0; s < count; s++)
@@ -69,7 +68,7 @@ HRESULT FbxParser::TraverseChildren(FbxNode* node, vector<FbxNode*>* mesh)
 		node = node->GetChild(s);
 		count = node->GetChildCount();
 		auto nodeAttribute = node->GetNodeAttribute();
-		FbxNodeAttribute::EType nodeType = nodeAttribute == NULL
+		FbxNodeAttribute::EType nodeType = nodeAttribute == nullptr
 			? FbxNodeAttribute::eUnknown
 			: nodeAttribute->GetAttributeType();
 
@@ -83,7 +82,7 @@ HRESULT FbxParser::TraverseChildren(FbxNode* node, vector<FbxNode*>* mesh)
 			{
 				node = node->GetChild(s);
 				nodeAttribute = node->GetNodeAttribute();
-				nodeType = nodeAttribute == NULL
+				nodeType = nodeAttribute == nullptr
 					? FbxNodeAttribute::eUnknown
 					: nodeAttribute->GetAttributeType();
 
@@ -97,7 +96,7 @@ HRESULT FbxParser::TraverseChildren(FbxNode* node, vector<FbxNode*>* mesh)
 	return 0;
 }
 
-HRESULT FbxParser::TraverseAndStoreFbxNode(vector<FbxNode*>* nodes, FbxAxisSystem* axisSystem, vector<nshade::Vertex>* vertices, vector<unsigned int>* indices)
+HRESULT nshade::FbxReader::TraverseAndStoreFbxNode(vector<FbxNode*>* nodes, FbxAxisSystem* axisSystem, vector<nshade::Vertex>* vertices, vector<unsigned int>* indices)
 {
 	auto count = nodes->size();
 
@@ -116,7 +115,7 @@ HRESULT FbxParser::TraverseAndStoreFbxNode(vector<FbxNode*>* nodes, FbxAxisSyste
 			auto point = controlPoints[cp];
 			auto newVertex = new nshade::Vertex();
 			// Set vertex position (and invert Z)
-			newVertex->Position = FbxParser::ConvertFbxVector4ToXMFLOAT3(&point, axisSystem, 1.0f);
+			newVertex->Position = FbxReader::ConvertFbxVector4ToXMFLOAT3(&point, axisSystem, 1.0f);
 			vertices->push_back(*newVertex);
 		}
 
@@ -164,7 +163,7 @@ HRESULT FbxParser::TraverseAndStoreFbxNode(vector<FbxNode*>* nodes, FbxAxisSyste
 	return 0;
 }
 
-XMFLOAT3 FbxParser::ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisSystem* axisSystem, float scale)
+XMFLOAT3 nshade::FbxReader::ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisSystem* axisSystem, float scale)
 {
 	bool rightHanded = true;
 	auto coordSystem = axisSystem->GetCoorSystem();

@@ -90,7 +90,7 @@ HRESULT Renderer::CreateRenderTargetDesciption()
 
 	ID3D11Texture2D* renderTarget = 0;
 
-	return GetDevice()->CreateTexture2D(&m_pRenderTargetDesc, NULL, &renderTarget);
+	return GetDevice()->CreateTexture2D(&m_pRenderTargetDesc, nullptr, &renderTarget);
 }
 
 HRESULT Renderer::CreateRenderTargetViewDesciption()
@@ -231,7 +231,7 @@ HRESULT Renderer::CreateDepthBuffer()
 	{
 		return result;
 	}
-	return GetDevice()->CreateTexture2D(&m_pDepthBufferDesc, NULL, &Resources()->DepthStencilBuffer);
+	return GetDevice()->CreateTexture2D(&m_pDepthBufferDesc, nullptr, &Resources()->DepthStencilBuffer);
 }
 
 
@@ -312,7 +312,7 @@ HRESULT Renderer::CreateDepthStencil()
 
 	ID3D11Texture2D* depthStencil = 0;
 
-	result = GetDevice()->CreateTexture2D(&m_pDepthStencilDesc, NULL, &depthStencil);
+	result = GetDevice()->CreateTexture2D(&m_pDepthStencilDesc, nullptr, &depthStencil);
 	result = GetDevice()->CreateDepthStencilView(depthStencil, &m_pDepthStencilViewDesc, &Resources()->DepthStencilView);
 
 	if (FAILED(result))
@@ -397,7 +397,7 @@ HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 	//ID3D11ClassLinkage linkage;
 	Debug::WriteCurrentDir();
 	auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
-	auto result = GetDevice()->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &Resources()->Shaders->VertexShader);
+	auto result = GetDevice()->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, nullptr, &Resources()->Shaders->VertexShader);
 
 	if (FAILED(result))
 	{
@@ -427,14 +427,14 @@ HRESULT Renderer::CompileVertexShader(LPCWSTR compiledShaderFile)
 	{
 		return result;
 	}
-	return GetDevice()->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &vertexShader);
+	return GetDevice()->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &vertexShader);
 }
 
 HRESULT Renderer::SetHullShader(LPCWSTR compiledShaderFile)
 {
 	auto hsByteCode = File::ReadFileBytes(compiledShaderFile);
 	auto shaders = Resources()->Shaders;
-	return GetDevice()->CreateHullShader(hsByteCode->FileBytes, hsByteCode->Length, NULL, &shaders->HullShader);
+	return GetDevice()->CreateHullShader(hsByteCode->FileBytes, hsByteCode->Length, nullptr, &shaders->HullShader);
 }
 
 HRESULT Renderer::CompileHullShader(LPCWSTR compiledShaderFile)
@@ -447,14 +447,14 @@ HRESULT Renderer::CompileHullShader(LPCWSTR compiledShaderFile)
 	{
 		return result;
 	}
-	return GetDevice()->CreateHullShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &hullShader);
+	return GetDevice()->CreateHullShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &hullShader);
 }
 
 HRESULT Renderer::SetGeometryShader(LPCWSTR compiledShaderFile)
 {
 	auto gsByteCode = File::ReadFileBytes(compiledShaderFile);
 	auto shaders = Resources()->Shaders;
-	return GetDevice()->CreateGeometryShader(gsByteCode->FileBytes, gsByteCode->Length, NULL, &shaders->GeometryShader);
+	return GetDevice()->CreateGeometryShader(gsByteCode->FileBytes, gsByteCode->Length, nullptr, &shaders->GeometryShader);
 }
 
 HRESULT Renderer::CompileGeometryShader(LPCWSTR compiledShaderFile)
@@ -467,13 +467,13 @@ HRESULT Renderer::CompileGeometryShader(LPCWSTR compiledShaderFile)
 	{
 		return result;
 	}
-	return GetDevice()->CreateGeometryShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &geometryShader);
+	return GetDevice()->CreateGeometryShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &geometryShader);
 }
 
 HRESULT Renderer::SetPixelShader(LPCWSTR compiledShaderFile)
 {
 	auto psByteCode = File::ReadFileBytes(compiledShaderFile);
-	return GetDevice()->CreatePixelShader(psByteCode->FileBytes, psByteCode->Length, NULL, &Resources()->Shaders->PixelShader);
+	return GetDevice()->CreatePixelShader(psByteCode->FileBytes, psByteCode->Length, nullptr, &Resources()->Shaders->PixelShader);
 }
 
 HRESULT Renderer::CompilePixelShader(LPCWSTR compiledShaderFile)
@@ -486,7 +486,7 @@ HRESULT Renderer::CompilePixelShader(LPCWSTR compiledShaderFile)
 	{
 		return result;
 	}
-	return GetDevice()->CreatePixelShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &pixelShader);
+	return GetDevice()->CreatePixelShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &pixelShader);
 }
 
 HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile)
@@ -502,12 +502,12 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
 	{
 		"EXAMPLE_DEFINE",
 		"1",
-		NULL,
-		NULL
+		nullptr,
+		nullptr
 	};
 
 	return D3DCompileFromFile(compiledShaderFile,
-		NULL, // Defines
+		nullptr, // Defines
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", // Entrypoint
 		shaderProfile, flags, 0, &shaderBlob, &shaderBlob);
 }
@@ -552,10 +552,10 @@ HRESULT Renderer::Render()
 	auto ps = Resources()->Shaders->PixelShader;
 
 	GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
-	GetDeviceContext()->VSSetShader(vs, NULL, 0);
+	GetDeviceContext()->VSSetShader(vs, nullptr, 0);
 	
 	GetDeviceContext()->PSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
-	GetDeviceContext()->PSSetShader(ps, NULL, 0);
+	GetDeviceContext()->PSSetShader(ps, nullptr, 0);
 	GetDeviceContext()->DrawIndexed(Resources()->IndexCount, 0, 0);
 
 	// Present
@@ -571,7 +571,7 @@ HRESULT Renderer::Resize(D3D11_VIEWPORT* viewPort)
 {
 	HRESULT result;
 	Resources()->ViewPort = viewPort;
-	if (NULL != Resources()->SwapChain && m_isInitialized)
+	if (nullptr != Resources()->SwapChain && m_isInitialized)
 	{
 		result = Initialize();
 	}

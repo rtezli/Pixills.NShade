@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning( disable : 4615 )
 
 #define WIN32_LEAN_AND_MEAN
 

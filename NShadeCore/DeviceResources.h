@@ -37,7 +37,7 @@ public:
 	ID3D11RenderTargetView*		RenderTargetView;
 	ID3D11DepthStencilView*		DepthStencilView;
 	ID3D11InputLayout*			InputLayout;
-	XMVECTORF32					DefaultColor;
+
 	ShaderSet*					Shaders;
 
 	D3D11_VIEWPORT*				ViewPort;
@@ -48,6 +48,7 @@ public:
 	int							IndexCount;
 	int							VertexCount;
 
+	XMVECTORF32					DefaultColor;
 	float						Dpi;
 	float						NearZ;
 	float						FarZ;

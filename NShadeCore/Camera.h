@@ -20,9 +20,9 @@ private:
 	XMFLOAT4X4*			m_pViewMatrix;
 	XMFLOAT4X4*			m_pProjectionMatrix;
 	DeviceResources*	m_pDeviceResources;
-	XMVECTOR*			m_eyePosition;
-	XMVECTOR*			m_focusPosition;
-	XMVECTOR*			m_upDirection;
+	XMFLOAT3*			m_eyePosition;
+	XMFLOAT3*			m_focusPosition;
+	XMFLOAT3*			m_upDirection;
 	float				m_hAngle;
 	float				m_vAngle;
 	float				m_radius;
