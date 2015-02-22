@@ -16,14 +16,14 @@ void Camera::Initialize()
 	m_pViewMatrix		= new XMFLOAT4X4();
 	m_pProjectionMatrix = new XMFLOAT4X4();
 
-	m_radius = 4.0f;
+	m_radius = 6.0f;
 	m_hAngle = 0.0f;
 	m_vAngle = 0.0f;
 
 	auto z = m_radius * sin(m_hAngle * -1);
 	auto x = sqrt(pow(m_radius, 2) - pow(z, 2));
 
-	m_eyePosition	= new XMFLOAT3{ 0.0f, 3.0f, m_radius };
+	m_eyePosition	= new XMFLOAT3{ 0.0f, 4.0f, m_radius };
 	m_focusPosition = new XMFLOAT3{ 0.0f, 0.0f, 0.0f };
 	m_upDirection	= new XMFLOAT3{ 0.0f, 1.0f, 0.0f };
 

@@ -13,7 +13,23 @@ Model::~Model()
 
 HRESULT Model::Initialize()
 {
+	m_Indices = new vector<unsigned int>();
+	m_Vertices = new vector<nshade::Vertex>();
+
 	auto result = LoadModelFromFBXFile("../Models/teapot.fbx");
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	auto position =  XMFLOAT3(0.0f, 0.0f, 0.0f);
+	result = CreateHorizontalPlane(15.00f, &position);
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	result = FillVertexAndIndexBuffer(m_Indices, m_Vertices);
 	if (FAILED(result))
 	{
 		return result;
@@ -42,13 +58,10 @@ HRESULT Model::Initialize()
 
 HRESULT Model::LoadModelFromFBXFile(char* fileName)
 {
-	auto indices = new vector<unsigned int>();
-	auto vertices = new vector<nshade::Vertex>();
-	nshade::FbxReader::Read(fileName, vertices, indices);
-	return FillVertexAndIndexBuffer(vertices, indices);
+	return nshade::FbxReader::Read(fileName, m_Vertices, m_Indices);
 }
 
-HRESULT Model::FillVertexAndIndexBuffer(vector<nshade::Vertex>* modelVertices, vector<unsigned int>* modelIndexes)
+HRESULT Model::FillVertexAndIndexBuffer(vector<unsigned int>* modelIndexes, vector<nshade::Vertex>* modelVertices)
 {
 	Light light = { XMFLOAT4{ 5.0f, 5.0f, 0.0f, 1.0f }, XMFLOAT4{ 1.0f, 0.7f, 0.7f, 1.0f } };
 
@@ -113,10 +126,7 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<nshade::Vertex>* modelVertices, v
 
 HRESULT Model::LoadModelFromOBJFile(char* fileName, bool isRightHand)
 {
-	auto indices = new vector<unsigned int>();
-	auto vertices = new vector<nshade::Vertex>();
-	ObjParser::Parse(vertices, indices, fileName);
-	return FillVertexAndIndexBuffer(vertices, indices);
+	return ObjParser::Parse(m_Vertices, m_Indices, fileName);
 }
 
 HRESULT Model::InitializeConstantBuffer()
@@ -225,21 +235,60 @@ HRESULT Model::CreateVertexAndIndexBuffer(XMFLOAT3* vertices)
 
 HRESULT Model::CreateHorizontalPlane(float size, XMFLOAT3* position)
 {
-	auto indices = new vector<unsigned int>();
-	auto vertices = new vector<nshade::Vertex>();
-
-	float halfSize = size / 2;
-	for (auto i = 0; i < 2; i++)
+	static const nshade::Vertex plane[] =
 	{
-		for (auto j = 0; j < 2; j++)
+		{ 
+			XMFLOAT3(size * -1.0f + position->x, position->y, size * -1.0f + position->z),
+			XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 
+			XMFLOAT3(0.0f, 1.0f, 0.0f), 
+			XMFLOAT2(0.0f, 0.0f) 
+		},
+		{ 
+			XMFLOAT3(size + position->x, position->y, size * -1.0f + position->z),
+			XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 
+			XMFLOAT3(0.0f, 1.0f, 0.0f),
+			XMFLOAT2(0.0f, 0.0f) 
+		},
+		{ 
+			XMFLOAT3(size + position->x, position->y, size + position->z),
+			XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 
+			XMFLOAT3(0.0f, 1.0f, 0.0f),
+			XMFLOAT2(0.0f, 0.0f) 
+		},
+		{ 
+			XMFLOAT3(size * -1.0f + position->x, position->y, size + position->z),
+			XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 
+			XMFLOAT3(0.0f, 1.0f, 0.0f), 
+			XMFLOAT2(0.0f, 0.0f) }
+	};
+
+	for (auto i = 0; i < 4; i++)
+	{
+		m_Vertices->push_back(plane[i]);
+	}
+
+	static const unsigned int cubeIndices[] =
+	{
+		4, 3, 1, 
+		3, 2, 1
+	};
+
+	unsigned int highest = 0;
+	for (unsigned int i = 0; i < m_Indices->size(); i++)
+	{
+		auto current = m_Indices->at(i);
+		if (current > highest)
 		{
-			XMFLOAT3 pos{ halfSize + i, halfSize, halfSize + j };
-			auto vertex = new nshade::Vertex{ pos };
-			vertices->push_back(*vertex);
+			highest = current;
 		}
 	}
 
-	return FillVertexAndIndexBuffer(vertices, indices);
+	for (auto i = 0; i < 6; i++)
+	{
+		m_Indices->push_back(cubeIndices[i] + highest);
+	}
+
+	return 0;
 }
 
 HRESULT Model::CreateCube(float size, XMFLOAT3* position)
@@ -256,12 +305,12 @@ HRESULT Model::CreateCube(float size, XMFLOAT3* position)
 			{
 				XMFLOAT3 pos{ halfSize + i, halfSize, halfSize + j };
 				auto vertex = new nshade::Vertex{ pos };
-				vertices->push_back(*vertex);
+				m_Vertices->push_back(*vertex);
 			}
 		}
 	}
 
-	return FillVertexAndIndexBuffer(vertices, indices);
+	return 0;
 }
 
 // TODO : Add material

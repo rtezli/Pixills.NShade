@@ -130,7 +130,6 @@ HRESULT nshade::FbxReader::TraverseAndStoreFbxNode(vector<FbxNode*>* nodes, FbxA
 			for (auto v = 0; v < polygonSize; v++)
 			{
 				auto vertexIndex = mesh->GetPolygonVertex(p, v);
-				auto point = controlPoints[vertexIndex];
 				auto newVertex = new nshade::Vertex(vertices->at(vertexIndex));
 
 				// Create the normal

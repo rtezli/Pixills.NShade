@@ -357,7 +357,7 @@ HRESULT Renderer::CreateRasterizerDescription()
 	m_pRasterizerDesc.SlopeScaledDepthBias = 0.0f;
 
 	// Straight LH
-	m_pRasterizerDesc.CullMode = D3D11_CULL_NONE;//D3D11_CULL_BACK;//  D3D11_CULL_FRONT; // 
+	m_pRasterizerDesc.CullMode = D3D11_CULL_BACK;// //  D3D11_CULL_NONE;//
 	m_pRasterizerDesc.FrontCounterClockwise = true;
 
 	return 0;
