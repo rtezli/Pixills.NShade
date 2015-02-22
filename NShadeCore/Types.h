@@ -20,6 +20,7 @@ namespace nshade{
 		XMFLOAT4 Color;
 		XMFLOAT3 Normal;
 		XMFLOAT2 UV;
+		int		 PolyPosition;
 	};
 
 	struct Polygon

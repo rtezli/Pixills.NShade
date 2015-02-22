@@ -142,6 +142,25 @@ HRESULT nshade::FbxReader::TraverseAndStoreFbxNode(vector<FbxNode*>* nodes, FbxA
 					static_cast<float>(normal.mData[2])
 				};
 
+				switch (v)
+				{
+					case 0:
+					{
+						newVertex->PolyPosition = 0;
+						break;
+					}
+					case 1:
+					{
+						newVertex->PolyPosition = 1;
+						break;
+					}
+					case 2:
+					{
+						newVertex->PolyPosition = 2;
+						break;
+					}
+				}
+
 				// Use a standard color for all vertices
 				newVertex->Color = XMFLOAT4
 				{

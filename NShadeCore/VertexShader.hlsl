@@ -16,18 +16,19 @@ struct VertexShaderInput
 	float4 lightPosition		: POSITION1;
 };
 
-struct PixelShaderInput
+struct VertexShaderOutput
 {
 	float4 vertexPosition	: SV_POSITION;
 	float4 vertexColor		: COLOR0;
 	float4 normal			: NORMAL;
 	float4 ambientColor		: COLOR1;
-	float4 lightPosition	: POSITION1;
+	float4 lightPosition	: POSITION2;
+	float4 eyePosition		: POSITION3;
 };
 
-PixelShaderInput main(VertexShaderInput input)
+VertexShaderOutput main(VertexShaderInput input)
 {
-	PixelShaderInput vertexShaderOutput;
+	VertexShaderOutput vertexShaderOutput;
 	float4 position = float4(input.vertexPosition, 1.0f);
 
 	position = mul(position, world);
@@ -39,9 +40,10 @@ PixelShaderInput main(VertexShaderInput input)
 
 	float4 normal = float4(input.normal, 0.0f);
 
-	vertexShaderOutput.normal = mul(normal, world);
-	vertexShaderOutput.ambientColor = input.ambientColor;
+	vertexShaderOutput.normal		 = mul(normal, world);
+	vertexShaderOutput.ambientColor	 = input.ambientColor;	
 	vertexShaderOutput.lightPosition = mul(input.lightPosition, world);
+	vertexShaderOutput.eyePosition   = mul(input.lightPosition, view);
 
 	return vertexShaderOutput;
 }

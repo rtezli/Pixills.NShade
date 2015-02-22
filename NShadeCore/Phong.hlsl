@@ -1,37 +1,27 @@
-cbuffer ConstantBufferData : register(b0)
+struct PixelShaderInput
 {
-	matrix world;
-	matrix view;
-	matrix projection;
+	float4 vertexPosition	: SV_POSITION;
+	float4 vertexColor		: COLOR0;
+	float4 normal			: NORMAL;
+
+	float4 ambient			: COLOR1;		// Color and Intensity
+	float  reflective		: COLOR2;		// Color and Intensity
+	float4 light			: POSITION1;	// Position and Intensity
+	float4 eye 				: POSITION2;
 };
 
-
-struct VertexShaderInput
+float4 main(PixelShaderInput input) : SV_TARGET
 {
-	float3 position : VERT_POSITION;
-	float3 normal : VERT_NORMAL;
-	float4 vertexColor : VERT_COLOR;
-	float3 ambientLightColor : AMB_COLOR;
-	matrix lightPoistion : LIGHT_POSITION;
-};
+	float4 diffuse = { 1.0f, 0.0f, 0.0f, 1.0f };
 
-struct VertexShaderOutput
-{
-	float4 pos : SV_POSITION;
-	float4 color : COLOR;
-};
+	float4 lPosition = float4(input.light.x, input.light.y, input.light.z, 0.0f);
+	float  lIntensity = saturate(input.light.w);
 
-VertexShaderOutput main(VertexShaderInput input)
-{
-	VertexShaderOutput vertexShaderOutput;
-	float4 position = float4(input.position, 1.0f);
+	float4	aColor = float4(input.ambient.x, input.ambient.y, input.ambient.z, 0.0f);
+	float	aIntensity = saturate(input.light.w);
 
-		position = mul(position, world);
-	position = mul(position, view);
-	position = mul(position, projection);
+	float	lDiffuse = lIntensity * dot(lPosition, input.normal);
+	float	lSpecular = input.reflective * dot(input.eye, input.normal);
 
-	vertexShaderOutput.pos = position;
-	vertexShaderOutput.color = input.vertexColor;
-
-	return vertexShaderOutput;
+	return (input.vertexColor + aColor * aIntensity) * saturate(lDiffuse + lSpecular);
 }
