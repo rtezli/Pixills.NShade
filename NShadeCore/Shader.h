@@ -1,6 +1,9 @@
 #pragma once
 #pragma comment(lib, "D3DCompiler.lib")
 
+#include "includes.h"
+#include "d3dcompiler.h"
+
 #ifndef PS_PROFILE
 #define PS_PROFILE {"ps_5_0" }
 #endif
@@ -21,8 +24,25 @@
 #define DS_PROFILE { "ds_5_0" }
 #endif
 
-#include "includes.h"
-#include "d3dcompiler.h"
+enum ShaderVersion : char
+{
+	V0 = 0,
+	V1 = 0,
+	V2 = 0,
+	V3 = 0,
+	V4 = 0,
+	V5 = 0
+};
+
+enum ShaderType : char
+{
+	VS = 1,
+	PS = 2,
+	GS = 3,
+	HS = 4,
+	CS = 5,
+	DS = 5
+};
 
 class Shader
 {
