@@ -12,8 +12,10 @@ struct VertexShaderInput
 	float4 vertexColor			: COLOR0;
 	float3 normal				: NORMAL;
 	float2 uv					: TEXCOORD;
+
+	float3 baryCentricCoord		: POSITION1;
 	float4 ambientColor			: COLOR1;
-	float4 lightPosition		: POSITION1;
+	float4 lightPosition		: POSITION2;
 };
 
 struct VertexShaderOutput
@@ -22,8 +24,8 @@ struct VertexShaderOutput
 	float4 vertexColor		: COLOR0;
 	float4 normal			: NORMAL;
 	float4 ambientColor		: COLOR1;
-	float4 lightPosition	: POSITION2;
-	float4 eyePosition		: POSITION3;
+	float4 lightPosition	: POSITION1;
+	float4 eyePosition		: POSITION2;
 };
 
 VertexShaderOutput main(VertexShaderInput input)

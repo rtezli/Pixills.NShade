@@ -16,11 +16,11 @@ enum Perspective : char
 namespace nshade{
 	struct Vertex
 	{
-		XMFLOAT3 Position;
-		XMFLOAT4 Color;
-		XMFLOAT3 Normal;
-		XMFLOAT2 UV;
-		int		 PolyPosition;
+		XMFLOAT3		Position;
+		XMFLOAT4		Color;
+		XMFLOAT3		Normal;
+		XMFLOAT2		UV;
+		XMFLOAT3		PolyPosition;
 	};
 
 	struct Polygon

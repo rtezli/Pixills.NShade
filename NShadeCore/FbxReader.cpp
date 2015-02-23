@@ -146,17 +146,17 @@ HRESULT nshade::FbxReader::TraverseAndStoreFbxNode(vector<FbxNode*>* nodes, FbxA
 				{
 					case 0:
 					{
-						newVertex->PolyPosition = 0;
+						newVertex->PolyPosition = XMFLOAT3{ 1.0f, 0.0f, 0.0f };
 						break;
 					}
 					case 1:
 					{
-						newVertex->PolyPosition = 1;
+						newVertex->PolyPosition = XMFLOAT3{ 0.0f, 1.0f, 0.0f };
 						break;
 					}
 					case 2:
 					{
-						newVertex->PolyPosition = 2;
+						newVertex->PolyPosition = XMFLOAT3{ 0.0f, 0.0f, 1.0f };
 						break;
 					}
 				}

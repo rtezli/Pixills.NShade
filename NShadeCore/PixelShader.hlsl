@@ -5,6 +5,7 @@ struct PixelShaderInput
 	float4 normal			: NORMAL;
 	float4 ambientColor		: COLOR1;
 	float4 lightPosition	: POSITION1;
+	float4 eyePosition		: POSITION2;
 };
 
 float4 main(PixelShaderInput input) : SV_TARGET
