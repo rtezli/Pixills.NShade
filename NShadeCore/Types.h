@@ -13,7 +13,8 @@ enum Perspective : char
 	THIRD_PERSON = 2,
 	ISOMETRIC = 3
 };
-namespace nshade{
+namespace nshade
+{
 	struct Vertex
 	{
 		XMFLOAT3		Position;
@@ -33,12 +34,13 @@ namespace nshade{
 
 enum LightType : char
 {
-	Undefined	= 0,
-	Point		= 1,
-	Spot		= 2,
-	Directional = 3
+	Directional = 1,
+	Point = 2,
+	Spot = 3,
+	Volume = 4,
+	Area = 5,
+	Ambient = 6
 };
-
 
 struct Light
 {

@@ -10,7 +10,7 @@ public:
 	Scene(DeviceResources* pResources);
 	~Scene();
 	HRESULT Render();
-	HRESULT Initialize()
+	HRESULT Initialize();
 public:
 	XMFLOAT3* AmbientColor;
 	shared_ptr<vector<Light>>			Lights;
