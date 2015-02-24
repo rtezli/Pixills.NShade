@@ -9,8 +9,8 @@ Shader::Shader(DeviceResources* pResources)
 
 Shader::~Shader()
 {
-}
 
+}
 
 HRESULT Shader::SetVertexShader(LPCWSTR compiledShaderFile)
 {

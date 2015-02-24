@@ -1,0 +1,21 @@
+#pragma once
+
+#include "includes.h"
+#include "shader.h"
+
+namespace WireframeShader
+{
+	struct InputLayout
+	{
+		XMFLOAT3 Position;
+		XMFLOAT4 ColorWithAlpha;
+		XMFLOAT3 BaryCoord;
+	};
+
+	class WireframeVertexShader : public Shader
+	{
+	public:
+		WireframeVertexShader(DeviceResources* pResources);
+		~WireframeVertexShader();
+	};
+}

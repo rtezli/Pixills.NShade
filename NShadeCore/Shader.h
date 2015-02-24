@@ -48,7 +48,7 @@ class Shader
 {
 public:
 	Shader(DeviceResources* pResources);
-	~Shader();
+   ~Shader(); 
 public:
 	HRESULT	SetVertexShader(LPCWSTR compiledShaderFile);
 	HRESULT	CompileVertexShader(LPCWSTR shaderSource);

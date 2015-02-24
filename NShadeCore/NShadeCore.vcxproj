@@ -180,6 +180,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="ColorPixelShader.h" />
+    <ClInclude Include="ColorVertexShader.h" />
     <ClInclude Include="D3DSystem.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="DeviceResources.h" />
@@ -193,16 +195,25 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ObjParser.h" />
+    <ClInclude Include="PhongPixelShader.h" />
+    <ClInclude Include="PhongVertexShader.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderingPipeline.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="TesselationDomainShader.h" />
+    <ClInclude Include="TesselationVertexShader.h" />
+    <ClInclude Include="TesselationHullShader.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="WireframePixelShader.h" />
+    <ClInclude Include="WireframeVertexShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ColorPixelShader.cpp" />
+    <ClCompile Include="ColorVertexShader.cpp" />
     <ClCompile Include="D3DSystem.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="dllmain.cpp">
@@ -227,6 +238,8 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ObjParser.cpp" />
+    <ClCompile Include="PhongPixelShader.cpp" />
+    <ClCompile Include="PhongVertexShader.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderingPipeline.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -237,6 +250,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TesselationDomainShader.cpp" />
+    <ClCompile Include="TesselationHullShader.cpp" />
+    <ClCompile Include="TesselationVertexShader.cpp" />
+    <ClCompile Include="WireframePixelShader.cpp" />
+    <ClCompile Include="WireframeVertexShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Bloom.hlsl">
@@ -251,7 +269,7 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="PixelShader.hlsl">
+    <FxCompile Include="PhongPixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
@@ -260,7 +278,7 @@
       <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</EnableDebuggingInformation>
       <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</EnableDebuggingInformation>
     </FxCompile>
-    <FxCompile Include="VertexShader.hlsl">
+    <FxCompile Include="PhongVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
@@ -269,11 +287,17 @@
       <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</EnableDebuggingInformation>
       <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</EnableDebuggingInformation>
     </FxCompile>
-    <FxCompile Include="Wireframe.hlsl">
+    <FxCompile Include="WireframePixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="WireframeVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

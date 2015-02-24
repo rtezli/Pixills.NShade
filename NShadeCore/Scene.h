@@ -4,19 +4,24 @@
 #include "model.h"
 #include "material.h"
 
+struct SceneFile
+{
+
+};
+
 class Scene
 {
 public:
 	Scene(DeviceResources* pResources);
 	~Scene();
 	HRESULT AddModel(Model* pModel);
+	HRESULT Load(wstring fileName);
 	HRESULT Render();
 public:
 	const XMFLOAT3* AmbientColor;
 
 	vector<Light>*			Lights()			{ return m_Lights.get(); }
 	vector<Model>*			Models()			{ return m_Models.get(); }
-	vector<ShaderSet>*		Shaders()			{ return m_Shaders.get(); }
 	vector<Material>*		Materials()			{ return m_Materials.get(); }
 	vector<nshade::Vertex>*	Vertices()			{ return m_Vertices.get(); }
 	vector<unsigned int>*	Indices()			{ return m_Indices.get(); }
