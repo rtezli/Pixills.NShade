@@ -555,6 +555,9 @@ HRESULT Renderer::Render()
 	GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
 	GetDeviceContext()->VSSetShader(vs, nullptr, 0);
 	
+	GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
+	GetDeviceContext()->VSSetShader(vs, nullptr, 0);
+
 	GetDeviceContext()->PSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
 	GetDeviceContext()->PSSetShader(ps, nullptr, 0);
 	GetDeviceContext()->DrawIndexed(Resources()->IndexCount, 0, 0);
