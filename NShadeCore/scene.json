@@ -1,0 +1,28 @@
+{
+    "name": "Standard Scene",
+    "textures": [
+        { "name": "Texture 1", "file-type": "png", "file": "text1.png" },
+        { "name": "Texture 2", "file-type": "tga", "file": "text2.tga" }
+    ],
+    "shaders": [
+        { "name": "Color Vertex Shader", "file-type": "source", "file": "colorvertexshader.cso", "shader-type": "vs", "shader-version": "5.0" },
+        { "name": "Color Pixel Shader", "file-type": "bytecode", "file": "colorpixelshader.cso", "shader-type": "ps", "shader-version": "5.0" },
+
+    ],
+    "models": [
+        { "name": "Teapot", "file-type": "fbx", "file": "teapot.fbx", "position": [ 0.0, 0.0, 0.0 ], "rotation": [ 0.0, 0.0, 0.0 ], "transform": [ 0.0, 0.0, 0.0 ] },
+        { "name": "Plane", "file-type": "obj", "file": "plane.obj", "position": [ 0.0, 0.0, 0.0 ], "rotation": [ 0.0, 0.0, 0.0 ], "transform": [ 0.0, 0.0, 0.0 ] }
+    ],
+    "lights": [
+
+        { "light-type": "ambient", "position": [ 0.0, 0.0, 0.0 ], "direction": null, "color": [ 0.0, 0.0, 0.0 ], "intensity": [ 0.0, 0.0, 0.0 ] },
+        { "light-type": "point", "position": [ 0.0, 0.0, 0.0 ], "direction": null, "color": [ 0.0, 0.0, 0.0 ], "intensity": [ 0.0, 0.0, 0.0 ] }
+    ],
+    "materials": [
+        { "reflective": 1.0, "shaders": [ 0, 1 ], "color": [ 0.0, 0.0, 0.0, 0.0 ], "texture": 0, "texture-uv": [ 0.0, 0.0 ] }
+    ],
+    "material-assignments": [
+        { "material": 0, "model": 0 },
+        { "material": 0, "model": 1 }
+    ]
+}

@@ -318,4 +318,15 @@ HRESULT Model::CreateCube(float size, XMFLOAT3* position)
 	return 0;
 }
 
+HRESULT Model::SetTopology(char verticesPerFace)
+{
+	switch (verticesPerFace)
+	{
+		case 3 :
+			m_Topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		case 4:
+			m_Topology = D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST;
+	}
+}
+
 // TODO : Add material

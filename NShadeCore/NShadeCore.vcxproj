@@ -176,9 +176,6 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ColorPixelShader.h" />
     <ClInclude Include="ColorVertexShader.h" />
@@ -302,8 +299,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="shader.ps" />
-    <None Include="shader.vs" />
+    <None Include="scene.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Models\teapot.fbx">

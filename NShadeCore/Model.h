@@ -28,6 +28,7 @@ private:
 	HRESULT						InitializeVertexBuffer();
 	HRESULT						InitializeIndexBuffer(int indeces[]);
 	HRESULT						InitializeConstantBuffer();
+	HRESULT						SetTopology();
 private:
 	unsigned short				m_indexCount = 0;
 	D3D11_BUFFER_DESC			m_bufferDesc;
@@ -36,6 +37,7 @@ private:
 	Material*					m_pMaterial;
 	vector<unsigned int>*		m_Indices;
 	vector<nshade::Vertex>*		m_Vertices;
+	D3D11_PRIMITIVE_TOPOLOGY	m_Topology;
 };
 
 #pragma warning( restore : 4996 )

@@ -27,9 +27,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="targetver.h">
       <Filter>Header Files\Common</Filter>
     </ClInclude>
@@ -222,8 +219,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader.vs" />
-    <None Include="shader.ps" />
     <None Include="packages.config" />
+    <None Include="scene.json" />
   </ItemGroup>
 </Project>
