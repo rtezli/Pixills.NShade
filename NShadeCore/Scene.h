@@ -9,17 +9,25 @@ class Scene
 public:
 	Scene(DeviceResources* pResources);
 	~Scene();
+	HRESULT AddModel(Model* pModel);
 	HRESULT Render();
-	HRESULT Initialize();
 public:
-	XMFLOAT3* AmbientColor;
-	shared_ptr<vector<Light>>			Lights;
-	shared_ptr<vector<Model>>			Models;
-	shared_ptr<vector<ShaderSet>>		Shaders;
-	shared_ptr<vector<Material>>		Materials;
-	shared_ptr<vector<nshade::Vertex>>	Vertices;
-	vector<unsigned int>				Indices;
+	const XMFLOAT3* AmbientColor;
+
+	vector<Light>*			Lights()			{ return m_Lights.get(); }
+	vector<Model>*			Models()			{ return m_Models.get(); }
+	vector<ShaderSet>*		Shaders()			{ return m_Shaders.get(); }
+	vector<Material>*		Materials()			{ return m_Materials.get(); }
+	vector<nshade::Vertex>*	Vertices()			{ return m_Vertices.get(); }
+	vector<unsigned int>*	Indices()			{ return m_Indices.get(); }
 private:
+	shared_ptr<vector<Light>>			m_Lights;
+	shared_ptr<vector<Model>>			m_Models;
+	shared_ptr<vector<ShaderSet>>		m_Shaders;
+	shared_ptr<vector<Material>>		m_Materials;
+	shared_ptr<vector<nshade::Vertex>>	m_Vertices;
+	shared_ptr<vector<unsigned int>>	m_Indices;
+
 	DeviceResources*					m_pResources;
 };
 
