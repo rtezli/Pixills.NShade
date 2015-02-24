@@ -74,8 +74,6 @@ HRESULT Renderer::Initialize()
 
 HRESULT Renderer::CreateRenderTargetDesciption()
 {
-	ZeroMemory(&m_pRenderTargetDesc, sizeof(m_pRenderTargetDesc));
-
 	m_pRenderTargetDesc.Width = Resources()->ViewPort->Width;
 	m_pRenderTargetDesc.Height = Resources()->ViewPort->Height;
 	m_pRenderTargetDesc.MipLevels = 1;
@@ -95,7 +93,6 @@ HRESULT Renderer::CreateRenderTargetDesciption()
 
 HRESULT Renderer::CreateRenderTargetViewDesciption()
 {
-	ZeroMemory(&m_pRenderTargetViewDesc, sizeof(m_pRenderTargetViewDesc));
 	m_pRenderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
 	m_pRenderTargetViewDesc.Format = m_pRenderTargetDesc.Format;
 	return 0;
@@ -121,7 +118,7 @@ HRESULT Renderer::CreateRenderTarget()
 
 HRESULT Renderer::CreateSwapChainDesciption()
 {
-	ZeroMemory(&m_pSwapChainDescription, sizeof(m_pSwapChainDescription));
+	m_pSwapChainDescription = { 0 };
 
 	m_pSwapChainDescription.BufferCount = Resources()->BufferCount;
 	m_pSwapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
@@ -206,8 +203,6 @@ HRESULT Renderer::CreateSwapChain()
 
 HRESULT Renderer::CreateDepthBufferDescription()
 {
-	ZeroMemory(&m_pDepthBufferDesc, sizeof(m_pDepthBufferDesc));
-
 	m_pDepthBufferDesc.Width = Resources()->ViewPort->Width;
 	m_pDepthBufferDesc.Height = Resources()->ViewPort->Height;
 	m_pDepthBufferDesc.MipLevels = 1;
@@ -225,7 +220,6 @@ HRESULT Renderer::CreateDepthBufferDescription()
 
 HRESULT Renderer::CreateDepthBuffer()
 {
-
 	auto result = CreateDepthBufferDescription();
 	if (FAILED(result))
 	{
@@ -237,8 +231,6 @@ HRESULT Renderer::CreateDepthBuffer()
 
 HRESULT Renderer::CreateDepthStencilDescription()
 {
-	ZeroMemory(&m_pDepthStencilDesc, sizeof(m_pDepthStencilDesc));
-
 	m_pDepthStencilDesc.ArraySize = 1;
 	m_pDepthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	m_pDepthStencilDesc.MipLevels = Resources()->RenderQuality->Quality > 0 ? 1 : 0;
@@ -253,8 +245,6 @@ HRESULT Renderer::CreateDepthStencilDescription()
 
 HRESULT Renderer::CreateDepthStencilStateDescription()
 {
-	ZeroMemory(&m_pDepthStencilStateDesc, sizeof(m_pDepthStencilStateDesc));
-
 	m_pDepthStencilStateDesc.DepthEnable = true;
 	m_pDepthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	m_pDepthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
@@ -281,8 +271,6 @@ HRESULT Renderer::CreateDepthStencilStateDescription()
 
 HRESULT Renderer::CreateDepthStencilViewDescription()
 {
-	ZeroMemory(&m_pDepthStencilViewDesc, sizeof(m_pDepthStencilViewDesc));
-
 	m_pDepthStencilViewDesc.Format = Resources()->RenderQuality->BufferFormat;
 	m_pDepthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
 	m_pDepthStencilViewDesc.Texture2D.MipSlice = 0;
@@ -319,22 +307,6 @@ HRESULT Renderer::CreateDepthStencil()
 	{
 		return result;
 	}
-
-	// D2D1_BITMAP_PROPERTIES1 bitmapProperties =
-	// D2D1::BitmapProperties1(
-	// D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
-	// D2D1::PixelFormat(Resources()->RenderQuality->TextureFormat, D2D1_ALPHA_MODE_PREMULTIPLIED),
-	// Resources()->Dpi,
-	// Resources()->Dpi);
-
-	// IDXGISurface2* dxgiBackBuffer;
-	// Resources()->SwapChain->GetBuffer(0, IID_PPV_ARGS(&dxgiBackBuffer));
-
-	// ID2D1Bitmap1* targetBitmap;
-	// GetDeviceContext()->CreateBitmapFromDxgiSurface(dxgiBackBuffer,&bitmapProperties,&targetBitmap);
-	// GetDeviceContext()->SetTarget(targetBitmap);
-	// GetDeviceContext()->SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE);
-
 	return 0;
 }
 
@@ -342,8 +314,6 @@ HRESULT Renderer::CreateDepthStencil()
 HRESULT Renderer::CreateRasterizerDescription()
 {
 	auto isRightHand = false;
-
-	ZeroMemory(&m_pRasterizerDesc, sizeof(m_pRasterizerDesc));
 
 	m_pRasterizerDesc.AntialiasedLineEnable = m_rasterizerUseMultiSampling;
 	m_pRasterizerDesc.DepthBias = 0;
@@ -356,7 +326,6 @@ HRESULT Renderer::CreateRasterizerDescription()
 	m_pRasterizerDesc.ScissorEnable = false;
 	m_pRasterizerDesc.SlopeScaledDepthBias = 0.0f;
 
-	// Straight LH
 	m_pRasterizerDesc.CullMode = D3D11_CULL_NONE;// D3D11_CULL_BACK;//
 	m_pRasterizerDesc.FrontCounterClockwise = true;
 
@@ -394,8 +363,6 @@ HRESULT Renderer::CreateViewPort()
 
 HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 {
-	//ID3D11ClassLinkage linkage;
-	Debug::WriteCurrentDir();
 	auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
 	auto result = GetDevice()->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, nullptr, &Resources()->Shaders->VertexShader);
 
@@ -502,16 +469,10 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
 
 	const D3D_SHADER_MACRO defines[] =
 	{
-		"EXAMPLE_DEFINE",
-		"1",
-		nullptr,
-		nullptr
+		{"Foo", "Bar" }
 	};
 
-	return D3DCompileFromFile(compiledShaderFile,
-		nullptr, // Defines
-		D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", // Entrypoint
-		shaderProfile, flags, 0, &shaderBlob, &shaderBlob);
+	return D3DCompileFromFile(compiledShaderFile,defines, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", shaderProfile, flags, 0, &shaderBlob, &shaderBlob);
 }
 
 void Renderer::ClearScene()
