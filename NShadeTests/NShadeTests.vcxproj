@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <TargetName>DefaultTest</TargetName>
+    <TargetName>NShadeTests</TargetName>
     <ProjectTypes>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}</ProjectTypes>
     <ProjectGUID>{9757CB21-B840-49A6-B057-9F322E543DD6}</ProjectGUID>
     <Keyword>ManagedCProj</Keyword>

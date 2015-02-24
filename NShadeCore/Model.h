@@ -28,7 +28,7 @@ private:
 	HRESULT						InitializeVertexBuffer();
 	HRESULT						InitializeIndexBuffer(int indeces[]);
 	HRESULT						InitializeConstantBuffer();
-	HRESULT						SetTopology();
+	HRESULT						SetTopology(char verticesPerFace);
 private:
 	unsigned short				m_indexCount = 0;
 	D3D11_BUFFER_DESC			m_bufferDesc;

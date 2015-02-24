@@ -327,6 +327,7 @@ HRESULT Model::SetTopology(char verticesPerFace)
 		case 4:
 			m_Topology = D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST;
 	}
+	return 0;
 }
 
 // TODO : Add material
