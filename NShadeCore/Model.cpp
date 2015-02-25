@@ -47,7 +47,7 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<unsigned int>* modelIndexes, vect
 {
 	auto spot = XMFLOAT4{ 5.0f, 5.0f, 0.0f, 1.0f };
 	auto ambient = XMFLOAT4{ 1.0f, 1.0f, 1.0f, 0.0f };
-	auto color = XMFLOAT4{ 0.3f, 0.8f, 0.2f, 1.0f };
+	auto color = XMFLOAT4{ 1.0f, 1.0f, 1.0f, 1.0f };
 
 	auto input = new  vector<PhongShader::InputLayout>();
 
@@ -61,7 +61,6 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<unsigned int>* modelIndexes, vect
 		vertexInput->Normal = vertex.Normal;
 		vertexInput->AmbientColorIntensity = ambient;
 		vertexInput->LightPositionIntensity = spot;
-		vertexInput->EyePosition = XMFLOAT4{ 5.0f, 5.0f, 0.0f, 0.0f };
 		input->push_back(*vertexInput);
 	}
 

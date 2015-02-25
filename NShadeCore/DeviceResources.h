@@ -42,7 +42,6 @@ public:
 
 	D3D11_VIEWPORT*				ViewPort;
 	RenderingQuality*			RenderQuality;
-	XMFLOAT3*					m_EyePosition;
 
 	int							SwapChainFlags;
 	int							BufferCount;

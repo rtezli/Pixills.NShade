@@ -85,6 +85,8 @@ struct ConstantBufferData
 	XMFLOAT4X4 world;
 	XMFLOAT4X4 view;
 	XMFLOAT4X4 projection;
+	XMFLOAT3   camera;
+	float	   time;
 };
 
 struct ShaderSet

@@ -51,7 +51,7 @@ void Camera::Initialize()
 	XMMATRIX	perspectiveMatrix	= XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 0.1f, 100.0f);
 	XMFLOAT4X4	orientation			= ScreenRotation::Rotation0;
 	XMMATRIX	orientationMatrix	= XMLoadFloat4x4(&orientation);
-
+   
 	XMStoreFloat4x4(m_pProjectionMatrix, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
 
 	Update();
@@ -77,6 +77,6 @@ void Camera::Rotate(POINT* p)
 
 void Camera::Update()
 {
-	ConstantBufferData constBuffer = { *m_pWorldMatrix, *m_pViewMatrix, *m_pProjectionMatrix };
+	ConstantBufferData constBuffer = { *m_pWorldMatrix, *m_pViewMatrix, *m_pProjectionMatrix, *m_eyePosition };
 	m_pDeviceResources->ConstBufferData = new ConstantBufferData(constBuffer);
 }
