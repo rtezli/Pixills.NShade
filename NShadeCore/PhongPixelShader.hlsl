@@ -19,7 +19,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
 	float4 light = normalize(input.light);
 	float4 camera = normalize(input.camera);
 
-	float4 ambient = { 1.0f, 0.0f, 1.0f, 1.0f };
+	float4 ambient = {0.2f, 0.2f, 0.2f, 1.0f };
 	float4 diffuse = saturate(dot(normal, light));
 	float4 reflect = normalize(2 * diffuse * normal - light);
 
