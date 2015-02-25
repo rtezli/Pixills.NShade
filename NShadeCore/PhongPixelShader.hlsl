@@ -10,10 +10,18 @@ struct PixelShaderInput
 };
 
 float4 main(PixelShaderInput input) : SV_TARGET
-{ 
-	float  specularPower  = 0.1f;
-	float  lightIntensity = 0.1f;//input.light.w;
-	float4 diffuse		  = lightIntensity * dot(input.light, input.normal);
-	float4 specular		  = lightIntensity * dot(input.light, diffuse) * specularPower;
-	return input.color    * (diffuse + specular);
+{
+	float  lightIntensity = 0.9f;
+	float  specularPower = 8.0f;
+
+	float4 normal = normalize(input.normal);
+	float4 light = normalize(input.light);
+	float4 eye = normalize(input.eye);
+
+	float4 diffuse = lightIntensity * saturate(dot(normal, light));
+	float4 reflect = normalize(2 * diffuse * normal - light);
+
+	float4 specular = pow(saturate(dot(reflect, eye)), specularPower);
+	
+	return input.color + diffuse + specular;
 }

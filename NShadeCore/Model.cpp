@@ -61,7 +61,7 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<unsigned int>* modelIndexes, vect
 		vertexInput->Normal = vertex.Normal;
 		vertexInput->AmbientColorIntensity = ambient;
 		vertexInput->LightPositionIntensity = spot;
-
+		vertexInput->EyePosition = XMFLOAT4{ 5.0f, 5.0f, 0.0f, 0.0f };
 		input->push_back(*vertexInput);
 	}
 

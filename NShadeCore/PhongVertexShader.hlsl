@@ -14,6 +14,7 @@ struct VertexShaderInput
 
 	float4 ambient		: COLOR1;
 	float4 light		: POSITION1;
+	float4 eye			: POSITION2;
 };
 
 struct VertexShaderOutput
@@ -33,6 +34,8 @@ VertexShaderOutput main(VertexShaderInput input)
 	float4 position = float4(input.position, 1.0f);
 
 	position = mul(position, world);
+	vertexShaderOutput.eye = mul(input.eye, position);
+
 	position = mul(position, view);
 	position = mul(position, projection);
 
@@ -43,8 +46,9 @@ VertexShaderOutput main(VertexShaderInput input)
 
 	vertexShaderOutput.normal	= mul(normal, world);
 	vertexShaderOutput.ambient	= input.ambient;
+
 	vertexShaderOutput.light	= mul(input.light, world);
-	vertexShaderOutput.eye		= mul(input.light, view);
+
 
 	return vertexShaderOutput;
 }
