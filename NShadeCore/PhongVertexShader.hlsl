@@ -8,14 +8,12 @@ cbuffer ConstantBufferData : register(b0)
 
 struct VertexShaderInput
 {
-	float3 vertexPosition		: POSITION0;
-	float4 vertexColor			: COLOR0;
-	float3 normal				: NORMAL;
-	float2 uv					: TEXCOORD;
+	float3 position			: POSITION0;
+	float4 color			: COLOR0;
+	float3 normal			: NORMAL;
 
-	float3 baryCentricCoord		: POSITION1;
-	float4 ambientColor			: COLOR1;
-	float4 lightPosition		: POSITION2;
+	float4 ambientColor		: COLOR1;
+	float4 lightPosition	: POSITION1;
 };
 
 struct VertexShaderOutput
@@ -31,14 +29,14 @@ struct VertexShaderOutput
 VertexShaderOutput main(VertexShaderInput input)
 {
 	VertexShaderOutput vertexShaderOutput;
-	float4 position = float4(input.vertexPosition, 1.0f);
+	float4 position = float4(input.position, 1.0f);
 
 	position = mul(position, world);
 	position = mul(position, view);
 	position = mul(position, projection);
 
 	vertexShaderOutput.vertexPosition = position;
-	vertexShaderOutput.vertexColor = input.vertexColor;
+	vertexShaderOutput.vertexColor = input.color;
 
 	float4 normal = float4(input.normal, 0.0f);
 

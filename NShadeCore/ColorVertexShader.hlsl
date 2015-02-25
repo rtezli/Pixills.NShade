@@ -20,14 +20,14 @@ struct VertexShaderOutput
 VertexShaderOutput main(VertexShaderInput input)
 {
 	VertexShaderOutput vertexShaderOutput;
-	float4 position = float4(input.vertexPosition, 1.0f);
+	float4 position = float4(input.Position, 1.0f);
 
 	position = mul(position, world);
 	position = mul(position, view);
 	position = mul(position, projection);
 
-	vertexShaderOutput.vertexPosition = position;
-	vertexShaderOutput.vertexColor = input.vertexColor;
+	vertexShaderOutput.Position = position;
+	vertexShaderOutput.Color = input.Color;
 
 	return vertexShaderOutput;
 }

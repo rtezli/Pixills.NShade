@@ -9,7 +9,8 @@ struct PixelShaderInput
 };
 
 float4 main(PixelShaderInput input) : SV_TARGET
-{
-	float4 diffuse = { 1.0f, 0.0f, 0.0f, 1.0f };
-	return input.vertexColor * saturate(dot(input.lightPosition, input.normal));
+{ 
+	float4 diffuse  = saturate(dot(input.lightPosition, input.normal));
+	float4 specular = saturate(dot(input.eyePosition, input.normal));
+	return input.vertexColor * (diffuse + specular) + input.ambientColor;
 }

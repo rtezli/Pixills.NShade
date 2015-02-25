@@ -63,17 +63,22 @@ HRESULT Model::LoadModelFromFBXFile(char* fileName)
 
 HRESULT Model::FillVertexAndIndexBuffer(vector<unsigned int>* modelIndexes, vector<nshade::Vertex>* modelVertices)
 {
-	Light light = { XMFLOAT4{ 5.0f, 5.0f, 0.0f, 1.0f }, XMFLOAT4{ 1.0f, 0.7f, 0.7f, 1.0f } };
+	auto spot = XMFLOAT4{ 5.0f, 5.0f, 0.0f, 1.0f };
+	auto ambient = XMFLOAT4{ 1.0f, 1.0f, 1.0f, 0.0f };
+	auto color = XMFLOAT4{ 0.8f, 1.0f, 0.8f, 1.0f };
 
-	auto input = new  vector<VertexShaderInput>();
+	auto input = new  vector<PhongShader::InputLayout>();
 
 	for (unsigned int i = 0; i < modelVertices->size(); i++)
 	{
 		auto vertex = modelVertices->at(i);
 
-		auto vertexInput = new VertexShaderInput();
-		vertexInput->Vertex = vertex;
-		vertexInput->Light = light;
+		auto vertexInput = new PhongShader::InputLayout();
+		vertexInput->Position = vertex.Position;
+		vertexInput->Color = color;
+		vertexInput->Normal = vertex.Normal;
+		vertexInput->AmbientColorIntensity = ambient;
+		vertexInput->LightPositionIntensity = spot;
 
 		input->push_back(*vertexInput);
 	}
@@ -81,12 +86,12 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<unsigned int>* modelIndexes, vect
 	DeviceResource()->VertexCount = modelVertices->size();
 	DeviceResource()->IndexCount = modelIndexes->size();
 
-	VertexShaderInput* vertexArr;
-	vertexArr = (VertexShaderInput*)malloc(DeviceResource()->VertexCount * sizeof(VertexShaderInput));
+	PhongShader::InputLayout* vertexArr;
+	vertexArr = (PhongShader::InputLayout*)malloc(DeviceResource()->VertexCount * sizeof(PhongShader::InputLayout));
 	copy(input->begin(), input->end(), vertexArr);
 
 	D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
-	vertexBufferDesc.ByteWidth = sizeof(VertexShaderInput) * DeviceResource()->VertexCount;
+	vertexBufferDesc.ByteWidth = sizeof(PhongShader::InputLayout) * DeviceResource()->VertexCount;
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;

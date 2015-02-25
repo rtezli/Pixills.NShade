@@ -370,17 +370,15 @@ HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 	{
 		return result;
 	}
-
+	
 	static const D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
 		{ "POSITION",	0, DXGI_FORMAT_R32G32B32_FLOAT, 0,		D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // Vertex position
 		{ "COLOR",		0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,	D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // Vertex color
 		{ "NORMAL",		0, DXGI_FORMAT_R32G32B32_FLOAT, 0,		D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // Normal vector
-		{ "TEXCOORD",	0, DXGI_FORMAT_R32G32_FLOAT, 0,			D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // Texture UV
-		
-		{ "POSITION",	1, DXGI_FORMAT_R32G32B32_FLOAT, 0,		D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // Texture UV
+
 		{ "COLOR",		1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,	D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // Ambient Light color where w is intensity
-		{ "POSITION",	2, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,   D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }  // Point light position w is intensity
+		{ "POSITION",	1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,   D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }  // Point light position w is intensity
 	};
 
 	return GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), vsByteCode->FileBytes, vsByteCode->Length, &Resources()->InputLayout);
@@ -496,7 +494,7 @@ HRESULT Renderer::Render()
 		return 0;
 	}
 
-	UINT stride = sizeof(VertexShaderInput);
+	UINT stride = sizeof(PhongShader::InputLayout);
 	UINT offset = 0;
 
 	// Set model data

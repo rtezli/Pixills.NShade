@@ -3,6 +3,7 @@
 
 #include "includes.h"
 #include "material.h"
+#include "phongvertexshader.h"
 
 class Model
 {

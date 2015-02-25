@@ -23,7 +23,7 @@
 
 #include "includes.h"
 #include "d3dcompiler.h"
-
+#include "phongvertexshader.h"
 
 class Renderer
 {
