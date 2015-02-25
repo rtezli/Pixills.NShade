@@ -12,7 +12,6 @@ public:
 	~Model();
 	HRESULT LoadModelFromFBXFile(char* fileName);
 	HRESULT LoadModelFromOBJFile(char* fileName, bool isRightHand);
-	HRESULT CreateVertexAndIndexBuffer(XMFLOAT3 vertices[]);
 	HRESULT CreateCube(float size, XMFLOAT3* position);
 	HRESULT CreateHorizontalPlane(float size, XMFLOAT3* position);
 	HRESULT	Initialize();

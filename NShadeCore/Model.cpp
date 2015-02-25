@@ -35,24 +35,6 @@ HRESULT Model::Initialize()
 		return result;
 	}
 
-	//auto result = LoadModelFromOBJFile("../Models/cube.obj", true);
-	//if (FAILED(result))
-	//{
-	//	return result;
-	//}
-
-	//auto result = InitializeVertexBuffer();
-	//if (FAILED(result))
-	//{
-	//	return result;
-	//}
-
-	//result = InitializeIndexBuffer(NULL);
-	//if (FAILED(result))
-	//{
-	//	return result;
-	//}
-
 	return InitializeConstantBuffer();
 }
 
@@ -65,7 +47,7 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<unsigned int>* modelIndexes, vect
 {
 	auto spot = XMFLOAT4{ 5.0f, 5.0f, 0.0f, 1.0f };
 	auto ambient = XMFLOAT4{ 1.0f, 1.0f, 1.0f, 0.0f };
-	auto color = XMFLOAT4{ 0.8f, 1.0f, 0.8f, 1.0f };
+	auto color = XMFLOAT4{ 0.3f, 0.8f, 0.2f, 1.0f };
 
 	auto input = new  vector<PhongShader::InputLayout>();
 
@@ -222,20 +204,6 @@ HRESULT Model::InitializeIndexBuffer(int indeces[])
 		return result;
 	}
 	return result;
-}
-
-HRESULT Model::CreateVertexAndIndexBuffer(XMFLOAT3* vertices)
-{
-	//long size = 0;
-	//int* indexBuffer = new int[size];
-	//Vertex* vertexBuffer = new Vertex[size];
-
-	//for (long i = 0; i < size; i++)
-	//{
-	//	vertexBuffer[i].Position = vertices[i];
-	//	indexBuffer[i] = i;
-	//}
-	return 0;
 }
 
 HRESULT Model::CreateHorizontalPlane(float size, XMFLOAT3* position)

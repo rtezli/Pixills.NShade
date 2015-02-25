@@ -8,22 +8,23 @@ cbuffer ConstantBufferData : register(b0)
 
 struct VertexShaderInput
 {
-	float3 position			: POSITION0;
-	float4 color			: COLOR0;
-	float3 normal			: NORMAL;
+	float3 position		: POSITION0;
+	float4 color		: COLOR0;
+	float3 normal		: NORMAL;
 
-	float4 ambientColor		: COLOR1;
-	float4 lightPosition	: POSITION1;
+	float4 ambient		: COLOR1;
+	float4 light		: POSITION1;
 };
 
 struct VertexShaderOutput
 {
-	float4 vertexPosition	: SV_POSITION;
-	float4 vertexColor		: COLOR0;
+	float4 position			: SV_POSITION;
+	float4 color			: COLOR0;
 	float4 normal			: NORMAL;
-	float4 ambientColor		: COLOR1;
-	float4 lightPosition	: POSITION1;
-	float4 eyePosition		: POSITION2;
+
+	float4 ambient			: COLOR1;
+	float4 light			: POSITION1;
+	float4 eye				: POSITION2;
 };
 
 VertexShaderOutput main(VertexShaderInput input)
@@ -35,15 +36,15 @@ VertexShaderOutput main(VertexShaderInput input)
 	position = mul(position, view);
 	position = mul(position, projection);
 
-	vertexShaderOutput.vertexPosition = position;
-	vertexShaderOutput.vertexColor = input.color;
+	vertexShaderOutput.position = position;
+	vertexShaderOutput.color	= input.color;
 
 	float4 normal = float4(input.normal, 0.0f);
 
-	vertexShaderOutput.normal		 = mul(normal, world);
-	vertexShaderOutput.ambientColor	 = input.ambientColor;	
-	vertexShaderOutput.lightPosition = mul(input.lightPosition, world);
-	vertexShaderOutput.eyePosition   = mul(input.lightPosition, view);
+	vertexShaderOutput.normal	= mul(normal, world);
+	vertexShaderOutput.ambient	= input.ambient;
+	vertexShaderOutput.light	= mul(input.light, world);
+	vertexShaderOutput.eye		= mul(input.light, view);
 
 	return vertexShaderOutput;
 }
