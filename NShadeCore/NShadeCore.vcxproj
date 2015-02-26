@@ -185,13 +185,14 @@
     <ClInclude Include="Export.h" />
     <ClInclude Include="FbxReader.h" />
     <ClInclude Include="File.h" />
-    <ClInclude Include="FpsTextRenderer.h" />
+    <ClInclude Include="OverlayRenderer.h" />
     <ClInclude Include="Includes.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ObjParser.h" />
+    <ClInclude Include="Particles.h" />
     <ClInclude Include="PhongPixelShader.h" />
     <ClInclude Include="PhongVertexShader.h" />
     <ClInclude Include="Renderer.h" />
@@ -229,12 +230,13 @@
     </ClCompile>
     <ClCompile Include="FbxReader.cpp" />
     <ClCompile Include="File.cpp" />
-    <ClCompile Include="FpsTextRenderer.cpp" />
+    <ClCompile Include="OverlayRenderer.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ObjParser.cpp" />
+    <ClCompile Include="Particles.cpp" />
     <ClCompile Include="PhongPixelShader.cpp" />
     <ClCompile Include="PhongVertexShader.cpp" />
     <ClCompile Include="Renderer.cpp" />

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "FpsTextRenderer.h"
+#include "overlayrenderer.h"
 
 
 FpsTextRenderer::FpsTextRenderer(DeviceResources* pResources)
