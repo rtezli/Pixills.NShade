@@ -3,8 +3,9 @@ cbuffer ConstantBufferData : register(b0)
 	float4x4 world;
 	float4x4 view;
 	float4x4 projection;
-	float3	 camera;
-	float	 time;
+	float4x4 reflection;
+	float4   camera;
+	float    time;
 };
 
 struct VertexShaderInput
@@ -19,13 +20,13 @@ struct VertexShaderInput
 
 struct VertexShaderOutput
 {
-	float4 position			: SV_POSITION;
-	float4 color			: COLOR0;
-	float4 normal			: NORMAL;
+	float4 position	: SV_POSITION;
+	float4 color	: COLOR0;
+	float4 normal	: NORMAL;
 
-	float4 ambient			: COLOR1;
-	float4 light			: POSITION1;
-	float4 camera			: POSITION2;
+	float4 ambient	: COLOR1;
+	float4 light	: POSITION1;
+	float4 eye		: POSITION2;
 };
 
 VertexShaderOutput main(VertexShaderInput input)
@@ -45,7 +46,7 @@ VertexShaderOutput main(VertexShaderInput input)
 
 	vertexShaderOutput.normal	= mul(normal, world);
 	vertexShaderOutput.ambient	= input.ambient;
-	vertexShaderOutput.camera   = float4(camera, 0.0f);
+	vertexShaderOutput.eye   = camera;
 
 	vertexShaderOutput.light	= mul(input.light, world);
 

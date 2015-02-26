@@ -76,7 +76,8 @@ void Camera::Rotate(POINT* p)
 }
 
 void Camera::Update()
-{
-	ConstantBufferData constBuffer = { *m_pWorldMatrix, *m_pViewMatrix, *m_pProjectionMatrix, *m_eyePosition };
+{	
+	XMFLOAT4X4 reflect;
+	ConstantBufferData constBuffer = { *m_pWorldMatrix, *m_pViewMatrix, *m_pProjectionMatrix, reflect, *m_eyePosition, 0 };
 	m_pDeviceResources->ConstBufferData = new ConstantBufferData(constBuffer);
 }

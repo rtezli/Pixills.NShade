@@ -11,15 +11,14 @@ struct PixelShaderInput
 
 float4 main(PixelShaderInput input) : SV_TARGET
 {
-	float  lightIntensity = 0.5f;
-
-	float  specularPower = 50.00f;
+	float  lightIntensity = 0.45f;
+	float  specularPower = 70.00f;
 
 	float4 normal = normalize(input.normal);
-	float4 light = normalize(input.light);
+	float4 light  = normalize(input.light);
 	float4 camera = normalize(input.camera);
 
-	float4 ambient = {0.2f, 0.2f, 0.2f, 1.0f };
+	float4 ambient = { 0.2f, 0.2f, 0.2f, 1.0f };
 	float4 diffuse = saturate(dot(normal, light));
 	float4 reflect = normalize(2 * diffuse * normal - light);
 
