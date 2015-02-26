@@ -192,6 +192,11 @@ HRESULT D3DSystem::CreateInput()
 	return device->Initialize();
 }
 
+HRESULT D3DSystem::CreatScene()
+{
+	return 0;
+}
+
 D3D11_VIEWPORT* D3DSystem::CreateViewPort(HWND* hwnd)
 {
 	RECT rect;

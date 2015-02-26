@@ -50,6 +50,12 @@ HRESULT Renderer::Initialize()
 		return result;
 	}
 
+	result = CreateTextureRenderTarget();
+	if (FAILED(result))
+	{
+		return result;
+	}
+
 	result = CreateRasterizer();
 	if (FAILED(result))
 	{
@@ -311,6 +317,65 @@ HRESULT Renderer::CreateDepthStencil()
 }
 
 
+HRESULT Renderer::CreateTextureRenderTarget()
+{
+	D3D11_TEXTURE2D_DESC textureDesc;
+	HRESULT result;
+	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+
+
+	// Initialize the render target texture description.
+	ZeroMemory(&textureDesc, sizeof(textureDesc));
+
+	// Setup the render target texture description.
+	textureDesc.Width = Resources()->ViewPort->Width;
+	textureDesc.Height = Resources()->ViewPort->Height;
+	textureDesc.MipLevels = 1;
+	textureDesc.ArraySize = 1;
+	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	textureDesc.CPUAccessFlags = 0;
+	textureDesc.MiscFlags = 0;
+
+	// Create the render target texture.
+	result = Resources()->Device->CreateTexture2D(&textureDesc, NULL, &Resources()->ShadowTexture);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Setup the description of the render target view.
+	renderTargetViewDesc.Format = textureDesc.Format;
+	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	renderTargetViewDesc.Texture2D.MipSlice = 0;
+
+	// Create the render target view.
+	result = Resources()->Device->CreateRenderTargetView(Resources()->ShadowTexture, &renderTargetViewDesc, &Resources()->ShadowTextureTargetView);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Setup the description of the shader resource view.
+	shaderResourceViewDesc.Format = textureDesc.Format;
+	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+	shaderResourceViewDesc.Texture2D.MipLevels = 1;
+
+	// Create the shader resource view.
+	result = Resources()->Device->CreateShaderResourceView(Resources()->ShadowTexture, &shaderResourceViewDesc, &Resources()->ShadowTextureResourceView);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+
 HRESULT Renderer::CreateRasterizerDescription()
 {
 	auto isRightHand = false;
@@ -370,7 +435,7 @@ HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 	{
 		return result;
 	}
-	
+
 	static const D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // Vertex position
@@ -467,11 +532,12 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
 
 	const D3D_SHADER_MACRO defines[] =
 	{
-		{"Foo", "Bar" }
+		{ "Foo", "Bar" }
 	};
 
-	return D3DCompileFromFile(compiledShaderFile,defines, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", shaderProfile, flags, 0, &shaderBlob, &shaderBlob);
+	return D3DCompileFromFile(compiledShaderFile, defines, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", shaderProfile, flags, 0, &shaderBlob, &shaderBlob);
 }
+
 
 void Renderer::ClearScene()
 {
@@ -499,13 +565,13 @@ HRESULT Renderer::Render()
 
 	// Set model data
 	GetDeviceContext()->IASetInputLayout(Resources()->InputLayout);
-	
+
 	// Set multiple buffers here ? i.e. each for one model since some shaders are not applied to all models
 	GetDeviceContext()->IASetVertexBuffers(0, 1, &Resources()->VertexBuffer, &stride, &offset);
 	GetDeviceContext()->IASetIndexBuffer(Resources()->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	// Set shader data
-	
+
 
 	// Set multiple shaders here ?
 	auto vs = Resources()->Shaders->VertexShader;
@@ -513,7 +579,7 @@ HRESULT Renderer::Render()
 
 	GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
 	GetDeviceContext()->VSSetShader(vs, nullptr, 0);
-	
+
 	GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
 	GetDeviceContext()->VSSetShader(vs, nullptr, 0);
 

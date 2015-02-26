@@ -19,6 +19,7 @@ public:
 	HRESULT InitializeForWindow(bool vsync, HINSTANCE*, HWND* window, bool fullscreen);
 	HRESULT InitializeWithWindow(int screenWidth, int screenHeight, bool vsync, bool fullscreen);
 	LRESULT MessageHandler(HWND* hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
+	HRESULT CreatScene();
 	HRESULT Initialize();
 	void	Render();
 private:

@@ -48,6 +48,8 @@ private:
 	HRESULT CreateRenderTargetViewDesciption();
 	HRESULT CreateRenderTarget();
 
+	HRESULT CreateTextureRenderTarget();
+
 	/* swap chain */
 	HRESULT	CreateSwapChainDesciption();
 	HRESULT CreateSwapChain();

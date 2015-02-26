@@ -203,6 +203,7 @@
     <ClInclude Include="TesselationVertexShader.h" />
     <ClInclude Include="TesselationHullShader.h" />
     <ClInclude Include="TextureTarget.h" />
+    <ClInclude Include="TilePool.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -254,6 +255,7 @@
     <ClCompile Include="TesselationHullShader.cpp" />
     <ClCompile Include="TesselationVertexShader.cpp" />
     <ClCompile Include="TextureTarget.cpp" />
+    <ClCompile Include="TilePool.cpp" />
     <ClCompile Include="WireframePixelShader.cpp" />
     <ClCompile Include="WireframeVertexShader.cpp" />
   </ItemGroup>
