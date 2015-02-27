@@ -48,8 +48,6 @@ private:
 	HRESULT CreateRenderTargetViewDesciption();
 	HRESULT CreateRenderTarget();
 
-	HRESULT CreateTextureRenderTarget();
-
 	/* swap chain */
 	HRESULT	CreateSwapChainDesciption();
 	HRESULT CreateSwapChain();
@@ -67,6 +65,9 @@ private:
 	HRESULT CreateDepthStencilViewDescription();
 	HRESULT CreateDepthStencilStateDescription();
 	HRESULT CreateDepthStencil();
+
+	/* shadow map */
+	HRESULT CreateShadowMapTextureTarget();
 
 	/* rasterizer */
 	HRESULT CreateRasterizerDescription();

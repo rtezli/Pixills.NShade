@@ -50,7 +50,7 @@ HRESULT Renderer::Initialize()
 		return result;
 	}
 
-	result = CreateTextureRenderTarget();
+	result = CreateShadowMapTextureTarget();
 	if (FAILED(result))
 	{
 		return result;
@@ -317,7 +317,7 @@ HRESULT Renderer::CreateDepthStencil()
 }
 
 
-HRESULT Renderer::CreateTextureRenderTarget()
+HRESULT Renderer::CreateShadowMapTextureTarget()
 {
 	D3D11_TEXTURE2D_DESC textureDesc;
 	HRESULT result;
@@ -546,6 +546,8 @@ void Renderer::ClearScene()
 
 	// Clear render targets and depth stencil
 	GetDeviceContext()->OMSetRenderTargets(1, &Resources()->RenderTargetView, Resources()->DepthStencilView);
+
+ 
 	GetDeviceContext()->ClearRenderTargetView(Resources()->RenderTargetView, Resources()->DefaultColor);
 	GetDeviceContext()->ClearDepthStencilView(Resources()->DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
@@ -577,14 +579,15 @@ HRESULT Renderer::Render()
 	auto vs = Resources()->Shaders->VertexShader;
 	auto ps = Resources()->Shaders->PixelShader;
 
-	GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
-	GetDeviceContext()->VSSetShader(vs, nullptr, 0);
+	//GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
+	//GetDeviceContext()->VSSetShader(vs, nullptr, 0);
 
 	GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
 	GetDeviceContext()->VSSetShader(vs, nullptr, 0);
 
 	GetDeviceContext()->PSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
 	GetDeviceContext()->PSSetShader(ps, nullptr, 0);
+
 	GetDeviceContext()->DrawIndexed(Resources()->IndexCount, 0, 0);
 
 	// Present
