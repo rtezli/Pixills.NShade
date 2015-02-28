@@ -112,5 +112,6 @@ private:
 
 	bool								m_isInitialized;
 	bool								m_useSwapChain;
+	bool								m_renderShadows;
 	bool								m_rasterizerUseMultiSampling;
 };
