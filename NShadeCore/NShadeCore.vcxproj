@@ -195,6 +195,7 @@
     <ClInclude Include="Particles.h" />
     <ClInclude Include="PhongPixelShader.h" />
     <ClInclude Include="PhongVertexShader.h" />
+    <ClInclude Include="PreviewControl.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderingPipeline.h" />
     <ClInclude Include="Scene.h" />
@@ -243,6 +244,7 @@
     <ClCompile Include="Particles.cpp" />
     <ClCompile Include="PhongPixelShader.cpp" />
     <ClCompile Include="PhongVertexShader.cpp" />
+    <ClCompile Include="PreviewControl.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderingPipeline.cpp" />
     <ClCompile Include="Scene.cpp" />

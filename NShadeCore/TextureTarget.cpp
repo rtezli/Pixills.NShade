@@ -19,17 +19,14 @@ HRESULT TextureTarget::Initialize()
 	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
 	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
 
-
-	// Initialize the render target texture description.
-	ZeroMemory(&textureDesc, sizeof(textureDesc));
-
 	// Setup the render target texture description.
 	textureDesc.Width = Resources()->ViewPort->Width;
 	textureDesc.Height = Resources()->ViewPort->Height;
 	textureDesc.MipLevels = 1;
 	textureDesc.ArraySize = 1;
 	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	textureDesc.SampleDesc.Count = 1;
+	textureDesc.SampleDesc.Quality = Resources()->RenderQuality->Quality;
+	textureDesc.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
 	textureDesc.Usage = D3D11_USAGE_DEFAULT;
 	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 	textureDesc.CPUAccessFlags = 0;
@@ -78,8 +75,9 @@ HRESULT TextureTarget::SetRenderTarget(ID3D11DepthStencilView* depthStencilView)
 
 HRESULT TextureTarget::ClearRenderTarget(ID3D11DepthStencilView* depthStencilView)
 {
+	const FLOAT color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	// Clear the back buffer.
-	Resources()->DeviceContext->ClearRenderTargetView(m_renderTargetView, Resources()->DefaultColor);
+	Resources()->DeviceContext->ClearRenderTargetView(m_renderTargetView, color);
 
 	// Clear the depth buffer.
 	Resources()->DeviceContext->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);

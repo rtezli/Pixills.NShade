@@ -320,63 +320,42 @@ HRESULT Renderer::CreateDepthStencil()
 
 HRESULT Renderer::CreateShadowMapTextureTarget()
 {
-	D3D11_TEXTURE2D_DESC textureDesc;
-	HRESULT result;
-	D3D11_DEPTH_STENCIL_VIEW_DESC renderTargetViewDesc;
-	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
-
-
-	// Initialize the render target texture description.
-	ZeroMemory(&textureDesc, sizeof(textureDesc));
-
-	// Setup the render target texture description.
-	textureDesc.Width = Resources()->ViewPort->Width;
-	textureDesc.Height = Resources()->ViewPort->Height;
-	textureDesc.MipLevels = 1;
-	textureDesc.ArraySize = 1;
+	// Copy depth stencil description, set BindFlags : D3D11_BIND_SHADER_RESOURCE
+	auto textureDesc = m_pDepthStencilDesc;
 	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	textureDesc.SampleDesc.Count = 1;
-	textureDesc.Usage = D3D11_USAGE_DEFAULT;
-	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-	textureDesc.CPUAccessFlags = 0;
-	textureDesc.MiscFlags = 0;
+	textureDesc.BindFlags = D3D10_BIND_RENDER_TARGET| D3D11_BIND_SHADER_RESOURCE;
 
-	// Create the render target texture.
-	result = Resources()->Device->CreateTexture2D(&textureDesc, NULL, &Resources()->ShadowTexture);
+	auto result = Resources()->Device->CreateTexture2D(&textureDesc, NULL, &Resources()->ShadowTexture);
 	if (FAILED(result))
 	{
-		return false;
+		return result;
 	}
 
-	// Setup the description of the render target view.
+	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
 	renderTargetViewDesc.Format = textureDesc.Format;
-	renderTargetViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	renderTargetViewDesc.Texture2D.MipSlice = 0;
+	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
+	//renderTargetViewDesc.Texture2DMS. = 0;
+	//renderTargetViewDesc.Texture2DMS. = 0;
 
-	// Create the render target view.
-	result = Resources()->Device->CreateDepthStencilView(Resources()->ShadowTexture, &renderTargetViewDesc, &Resources()->ShadowDepthStencilView);
+	// Copy depth stencil settings
+	result = Resources()->Device->CreateRenderTargetView(Resources()->ShadowTexture, &renderTargetViewDesc, &Resources()->ShadowRenderTarget);
 	if (FAILED(result))
 	{
-		return false;
+		return result;
 	}
 
-	// Setup the description of the shader resource view.
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
 	shaderResourceViewDesc.Format = textureDesc.Format;
-	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
 	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
 	shaderResourceViewDesc.Texture2D.MipLevels = 1;
-
-	// Create the shader resource view.
-	result = Resources()->Device->CreateShaderResourceView(Resources()->ShadowTexture, &shaderResourceViewDesc, &Resources()->ShadowTextureResourceView);
+	result = Resources()->Device->CreateShaderResourceView(Resources()->ShadowTexture, &shaderResourceViewDesc, &Resources()->ShadowResourceView);
 	if (FAILED(result))
 	{
-		return false;
+		return result;
 	}
 
-	GetDeviceContext()->OMSetRenderTargets(0, 0, Resources()->ShadowDepthStencilView);
-	GetDeviceContext()->ClearDepthStencilView(Resources()->ShadowDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-
-	return true;
+	return result;
 }
 
 
@@ -545,14 +524,13 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
 
 void Renderer::ClearScene()
 {
-	// Update the model data
+	// Update the constant buffer data
 	GetDeviceContext()->UpdateSubresource(Resources()->ConstBuffer, 0, nullptr, Resources()->ConstBufferData, 0, 0);
 
 	// Clear render targets and depth stencil
 	GetDeviceContext()->OMSetRenderTargets(1, &Resources()->RenderTargetView, Resources()->DepthStencilView);
-
- 
-	GetDeviceContext()->ClearRenderTargetView(Resources()->RenderTargetView, Resources()->DefaultColor);
+	const FLOAT color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	GetDeviceContext()->ClearRenderTargetView(Resources()->RenderTargetView, color);
 	GetDeviceContext()->ClearDepthStencilView(Resources()->DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
@@ -580,17 +558,15 @@ HRESULT Renderer::Render()
 
 
 	// Set multiple shaders here ?
-	auto vs = Resources()->Shaders->VertexShader;
-	auto ps = Resources()->Shaders->PixelShader;
 
 	//GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
 	//GetDeviceContext()->VSSetShader(vs, nullptr, 0);
 
 	GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
-	GetDeviceContext()->VSSetShader(vs, nullptr, 0);
+	GetDeviceContext()->VSSetShader(Resources()->Shaders->VertexShader, nullptr, 0);
 
 	GetDeviceContext()->PSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
-	GetDeviceContext()->PSSetShader(ps, nullptr, 0);
+	GetDeviceContext()->PSSetShader(Resources()->Shaders->PixelShader, nullptr, 0);
 
 	GetDeviceContext()->DrawIndexed(Resources()->IndexCount, 0, 0);
 

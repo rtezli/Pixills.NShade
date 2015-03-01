@@ -136,7 +136,7 @@ HRESULT D3DSystem::CreateDevice()
 
 	auto createResult = D3D11CreateDevice(
 		nullptr,
-		D3D_DRIVER_TYPE_WARP, //D3D_DRIVER_TYPE_HARDWARE, // 
+		D3D_DRIVER_TYPE_HARDWARE, // D3D_DRIVER_TYPE_WARP, //
 		0,
 		creationFlags,
 		featureLevels,

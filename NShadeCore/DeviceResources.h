@@ -20,31 +20,36 @@ public:
 	HWND*						WindowHandle;
 	ID3D11Device*				Device;
 	ID3D11DeviceContext*		DeviceContext;
+	ID3D11RasterizerState*		RasterizerState;
+	IDXGISwapChain*				SwapChain;
 
+	/* buffers */
 	ID3D11Buffer*				VertexBuffer;
 	ID3D11Buffer*				IndexBuffer;
 	ID3D11Buffer*				ConstBuffer;
+	ID3D11InputLayout*			InputLayout;
 	ConstantBufferData*			ConstBufferData;
 
-	ID3D11Texture2D*			BackBuffer;
+	/* depth stencil */
 	ID3D11Texture2D*			DepthStencilBuffer;
-
 	ID3D11DepthStencilState*	DepthStencilState;
-	ID3D11RasterizerState*		RasterizerState;
-
-	IDXGISwapChain*				SwapChain;
-
-	ID3D11RenderTargetView*		RenderTargetView;
 	ID3D11DepthStencilView*		DepthStencilView;
-	ID3D11InputLayout*			InputLayout;
 
+	/* render target (screen) */
+	ID3D11Texture2D*			BackBuffer;
+	ID3D11RenderTargetView*		RenderTargetView;
+
+	/* shadows */
 	ID3D11Texture2D*			ShadowTexture;
-	ID3D11DepthStencilView*		ShadowDepthStencilView;
-	ID3D11RenderTargetView*		ShadowTextureTargetView;
-	ID3D11ShaderResourceView*	ShadowTextureResourceView;
+	ID3D11RenderTargetView*		ShadowRenderTarget;
+	ID3D11ShaderResourceView*	ShadowResourceView;
+
+	/* mirrors */
+	ID3D11Texture2D*			MirrorTexture;
+	ID3D11RenderTargetView*		MirrorRenderTarget;
+	ID3D11ShaderResourceView*	MirrorResourceView;
 
 	ShaderSet*					Shaders;
-
 	D3D11_VIEWPORT*				ViewPort;
 	RenderingQuality*			RenderQuality;
 
@@ -52,8 +57,7 @@ public:
 	int							BufferCount;
 	int							IndexCount;
 	int							VertexCount;
-
-	XMVECTORF32					DefaultColor;
+ 
 	float						Dpi;
 	float						NearZ;
 	float						FarZ;

@@ -25,4 +25,5 @@ HRESULT Shader::Initialize()
 	{
 		return result;
 	}
+	return 0;
 }

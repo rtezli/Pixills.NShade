@@ -24,7 +24,7 @@ HRESULT FpsTextRenderer::Initialize()
 	IDXGISurface2* dxgiBackBuffer;
 	Resources()->SwapChain->GetBuffer(0, IID_PPV_ARGS(&dxgiBackBuffer));
 
-	ID2D1Bitmap1* targetBitmap;
+	//ID2D1Bitmap1* targetBitmap;
 	
 	// DeviceContext()->CreateBitmapFromDxgiSurface(dxgiBackBuffer, &bitmapProperties, &targetBitmap);
 	// DeviceContext()->SetTarget(targetBitmap);
