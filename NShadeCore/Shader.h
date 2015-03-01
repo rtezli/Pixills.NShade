@@ -44,35 +44,60 @@ enum ShaderType : char
 	DS = 6
 };
 
+struct SHADER_DESC
+{
+	ShaderType Type;
+	ShaderVersion Version;
+	LPCSTR FilePath;
+};
+
 class Shader
 {
 public:
 	Shader(DeviceResources* pResources);
    ~Shader(); 
-public:
+protected:
+	DeviceResources*					const Resources(){ return m_pDeviceResources; }
+	ID3D11Device*						const Device(){ return m_pDeviceResources->Device; }
+	ID3D11DeviceContext*				const DeviceContext(){ return m_pDeviceResources->DeviceContext; }
+	ShaderType							Type;
+	ShaderVersion						Version;
+	LPCWSTR								ShaderFilePath;
+
+	HRESULT Initialize();
+	HRESULT Load(LPCWSTR file);
+	HRESULT Compile(LPCWSTR file);
+	HRESULT Set();
+	HRESULT Render();
+
+	//virtual struct InputLayout			InputLayout;
+	//virtual struct ConstantBuffer		ConstantBuffer;
+	//virtual D3D11_INPUT_ELEMENT_DESC*	InputDescription;
+
+private:
 	HRESULT	SetVertexShader(LPCWSTR compiledShaderFile);
-	HRESULT	CompileVertexShader(LPCWSTR shaderSource);
+	HRESULT	CompileVertexShader(LPCWSTR shaderSource, LPCSTR profile);
 
 	HRESULT SetHullShader(LPCWSTR compiledShaderFile);
-	HRESULT CompileHullShader(LPCWSTR shaderSource);
+	HRESULT CompileHullShader(LPCWSTR shaderSource, LPCSTR profile);
 
 	HRESULT SetDomainShader(LPCWSTR compiledShaderFile);
-	HRESULT CompileDomainShader(LPCWSTR shaderSource);
+	HRESULT CompileDomainShader(LPCWSTR shaderSource, LPCSTR profile);
 
 	HRESULT SetGeometryShader(LPCWSTR compiledShaderFile);
-	HRESULT CompileGeometryShader(LPCWSTR shaderSource);
+	HRESULT CompileGeometryShader(LPCWSTR shaderSource, LPCSTR profile);
 
 	HRESULT SetPixelShader(LPCWSTR compiledShaderFile);
-	HRESULT CompilePixelShader(LPCWSTR shaderSource);
+	HRESULT CompilePixelShader(LPCWSTR shaderSource, LPCSTR profile);
 
-	HRESULT Set();
-private:
+	HRESULT SetComputeShader(LPCWSTR compiledShaderFile);
+	HRESULT CompileComputeShader(LPCWSTR shaderSource, LPCSTR profile);
+
+	LPCSTR Shader::CreateProfile();
+
 	HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
-private:
+
 	DeviceResources*					m_pDeviceResources;
-	DeviceResources*					const Resources(){		return m_pDeviceResources; }
-	ID3D11Device*						const Device(){			return m_pDeviceResources->Device; }
-	ID3D11DeviceContext*				const DeviceContext(){	return m_pDeviceResources->DeviceContext; }
 	vector<D3D11_INPUT_ELEMENT_DESC>	m_inputDescription;
 	ShaderType							m_Type;
 	ID3D11PixelShader*					m_PixelShader;

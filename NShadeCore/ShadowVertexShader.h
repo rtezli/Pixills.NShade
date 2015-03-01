@@ -5,31 +5,34 @@
 
 namespace ShadowShader
 {
-	struct InputLayout
+	const struct ConstantBuffer
 	{
-		XMFLOAT3 Position;
-		XMFLOAT4 Color;
-		XMFLOAT3 Normal;
-		XMFLOAT4 AmbientColorIntensity;
-		XMFLOAT4 LightPositionIntensity;
-		XMFLOAT4 EyePosition;
+		XMFLOAT4X4 world;
+		XMFLOAT4X4 view;
+		XMFLOAT4X4 projection;
 	};
 
-	static const D3D11_INPUT_ELEMENT_DESC InputDescription[] =
+	const struct  InputLayout
 	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // Vertex position
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // Model color
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // Normal vector
+		XMFLOAT3 Position;
+		XMFLOAT3 TextCoord;
+		XMFLOAT3 Normal;
+	};
 
-		{ "COLOR", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // Ambient light color where w is intensity
-		{ "POSITION", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }  // Point light position w is intensity
+	const D3D11_INPUT_ELEMENT_DESC InputDescription[] =
+	{
+		{ "POSITION",	0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXTCOORD",	0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL",		0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
 	class ShadowVertexShader : Shader
 	{
 	public:
-		ShadowVertexShader(DeviceResources* pResources);
+		ShadowVertexShader(DeviceResources* pResources, Light* light);
 		~ShadowVertexShader();
+	private:
+		shared_ptr<Light>			m_pLight;
 	};
 }
 

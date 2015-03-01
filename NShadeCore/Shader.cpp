@@ -12,9 +12,80 @@ Shader::~Shader()
 
 }
 
+HRESULT Shader::Load(LPCWSTR file)
+{
+	switch (Type)
+	{
+		case ShaderType::VS:
+		{
+			SetVertexShader(file);
+		}
+
+		case ShaderType::PS:
+		{
+			SetPixelShader(file);
+		}
+
+		case ShaderType::GS:
+		{
+			SetGeometryShader(file);
+		}
+
+		case ShaderType::DS:
+		{
+			SetDomainShader(file);
+		}
+		case ShaderType::HS:
+		{
+			SetHullShader(file);
+		}
+		case ShaderType::CS:
+		{
+			SetComputeShader(file);
+		}
+	}
+	return 0;
+}
+
+HRESULT Shader::Compile(LPCWSTR file)
+{
+	auto profile = CreateProfile();
+	switch (Type)
+	{
+		case ShaderType::VS:
+		{
+			CompileVertexShader(file, profile);
+		}
+
+		case ShaderType::PS:
+		{
+			CompilePixelShader(file, profile);
+		}
+
+		case ShaderType::GS:
+		{
+			CompileGeometryShader(file, profile);
+		}
+
+		case ShaderType::DS:
+		{
+			CompileDomainShader(file, profile);
+		}
+		case ShaderType::HS:
+		{
+			CompileHullShader(file, profile);
+		}
+		case ShaderType::CS:
+		{
+			CompileComputeShader(file, profile);
+		}
+	}
+	return 0;
+}
+
+
 HRESULT Shader::SetVertexShader(LPCWSTR compiledShaderFile)
 {
-	//ID3D11ClassLinkage linkage;
 	Debug::WriteCurrentDir();
 	auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
 	auto result = Device()->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, nullptr, &Resources()->Shaders->VertexShader);
@@ -37,18 +108,19 @@ HRESULT Shader::SetVertexShader(LPCWSTR compiledShaderFile)
 	return Device()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), vsByteCode->FileBytes, vsByteCode->Length, &Resources()->InputLayout);
 }
 
-HRESULT Shader::CompileVertexShader(LPCWSTR compiledShaderFile)
+HRESULT Shader::CompileVertexShader(LPCWSTR compiledShaderFile, LPCSTR profile)
 {
 	ID3DBlob* shaderBlob = 0;
 	ID3D11VertexShader* vertexShader = 0;
 
-	auto result = CompileShader(compiledShaderFile, shaderBlob, VS_PROFILE);
+	auto result = CompileShader(compiledShaderFile, shaderBlob, profile);
 	if (FAILED(result))
 	{
 		return result;
 	}
 	return Device()->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &vertexShader);
 }
+
 
 HRESULT Shader::SetHullShader(LPCWSTR compiledShaderFile)
 {
@@ -57,18 +129,19 @@ HRESULT Shader::SetHullShader(LPCWSTR compiledShaderFile)
 	return Device()->CreateHullShader(hsByteCode->FileBytes, hsByteCode->Length, nullptr, &shaders->HullShader);
 }
 
-HRESULT Shader::CompileHullShader(LPCWSTR compiledShaderFile)
+HRESULT Shader::CompileHullShader(LPCWSTR compiledShaderFile, LPCSTR profile)
 {
 	ID3DBlob* shaderBlob = 0;
 	ID3D11HullShader* hullShader = 0;
 
-	auto result = CompileShader(compiledShaderFile, shaderBlob, HS_PROFILE);
+	auto result = CompileShader(compiledShaderFile, shaderBlob, profile);
 	if (FAILED(result))
 	{
 		return result;
 	}
 	return Device()->CreateHullShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &hullShader);
 }
+
 
 HRESULT Shader::SetGeometryShader(LPCWSTR compiledShaderFile)
 {
@@ -77,12 +150,12 @@ HRESULT Shader::SetGeometryShader(LPCWSTR compiledShaderFile)
 	return Device()->CreateGeometryShader(gsByteCode->FileBytes, gsByteCode->Length, nullptr, &shaders->GeometryShader);
 }
 
-HRESULT Shader::CompileGeometryShader(LPCWSTR compiledShaderFile)
+HRESULT Shader::CompileGeometryShader(LPCWSTR compiledShaderFile, LPCSTR profile)
 {
 	ID3DBlob* shaderBlob = 0;
 	ID3D11GeometryShader* geometryShader = 0;
 
-	auto result = CompileShader(compiledShaderFile, shaderBlob, GS_PROFILE);
+	auto result = CompileShader(compiledShaderFile, shaderBlob, profile);
 	if (FAILED(result))
 	{
 		return result;
@@ -90,24 +163,66 @@ HRESULT Shader::CompileGeometryShader(LPCWSTR compiledShaderFile)
 	return Device()->CreateGeometryShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &geometryShader);
 }
 
+
 HRESULT Shader::SetPixelShader(LPCWSTR compiledShaderFile)
 {
 	auto psByteCode = File::ReadFileBytes(compiledShaderFile);
 	return Device()->CreatePixelShader(psByteCode->FileBytes, psByteCode->Length, nullptr, &Resources()->Shaders->PixelShader);
 }
 
-HRESULT Shader::CompilePixelShader(LPCWSTR compiledShaderFile)
+HRESULT Shader::CompilePixelShader(LPCWSTR compiledShaderFile, LPCSTR profile)
 {
 	ID3DBlob* shaderBlob = 0;
 	ID3D11PixelShader* pixelShader = 0;
 
-	auto result = CompileShader(compiledShaderFile, shaderBlob, PS_PROFILE);
+	auto result = CompileShader(compiledShaderFile, shaderBlob, profile);
 	if (FAILED(result))
 	{
 		return result;
 	}
 	return Device()->CreatePixelShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &pixelShader);
 }
+
+
+HRESULT Shader::SetDomainShader(LPCWSTR compiledShaderFile)
+{
+	auto psByteCode = File::ReadFileBytes(compiledShaderFile);
+	return Device()->CreateDomainShader(psByteCode->FileBytes, psByteCode->Length, nullptr, &Resources()->Shaders->DomainShader);
+}
+
+HRESULT Shader::CompileDomainShader(LPCWSTR compiledShaderFile, LPCSTR profile)
+{
+	ID3DBlob* shaderBlob = 0;
+	ID3D11DomainShader* domainShader = 0;
+
+	auto result = CompileShader(compiledShaderFile, shaderBlob, profile);
+	if (FAILED(result))
+	{
+		return result;
+	}
+	return Device()->CreateDomainShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &domainShader);
+}
+
+
+HRESULT Shader::SetComputeShader(LPCWSTR compiledShaderFile)
+{
+	auto psByteCode = File::ReadFileBytes(compiledShaderFile);
+	return Device()->CreatePixelShader(psByteCode->FileBytes, psByteCode->Length, nullptr, &Resources()->Shaders->PixelShader);
+}
+
+HRESULT Shader::CompileComputeShader(LPCWSTR compiledShaderFile, LPCSTR profile)
+{
+	ID3DBlob* shaderBlob = 0;
+	ID3D11PixelShader* pixelShader = 0;
+
+	auto result = CompileShader(compiledShaderFile, shaderBlob, profile);
+	if (FAILED(result))
+	{
+		return result;
+	}
+	return Device()->CreatePixelShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &pixelShader);
+}
+
 
 HRESULT Shader::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile)
 {
@@ -172,3 +287,14 @@ HRESULT Shader::Set()
 	}
 	return 0;
 }
+
+HRESULT Shader::Render()
+{
+	return 0;
+}
+
+LPCSTR Shader::CreateProfile()
+{
+	return "";
+}
+
