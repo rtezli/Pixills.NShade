@@ -8,6 +8,7 @@ Renderer::Renderer(DeviceResources* pResources, bool useSwapChain)
 	m_pDeviceResources = pResources;
 	m_pDeviceResources->Shaders = new ShaderSet();
 	m_useSwapChain = useSwapChain;
+	m_renderShadows = true;
 	m_rasterizerUseMultiSampling = true;
 
 	DXGI_FORMAT swapChainBufferFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
@@ -321,7 +322,7 @@ HRESULT Renderer::CreateShadowMapTextureTarget()
 {
 	D3D11_TEXTURE2D_DESC textureDesc;
 	HRESULT result;
-	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+	D3D11_DEPTH_STENCIL_VIEW_DESC renderTargetViewDesc;
 	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
 
 
@@ -349,11 +350,11 @@ HRESULT Renderer::CreateShadowMapTextureTarget()
 
 	// Setup the description of the render target view.
 	renderTargetViewDesc.Format = textureDesc.Format;
-	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	renderTargetViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	renderTargetViewDesc.Texture2D.MipSlice = 0;
 
 	// Create the render target view.
-	result = Resources()->Device->CreateRenderTargetView(Resources()->ShadowTexture, &renderTargetViewDesc, &Resources()->ShadowTextureTargetView);
+	result = Resources()->Device->CreateDepthStencilView(Resources()->ShadowTexture, &renderTargetViewDesc, &Resources()->ShadowDepthStencilView);
 	if (FAILED(result))
 	{
 		return false;
@@ -371,6 +372,9 @@ HRESULT Renderer::CreateShadowMapTextureTarget()
 	{
 		return false;
 	}
+
+	GetDeviceContext()->OMSetRenderTargets(0, 0, Resources()->ShadowDepthStencilView);
+	GetDeviceContext()->ClearDepthStencilView(Resources()->ShadowDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	return true;
 }

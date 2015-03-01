@@ -20,7 +20,7 @@ DeviceResources::DeviceResources(ID3D11Device* device, ID3D11DeviceContext* devi
 	// 16 bit per channel  (rgba)
 	RenderingQuality quality0_16 = { 0, 1, DXGI_FORMAT_R16G16B16A16_UNORM, DXGI_FORMAT_D32_FLOAT, true };
  
-	RenderQuality = new RenderingQuality(quality4_8);
+	RenderQuality = new RenderingQuality(quality0_8);
 }
 
 DeviceResources::~DeviceResources()

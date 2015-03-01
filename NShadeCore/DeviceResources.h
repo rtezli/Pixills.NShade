@@ -39,6 +39,7 @@ public:
 	ID3D11InputLayout*			InputLayout;
 
 	ID3D11Texture2D*			ShadowTexture;
+	ID3D11DepthStencilView*		ShadowDepthStencilView;
 	ID3D11RenderTargetView*		ShadowTextureTargetView;
 	ID3D11ShaderResourceView*	ShadowTextureResourceView;
 
