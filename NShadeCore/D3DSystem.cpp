@@ -316,8 +316,10 @@ HRESULT D3DSystem::LoadModels()
 
 HRESULT D3DSystem::CreateRenderer()
 {
+	auto scene = Scene::CreateStandardScene(m_pDeviceResources);
+
 	m_pRenderer = shared_ptr<Renderer>(new Renderer(m_pDeviceResources, true));
-	return m_pRenderer->Initialize();
+	return m_pRenderer->Initialize(scene);
 }
 
 void D3DSystem::Render()

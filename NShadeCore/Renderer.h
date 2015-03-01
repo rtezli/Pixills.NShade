@@ -24,6 +24,7 @@
 #include "includes.h"
 #include "d3dcompiler.h"
 #include "phongvertexshader.h"
+#include "scene.h"
 
 class Renderer
 {
@@ -33,7 +34,7 @@ public:
 public:
 	HRESULT	ResizeSwapChain(UINT32 newWidth, UINT32 newHeight);
 	HRESULT SetShaderParameters();
-	HRESULT	Initialize();
+	HRESULT	Initialize(Scene* scene);
 	HRESULT	Render();
 	HRESULT	Resize(D3D11_VIEWPORT* viewport);
 public:
@@ -67,7 +68,9 @@ private:
 	HRESULT CreateDepthStencil();
 
 	/* shadow map */
-	HRESULT CreateShadowMapTextureTarget();
+	HRESULT CreateShadows();
+
+	HRESULT CreateLights();
 
 	/* rasterizer */
 	HRESULT CreateRasterizerDescription();
@@ -94,7 +97,7 @@ private:
 	HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
 private:
 	DeviceResources*					m_pDeviceResources;
-
+	Scene*								m_pScene;
 	LPCWSTR								m_standardVertexShader = L"../Debug/PhongVertexShader.cso";
 	LPCWSTR								m_standardPixelShader = L"../Debug/PhongPixelShader.cso";
 

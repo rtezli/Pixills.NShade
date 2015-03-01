@@ -26,9 +26,10 @@ public:
 	/* buffers */
 	ID3D11Buffer*				VertexBuffer;
 	ID3D11Buffer*				IndexBuffer;
-	ID3D11Buffer*				ConstBuffer;
+	ID3D11Buffer*			    ConstBuffer;
 	ID3D11InputLayout*			InputLayout;
-	ConstantBufferData*			ConstBufferData;
+	ConstantBufferData*			CameraConstBufferData;
+	ConstantBufferData*			LightConstBufferData;
 
 	/* depth stencil */
 	ID3D11Texture2D*			DepthStencilBuffer;

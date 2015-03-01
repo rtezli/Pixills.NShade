@@ -176,6 +176,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AmbientLight.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ColorPixelShader.h" />
     <ClInclude Include="ColorVertexShader.h" />
@@ -195,6 +196,7 @@
     <ClInclude Include="Particles.h" />
     <ClInclude Include="PhongPixelShader.h" />
     <ClInclude Include="PhongVertexShader.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="PreviewControl.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderingPipeline.h" />
@@ -214,6 +216,7 @@
     <ClInclude Include="WireframeVertexShader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AmbientLight.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ColorPixelShader.cpp" />
     <ClCompile Include="ColorVertexShader.cpp" />
@@ -244,6 +247,7 @@
     <ClCompile Include="Particles.cpp" />
     <ClCompile Include="PhongPixelShader.cpp" />
     <ClCompile Include="PhongVertexShader.cpp" />
+    <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PreviewControl.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderingPipeline.cpp" />

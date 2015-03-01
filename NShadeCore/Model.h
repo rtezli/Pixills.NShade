@@ -12,6 +12,7 @@ public:
 	~Model();
 	HRESULT LoadModelFromFBXFile(char* fileName);
 	HRESULT LoadModelFromOBJFile(char* fileName, bool isRightHand);
+	HRESULT AssignMaterial(Material* pMaterial);
 	HRESULT CreateCube(float size, XMFLOAT3* position);
 	HRESULT CreateHorizontalPlane(float size, XMFLOAT3* position);
 	HRESULT	Initialize();

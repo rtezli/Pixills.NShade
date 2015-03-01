@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "renderer.h"
 
 
@@ -25,8 +26,9 @@ Renderer::~Renderer()
 
 }
 
-HRESULT Renderer::Initialize()
+HRESULT Renderer::Initialize(Scene* scene)
 {
+	m_pScene = scene;
 	auto result = CreateSwapChain();
 	if (FAILED(result))
 	{
@@ -51,12 +53,6 @@ HRESULT Renderer::Initialize()
 		return result;
 	}
 
-	result = CreateShadowMapTextureTarget();
-	if (FAILED(result))
-	{
-		return result;
-	}
-
 	result = CreateRasterizer();
 	if (FAILED(result))
 	{
@@ -74,11 +70,24 @@ HRESULT Renderer::Initialize()
 	{
 		return result;
 	}
+
+	result = CreateShadows();
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	result = CreateLights();
+	if (FAILED(result))
+	{
+		return result;
+	}
+
 	m_isInitialized = true;
 	return SetPixelShader(m_standardPixelShader);
 }
 
-
+ 
 HRESULT Renderer::CreateRenderTargetDesciption()
 {
 	m_pRenderTargetDesc.Width = Resources()->ViewPort->Width;
@@ -318,47 +327,6 @@ HRESULT Renderer::CreateDepthStencil()
 }
 
 
-HRESULT Renderer::CreateShadowMapTextureTarget()
-{
-	// Copy depth stencil description, set BindFlags : D3D11_BIND_SHADER_RESOURCE
-	auto textureDesc = m_pDepthStencilDesc;
-	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	textureDesc.BindFlags = D3D10_BIND_RENDER_TARGET| D3D11_BIND_SHADER_RESOURCE;
-
-	auto result = Resources()->Device->CreateTexture2D(&textureDesc, NULL, &Resources()->ShadowTexture);
-	if (FAILED(result))
-	{
-		return result;
-	}
-
-	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
-	renderTargetViewDesc.Format = textureDesc.Format;
-	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
-	//renderTargetViewDesc.Texture2DMS. = 0;
-	//renderTargetViewDesc.Texture2DMS. = 0;
-
-	// Copy depth stencil settings
-	result = Resources()->Device->CreateRenderTargetView(Resources()->ShadowTexture, &renderTargetViewDesc, &Resources()->ShadowRenderTarget);
-	if (FAILED(result))
-	{
-		return result;
-	}
-
-	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
-	shaderResourceViewDesc.Format = textureDesc.Format;
-	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
-	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
-	shaderResourceViewDesc.Texture2D.MipLevels = 1;
-	result = Resources()->Device->CreateShaderResourceView(Resources()->ShadowTexture, &shaderResourceViewDesc, &Resources()->ShadowResourceView);
-	if (FAILED(result))
-	{
-		return result;
-	}
-
-	return result;
-}
-
-
 HRESULT Renderer::CreateRasterizerDescription()
 {
 	auto isRightHand = false;
@@ -521,13 +489,50 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
 	return D3DCompileFromFile(compiledShaderFile, defines, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", shaderProfile, flags, 0, &shaderBlob, &shaderBlob);
 }
 
+HRESULT Renderer::CreateShadows()
+{
+	auto textureDesc = m_pDepthStencilDesc;
+	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	textureDesc.BindFlags = D3D10_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+
+	auto result = Resources()->Device->CreateTexture2D(&textureDesc, NULL, &Resources()->ShadowTexture);
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+	renderTargetViewDesc.Format = textureDesc.Format;
+	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
+
+	result = Resources()->Device->CreateRenderTargetView(Resources()->ShadowTexture, &renderTargetViewDesc, &Resources()->ShadowRenderTarget);
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+	shaderResourceViewDesc.Format = textureDesc.Format;
+	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
+	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+	shaderResourceViewDesc.Texture2D.MipLevels = 1;
+	result = Resources()->Device->CreateShaderResourceView(Resources()->ShadowTexture, &shaderResourceViewDesc, &Resources()->ShadowResourceView);
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	return result;
+}
+
+HRESULT Renderer::CreateLights()
+{
+	return 0;
+}
 
 void Renderer::ClearScene()
 {
-	// Update the constant buffer data
-	GetDeviceContext()->UpdateSubresource(Resources()->ConstBuffer, 0, nullptr, Resources()->ConstBufferData, 0, 0);
-
-	// Clear render targets and depth stencil
+	GetDeviceContext()->UpdateSubresource(Resources()->ConstBuffer, 0, nullptr, Resources()->CameraConstBufferData, 0, 0);
 	GetDeviceContext()->OMSetRenderTargets(1, &Resources()->RenderTargetView, Resources()->DepthStencilView);
 	const FLOAT color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	GetDeviceContext()->ClearRenderTargetView(Resources()->RenderTargetView, color);
@@ -536,7 +541,6 @@ void Renderer::ClearScene()
 
 HRESULT Renderer::Render()
 {
-	// Clear
 	ClearScene();
 
 	if (!m_isInitialized)
@@ -547,20 +551,12 @@ HRESULT Renderer::Render()
 	UINT stride = sizeof(PhongShader::InputLayout);
 	UINT offset = 0;
 
-	// Set model data
 	GetDeviceContext()->IASetInputLayout(Resources()->InputLayout);
 
-	// Set multiple buffers here ? i.e. each for one model since some shaders are not applied to all models
 	GetDeviceContext()->IASetVertexBuffers(0, 1, &Resources()->VertexBuffer, &stride, &offset);
 	GetDeviceContext()->IASetIndexBuffer(Resources()->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	// Set shader data
 
-
-	// Set multiple shaders here ?
-
-	//GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
-	//GetDeviceContext()->VSSetShader(vs, nullptr, 0);
 
 	GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
 	GetDeviceContext()->VSSetShader(Resources()->Shaders->VertexShader, nullptr, 0);
@@ -570,7 +566,6 @@ HRESULT Renderer::Render()
 
 	GetDeviceContext()->DrawIndexed(Resources()->IndexCount, 0, 0);
 
-	// Present
 	return Resources()->SwapChain->Present(1, 0);
 }
 
@@ -585,7 +580,7 @@ HRESULT Renderer::Resize(D3D11_VIEWPORT* viewPort)
 	Resources()->ViewPort = viewPort;
 	if (nullptr != Resources()->SwapChain && m_isInitialized)
 	{
-		result = Initialize();
+		result = Initialize(m_pScene);
 	}
 	return result;
 }

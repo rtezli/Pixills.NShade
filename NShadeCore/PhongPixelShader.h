@@ -5,10 +5,10 @@
 
 namespace PhongShader
 {
-	class PhongPixelSHader : public Shader
+	class PhongPixelShader : public Shader
 	{
 	public:
-		PhongPixelSHader(DeviceResources* pResources);
-		~PhongPixelSHader();
+		PhongPixelShader(DeviceResources* pResources);
+		~PhongPixelShader();
 	};
 }

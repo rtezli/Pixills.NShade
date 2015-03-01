@@ -302,4 +302,10 @@ HRESULT Model::SetTopology(char verticesPerFace)
 	return 0;
 }
 
+HRESULT Model::AssignMaterial(Material* pMaterial)
+{
+	m_pMaterial = pMaterial;
+	return 0;
+}
+
 // TODO : Add material
