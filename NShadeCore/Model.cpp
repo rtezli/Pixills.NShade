@@ -4,6 +4,7 @@
 Model::Model(DeviceResources* resources)
 {
 	m_pDeviceResources = shared_ptr<DeviceResources>(resources);
+	m_pMaterial = shared_ptr<Material>();
 }
 
 Model::~Model()
@@ -304,7 +305,7 @@ HRESULT Model::SetTopology(char verticesPerFace)
 
 HRESULT Model::AssignMaterial(Material* pMaterial)
 {
-	m_pMaterial = pMaterial;
+	m_pMaterial = shared_ptr<Material>(pMaterial);
 	return 0;
 }
 

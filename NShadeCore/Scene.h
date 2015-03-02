@@ -33,7 +33,7 @@ public:
 private:
 	shared_ptr<vector<Light>>			m_Lights;
 	shared_ptr<vector<Model>>			m_Models;
-	shared_ptr<vector<ShaderSet>>		m_Shaders;
+	shared_ptr<vector<Shader>>			m_Shaders;
 	shared_ptr<Material>				m_Material;
 	shared_ptr<vector<nshade::Vertex>>	m_Vertices;
 	shared_ptr<vector<unsigned int>>	m_Indices;

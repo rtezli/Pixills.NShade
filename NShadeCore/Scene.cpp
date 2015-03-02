@@ -6,6 +6,13 @@
 Scene::Scene(DeviceResources* pResources)
 {
 	m_pResources = pResources;
+
+	m_Lights = shared_ptr<vector<Light>>();
+	m_Models = shared_ptr<vector<Model>>();
+	m_Shaders = shared_ptr<vector<Shader>>();
+	m_Material = shared_ptr<Material>();
+	m_Vertices = shared_ptr<vector<nshade::Vertex>>();
+	m_Indices = shared_ptr<vector<unsigned int>>();
 }
 
 Scene::~Scene()
@@ -47,13 +54,16 @@ HRESULT Scene::Load(wstring fileName)
 Scene* Scene::CreateStandardScene(DeviceResources* pResources)
 {
 	auto scene = new Scene(pResources);
+	auto shaders = new vector<Shader>();
 
 	auto stdPixelShader = new PhongShader::PhongPixelShader(pResources);
 	auto stdVertexShader = new PhongShader::PhongVertexShader(pResources);
 
+	shaders->push_back(*stdPixelShader);
+	shaders->push_back(*stdVertexShader);
+
 	auto stdMaterial = new Material();
-	stdMaterial->Shaders->push_back(*stdPixelShader);
-	stdMaterial->Shaders->push_back(*stdVertexShader);
+	stdMaterial->Shaders = shared_ptr<vector<Shader>>(shaders);
 
 	auto stdModel = new Model(pResources);
 	stdModel->LoadModelFromFBXFile("../Debug/teapot.fbx");

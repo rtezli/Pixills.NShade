@@ -35,7 +35,7 @@ private:
 	D3D11_BUFFER_DESC			m_bufferDesc;
 	D3D11_SUBRESOURCE_DATA		m_initData;
 	shared_ptr<DeviceResources>	m_pDeviceResources;
-	Material*					m_pMaterial;
+	shared_ptr<Material>		m_pMaterial;
 	vector<unsigned int>*		m_Indices;
 	vector<nshade::Vertex>*		m_Vertices;
 	D3D11_PRIMITIVE_TOPOLOGY	m_Topology;
