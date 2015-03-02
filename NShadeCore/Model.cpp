@@ -5,6 +5,8 @@ Model::Model(DeviceResources* resources)
 {
 	m_pDeviceResources = shared_ptr<DeviceResources>(resources);
 	m_pMaterial = shared_ptr<Material>();
+	m_Vertices = shared_ptr<vector<nshade::Vertex>>(new vector<nshade::Vertex>());
+	m_Indices = shared_ptr<vector<unsigned int>>(new vector<unsigned int>());
 }
 
 Model::~Model()
@@ -14,9 +16,6 @@ Model::~Model()
 
 HRESULT Model::Initialize()
 {
-	m_Indices = new vector<unsigned int>();
-	m_Vertices = new vector<nshade::Vertex>();
-
 	auto result = LoadModelFromFBXFile("../Models/teapot.fbx");
 	if (FAILED(result))
 	{
@@ -30,7 +29,7 @@ HRESULT Model::Initialize()
 		return result;
 	}
 
-	result = FillVertexAndIndexBuffer(m_Indices, m_Vertices);
+	result = FillVertexAndIndexBuffer(Indices(), Vertices());
 	if (FAILED(result))
 	{
 		return result;
@@ -41,7 +40,7 @@ HRESULT Model::Initialize()
 
 HRESULT Model::LoadModelFromFBXFile(char* fileName)
 {
-	return nshade::FbxReader::Read(fileName, m_Vertices, m_Indices);
+	return nshade::FbxReader::Read(fileName, Vertices(), Indices());
 }
 
 HRESULT Model::FillVertexAndIndexBuffer(vector<unsigned int>* modelIndexes, vector<nshade::Vertex>* modelVertices)
@@ -113,7 +112,7 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<unsigned int>* modelIndexes, vect
 
 HRESULT Model::LoadModelFromOBJFile(char* fileName, bool isRightHand)
 {
-	return ObjParser::Parse(m_Vertices, m_Indices, fileName);
+	return ObjParser::Parse(Vertices(), Indices(), fileName);
 }
 
 HRESULT Model::InitializeConstantBuffer()

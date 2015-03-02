@@ -17,6 +17,9 @@ public:
 	HRESULT CreateHorizontalPlane(float size, XMFLOAT3* position);
 	HRESULT	Initialize();
 
+	vector<unsigned int>*		const Indices(){ return m_Indices.get(); }
+	vector<nshade::Vertex>*		const Vertices(){ return m_Vertices.get(); }
+
 	static nshade::Vertex Cube[];
 	static nshade::Vertex Sphere[];
 private:
@@ -31,14 +34,14 @@ private:
 	HRESULT						InitializeConstantBuffer();
 	HRESULT						SetTopology(char verticesPerFace);
 private:
-	unsigned short				m_indexCount = 0;
-	D3D11_BUFFER_DESC			m_bufferDesc;
-	D3D11_SUBRESOURCE_DATA		m_initData;
-	shared_ptr<DeviceResources>	m_pDeviceResources;
-	shared_ptr<Material>		m_pMaterial;
-	vector<unsigned int>*		m_Indices;
-	vector<nshade::Vertex>*		m_Vertices;
-	D3D11_PRIMITIVE_TOPOLOGY	m_Topology;
+	unsigned short						m_indexCount = 0;
+	D3D11_BUFFER_DESC					m_bufferDesc;
+	D3D11_SUBRESOURCE_DATA				m_initData;
+	shared_ptr<DeviceResources>			m_pDeviceResources;
+	shared_ptr<Material>				m_pMaterial;
+	shared_ptr<vector<unsigned int>>	m_Indices;
+	shared_ptr<vector<nshade::Vertex>>	m_Vertices;
+	D3D11_PRIMITIVE_TOPOLOGY			m_Topology;
 };
 
 #pragma warning( restore : 4996 )
