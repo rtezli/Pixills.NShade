@@ -1,30 +1,49 @@
 #pragma once
 #pragma comment(lib, "D3DCompiler.lib")
 
-#ifndef PS_PROFILE
-#define PS_PROFILE {"ps_5_0" }
-#endif
+//#ifndef PS_PROFILE
+//#define PS_PROFILE {"ps_5_0" }
+//#endif
+//
+//#ifndef VS_PROFILE
+//#define VS_PROFILE {"vs_5_0" }
+//#endif
+//
+//#ifndef GS_PROFILE
+//#define GS_PROFILE { "ps_5_0" }
+//#endif
+//
+//#ifndef HS_PROFILE
+//#define HS_PROFILE { "hs_5_0" }
+//#endif
+//
+//#ifndef DS_PROFILE
+//#define DS_PROFILE { "ds_5_0" }
+//#endif
 
-#ifndef VS_PROFILE
-#define VS_PROFILE {"vs_5_0" }
-#endif
-
-#ifndef GS_PROFILE
-#define GS_PROFILE { "ps_5_0" }
-#endif
-
-#ifndef HS_PROFILE
-#define HS_PROFILE { "hs_5_0" }
-#endif
-
-#ifndef DS_PROFILE
-#define DS_PROFILE { "ds_5_0" }
-#endif
+//DXGI_FORMAT swapChainBufferFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
+//DXGI_FORMAT depthBufferFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+//DXGI_FORMAT depthSencilViewFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+//DXGI_FORMAT depthSencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+//
+//DXGI_FORMAT vertexPositionFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+//DXGI_FORMAT vertexColorFormat = DXGI_FORMAT_R32G32B32_FLOAT;
 
 #include "includes.h"
 #include "d3dcompiler.h"
 #include "phongvertexshader.h"
 #include "scene.h"
+
+struct RENDERER_SETTINGS
+{
+	DXGI_FORMAT swapChainBufferFormat;
+	DXGI_FORMAT depthBufferFormat;
+	DXGI_FORMAT depthSencilViewFormat;
+	DXGI_FORMAT depthSencilFormat;
+	DXGI_FORMAT vertexPositionFormat;
+	DXGI_FORMAT vertexColorFormat;
+};
+
 
 class Renderer
 {
@@ -35,14 +54,15 @@ public:
 	HRESULT	ResizeSwapChain(UINT32 newWidth, UINT32 newHeight);
 	HRESULT SetShaderParameters();
 	HRESULT	Initialize(Scene* scene);
-	HRESULT	Render();
 	HRESULT	Resize(D3D11_VIEWPORT* viewport);
+	HRESULT	Render();
+
 public:
-	void						ClearScene();
-	ID3D11Device*				const GetDevice(){ return Resources()->Device; }
-	ID3D11DeviceContext*		const GetDeviceContext(){ return Resources()->DeviceContext; }
-	DeviceResources*			const Resources(){ return m_pDeviceResources; }
-	bool						const Initialized(){ return m_isInitialized; };
+	ID3D11Device*				const GetDevice(){				return GetResources()->Device; }
+	ID3D11DeviceContext*		const GetDeviceContext(){		return GetResources()->DeviceContext; }
+	DeviceResources*			const GetResources(){			return m_pDeviceResources.get(); }
+	Scene*						const GetScene(){				return m_pScene.get(); }
+	bool						const GetInitialized(){			return m_isInitialized; };
 private:
 	/* render target */
 	HRESULT CreateRenderTargetDesciption();
@@ -78,28 +98,9 @@ private:
 
 	HRESULT CreateViewPort();
 
-	/* sahders */
-	HRESULT	SetVertexShader(LPCWSTR compiledShaderFile);
-	HRESULT	CompileVertexShader(LPCWSTR shaderSource);
-
-	HRESULT SetHullShader(LPCWSTR compiledShaderFile);
-	HRESULT CompileHullShader(LPCWSTR shaderSource);
-
-	HRESULT SetDomainShader(LPCWSTR compiledShaderFile);
-	HRESULT CompileDomainShader(LPCWSTR shaderSource);
-
-	HRESULT SetGeometryShader(LPCWSTR compiledShaderFile);
-	HRESULT CompileGeometryShader(LPCWSTR shaderSource);
-
-	HRESULT SetPixelShader(LPCWSTR compiledShaderFile);
-	HRESULT CompilePixelShader(LPCWSTR shaderSource);
-
-	HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
 private:
-	DeviceResources*					m_pDeviceResources;
-	Scene*								m_pScene;
-	LPCWSTR								m_standardVertexShader = L"../Debug/PhongVertexShader.cso";
-	LPCWSTR								m_standardPixelShader = L"../Debug/PhongPixelShader.cso";
+	shared_ptr<DeviceResources>			m_pDeviceResources;
+	shared_ptr<Scene>					m_pScene;
 
 	D3D11_TEXTURE2D_DESC				m_pDepthBufferDesc;
 	DXGI_SWAP_CHAIN_DESC				m_pSwapChainDescription;

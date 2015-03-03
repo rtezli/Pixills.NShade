@@ -16,31 +16,32 @@ Model::~Model()
 
 HRESULT Model::Initialize()
 {
-	auto result = LoadModelFromFBXFile("../Models/teapot.fbx");
-	if (FAILED(result))
-	{
-		return result;
-	}
+	//auto result = LoadModelFromFBXFile("../Models/teapot.fbx");
+	//if (FAILED(result))
+	//{
+	//	return result;
+	//}
 
-	auto position =  XMFLOAT3(0.0f, 0.0f, 0.0f);
-	result = CreateHorizontalPlane(15.00f, &position);
-	if (FAILED(result))
-	{
-		return result;
-	}
+	//auto position =  XMFLOAT3(0.0f, 0.0f, 0.0f);
+	//result = CreateHorizontalPlane(15.00f, &position);
+	//if (FAILED(result))
+	//{
+	//	return result;
+	//}
 
-	result = FillVertexAndIndexBuffer(Indices(), Vertices());
-	if (FAILED(result))
-	{
-		return result;
-	}
+	//result = FillVertexAndIndexBuffer(Indices(), Vertices());
+	//if (FAILED(result))
+	//{
+	//	return result;
+	//}
 
-	return InitializeConstantBuffer();
+	//return InitializeConstantBuffer();
+	return 0;
 }
 
 HRESULT Model::LoadModelFromFBXFile(char* fileName)
 {
-	return nshade::FbxReader::Read(fileName, Vertices(), Indices());
+	return  nshade::FbxReader::Read(fileName, GetVertices(), GetIndices());
 }
 
 HRESULT Model::FillVertexAndIndexBuffer(vector<unsigned int>* modelIndexes, vector<nshade::Vertex>* modelVertices)
@@ -112,7 +113,7 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<unsigned int>* modelIndexes, vect
 
 HRESULT Model::LoadModelFromOBJFile(char* fileName, bool isRightHand)
 {
-	return ObjParser::Parse(Vertices(), Indices(), fileName);
+	return ObjParser::Parse(GetVertices(), GetIndices(), fileName);
 }
 
 HRESULT Model::InitializeConstantBuffer()
@@ -308,4 +309,7 @@ HRESULT Model::AssignMaterial(Material* pMaterial)
 	return 0;
 }
 
-// TODO : Add material
+HRESULT Model::Render()
+{
+	return 0;
+}

@@ -21,6 +21,7 @@ public:
 	HRESULT AddModel(Model* pModel);
 	HRESULT AddLight(Light* pLight);
 	HRESULT Load(wstring fileName);
+	HRESULT Clear();
 	HRESULT Render();
 public:
 	vector<Light>*			Lights()			{ return m_Lights.get(); }

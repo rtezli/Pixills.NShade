@@ -16,10 +16,11 @@ public:
 	HRESULT CreateCube(float size, XMFLOAT3* position);
 	HRESULT CreateHorizontalPlane(float size, XMFLOAT3* position);
 	HRESULT	Initialize();
+	HRESULT	Render();
 
-	vector<unsigned int>*		const Indices(){ return m_Indices.get(); }
-	vector<nshade::Vertex>*		const Vertices(){ return m_Vertices.get(); }
-
+	vector<unsigned int>*		const GetIndices(){ return m_Indices.get(); }
+	vector<nshade::Vertex>*		const GetVertices(){ return m_Vertices.get(); }
+	Material*					const GetMaterial(){ return m_pMaterial.get(); }
 	static nshade::Vertex Cube[];
 	static nshade::Vertex Sphere[];
 private:
