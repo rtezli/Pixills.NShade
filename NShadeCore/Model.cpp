@@ -74,7 +74,8 @@ HRESULT Model::CreateVertexBuffer()
 	vertexBufferData.SysMemPitch = 0;
 	vertexBufferData.SysMemSlicePitch = 0;
 
-	auto result = DeviceResource()->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &m_VertexBuffer);
+	auto vertexBuffer = GetVertexBuffer();
+	auto result = m_pDeviceResources->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &vertexBuffer);
 	if (FAILED(result))
 	{
 		return result;
@@ -88,7 +89,7 @@ HRESULT Model::CreateIndexBuffer()
 	//copy(modelIndexes->begin(), modelIndexes->end(), indexArr);
 
 	D3D11_BUFFER_DESC indexBufferDesc = { 0 };
-	indexBufferDesc.ByteWidth = sizeof(unsigned int) * DeviceResource()->IndexCount;
+	indexBufferDesc.ByteWidth = sizeof(unsigned int) * m_pDeviceResources->IndexCount;
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags = 0;
@@ -96,11 +97,12 @@ HRESULT Model::CreateIndexBuffer()
 	indexBufferDesc.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
-	indexBufferData.pSysMem = indexArr;
+	//indexBufferData.pSysMem = indexArr;
 	indexBufferData.SysMemPitch = 0;
 	indexBufferData.SysMemSlicePitch = 0;
 
-	return DeviceResource()->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &m_IndexBuffer);
+	auto indexBuffer = GetIndexBuffer();
+	return m_pDeviceResources->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &indexBuffer);
 }
 
 
@@ -117,7 +119,7 @@ HRESULT Model::SetTopology(char verticesPerFace)
 }
 
 HRESULT Model::AssignMaterial(Material* pMaterial)
-{
+{	
 	m_pMaterial = shared_ptr<Material>(pMaterial);
 	return 0;
 }

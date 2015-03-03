@@ -72,14 +72,14 @@ void Camera::Rotate(POINT* p)
 	m_vAngle = m_vAngle + p->y * moderationV;
 
 	XMStoreFloat4x4(m_pWorldMatrix, XMMatrixTranspose(XMMatrixRotationY(m_hAngle)));
-	m_pDeviceResources->CameraConstBufferData->world = *m_pWorldMatrix;
+	GetConstBufferData()->world = *m_pWorldMatrix;
 }
 
 void Camera::Update()
 {	
 	XMFLOAT4X4 reflect;
 	ConstantBufferData constBuffer = { *m_pWorldMatrix, *m_pViewMatrix, *m_pProjectionMatrix, reflect, *m_eyePosition, 0 };
-	m_pDeviceResources->CameraConstBufferData = new ConstantBufferData(constBuffer);
+	m_pCameraConstBufferData = shared_ptr<ConstantBufferData>(new ConstantBufferData(constBuffer));
 }
 
 HRESULT Camera::InitializeConstantBuffer()
@@ -90,7 +90,7 @@ HRESULT Camera::InitializeConstantBuffer()
 	constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 
 	D3D11_SUBRESOURCE_DATA constantBufferData = { 0 };
-	constantBufferData.pSysMem = &m_pDeviceResources->CameraConstBufferData;
+	//constantBufferData.pSysMem = &GetConstBufferData();
 	constantBufferData.SysMemPitch = 0;
 	constantBufferData.SysMemSlicePitch = 0;
 

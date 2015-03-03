@@ -28,6 +28,7 @@ namespace PhongShader
 	class PhongVertexShader : public VertexShader
 	{
 	public:
+		virtual HRESULT SetVertices(vector<nshade::Vertex> vertices);
 		PhongVertexShader(DeviceResources* pResources);
 		~PhongVertexShader();
 	};

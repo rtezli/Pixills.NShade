@@ -20,12 +20,12 @@ public:
 	float				GetAspectRatio(){ return m_pDeviceResources->ViewPort->Width / m_pDeviceResources->ViewPort->Height; };
 	float				GetFieldOfView(){ return 70.0f * XM_PI / 180.0f; };
 private:
-	XMFLOAT4X4			m_pWorldMatrix;
-	XMFLOAT4X4			m_pViewMatrix;
-	XMFLOAT4X4			m_pProjectionMatrix;
-	XMFLOAT3			m_eyePosition;
-	XMFLOAT3			m_focusPosition;
-	XMFLOAT3			m_upDirection;
+	XMFLOAT4X4*			m_pWorldMatrix;
+	XMFLOAT4X4*			m_pViewMatrix;
+	XMFLOAT4X4*			m_pProjectionMatrix;
+	XMFLOAT3*			m_eyePosition;
+	XMFLOAT3*			m_focusPosition;
+	XMFLOAT3*			m_upDirection;
 	
 	shared_ptr<ID3D11Buffer>		m_pCameraConstBuffer;
 	shared_ptr<ConstantBufferData>	m_pCameraConstBufferData;

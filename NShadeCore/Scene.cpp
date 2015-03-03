@@ -83,6 +83,7 @@ Scene* Scene::CreateStandardScene(DeviceResources* pResources)
 
 	auto stdPixelShader = new PhongShader::PhongPixelShader(pResources);
 	auto stdVertexShader = new PhongShader::PhongVertexShader(pResources);
+	
 
 	auto stdMaterial = new Material();
 	stdMaterial->Shaders->PixelShader = stdPixelShader;

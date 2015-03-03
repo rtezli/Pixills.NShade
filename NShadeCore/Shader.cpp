@@ -253,8 +253,8 @@ HRESULT Shader::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR
 		shaderProfile, flags, 0, &shaderBlob, &shaderBlob);
 }
 
-HRESULT Shader::Set()
-{
+//HRESULT Shader::Set()
+//{
 	//switch (m_Type)
 	//{
 	//	case ShaderType::VS:
@@ -291,8 +291,8 @@ HRESULT Shader::Set()
 	//		DeviceContext()->CSSetShader(m_ComputeShader, nullptr, 0);
 	//	}
 	//}
-	return 0;
-}
+//	return 0;
+//}
 
 HRESULT Shader::Render()
 {

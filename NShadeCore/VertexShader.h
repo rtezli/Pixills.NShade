@@ -7,8 +7,8 @@ class VertexShader : public Shader
 {
 public:
 	VertexShader(DeviceResources* pResources);
-	~VertexShader();
-	HRESULT Set();
+	virtual ~VertexShader();
+	virtual HRESULT SetVertices(vector<nshade::Vertex> vertices) = 0;
 private:
 	DeviceResources*		m_pResources;
 };

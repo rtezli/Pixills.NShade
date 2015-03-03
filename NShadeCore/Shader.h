@@ -55,7 +55,7 @@ class Shader
 {
 public:
 	Shader(DeviceResources* pResources);
-   ~Shader(); 
+	virtual ~Shader();
 protected:
 	DeviceResources*					const Resources(){ return m_pDeviceResources; }
 	ID3D11Device*						const Device(){ return m_pDeviceResources->Device; }
@@ -64,11 +64,9 @@ protected:
 	ShaderVersion						Version;
 	LPCWSTR								ShaderFilePath;
 
-	HRESULT Initialize();
-	HRESULT Load(LPCWSTR file);
-	HRESULT Compile(LPCWSTR file);
-	HRESULT Set();
-	HRESULT Render();
+	virtual HRESULT Load(LPCWSTR file);
+	virtual HRESULT Compile(LPCWSTR file);
+	virtual HRESULT Render();
 
 	//virtual struct InputLayout			InputLayout;
 	//virtual struct ConstantBuffer		ConstantBuffer;
