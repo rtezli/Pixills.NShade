@@ -24,11 +24,11 @@ public:
 	HRESULT Clear();
 	HRESULT Render();
 public:
-	vector<Light>*			Lights()			{ return m_Lights.get(); }
-	vector<Model>*			Models()			{ return m_Models.get(); }
-	Material*				Materials()			{ return m_Material.get(); }
-	vector<nshade::Vertex>*	Vertices()			{ return m_Vertices.get(); }
-	vector<unsigned int>*	Indices()			{ return m_Indices.get(); }
+	vector<Light>*			const GetLights()		{ return m_Lights.get();   }
+	vector<Model>*			const GetModels()		{ return m_Models.get();   }
+	Material*				const GetMaterials()	{ return m_Material.get(); }
+	vector<nshade::Vertex>*	const GetVertices()		{ return m_Vertices.get(); }
+	vector<unsigned int>*	const GetIndices()		{ return m_Indices.get();  }
 	
 	static Scene*			CreateStandardScene(DeviceResources* pResources);
 private:

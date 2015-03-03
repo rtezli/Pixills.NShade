@@ -81,3 +81,18 @@ void Camera::Update()
 	ConstantBufferData constBuffer = { *m_pWorldMatrix, *m_pViewMatrix, *m_pProjectionMatrix, reflect, *m_eyePosition, 0 };
 	m_pDeviceResources->CameraConstBufferData = new ConstantBufferData(constBuffer);
 }
+
+HRESULT Camera::InitializeConstantBuffer()
+{
+	// Belongs to renderer class
+	D3D11_BUFFER_DESC constantBufferDesc = { 0 };
+	constantBufferDesc.ByteWidth = sizeof(ConstantBufferData);
+	constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+	D3D11_SUBRESOURCE_DATA constantBufferData = { 0 };
+	constantBufferData.pSysMem = &m_pDeviceResources->CameraConstBufferData;
+	constantBufferData.SysMemPitch = 0;
+	constantBufferData.SysMemSlicePitch = 0;
+
+	return m_pDeviceResources->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &m_pDeviceResources->CameraConstBufferData);
+}

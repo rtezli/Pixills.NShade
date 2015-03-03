@@ -58,12 +58,12 @@ public:
 	HRESULT	Render();
 
 public:
-	ID3D11Device*				const GetDevice(){				return GetResources()->Device; }
-	ID3D11DeviceContext*		const GetDeviceContext(){		return GetResources()->DeviceContext; }
-	DeviceResources*			const GetResources(){			return m_pDeviceResources.get(); }
 	Scene*						const GetScene(){				return m_pScene.get(); }
 	bool						const GetInitialized(){			return m_isInitialized; };
 private:
+	ID3D11Device*				const GetDevice(){ return GetResources()->Device; }
+	ID3D11DeviceContext*		const GetDeviceContext(){ return GetResources()->DeviceContext; }
+	DeviceResources*			const GetResources(){ return m_pDeviceResources.get(); }
 	/* render target */
 	HRESULT CreateRenderTargetDesciption();
 	HRESULT CreateRenderTargetViewDesciption();

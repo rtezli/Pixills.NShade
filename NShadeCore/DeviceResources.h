@@ -24,12 +24,10 @@ public:
 	IDXGISwapChain*				SwapChain;
 
 	/* buffers */
-	ID3D11Buffer*				VertexBuffer;
-	ID3D11Buffer*				IndexBuffer;
-	ID3D11Buffer*			    ConstBuffer;
 	ID3D11InputLayout*			InputLayout;
 	ConstantBufferData*			CameraConstBufferData;
 	ConstantBufferData*			LightConstBufferData;
+	ConstantBufferData*			MirrorConstBufferData;
 
 	/* depth stencil */
 	ID3D11Texture2D*			DepthStencilBuffer;

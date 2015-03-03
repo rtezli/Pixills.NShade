@@ -14,9 +14,9 @@ public:
 	DeviceResources*			const	Resources(){ return m_pResources; }
 	ID3D11ShaderResourceView*	const	View(){ return m_shaderResourceView; }
 private:
-	DeviceResources* m_pResources;
-	ID3D11Texture2D* m_renderTargetTexture;
-	ID3D11RenderTargetView* m_renderTargetView;
-	ID3D11ShaderResourceView* m_shaderResourceView;
+	DeviceResources*			m_pResources;
+	ID3D11Texture2D*			m_renderTargetTexture;
+	ID3D11RenderTargetView*		m_renderTargetView;
+	ID3D11ShaderResourceView*	m_shaderResourceView;
 };
 
