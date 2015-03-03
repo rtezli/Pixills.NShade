@@ -1,7 +1,7 @@
 #pragma once
 
 #include "includes.h"
-#include "shader.h"
+#include "vertexshader.h"
 
 namespace ColorShader
 {
@@ -11,7 +11,7 @@ namespace ColorShader
 		XMFLOAT4 ColorWithAlpha;
 	};
 
-	class ColorVertexShader : public Shader
+	class ColorVertexShader : public VertexShader
 	{
 	public:
 		ColorVertexShader(DeviceResources* pResources);

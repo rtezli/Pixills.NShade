@@ -4,9 +4,12 @@
 
 using namespace WireframeShader;
 
-WireframePixelShader::WireframePixelShader(DeviceResources* pResources) : Shader(pResources)
+WireframePixelShader::WireframePixelShader(DeviceResources* pResources) : PixelShader(pResources)
 {
+
 }
+
 WireframePixelShader::~WireframePixelShader()
 {
+
 }

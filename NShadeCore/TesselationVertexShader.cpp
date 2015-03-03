@@ -4,7 +4,7 @@
 
 using namespace TesselationShader;
 
-TesselationVertexShader::TesselationVertexShader(DeviceResources* pResources) : Shader(pResources)
+TesselationVertexShader::TesselationVertexShader(DeviceResources* pResources) : VertexShader(pResources)
 {
 
 }

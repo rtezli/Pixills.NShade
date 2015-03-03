@@ -1,11 +1,11 @@
 #pragma once
 
 #include "includes.h"
-#include "shader.h"
+#include "pixelshader.h"
 
 namespace WireframeShader
 {
-	class WireframePixelShader : public Shader
+	class WireframePixelShader : public PixelShader
 	{
 	public:
 		WireframePixelShader(DeviceResources* pResources);

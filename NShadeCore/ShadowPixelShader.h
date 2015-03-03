@@ -1,15 +1,15 @@
 #pragma once
 
 #include "includes.h"
-#include "shader.h"
+#include "pixelshader.h"
 
 namespace ShadowShader
 {
 
-	class ShadowPixelShader
+	class ShadowPixelShader : public PixelShader
 	{
 	public:
-		ShadowPixelShader();
+		ShadowPixelShader(DeviceResources* pResources);
 		~ShadowPixelShader();
 	};
 }

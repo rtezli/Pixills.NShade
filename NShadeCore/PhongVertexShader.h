@@ -1,7 +1,7 @@
 #pragma once
 
 #include "includes.h"
-#include "shader.h"
+#include "vertexshader.h"
 
 namespace PhongShader
 {
@@ -25,7 +25,7 @@ namespace PhongShader
 		{ "POSITION", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }  // Point light position w is intensity
 	};
 
-	class PhongVertexShader : public Shader
+	class PhongVertexShader : public VertexShader
 	{
 	public:
 		PhongVertexShader(DeviceResources* pResources);

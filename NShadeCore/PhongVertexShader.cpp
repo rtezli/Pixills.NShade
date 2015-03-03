@@ -4,7 +4,7 @@
 
 using namespace PhongShader;
 
-PhongVertexShader::PhongVertexShader(DeviceResources* pResources) : Shader(pResources)
+PhongVertexShader::PhongVertexShader(DeviceResources* pResources) : VertexShader(pResources)
 {
 }
 

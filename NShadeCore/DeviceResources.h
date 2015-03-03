@@ -50,7 +50,6 @@ public:
 	ID3D11RenderTargetView*		MirrorRenderTarget;
 	ID3D11ShaderResourceView*	MirrorResourceView;
 
-	ShaderSet*					Shaders;
 	D3D11_VIEWPORT*				ViewPort;
 	RenderingQuality*			RenderQuality;
 

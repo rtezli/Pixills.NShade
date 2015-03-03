@@ -32,29 +32,28 @@ HRESULT Scene::Clear()
 
 HRESULT Scene::Render()
 {
-	//auto models = GetScene()->Models();
+	for (unsigned int m = 0; m < Models()->size(); m++)
+	{
+		auto model = Models()->at(m);
+		auto vertices = model.GetVertices();
+		auto indices = model.GetIndices();
 
-	//for (unsigned int i = 0; i < models->size(); i++)
-	//{
-	//	auto model = models->at(i);
-	//	model.Render();
-	//	// UINT stride = sizeof(PhongShader::InputLayout);
-	//	// UINT offset = 0;
-	//	// auto vertices = model.Vertices();
-	//	// auto indices = model.Indices();
-	//	// auto material = model.Material();
+		auto material = model.GetMaterial();
+		auto shaders = material->Shaders;
+		
+		auto stride = 0;
 
-	//	// GetDeviceContext()->IASetInputLayout(GetResources()->InputLayout);
-	//	// GetDeviceContext()->IASetVertexBuffers(0, 1, &vertices, &stride, &offset);
-	//	// GetDeviceContext()->IASetIndexBuffer(indices, DXGI_FORMAT_R32_UINT, 0);
-	//	// GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		/* Input Assembler */
+		m_pResources->DeviceContext->IASetInputLayout(m_pResources->InputLayout);
+		//m_pResources->DeviceContext->IASetVertexBuffers(0, 1, m_pResources->VertexBuffer, &stride, 0);
+		m_pResources->DeviceContext->IASetIndexBuffer(m_pResources->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+		m_pResources->DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	//	// GetDeviceContext()->VSSetConstantBuffers(0, 1, &GetResources()->ConstBuffer);
-	//	// GetDeviceContext()->VSSetShader(GetScene()->Materials()->Shaders() ->VertexShader, nullptr, 0);
-
-	//	// GetDeviceContext()->PSSetConstantBuffers(0, 1, &GetResources()->ConstBuffer);
-	//	// GetDeviceContext()->PSSetShader(GetResources()->Shaders->PixelShader, nullptr, 0);
-	//}
+		for (unsigned int s = 0; s < shaders->size(); s++)
+		{
+			auto shader = shaders->at(s);
+		}
+	}
 	return 0;
 }
 

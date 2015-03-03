@@ -4,7 +4,7 @@
 
 using namespace ColorShader;
 
-ColorPixelShader::ColorPixelShader(DeviceResources* pResources) : Shader(pResources)
+ColorPixelShader::ColorPixelShader(DeviceResources* pResources) : PixelShader(pResources)
 {
 }
 

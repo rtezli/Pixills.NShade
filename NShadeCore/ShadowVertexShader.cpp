@@ -4,7 +4,7 @@
 
 using namespace ShadowShader;
 
-ShadowVertexShader::ShadowVertexShader(DeviceResources* pResources, Light* light) : Shader(pResources)
+ShadowVertexShader::ShadowVertexShader(DeviceResources* pResources, Light* light) : VertexShader(pResources)
 {
 	m_pLight = make_shared<Light>(*light);
 }

@@ -1,9 +1,10 @@
 #include "stdafx.h"
-#include "ShadowPixelShader.h"
+
+#include "shadowpixelshader.h"
 
 using namespace ShadowShader;
 
-ShadowPixelShader::ShadowPixelShader()
+ShadowPixelShader::ShadowPixelShader(DeviceResources* pResources) : PixelShader(pResources)
 {
 }
 
