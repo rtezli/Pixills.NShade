@@ -25,7 +25,7 @@ public:
 
 	/* buffers */
 	ID3D11InputLayout*			InputLayout;
-	ConstantBufferData*			CameraConstBufferData;
+
 	ConstantBufferData*			LightConstBufferData;
 	ConstantBufferData*			MirrorConstBufferData;
 

@@ -94,5 +94,6 @@ HRESULT Camera::InitializeConstantBuffer()
 	constantBufferData.SysMemPitch = 0;
 	constantBufferData.SysMemSlicePitch = 0;
 
-	return m_pDeviceResources->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &m_pDeviceResources->CameraConstBufferData);
+	//return m_pDeviceResources->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &m_pDeviceResources->CameraConstBuffer);
+	return 0;
 }

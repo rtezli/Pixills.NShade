@@ -30,7 +30,7 @@ private:
 	D3D11_SUBRESOURCE_DATA				m_initData;
 	D3D11_PRIMITIVE_TOPOLOGY			m_Topology;
 
-	shared_ptr<DeviceResources>			m_pDeviceResources;
+	DeviceResources*					m_pDeviceResources;
 	shared_ptr<Material>				m_pMaterial;
 	shared_ptr<vector<unsigned int>>	m_Indices;
 	shared_ptr<vector<nshade::Vertex>>	m_Vertices;

@@ -3,7 +3,7 @@
 
 Model::Model(DeviceResources* resources)
 {
-	m_pDeviceResources = shared_ptr<DeviceResources>(resources);
+	m_pDeviceResources = resources;
 	m_pMaterial = shared_ptr<Material>();
 	m_Vertices = shared_ptr<vector<nshade::Vertex>>(new vector<nshade::Vertex>());
 	m_Indices = shared_ptr<vector<unsigned int>>(new vector<unsigned int>());
@@ -62,7 +62,7 @@ HRESULT Model::CreateVertexBuffer()
 	//copy(input->begin(), input->end(), vertexArr);
 
 	D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
-	vertexBufferDesc.ByteWidth = sizeof(PhongShader::InputLayout) * DeviceResource()->VertexCount;
+	//vertexBufferDesc.ByteWidth = sizeof(PhongShader::InputLayout) * m_pDeviceResources->VertexCount;
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
@@ -70,7 +70,7 @@ HRESULT Model::CreateVertexBuffer()
 	vertexBufferDesc.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
-	vertexBufferData.pSysMem = vertexArr;
+	// vertexBufferData.pSysMem = vertexArr;
 	vertexBufferData.SysMemPitch = 0;
 	vertexBufferData.SysMemSlicePitch = 0;
 
