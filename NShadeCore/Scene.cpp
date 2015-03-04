@@ -7,12 +7,23 @@ Scene::Scene(DeviceResources* pResources)
 {
 	m_pResources = pResources;
 
-	m_Lights = shared_ptr<vector<Light>>();
-	m_Models = shared_ptr<vector<Model>>();
-	m_Shaders = shared_ptr<vector<Shader>>();
-	m_Material = shared_ptr<Material>();
-	m_Vertices = shared_ptr<vector<nshade::Vertex>>();
-	m_Indices = shared_ptr<vector<unsigned int>>();
+	m_pMaterial = shared_ptr<Material>();
+	m_pCamera = shared_ptr<Camera>();
+
+	auto lights = new vector<Light>();
+	m_pLights = shared_ptr<vector<Light>>(lights);
+
+	auto models = new vector<Model>();
+	m_pModels = shared_ptr<vector<Model>>(models);
+
+	auto shaders = new vector<Shader>();
+	m_pShaders = shared_ptr<vector<Shader>>(shaders);
+
+	auto vertices = new vector<nshade::Vertex>();
+	m_pVertices = shared_ptr<vector<nshade::Vertex>>(vertices);
+
+	auto indices = new vector<unsigned int> ();
+	m_pIndices = shared_ptr<vector<unsigned int>>(indices);
 }
 
 Scene::~Scene()
@@ -20,17 +31,16 @@ Scene::~Scene()
 
 }
 
-HRESULT Scene::Clear()
+void Scene::Clear()
 {
 	//GetDeviceContext()->UpdateSubresource(GetResources()->ConstBuffer, 0, nullptr, GetResources()->CameraConstBufferData, 0, 0);
 	//GetDeviceContext()->OMSetRenderTargets(1, &GetResources()->RenderTargetView, GetResources()->DepthStencilView);
 	//const FLOAT color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	//GetDeviceContext()->ClearRenderTargetView(GetResources()->RenderTargetView, color);
 	//GetDeviceContext()->ClearDepthStencilView(GetResources()->DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-	return 0;
 }
 
-HRESULT Scene::Render()
+void Scene::Render()
 {
 	auto models = GetModels();
 
@@ -49,32 +59,33 @@ HRESULT Scene::Render()
 		m_pResources->DeviceContext->IASetIndexBuffer(model.GetIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);
 		m_pResources->DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
-	return 0;
 }
 
-HRESULT Scene::AddModel(Model* pModel)
+void Scene::AddModel(Model* pModel)
 {
-	if (m_Models == nullptr)
+	if (m_pModels == nullptr)
 	{
-		m_Models = shared_ptr<vector<Model>>();
+		m_pModels = shared_ptr<vector<Model>>();
 	}
-	m_Models->push_back(*pModel);
-	return 0;
+	m_pModels->push_back(*pModel);
 }
 
-HRESULT Scene::AddLight(Light* pLight)
+void Scene::AddLight(Light* pLight)
 {
-	if (m_Lights == nullptr)
+	if (m_pLights == nullptr)
 	{
-		m_Lights = shared_ptr<vector<Light>>();
+		m_pLights = shared_ptr<vector<Light>>();
 	}
-	m_Lights->push_back(*pLight);
-	return 0;
+	m_pLights->push_back(*pLight);
 }
 
-HRESULT Scene::Load(wstring fileName)
+void Scene::AddCamera(Camera* pCamera)
 {
-	return 0;
+	m_pCamera = shared_ptr<Camera>();
+}
+
+void Scene::Load(wstring fileName)
+{
 }
 
 Scene* Scene::CreateStandardScene(DeviceResources* pResources)
@@ -95,14 +106,21 @@ Scene* Scene::CreateStandardScene(DeviceResources* pResources)
 
 	scene->AddModel(stdModel);
 
+	auto stdCamera = new Camera(pResources);
+	//stdCamera->Position = new XMFLOAT3(1.0f, 1.0f, 1.0f);
+	//stdCamera->LookAt = new XMFLOAT3(1.0f, 1.0f, 1.0f);
+	scene->AddCamera(stdCamera);
+
 	auto stdAmbientLight = new AmbientLight();
-	//stdAmbientLight->Color = new XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	//stdAmbientLight->Color = new XMFLOAT3(1.0f, 1.0f, 1.0f, 1.0f);
+	//stdAmbientLight->Intensity = 1.0f;
 	scene->AddLight(stdAmbientLight);
 
 
 	auto stdPointLight = new PointLight();
-	//stdPointLight->Position = new XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	//stdPointLight->Color = new XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	//stdPointLight->Position = new XMFLOAT3(1.0f, 1.0f, 1.0f);
+	//stdPointLight->Color = new XMFLOAT3(1.0f, 1.0f, 1.0f);
+	//stdPointLight->Intensity = 1.0f;
 	scene->AddLight(stdPointLight);
 
 	return scene;

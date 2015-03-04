@@ -345,6 +345,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Models\teapot.fbx" />
     <None Include="packages.config" />
     <None Include="scene.json" />
   </ItemGroup>

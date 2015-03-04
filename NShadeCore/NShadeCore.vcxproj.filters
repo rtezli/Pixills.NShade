@@ -308,5 +308,8 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="scene.json" />
+    <None Include="..\Models\teapot.fbx">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -91,17 +91,18 @@ HRESULT D3DSystem::Initialize()
 		return result;
 	}
 
-	result = LoadModels();
-	if (FAILED(result))
-	{
-		return result;
-	}
+	//result = LoadModels();
+	//if (FAILED(result))
+	//{
+	//	return result;
+	//}
 
-	result = CreateCamera();
-	if (FAILED(result))
-	{
-		return result;
-	}
+	//result = CreateCamera();
+	//if (FAILED(result))
+	//{
+	//	return result;
+	//}
+
 	auto sc = rxsc::make_new_thread();
 	auto so = rx::synchronize_in_one_worker(sc);
 	rx::observable<>::interval(sc.now(), FPS(25), so)
