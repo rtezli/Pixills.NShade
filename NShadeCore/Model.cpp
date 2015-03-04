@@ -4,9 +4,6 @@
 Model::Model(DeviceResources* resources)
 {
 	m_pDeviceResources = resources;
-	m_pMaterial = shared_ptr<Material>();
-	m_pVertices = shared_ptr<vector<nshade::Vertex>>(new vector<nshade::Vertex>());
-	m_pIndices = shared_ptr<vector<unsigned int>>(new vector<unsigned int>());
 }
 
 Model::~Model()
@@ -14,28 +11,73 @@ Model::~Model()
 
 }
 
-HRESULT Model::Initialize()
+void Model::LoadModelFromFBXFile(char* fileName)
 {
-	return 0;
+	auto vertices = new vector<nshade::Vertex>();
+	auto indices = new vector<unsigned int>();
+
+	auto result = nshade::FbxReader::Read(fileName, vertices, indices);
+
+	m_pVertices = shared_ptr<vector<nshade::Vertex>>(vertices);
+	m_pIndices = shared_ptr<vector<unsigned int>>(indices);
+	
+	CreateBuffers();
 }
 
-HRESULT Model::LoadModelFromFBXFile(char* fileName)
+void Model::LoadModelFromOBJFile(char* fileName, bool isRightHand)
 {
-	return nshade::FbxReader::Read(fileName, GetVertices(), GetIndices());
+	auto vertices = new vector<nshade::Vertex>();
+	auto indices = new vector<unsigned int>();
+
+	auto result = ObjParser::Parse(GetVertices(), GetIndices(), fileName);
+	
+	m_pVertices = shared_ptr<vector<nshade::Vertex>>(vertices);
+	m_pIndices = shared_ptr<vector<unsigned int>>(indices);
+
+	CreateBuffers();
 }
 
-HRESULT Model::LoadModelFromOBJFile(char* fileName, bool isRightHand)
-{
-	return ObjParser::Parse(GetVertices(), GetIndices(), fileName);
-}
-
-HRESULT Model::AssignMaterial(Material* pMaterial)
+void Model::AssignMaterial(Material* pMaterial)
 {	
 	m_pMaterial = shared_ptr<Material>(pMaterial);
-	return 0;
 }
 
-HRESULT Model::Render()
+void Model::CreateBuffers()
 {
-	return 0;
+	/* Vertex Buffer */
+	auto vertices = GetVertices();
+	
+	m_pStrides = sizeof(nshade::Vertex);
+
+	D3D11_BUFFER_DESC  vertexBufferDesc = { 0 };
+	vertexBufferDesc.ByteWidth = m_pStrides * vertices->size();
+	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+	
+	D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
+	vertexBufferData.pSysMem = &vertices[0];
+	vertexBufferData.SysMemPitch = 0;
+	vertexBufferData.SysMemSlicePitch = 0;
+
+	ID3D11Buffer* vertexBuffer;
+	auto result = m_pDeviceResources->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &vertexBuffer);
+	m_pVertexBuffer = shared_ptr<ID3D11Buffer>(vertexBuffer);
+
+
+	/* Index Buffer */
+	auto indices = GetIndices();
+
+	D3D11_BUFFER_DESC indexBufferDesc = { 0 };
+	indexBufferDesc.ByteWidth = sizeof(unsigned int) * indices->size();
+	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+
+
+	D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
+	indexBufferData.pSysMem = &indices[0];
+	indexBufferData.SysMemPitch = 0;
+	indexBufferData.SysMemSlicePitch = 0;
+
+	ID3D11Buffer* indexBuffer;
+	result = m_pDeviceResources->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &indexBuffer);
+	m_pIndexBuffer = shared_ptr<ID3D11Buffer>(indexBuffer);
 }

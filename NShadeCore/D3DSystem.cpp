@@ -91,18 +91,6 @@ HRESULT D3DSystem::Initialize()
 		return result;
 	}
 
-	//result = LoadModels();
-	//if (FAILED(result))
-	//{
-	//	return result;
-	//}
-
-	//result = CreateCamera();
-	//if (FAILED(result))
-	//{
-	//	return result;
-	//}
-
 	auto sc = rxsc::make_new_thread();
 	auto so = rx::synchronize_in_one_worker(sc);
 	rx::observable<>::interval(sc.now(), FPS(25), so)
@@ -299,20 +287,6 @@ vector<MSAA>* D3DSystem::ProduceMsaaCapability(vector<MSAA>* options, int i)
 		localOptions.push_back(masaa);
 	}
 	return new vector<MSAA>(localOptions);
-}
-
-HRESULT D3DSystem::CreateCamera()
-{
-	m_pCamera = shared_ptr<Camera>(new Camera(m_pDeviceResources));
-	m_pCamera->Initialize();
-	return 0;
-}
-
-HRESULT D3DSystem::LoadModels()
-{
-	m_pModel = shared_ptr<Model>(new Model(m_pDeviceResources));
-	auto result = m_pModel->Initialize();
-	return 0;
 }
 
 HRESULT D3DSystem::CreateRenderer()

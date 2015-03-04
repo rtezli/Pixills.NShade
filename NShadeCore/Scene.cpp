@@ -45,21 +45,16 @@ void Scene::Render()
 	{
 		auto model = models->at(m);
 		auto material = model.GetMaterial();
-
-		auto stride = 0;
- 
 		auto vertexBuffer = model.GetVertexBuffer();
-		auto vertexBufferSize = model.GetVertexBufferSize();
-		auto indexSize = model.GetIndices()->size();
-		/* Input Assembler */
- 
+		auto strides = model.GetVertexBufferStrides();
 		auto layout = model.GetMaterial()->GetShaders()->VertexShader->GetInputLayout();
+
 		m_pResources->DeviceContext->IASetInputLayout(layout);
-		//m_pResources->DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer[0], vertexBufferSize, 0);
+		m_pResources->DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &strides, 0);
 		m_pResources->DeviceContext->IASetIndexBuffer(model.GetIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);
 		m_pResources->DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		m_pResources->DeviceContext->DrawIndexed(indexSize, 0, 0);
+		m_pResources->DeviceContext->DrawIndexed(model.GetIndices()->size(), 0, 0);
 	}
 }
 
@@ -126,3 +121,42 @@ Scene* Scene::CreateStandardScene(DeviceResources* pResources)
 
 	return scene;
 }
+
+//HRESULT Renderer::Render()
+//{
+//	// Clear
+//	ClearScene();
+//
+//	if (!m_isInitialized)
+//	{
+//		return 0;
+//	}
+//
+//	UINT stride = sizeof(nshade::VertexShaderInput);
+//	UINT offset = 0;
+//
+//	// Set model data
+//	GetDeviceContext()->IASetInputLayout(Resources()->InputLayout);
+//
+//	// Set multiple buffers here ? i.e. each for one model since some shaders are not applied to all models
+//	GetDeviceContext()->IASetVertexBuffers(0, 1, &Resources()->VertexBuffer, &stride, &offset);
+//	GetDeviceContext()->IASetIndexBuffer(Resources()->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+//	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+//
+//	// Set shader data
+//
+//
+//	// Set multiple shaders here ?
+//	auto vs = Resources()->Shaders->VertexShader;
+//	auto ps = Resources()->Shaders->PixelShader;
+//
+//	GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
+//	GetDeviceContext()->VSSetShader(vs, nullptr, 0);
+//
+//	GetDeviceContext()->PSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
+//	GetDeviceContext()->PSSetShader(ps, nullptr, 0);
+//	GetDeviceContext()->DrawIndexed(Resources()->IndexCount, 0, 0);
+//
+//	// Present
+//	return Resources()->SwapChain->Present(1, 0);
+//}
