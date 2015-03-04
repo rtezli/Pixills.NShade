@@ -50,6 +50,8 @@ void Scene::Render()
 		auto shaders = model.GetMaterial()->GetShaders();
 		auto constBuffer = GetCamera()->GetConstBuffer();
 
+		// Get additional data and add it to the strides and buffer
+
 		m_pResources->DeviceContext->IASetInputLayout(shaders->VertexShader->GetInputLayout());
 		m_pResources->DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &strides, 0);
 		m_pResources->DeviceContext->IASetIndexBuffer(model.GetIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);

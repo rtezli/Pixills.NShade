@@ -45,17 +45,21 @@ void Model::AssignMaterial(Material* pMaterial)
 void Model::CreateBuffers()
 {
 	/* Vertex Buffer */
+
 	auto vertices = GetVertices();
 	
 	m_pStrides = sizeof(nshade::Vertex);
 
+	nshade::Vertex* vertexArr;
+	vertexArr = (nshade::Vertex*)malloc(vertices->size() * sizeof(nshade::Vertex));
+	copy(vertices->begin(), vertices->end(), vertexArr);
+
 	D3D11_BUFFER_DESC  vertexBufferDesc = { 0 };
 	vertexBufferDesc.ByteWidth = m_pStrides * vertices->size();
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-
 	
 	D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
-	vertexBufferData.pSysMem = &vertices[0];
+	vertexBufferData.pSysMem = vertexArr;
 	vertexBufferData.SysMemPitch = 0;
 	vertexBufferData.SysMemSlicePitch = 0;
 
@@ -63,17 +67,20 @@ void Model::CreateBuffers()
 	auto result = m_pDeviceResources->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &vertexBuffer);
 	m_pVertexBuffer = shared_ptr<ID3D11Buffer>(vertexBuffer);
 
-
 	/* Index Buffer */
+
 	auto indices = GetIndices();
+
+	unsigned int* indexArr;
+	indexArr = (unsigned int*)malloc(indices->size() * sizeof(unsigned int));
+	copy(indices->begin(), indices->end(), indexArr);
 
 	D3D11_BUFFER_DESC indexBufferDesc = { 0 };
 	indexBufferDesc.ByteWidth = sizeof(unsigned int) * indices->size();
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
-
 	D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
-	indexBufferData.pSysMem = &indices[0];
+	indexBufferData.pSysMem = indexArr;
 	indexBufferData.SysMemPitch = 0;
 	indexBufferData.SysMemSlicePitch = 0;
 
