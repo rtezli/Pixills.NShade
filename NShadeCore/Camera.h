@@ -19,12 +19,9 @@ public:
 public:
 	struct ConstantBufferData
 	{
-		XMFLOAT4X4 world;
-		XMFLOAT4X4 view;
-		XMFLOAT4X4 projection;
-		XMFLOAT4X4 refection;
-		XMFLOAT3   camera;
-		float	   time;
+		XMFLOAT4X4 World;
+		XMFLOAT4X4 View;
+		XMFLOAT4X4 Projection;
 	};
 
 public:
@@ -35,14 +32,10 @@ public:
 	void				Initialize();
 	void				Move(POINT* p);
 	void				Rotate(POINT* p);
-	HRESULT				InitializeConstantBuffer();
-	void				Update();
+	void				InitializeConstantBuffer();
 	float				GetAspectRatio(){ return m_pDeviceResources->ViewPort->Width / m_pDeviceResources->ViewPort->Height; };
 	float				GetFieldOfView(){ return 70.0f * XM_PI / 180.0f; };
 private:
-	XMFLOAT4X4*			m_pWorldMatrix;
-	XMFLOAT4X4*			m_pViewMatrix;
-	XMFLOAT4X4*			m_pProjectionMatrix;
 	XMFLOAT3*			m_eyePosition;
 	XMFLOAT3*			m_focusPosition;
 	XMFLOAT3*			m_upDirection;

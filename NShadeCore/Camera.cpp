@@ -5,7 +5,9 @@ Camera::Camera(DeviceResources* resources)
 {
 	m_pDeviceResources = resources;
 	m_pCameraConstBuffer = shared_ptr<ID3D11Buffer>();
-	m_pCameraConstBufferData = shared_ptr<ConstantBufferData>();
+
+	auto constBuffer = new ConstantBufferData();
+	m_pCameraConstBufferData = shared_ptr<ConstantBufferData>(constBuffer);
 	Initialize();
 }
 
@@ -15,10 +17,6 @@ Camera::~Camera()
 
 void Camera::Initialize()
 {
-	m_pWorldMatrix		= new XMFLOAT4X4();
-	m_pViewMatrix		= new XMFLOAT4X4();
-	m_pProjectionMatrix = new XMFLOAT4X4();
-
 	m_radius = 6.0f;
 	m_hAngle = 0.0f;
 	m_vAngle = 0.0f;
@@ -26,22 +24,25 @@ void Camera::Initialize()
 	auto z = m_radius * sin(m_hAngle * -1);
 	auto x = sqrt(pow(m_radius, 2) - pow(z, 2));
 
-	m_eyePosition	= new XMFLOAT3{ 0.0f, 4.0f, m_radius };
+	m_eyePosition = new XMFLOAT3{ 0.0f, 4.0f, m_radius };
 	m_focusPosition = new XMFLOAT3{ 0.0f, 0.0f, 0.0f };
-	m_upDirection	= new XMFLOAT3{ 0.0f, 1.0f, 0.0f };
+	m_upDirection = new XMFLOAT3{ 0.0f, 1.0f, 0.0f };
 
 	auto wMatrix = XMMatrixTranspose(XMMatrixIdentity());
-	XMStoreFloat4x4(m_pWorldMatrix, wMatrix);
+
+	XMFLOAT4X4 world;
+	XMStoreFloat4x4(&world, wMatrix);
 
 	auto vMatrix = XMMatrixTranspose(
 		XMMatrixLookAtRH(
-			XMLoadFloat3(m_eyePosition), 
-			XMLoadFloat3(m_focusPosition), 
-			XMLoadFloat3(m_upDirection)
+		XMLoadFloat3(m_eyePosition),
+		XMLoadFloat3(m_focusPosition),
+		XMLoadFloat3(m_upDirection)
 		)
-	);
+		);
 
-	XMStoreFloat4x4(m_pViewMatrix, vMatrix);
+	XMFLOAT4X4 view;
+	XMStoreFloat4x4(&view, vMatrix);
 
 	float fovAngleY = GetFieldOfView();
 	float aspectRatio = GetAspectRatio();
@@ -51,19 +52,24 @@ void Camera::Initialize()
 		fovAngleY *= 1.0f;
 	}
 
-	XMMATRIX	perspectiveMatrix	= XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 0.1f, 100.0f);
-	XMFLOAT4X4	orientation			= ScreenRotation::Rotation0;
-	XMMATRIX	orientationMatrix	= XMLoadFloat4x4(&orientation);
-   
-	XMStoreFloat4x4(m_pProjectionMatrix, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
+	XMMATRIX	perspectiveMatrix = XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 0.1f, 100.0f);
+	XMFLOAT4X4	orientation = ScreenRotation::Rotation0;
+	XMMATRIX	orientationMatrix = XMLoadFloat4x4(&orientation);
 
-	Update();
+	XMFLOAT4X4 projection;
+	XMStoreFloat4x4(&projection, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
+
+	auto constBufferData = new ConstantBufferData{ world, view, projection };
+
+	m_pCameraConstBufferData = shared_ptr<ConstantBufferData>(constBufferData);
+
+	InitializeConstantBuffer();
 }
 
 void Camera::Move(POINT* p)
 {
-	XMStoreFloat4x4(m_pWorldMatrix, XMMatrixTranspose(XMMatrixTranslation(p->x, 0.0, p->y)));
-	Update();
+	auto world = GetConstBufferData()->World;
+	XMStoreFloat4x4(&world, XMMatrixTranspose(XMMatrixTranslation(p->x, 0.0, p->y)));
 }
 
 void Camera::Rotate(POINT* p)
@@ -74,29 +80,23 @@ void Camera::Rotate(POINT* p)
 	m_hAngle = m_hAngle + p->x * moderationH;
 	m_vAngle = m_vAngle + p->y * moderationV;
 
-	XMStoreFloat4x4(m_pWorldMatrix, XMMatrixTranspose(XMMatrixRotationY(m_hAngle)));
-	GetConstBufferData()->world = *m_pWorldMatrix;
+	auto world = GetConstBufferData()->World;
+	XMStoreFloat4x4(&world, XMMatrixTranspose(XMMatrixRotationY(m_hAngle)));
 }
 
-void Camera::Update()
-{	
-	XMFLOAT4X4 reflect;
-	ConstantBufferData constBuffer = { *m_pWorldMatrix, *m_pViewMatrix, *m_pProjectionMatrix, reflect, *m_eyePosition, 0 };
-	m_pCameraConstBufferData = shared_ptr<ConstantBufferData>(new ConstantBufferData(constBuffer));
-}
-
-HRESULT Camera::InitializeConstantBuffer()
+void Camera::InitializeConstantBuffer()
 {
-	// Belongs to renderer class
 	D3D11_BUFFER_DESC constantBufferDesc = { 0 };
 	constantBufferDesc.ByteWidth = sizeof(ConstantBufferData);
 	constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 
+
 	D3D11_SUBRESOURCE_DATA constantBufferData = { 0 };
-	//constantBufferData.pSysMem = &GetConstBufferData();
+	constantBufferData.pSysMem = GetConstBufferData();
 	constantBufferData.SysMemPitch = 0;
 	constantBufferData.SysMemSlicePitch = 0;
 
-	//return m_pDeviceResources->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &m_pDeviceResources->CameraConstBuffer);
-	return 0;
+	ID3D11Buffer* constBuffer;
+	auto result = m_pDeviceResources->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &constBuffer);
+	m_pCameraConstBuffer = shared_ptr<ID3D11Buffer>(constBuffer);
 }

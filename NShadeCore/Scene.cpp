@@ -83,7 +83,7 @@ void Scene::AddLight(Light* pLight)
 
 void Scene::AddCamera(Camera* pCamera)
 {
-	m_pCamera = shared_ptr<Camera>();
+	m_pCamera = shared_ptr<Camera>(pCamera);
 }
 
 void Scene::Load(wstring fileName)

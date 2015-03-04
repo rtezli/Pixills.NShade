@@ -17,15 +17,14 @@ public:
 
 	vector<unsigned int>*		const GetIndices(){ return m_pIndices.get(); }
 	vector<nshade::Vertex>*		const GetVertices(){ return m_pVertices.get(); }
+
 	ID3D11Buffer*				const GetIndexBuffer(){ return m_pIndexBuffer.get(); }
-	unsigned int*				const GetIndexBufferSize(){ auto size = GetIndices()->size(); return &size; }
+	unsigned int				const GetIndexBufferSize(){ return GetIndices()->size(); }
+
 	ID3D11Buffer*				const GetVertexBuffer(){ return m_pVertexBuffer.get(); }
-	unsigned int*				const GetVertexBufferSize(){ auto size = GetVertices()->size(); return &size; }
+	unsigned int				const GetVertexBufferSize(){ return GetVertices()->size(); }
+
 	Material*					const GetMaterial(){ return m_pMaterial.get(); }
-private:
-	HRESULT						CreateVertexBuffer();
-	HRESULT						CreateIndexBuffer();
-	HRESULT						SetTopology(char verticesPerFace);
 private:
 	unsigned short						m_indexCount = 0;
 	D3D11_BUFFER_DESC					m_bufferDesc;
