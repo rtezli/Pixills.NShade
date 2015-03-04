@@ -13,3 +13,14 @@ PixelShader::PixelShader(DeviceResources* pResources) //: Shader(pResources)
 PixelShader::~PixelShader()
 {
 }
+
+void PixelShader::Load(char* fileName)
+{
+	ByteCode = File::ReadFileBytes(fileName);
+	auto result = PResources->Device->CreatePixelShader(ByteCode->Bytes, ByteCode->Length, nullptr, &PPixelShader);
+}
+
+void PixelShader::Compile(char* file, ShaderVersion version)
+{
+
+}

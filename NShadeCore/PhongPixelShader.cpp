@@ -4,9 +4,9 @@
 
 using namespace PhongShader;
 
-PhongPixelShader::PhongPixelShader(DeviceResources* pResources) : PixelShader(pResources)
+PhongPixelShader::PhongPixelShader(char * file, DeviceResources* pResources) : PixelShader(pResources)
 {
-
+	Load(file);
 }
 
 PhongPixelShader::~PhongPixelShader()

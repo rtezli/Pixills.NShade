@@ -4,6 +4,9 @@
 Camera::Camera(DeviceResources* resources)
 {
 	m_pDeviceResources = resources;
+	m_pCameraConstBuffer = shared_ptr<ID3D11Buffer>();
+	m_pCameraConstBufferData = shared_ptr<ConstantBufferData>();
+	Initialize();
 }
 
 Camera::~Camera()

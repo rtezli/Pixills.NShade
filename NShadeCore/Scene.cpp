@@ -94,19 +94,6 @@ Scene* Scene::CreateStandardScene(DeviceResources* pResources)
 {
 	auto scene = new Scene(pResources);
 
-	auto stdPixelShader = new PhongShader::PhongPixelShader(pResources);
-	auto stdVertexShader = new PhongShader::PhongVertexShader(pResources);
-	
-	auto stdMaterial = new Material();
-	stdMaterial->Shaders->PixelShader = stdPixelShader;
-	stdMaterial->Shaders->VertexShader = stdVertexShader;
-
-	auto stdModel = new Model(pResources);
-	stdModel->LoadModelFromFBXFile("../Debug/teapot.fbx");
-	stdModel->AssignMaterial(stdMaterial);
-
-	scene->AddModel(stdModel);
-
 	auto stdCamera = new Camera(pResources);
 	//stdCamera->Position = new XMFLOAT3(1.0f, 1.0f, 1.0f);
 	//stdCamera->LookAt = new XMFLOAT3(1.0f, 1.0f, 1.0f);
@@ -123,6 +110,19 @@ Scene* Scene::CreateStandardScene(DeviceResources* pResources)
 	//stdPointLight->Color = new XMFLOAT3(1.0f, 1.0f, 1.0f);
 	//stdPointLight->Intensity = 1.0f;
 	scene->AddLight(stdPointLight);
+
+	auto stdPixelShader = new PhongShader::PhongPixelShader("../Debug/PhongPixelShader.cso", pResources);
+	auto stdVertexShader = new PhongShader::PhongVertexShader("../Debug/PhongVertexShader.cso", pResources);
+	
+	auto stdMaterial = new Material();
+	stdMaterial->Shaders->PixelShader = stdPixelShader;
+	stdMaterial->Shaders->VertexShader = stdVertexShader;
+
+	auto stdModel = new Model(pResources);
+	stdModel->LoadModelFromFBXFile("../Debug/teapot.fbx");
+	stdModel->AssignMaterial(stdMaterial);
+
+	scene->AddModel(stdModel);
 
 	return scene;
 }

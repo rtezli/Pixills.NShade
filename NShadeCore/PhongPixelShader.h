@@ -8,7 +8,7 @@ namespace PhongShader
 	class PhongPixelShader : public PixelShader
 	{
 	public:
-		PhongPixelShader(DeviceResources* pResources);
+		PhongPixelShader(char * file, DeviceResources* pResources);
 		~PhongPixelShader();
 	};
 }

@@ -62,3 +62,14 @@ void VertexShader::Setup(vector<nshade::Vertex>* vertices, vector<unsigned int>*
 
 	//delete indexArr;
 }
+
+void VertexShader::Load(char* fileName)
+{
+	ByteCode = File::ReadFileBytes(fileName);
+	auto result = PResources->Device->CreateVertexShader(ByteCode->Bytes, ByteCode->Length, nullptr, &PVertexShader);
+}
+
+void VertexShader::Compile(char* file, ShaderVersion version)
+{
+
+}
