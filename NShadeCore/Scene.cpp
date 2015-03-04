@@ -47,12 +47,20 @@ void Scene::Render()
 		auto material = model.GetMaterial();
 		auto vertexBuffer = model.GetVertexBuffer();
 		auto strides = model.GetVertexBufferStrides();
-		auto layout = model.GetMaterial()->GetShaders()->VertexShader->GetInputLayout();
+		auto shaders = model.GetMaterial()->GetShaders();
+		auto constBuffer = GetCamera()->GetConstBuffer();
 
-		m_pResources->DeviceContext->IASetInputLayout(layout);
+		m_pResources->DeviceContext->IASetInputLayout(shaders->VertexShader->GetInputLayout());
 		m_pResources->DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &strides, 0);
 		m_pResources->DeviceContext->IASetIndexBuffer(model.GetIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);
 		m_pResources->DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		m_pResources->DeviceContext->VSSetConstantBuffers(0, 1, &constBuffer);
+		m_pResources->DeviceContext->VSSetShader(shaders->VertexShader->Shader(), nullptr, 0);
+
+		// Check if this is neccessary if the pixel shader does not use the registers
+		// m_pResources->DeviceContext->PSSetConstantBuffers(0, 1, &constBuffer);
+		m_pResources->DeviceContext->PSSetShader(shaders->PixelShader->Shader(), nullptr, 0);
 
 		m_pResources->DeviceContext->DrawIndexed(model.GetIndices()->size(), 0, 0);
 	}

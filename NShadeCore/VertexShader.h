@@ -12,6 +12,7 @@ public:
 	void				Render(ID3D11Buffer* constBuffer);
 	void				Setup(vector<nshade::Vertex>* vertices, vector<unsigned int>* indices);
 	ID3D11InputLayout*	const GetInputLayout(){ return PInputLayout; }
+	ID3D11VertexShader*	const Shader(){ return PVertexShader; }
 protected:
 	void						Load(char* file);
 	void						Compile(char* file, ShaderVersion version);
