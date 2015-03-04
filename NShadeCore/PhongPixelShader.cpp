@@ -6,6 +6,7 @@ using namespace PhongShader;
 
 PhongPixelShader::PhongPixelShader(DeviceResources* pResources) : PixelShader(pResources)
 {
+
 }
 
 PhongPixelShader::~PhongPixelShader()

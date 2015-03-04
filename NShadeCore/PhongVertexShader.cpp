@@ -6,15 +6,10 @@ using namespace PhongShader;
 
 PhongVertexShader::PhongVertexShader(DeviceResources* pResources) : VertexShader(pResources)
 {
+	ByteWidth = sizeof(PhongShader::InputLayout);
+	PResources->Device->CreateInputLayout(InputDescription, ARRAYSIZE(InputDescription), ByteCode->Bytes, ByteCode->Length, &PInputLayout);
 }
 
 PhongVertexShader::~PhongVertexShader()
 {
-}
-
-HRESULT PhongVertexShader::SetVertices(vector<nshade::Vertex> vertices)
-{
-	//m_pResources->DeviceContext->VSSetConstantBuffers(0, 1, &m_pResources->ConstBuffer);
-	//m_pResources->DeviceContext->VSSetShader(shaders->VertexShader, nullptr, 0);
-	return 0;
 }

@@ -44,7 +44,7 @@ enum ShaderType : char
 	DS = 6
 };
 
-struct SHADER_DESC
+struct ShaderDescription
 {
 	ShaderType Type;
 	ShaderVersion Version;
@@ -55,54 +55,16 @@ class Shader
 {
 public:
 	Shader(DeviceResources* pResources);
-	virtual ~Shader();
+	~Shader();
+public:
+	virtual void Render(ID3D11Buffer* constBuffer) = 0;
+	virtual void Load(LPCWSTR file) = 0;
+	virtual void Compile(LPCWSTR file) = 0;
 protected:
-	DeviceResources*					const Resources(){ return m_pDeviceResources; }
-	ID3D11Device*						const Device(){ return m_pDeviceResources->Device; }
-	ID3D11DeviceContext*				const DeviceContext(){ return m_pDeviceResources->DeviceContext; }
+	DeviceResources*					PResources;
 	ShaderType							Type;
 	ShaderVersion						Version;
 	LPCWSTR								ShaderFilePath;
-
-	virtual HRESULT Load(LPCWSTR file);
-	virtual HRESULT Compile(LPCWSTR file);
-	virtual HRESULT Render();
-
-	//virtual struct InputLayout			InputLayout;
-	//virtual struct ConstantBuffer		ConstantBuffer;
-	//virtual D3D11_INPUT_ELEMENT_DESC*	InputDescription;
-
-private:
-	HRESULT	SetVertexShader(LPCWSTR compiledShaderFile);
-	HRESULT	CompileVertexShader(LPCWSTR shaderSource, LPCSTR profile);
-
-	HRESULT SetHullShader(LPCWSTR compiledShaderFile);
-	HRESULT CompileHullShader(LPCWSTR shaderSource, LPCSTR profile);
-
-	HRESULT SetDomainShader(LPCWSTR compiledShaderFile);
-	HRESULT CompileDomainShader(LPCWSTR shaderSource, LPCSTR profile);
-
-	HRESULT SetGeometryShader(LPCWSTR compiledShaderFile);
-	HRESULT CompileGeometryShader(LPCWSTR shaderSource, LPCSTR profile);
-
-	HRESULT SetPixelShader(LPCWSTR compiledShaderFile);
-	HRESULT CompilePixelShader(LPCWSTR shaderSource, LPCSTR profile);
-
-	HRESULT SetComputeShader(LPCWSTR compiledShaderFile);
-	HRESULT CompileComputeShader(LPCWSTR shaderSource, LPCSTR profile);
-
-	LPCSTR Shader::CreateProfile();
-
-	HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
-
-	DeviceResources*					m_pDeviceResources;
-	vector<D3D11_INPUT_ELEMENT_DESC>	m_inputDescription;
-	ShaderType							m_Type;
-	ID3D11PixelShader*					m_PixelShader;
-	ID3D11VertexShader*					m_VertexShader;
-	ID3D11HullShader*					m_HullShader;
-	ID3D11DomainShader*					m_DomainShader;
-	ID3D11GeometryShader*				m_GeometryShader;
-	ID3D11ComputeShader*				m_ComputeShader;
+	FileBytes*							ByteCode;
 };
 

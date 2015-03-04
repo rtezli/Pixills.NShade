@@ -423,10 +423,13 @@ HRESULT Renderer::CreateLights()
 
 HRESULT Renderer::Render()
 {
+	const FLOAT color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	GetDeviceContext()->OMSetRenderTargets(1, &GetResources()->RenderTargetView, GetResources()->DepthStencilView);
+	GetDeviceContext()->ClearRenderTargetView(GetResources()->RenderTargetView, color);
+	GetDeviceContext()->ClearDepthStencilView(GetResources()->DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+
 	GetScene()->Clear();
 	GetScene()->Render();
- 
-	GetDeviceContext()->DrawIndexed(GetResources()->IndexCount, 0, 0);
 
 	return GetResources()->SwapChain->Present(1, 0);
 }

@@ -6,6 +6,7 @@ using namespace ColorShader;
 
 ColorPixelShader::ColorPixelShader(DeviceResources* pResources) : PixelShader(pResources)
 {
+
 }
 
 ColorPixelShader::~ColorPixelShader()

@@ -3,12 +3,22 @@
 #include "common.h"
 #include "shader.h"
 
-class VertexShader : public Shader
+class VertexShader //: public Shader
 {
 public:
 	VertexShader(DeviceResources* pResources);
-	virtual ~VertexShader();
-	virtual HRESULT SetVertices(vector<nshade::Vertex> vertices) = 0;
-private:
-	DeviceResources*		m_pResources;
+	~VertexShader();
+public:
+	void				Render(ID3D11Buffer* constBuffer);
+	void				Setup(vector<nshade::Vertex>* vertices, vector<unsigned int>* indices);
+	ID3D11InputLayout*	const GetInputLayout(){ return PInputLayout; }
+protected:
+	DeviceResources*			PResources;
+	unsigned int				ByteWidth;
+	ID3D11InputLayout*			PInputLayout;
+	ID3D11Buffer*				PVertexBuffer;
+	ID3D11Buffer*				PIndexBuffer;
+	ID3D11VertexShader*			PVertexShader;
+	D3D11_INPUT_ELEMENT_DESC*	PInputDescription;
+	FileBytes*					ByteCode;
 };

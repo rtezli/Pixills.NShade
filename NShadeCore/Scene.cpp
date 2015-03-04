@@ -33,11 +33,8 @@ Scene::~Scene()
 
 void Scene::Clear()
 {
-	//GetDeviceContext()->UpdateSubresource(GetResources()->ConstBuffer, 0, nullptr, GetResources()->CameraConstBufferData, 0, 0);
-	//GetDeviceContext()->OMSetRenderTargets(1, &GetResources()->RenderTargetView, GetResources()->DepthStencilView);
-	//const FLOAT color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	//GetDeviceContext()->ClearRenderTargetView(GetResources()->RenderTargetView, color);
-	//GetDeviceContext()->ClearDepthStencilView(GetResources()->DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	auto constBuffer = GetCamera()->GetConstBufferData();
+	m_pResources->DeviceContext->UpdateSubresource(GetCamera()->GetConstBuffer(), 0, nullptr, &constBuffer, 0, 0);
 }
 
 void Scene::Render()
@@ -50,14 +47,19 @@ void Scene::Render()
 		auto material = model.GetMaterial();
 
 		auto stride = 0;
-		//ID3D11Buffer buffers[]{0};
+ 
 		auto vertexBuffer = model.GetVertexBuffer();
+		auto vertexBufferSize = model.GetVertexBufferSize();
+		auto indexSize = model.GetIndices()->size();
 		/* Input Assembler */
  
-		m_pResources->DeviceContext->IASetInputLayout(m_pResources->InputLayout);
-		//m_pResources->DeviceContext->IASetVertexBuffers(0, 1, &buffers, &stride, 0);
+		auto layout = model.GetMaterial()->GetShaders()->VertexShader->GetInputLayout();
+		m_pResources->DeviceContext->IASetInputLayout(layout);
+		//m_pResources->DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer[0], vertexBufferSize, 0);
 		m_pResources->DeviceContext->IASetIndexBuffer(model.GetIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);
 		m_pResources->DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		m_pResources->DeviceContext->DrawIndexed(indexSize, 0, 0);
 	}
 }
 
@@ -95,7 +97,6 @@ Scene* Scene::CreateStandardScene(DeviceResources* pResources)
 	auto stdPixelShader = new PhongShader::PhongPixelShader(pResources);
 	auto stdVertexShader = new PhongShader::PhongVertexShader(pResources);
 	
-
 	auto stdMaterial = new Material();
 	stdMaterial->Shaders->PixelShader = stdPixelShader;
 	stdMaterial->Shaders->VertexShader = stdVertexShader;

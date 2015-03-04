@@ -5,8 +5,8 @@ Model::Model(DeviceResources* resources)
 {
 	m_pDeviceResources = resources;
 	m_pMaterial = shared_ptr<Material>();
-	m_Vertices = shared_ptr<vector<nshade::Vertex>>(new vector<nshade::Vertex>());
-	m_Indices = shared_ptr<vector<unsigned int>>(new vector<unsigned int>());
+	m_pVertices = shared_ptr<vector<nshade::Vertex>>(new vector<nshade::Vertex>());
+	m_pIndices = shared_ptr<vector<unsigned int>>(new vector<unsigned int>());
 }
 
 Model::~Model()

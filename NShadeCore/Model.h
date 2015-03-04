@@ -15,10 +15,12 @@ public:
 	HRESULT	Initialize();
 	HRESULT	Render();
 
-	vector<unsigned int>*		const GetIndices(){ return m_Indices.get(); }
-	vector<nshade::Vertex>*		const GetVertices(){ return m_Vertices.get(); }
-	ID3D11Buffer*				const GetIndexBuffer(){ return m_IndexBuffer.get(); }
-	ID3D11Buffer*				const GetVertexBuffer(){ return m_VertexBuffer.get(); }
+	vector<unsigned int>*		const GetIndices(){ return m_pIndices.get(); }
+	vector<nshade::Vertex>*		const GetVertices(){ return m_pVertices.get(); }
+	ID3D11Buffer*				const GetIndexBuffer(){ return m_pIndexBuffer.get(); }
+	unsigned int*				const GetIndexBufferSize(){ auto size = GetIndices()->size(); return &size; }
+	ID3D11Buffer*				const GetVertexBuffer(){ return m_pVertexBuffer.get(); }
+	unsigned int*				const GetVertexBufferSize(){ auto size = GetVertices()->size(); return &size; }
 	Material*					const GetMaterial(){ return m_pMaterial.get(); }
 private:
 	HRESULT						CreateVertexBuffer();
@@ -32,10 +34,10 @@ private:
 
 	DeviceResources*					m_pDeviceResources;
 	shared_ptr<Material>				m_pMaterial;
-	shared_ptr<vector<unsigned int>>	m_Indices;
-	shared_ptr<vector<nshade::Vertex>>	m_Vertices;
-	shared_ptr<ID3D11Buffer>			m_VertexBuffer;
-	shared_ptr<ID3D11Buffer>			m_IndexBuffer;
+	shared_ptr<vector<unsigned int>>	m_pIndices;
+	shared_ptr<vector<nshade::Vertex>>	m_pVertices;
+	shared_ptr<ID3D11Buffer>			m_pVertexBuffer;
+	shared_ptr<ID3D11Buffer>			m_pIndexBuffer;
 };
 
 #pragma warning( restore : 4996 )
