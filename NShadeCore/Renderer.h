@@ -1,6 +1,11 @@
 #pragma once
 #pragma comment(lib, "D3DCompiler.lib")
 
+#include "common.h"
+#include "d3dcompiler.h"
+#include "phongvertexshader.h"
+#include "scene.h"
+
 //#ifndef PS_PROFILE
 //#define PS_PROFILE {"ps_5_0" }
 //#endif
@@ -29,10 +34,31 @@
 //DXGI_FORMAT vertexPositionFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 //DXGI_FORMAT vertexColorFormat = DXGI_FORMAT_R32G32B32_FLOAT;
 
-#include "includes.h"
-#include "d3dcompiler.h"
-#include "phongvertexshader.h"
-#include "scene.h"
+enum MSAA : char
+{
+	SIMPLEST_POSSIBLE = 9,
+	MSAA_0X = 0,
+	MSAA_1X = 1,
+	MSAA_2X = 2,
+	MSAA_4X = 4,
+	MSAA_8X = 8,
+	BEST_POSSIBLE = 8
+};
+
+struct RenderingQuality
+{
+	UINT Quality;
+	UINT SampleCount;
+	DXGI_FORMAT TextureFormat;
+	DXGI_FORMAT BufferFormat;
+	bool IsMultisamplingSettings;
+};
+
+struct MsaaOptions
+{
+	MSAA Msaa;
+	RenderingQuality Quality;
+};
 
 struct RENDERER_SETTINGS
 {
@@ -101,6 +127,8 @@ private:
 private:
 	shared_ptr<DeviceResources>			m_pDeviceResources;
 	shared_ptr<Scene>					m_pScene;
+
+	RenderingQuality*					m_pRenderingQuality;
 
 	D3D11_TEXTURE2D_DESC				m_pDepthBufferDesc;
 	DXGI_SWAP_CHAIN_DESC				m_pSwapChainDescription;

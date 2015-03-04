@@ -86,9 +86,9 @@ HRESULT Renderer::CreateRenderTargetDesciption()
 	m_pRenderTargetDesc.Height = GetResources()->ViewPort->Height;
 	m_pRenderTargetDesc.MipLevels = 1;
 	m_pRenderTargetDesc.ArraySize = 1;
-	m_pRenderTargetDesc.Format = GetResources()->RenderQuality->TextureFormat;
-	m_pRenderTargetDesc.SampleDesc.Quality = GetResources()->RenderQuality->Quality;
-	m_pRenderTargetDesc.SampleDesc.Count = GetResources()->RenderQuality->SampleCount;
+	m_pRenderTargetDesc.Format = m_pRenderingQuality->TextureFormat;
+	m_pRenderTargetDesc.SampleDesc.Quality = m_pRenderingQuality->Quality;
+	m_pRenderTargetDesc.SampleDesc.Count = m_pRenderingQuality->SampleCount;
 	m_pRenderTargetDesc.Usage = D3D11_USAGE_DEFAULT;
 	m_pRenderTargetDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
 	m_pRenderTargetDesc.CPUAccessFlags = 0;
@@ -139,9 +139,9 @@ HRESULT Renderer::CreateSwapChainDesciption()
 	m_pSwapChainDescription.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	m_pSwapChainDescription.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
-	m_pSwapChainDescription.SampleDesc.Quality = GetResources()->RenderQuality->Quality;
-	m_pSwapChainDescription.SampleDesc.Count = GetResources()->RenderQuality->SampleCount;
-	m_pSwapChainDescription.BufferDesc.Format = GetResources()->RenderQuality->TextureFormat;
+	m_pSwapChainDescription.SampleDesc.Quality = m_pRenderingQuality->Quality;
+	m_pSwapChainDescription.SampleDesc.Count = m_pRenderingQuality->SampleCount;
+	m_pSwapChainDescription.BufferDesc.Format = m_pRenderingQuality->TextureFormat;
 	m_pSwapChainDescription.BufferDesc.Width = GetResources()->ViewPort->Width;
 	m_pSwapChainDescription.BufferDesc.Height = GetResources()->ViewPort->Height;
 
@@ -215,9 +215,9 @@ HRESULT Renderer::CreateDepthBufferDescription()
 	m_pDepthBufferDesc.Height = GetResources()->ViewPort->Height;
 	m_pDepthBufferDesc.MipLevels = 1;
 	m_pDepthBufferDesc.ArraySize = 1;
-	m_pDepthBufferDesc.Format = GetResources()->RenderQuality->BufferFormat;
-	m_pDepthBufferDesc.SampleDesc.Quality = GetResources()->RenderQuality->Quality;
-	m_pDepthBufferDesc.SampleDesc.Count = GetResources()->RenderQuality->SampleCount;
+	m_pDepthBufferDesc.Format = m_pRenderingQuality->BufferFormat;
+	m_pDepthBufferDesc.SampleDesc.Quality = m_pRenderingQuality->Quality;
+	m_pDepthBufferDesc.SampleDesc.Count = m_pRenderingQuality->SampleCount;
 	m_pDepthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	m_pDepthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	m_pDepthBufferDesc.CPUAccessFlags = 0;
@@ -241,10 +241,10 @@ HRESULT Renderer::CreateDepthStencilDescription()
 {
 	m_pDepthStencilDesc.ArraySize = 1;
 	m_pDepthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	m_pDepthStencilDesc.MipLevels = GetResources()->RenderQuality->Quality > 0 ? 1 : 0;
-	m_pDepthStencilDesc.SampleDesc.Quality = GetResources()->RenderQuality->Quality;
-	m_pDepthStencilDesc.SampleDesc.Count = GetResources()->RenderQuality->SampleCount;
-	m_pDepthStencilDesc.Format = GetResources()->RenderQuality->BufferFormat;
+	m_pDepthStencilDesc.MipLevels = m_pRenderingQuality->Quality > 0 ? 1 : 0;
+	m_pDepthStencilDesc.SampleDesc.Quality = m_pRenderingQuality->Quality;
+	m_pDepthStencilDesc.SampleDesc.Count = m_pRenderingQuality->SampleCount;
+	m_pDepthStencilDesc.Format = m_pRenderingQuality->BufferFormat;
 	m_pDepthStencilDesc.Width = GetResources()->ViewPort->Width;
 	m_pDepthStencilDesc.Height = GetResources()->ViewPort->Height;
 
@@ -279,7 +279,7 @@ HRESULT Renderer::CreateDepthStencilStateDescription()
 
 HRESULT Renderer::CreateDepthStencilViewDescription()
 {
-	m_pDepthStencilViewDesc.Format = GetResources()->RenderQuality->BufferFormat;
+	m_pDepthStencilViewDesc.Format = m_pRenderingQuality->BufferFormat;
 	m_pDepthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
 	m_pDepthStencilViewDesc.Texture2D.MipSlice = 0;
 
@@ -421,7 +421,7 @@ HRESULT Renderer::Render()
 
 HRESULT	Renderer::ResizeSwapChain(UINT32 newWidth, UINT32 newHeight)
 {
-	return GetResources()->SwapChain->ResizeBuffers(GetResources()->BufferCount, 0, 0, GetResources()->RenderQuality->BufferFormat, GetResources()->SwapChainFlags);
+	return GetResources()->SwapChain->ResizeBuffers(GetResources()->BufferCount, 0, 0, m_pRenderingQuality->BufferFormat, GetResources()->SwapChainFlags);
 }
 
 HRESULT Renderer::Resize(D3D11_VIEWPORT* viewPort)

@@ -1,7 +1,15 @@
 #pragma once
 
-#include "includes.h"
+#include "common.h"
 #include "deviceresources.h"
+
+enum Perspective : char
+{
+	UNDEFINED = 0,
+	FIRST_PERSON = 1,
+	THIRD_PERSON = 2,
+	ISOMETRIC = 3
+};
 
 class Camera
 {
@@ -9,6 +17,18 @@ public:
 	Camera(DeviceResources* resources);
 	~Camera();
 public:
+	struct ConstantBufferData
+	{
+		XMFLOAT4X4 world;
+		XMFLOAT4X4 view;
+		XMFLOAT4X4 projection;
+		XMFLOAT4X4 refection;
+		XMFLOAT3   camera;
+		float	   time;
+	};
+
+public:
+
 	ID3D11Buffer*		const GetConstBuffer(){ return m_pCameraConstBuffer.get(); };
 	ConstantBufferData*	const GetConstBufferData(){return m_pCameraConstBufferData.get(); };
 

@@ -60,9 +60,6 @@
     <ClInclude Include="Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Includes.h">
-      <Filter>Header Files\Common</Filter>
-    </ClInclude>
     <ClInclude Include="Export.h">
       <Filter>Header Files\Common</Filter>
     </ClInclude>
@@ -152,6 +149,15 @@
     </ClInclude>
     <ClInclude Include="PixelShader.h">
       <Filter>Header Files\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>Header Files\Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -262,6 +268,9 @@
     </ClCompile>
     <ClCompile Include="PixelShader.cpp">
       <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Files\Lights</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

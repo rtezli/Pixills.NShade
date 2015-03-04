@@ -1,7 +1,7 @@
 #pragma once
 #pragma comment(lib, "D2d1.lib")
 
-#include "includes.h"
+#include "common.h"
 #include "directxcolors.h"
 #include "dxgi1_2.h"
 #include "d2d1_1.h"
@@ -26,8 +26,8 @@ public:
 	/* buffers */
 	ID3D11InputLayout*			InputLayout;
 
-	ConstantBufferData*			LightConstBufferData;
-	ConstantBufferData*			MirrorConstBufferData;
+	//ConstantBufferData*			LightConstBufferData;
+	//ConstantBufferData*			MirrorConstBufferData;
 
 	/* depth stencil */
 	ID3D11Texture2D*			DepthStencilBuffer;
@@ -49,7 +49,7 @@ public:
 	ID3D11ShaderResourceView*	MirrorResourceView;
 
 	D3D11_VIEWPORT*				ViewPort;
-	RenderingQuality*			RenderQuality;
+	//RenderingQuality*			RenderQuality;
 
 	int							SwapChainFlags;
 	int							BufferCount;

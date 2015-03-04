@@ -21,6 +21,7 @@ namespace rxsub = rx::subjects;
 
 #include "fbxsdk.h"
 #include "fbxsdk/scene/fbxaxissystem.h"
+
 #include "boost/algorithm/string.hpp"
 #include "boost/lexical_cast.hpp"
 
@@ -28,8 +29,12 @@ namespace rxsub = rx::subjects;
 #include "dxgi.h"
 #include "directxmath.h"
 #include "dinput.h"
+
+#include "debug.h"
 #include "deviceresources.h"
 #include "types.h"
 #include "file.h"
 #include "objparser.h"
 #include "fbxreader.h"
+
+using namespace std;

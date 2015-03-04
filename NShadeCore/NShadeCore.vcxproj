@@ -181,13 +181,15 @@
     <ClInclude Include="ColorPixelShader.h" />
     <ClInclude Include="ColorVertexShader.h" />
     <ClInclude Include="D3DSystem.h" />
+    <ClInclude Include="Debug.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="Export.h" />
     <ClInclude Include="FbxReader.h" />
     <ClInclude Include="File.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="OverlayRenderer.h" />
-    <ClInclude Include="Includes.h" />
+    <ClInclude Include="Common.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
@@ -240,6 +242,7 @@
     </ClCompile>
     <ClCompile Include="FbxReader.cpp" />
     <ClCompile Include="File.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="OverlayRenderer.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Material.cpp" />

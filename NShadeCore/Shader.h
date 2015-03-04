@@ -1,7 +1,7 @@
 #pragma once
 #pragma comment(lib, "D3DCompiler.lib")
 
-#include "includes.h"
+#include "common.h"
 #include "d3dcompiler.h"
 
 #ifndef PS_PROFILE

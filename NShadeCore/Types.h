@@ -1,18 +1,10 @@
 #pragma once
 
-#include "windows.h"
 #include "d3d11.h"
 
 using namespace std;
 using namespace DirectX;
 
-enum Perspective : char
-{
-	UNDEFINED = 0,
-	FIRST_PERSON = 1,
-	THIRD_PERSON = 2,
-	ISOMETRIC = 3
-};
 namespace nshade
 {
 	struct Vertex
@@ -31,64 +23,6 @@ namespace nshade
 		unsigned int P3;
 	};
 }
-
-enum LightType : char
-{
-	Directional = 1,
-	Point = 2,
-	Spot = 3,
-	Volume = 4,
-	Area = 5,
-	Ambient = 6
-};
-
-struct Light
-{
-	XMFLOAT4 Color;
-	XMFLOAT4 Position;
-};
-
-struct VertexShaderInput
-{
-	nshade::Vertex Vertex;
-	Light Light;
-};
-
-struct RenderingQuality
-{
-	UINT Quality;
-	UINT SampleCount;
-	DXGI_FORMAT TextureFormat;
-	DXGI_FORMAT BufferFormat;
-	bool IsMultisamplingSettings;
-};
-
-enum MSAA : char
-{
-	SIMPLEST_POSSIBLE = 9,
-	MSAA_0X = 0,
-	MSAA_1X = 1,
-	MSAA_2X = 2,
-	MSAA_4X = 4,
-	MSAA_8X = 8,
-	BEST_POSSIBLE = 8
-};
-
-struct MsaaOptions
-{
-	MSAA Msaa;
-	RenderingQuality Quality;
-};
-
-struct ConstantBufferData
-{
-	XMFLOAT4X4 world;
-	XMFLOAT4X4 view;
-	XMFLOAT4X4 projection;
-	XMFLOAT4X4 refection;
-	XMFLOAT3   camera;
-	float	   time;
-};
 
 namespace ScreenRotation
 {
@@ -124,60 +58,3 @@ namespace ScreenRotation
 		);
 }
 
-namespace Debug
-{
-	static void WriteLine(LPCWSTR message)
-	{
-#ifdef _DEBUG
-		OutputDebugString(message);
-#endif
-	}
-
-	static void WriteLine(const char* m1, const char* m2)
-	{
-#ifdef _DEBUG
-		//auto mes = new wstring(message);
-		//auto cstr = mes->c_str();
-		//LPCWSTR str = cstr;
-		//OutputDebugString(mes->c_str());
-#endif
-	}
-
-	static void WriteLine(wstring message)
-	{
-#ifdef _DEBUG
-		LPCWSTR str = message.c_str();
-		OutputDebugString(str);
-#endif
-	}
-
-	static void WriteLine(float message)
-	{
-#ifdef _DEBUG
-		auto mes = to_wstring(message);
-		mes.append(L"\n");
-		LPCWSTR str = mes.c_str();
-		OutputDebugString(str);
-#endif
-	}
-
-	static void WriteLine(wstring m1, float m2)
-	{
-#ifdef _DEBUG
-		auto mes = to_wstring(m2);
-		m1.append(mes);
-		m1.append(L"\n");
-		LPCWSTR str = m1.c_str();
-		OutputDebugString(str);
-#endif
-	}
-	static void WriteCurrentDir()
-	{
-#ifdef _DEBUG
-		wchar_t wtext[MAX_PATH];
-		LPWSTR result = wtext;
-		GetCurrentDirectory(MAX_PATH, result);
-		OutputDebugString(result);
-#endif
-	}
-}

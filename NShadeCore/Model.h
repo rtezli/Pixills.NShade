@@ -1,7 +1,7 @@
 #pragma once
 #pragma warning( disable : 4996 )
 
-#include "includes.h"
+#include "common.h"
 #include "material.h"
 
 class Model
