@@ -45,20 +45,24 @@ void Scene::Render()
 	{
 		auto model = models->at(m);
 		auto material = model.GetMaterial();
-		auto vertexBuffer = model.GetVertexBuffer();
-		auto strides = model.GetVertexBufferStrides();
+
 		auto shaders = model.GetMaterial()->GetShaders();
+		auto vertexShader = shaders->VertexShader;
+		auto layout = shaders->VertexShader->GetInputLayout();
+
 		auto constBuffer = GetCamera()->GetConstBuffer();
+		auto vertexBuffer = vertexShader->GetVertexBuffer();
+		auto indexBuffer = vertexShader->GetIndexBuffer();
+		auto strides = vertexShader->GetInputSize();
+		UINT offset = 0;
 
-		// Get additional data and add it to the strides and buffer
-
-		m_pResources->DeviceContext->IASetInputLayout(shaders->VertexShader->GetInputLayout());
-		m_pResources->DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &strides, 0);
-		m_pResources->DeviceContext->IASetIndexBuffer(model.GetIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);
+		m_pResources->DeviceContext->IASetInputLayout(layout);
+		m_pResources->DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &strides, &offset);
+		m_pResources->DeviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 		m_pResources->DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		m_pResources->DeviceContext->VSSetConstantBuffers(0, 1, &constBuffer);
-		m_pResources->DeviceContext->VSSetShader(shaders->VertexShader->Shader(), nullptr, 0);
+		m_pResources->DeviceContext->VSSetShader(vertexShader->Shader(), nullptr, 0);
 
 		// Check if this is neccessary if the pixel shader does not use the registers
 		// m_pResources->DeviceContext->PSSetConstantBuffers(0, 1, &constBuffer);
@@ -123,7 +127,7 @@ Scene* Scene::CreateStandardScene(DeviceResources* pResources)
 	stdMaterial->Shaders->PixelShader = stdPixelShader;
 	stdMaterial->Shaders->VertexShader = stdVertexShader;
 
-	auto stdModel = new Model(pResources);
+	auto stdModel = new Model();
 	stdModel->LoadModelFromFBXFile("../Debug/teapot.fbx");
 	stdModel->AssignMaterial(stdMaterial);
 

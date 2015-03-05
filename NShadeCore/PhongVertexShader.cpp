@@ -8,7 +8,7 @@ PhongVertexShader::PhongVertexShader(char * file, DeviceResources* pResources) :
 {
 	Load(file);
 	ByteWidth = sizeof(PhongShader::InputLayout);
-	PResources->Device->CreateInputLayout(InputDescription, ARRAYSIZE(InputDescription), ByteCode->Bytes, ByteCode->Length, &PInputLayout);
+	PResources->Device->CreateInputLayout(InputDescription, ARRAYSIZE(InputDescription), PByteCode->Bytes, PByteCode->Length, &PInputLayout);
 }
 
 PhongVertexShader::~PhongVertexShader()

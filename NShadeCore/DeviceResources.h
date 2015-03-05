@@ -24,7 +24,7 @@ public:
 	IDXGISwapChain*				SwapChain;
 
 	/* buffers */
-	ID3D11InputLayout*			InputLayout;
+	//ID3D11InputLayout*			InputLayout;
 
 	//ConstantBufferData*			LightConstBufferData;
 	//ConstantBufferData*			MirrorConstBufferData;
@@ -53,9 +53,6 @@ public:
 
 	int							SwapChainFlags;
 	int							BufferCount;
-	int							IndexCount;
-	int							VertexCount;
- 
 	float						Dpi;
 	float						NearZ;
 	float						FarZ;
