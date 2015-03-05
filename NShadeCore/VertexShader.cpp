@@ -26,41 +26,37 @@ void VertexShader::SetBuffers(vector<nshade::Vertex>* vertices, vector<unsigned 
 {
 	// TODO : Merge the vertices with the InputLayout !
 
-	nshade::Vertex* vertexArr;
-	vertexArr = (nshade::Vertex*)malloc(vertices->size() * sizeof(nshade::Vertex));
-	copy(vertices->begin(), vertices->end(), vertexArr);
-
-	D3D11_BUFFER_DESC  vertexBufferDesc = { 0 };
-	vertexBufferDesc.ByteWidth = ByteWidth * vertices->size();
+	D3D11_BUFFER_DESC  vertexBufferDesc;
+	vertexBufferDesc.ByteWidth = sizeof(nshade::Vertex) * vertices->size();
+	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.CPUAccessFlags = 0;
+	vertexBufferDesc.MiscFlags = 0;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDesc.StructureByteStride = 0;
 
-	D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
-	vertexBufferData.pSysMem = vertexArr;
+	D3D11_SUBRESOURCE_DATA vertexBufferData;
+	vertexBufferData.pSysMem = &vertices[0];
 	vertexBufferData.SysMemPitch = 0;
 	vertexBufferData.SysMemSlicePitch = 0;
 
 	ID3D11Buffer* vertexBuffer;
 	auto result = PResources->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &vertexBuffer);
 	PVertexBuffer = shared_ptr<ID3D11Buffer>(vertexBuffer);
-	delete vertexArr;
 
-	/* Index Buffer */
-
-	unsigned int* indexArr;
-	indexArr = (unsigned int*)malloc(indices->size() * sizeof(unsigned int));
-	copy(indices->begin(), indices->end(), indexArr);
-
-	D3D11_BUFFER_DESC indexBufferDesc = { 0 };
+	D3D11_BUFFER_DESC indexBufferDesc;
 	indexBufferDesc.ByteWidth = sizeof(unsigned int) * indices->size();
+	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	indexBufferDesc.CPUAccessFlags = 0;
+	indexBufferDesc.MiscFlags = 0;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
-	D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
-	indexBufferData.pSysMem = indexArr;
+	D3D11_SUBRESOURCE_DATA indexBufferData;
+	indexBufferData.pSysMem = &indices[0];
 	indexBufferData.SysMemPitch = 0;
 	indexBufferData.SysMemSlicePitch = 0;
+	indexBufferDesc.StructureByteStride = 0;
 
 	ID3D11Buffer* indexBuffer;
 	result = PResources->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &indexBuffer);
 	PIndexBuffer = shared_ptr<ID3D11Buffer>(indexBuffer);
-	delete indexArr;
 }

@@ -58,6 +58,7 @@ void Scene::Render()
 
 		m_pResources->DeviceContext->IASetInputLayout(layout);
 		m_pResources->DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &strides, &offset);
+
 		m_pResources->DeviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 		m_pResources->DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -65,7 +66,7 @@ void Scene::Render()
 		m_pResources->DeviceContext->VSSetShader(vertexShader->Shader(), nullptr, 0);
 
 		// Check if this is neccessary if the pixel shader does not use the registers
-		// m_pResources->DeviceContext->PSSetConstantBuffers(0, 1, &constBuffer);
+		m_pResources->DeviceContext->PSSetConstantBuffers(0, 1, &constBuffer);
 		m_pResources->DeviceContext->PSSetShader(shaders->PixelShader->Shader(), nullptr, 0);
 
 		m_pResources->DeviceContext->DrawIndexed(model.GetIndices()->size(), 0, 0);
@@ -124,13 +125,16 @@ Scene* Scene::CreateStandardScene(DeviceResources* pResources)
 	auto stdVertexShader = new PhongShader::PhongVertexShader("../Debug/PhongVertexShader.cso", pResources);
 	
 	auto stdMaterial = new Material();
-	stdMaterial->Shaders->PixelShader = stdPixelShader;
-	stdMaterial->Shaders->VertexShader = stdVertexShader;
+
+	auto shaderSet = new ShaderSet();
+	shaderSet->PixelShader = stdPixelShader;
+	shaderSet->VertexShader = stdVertexShader;
+	stdMaterial->Shaders = shared_ptr<ShaderSet>(shaderSet);
 
 	auto stdModel = new Model();
 	stdModel->LoadModelFromFBXFile("../Debug/teapot.fbx");
 	stdModel->AssignMaterial(stdMaterial);
-
+	stdModel->CreateBuffers();
 	scene->AddModel(stdModel);
 
 	return scene;

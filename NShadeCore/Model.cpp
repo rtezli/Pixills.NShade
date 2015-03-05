@@ -20,8 +20,6 @@ void Model::LoadModelFromFBXFile(char* fileName)
 
 	m_pVertices = shared_ptr<vector<nshade::Vertex>>(vertices);
 	m_pIndices = shared_ptr<vector<unsigned int>>(indices);
-	
-	CreateBuffers();
 }
 
 void Model::LoadModelFromOBJFile(char* fileName, bool isRightHand)
@@ -30,7 +28,7 @@ void Model::LoadModelFromOBJFile(char* fileName, bool isRightHand)
 	auto indices = new vector<unsigned int>();
 
 	auto result = ObjParser::Parse(GetVertices(), GetIndices(), fileName);
-	
+
 	m_pVertices = shared_ptr<vector<nshade::Vertex>>(vertices);
 	m_pIndices = shared_ptr<vector<unsigned int>>(indices);
 
@@ -38,7 +36,7 @@ void Model::LoadModelFromOBJFile(char* fileName, bool isRightHand)
 }
 
 void Model::AssignMaterial(Material* pMaterial)
-{	
+{
 	m_pMaterial = shared_ptr<Material>(pMaterial);
 }
 
@@ -48,5 +46,10 @@ void Model::CreateBuffers()
 	// Check if Shaders			== null
 	// Check if VertexShader	== null
 	// If null, assign standard shader
-	GetMaterial()->Shaders->VertexShader->SetBuffers(GetVertices(), GetIndices());
+	auto vertexBuffer = GetVertices();
+	auto indexBuffer = GetIndices();
+	auto matrial = GetMaterial();
+	auto shaders = matrial->Shaders;
+	auto vertexShader = shaders->VertexShader;
+	vertexShader->SetBuffers(vertexBuffer, indexBuffer);
 }

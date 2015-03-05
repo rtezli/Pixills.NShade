@@ -22,12 +22,13 @@ public:
 		XMFLOAT4X4 World;
 		XMFLOAT4X4 View;
 		XMFLOAT4X4 Projection;
+		XMFLOAT4   CameraPosition;
 	};
 
 public:
 
-	ID3D11Buffer*		const GetConstBuffer(){ return m_pCameraConstBuffer.get(); };
-	ConstantBufferData*	const GetConstBufferData(){return m_pCameraConstBufferData.get(); };
+	ID3D11Buffer*		const GetConstBuffer(){ return m_pConstBuffer.get(); };
+	ConstantBufferData*	const GetConstBufferData(){ return m_pConstBufferData.get(); };
 
 	void				Initialize();
 	void				Move(POINT* p);
@@ -36,12 +37,12 @@ public:
 	float				GetAspectRatio(){ return m_pDeviceResources->ViewPort->Width / m_pDeviceResources->ViewPort->Height; };
 	float				GetFieldOfView(){ return 70.0f * XM_PI / 180.0f; };
 private:
-	XMFLOAT3*			m_eyePosition;
-	XMFLOAT3*			m_focusPosition;
-	XMFLOAT3*			m_upDirection;
+	XMFLOAT3*						m_eyePosition;
+	XMFLOAT3*						m_focusPosition;
+	XMFLOAT3*						m_upDirection;
 	
-	shared_ptr<ID3D11Buffer>		m_pCameraConstBuffer;
-	shared_ptr<ConstantBufferData>	m_pCameraConstBufferData;
+	shared_ptr<ID3D11Buffer>		m_pConstBuffer;
+	shared_ptr<ConstantBufferData>	m_pConstBufferData;
 
 	DeviceResources*				m_pDeviceResources;
 

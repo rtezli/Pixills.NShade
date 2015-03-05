@@ -4,10 +4,6 @@
 Camera::Camera(DeviceResources* resources)
 {
 	m_pDeviceResources = resources;
-	m_pCameraConstBuffer = shared_ptr<ID3D11Buffer>();
-
-	auto constBuffer = new ConstantBufferData();
-	m_pCameraConstBufferData = shared_ptr<ConstantBufferData>(constBuffer);
 	Initialize();
 }
 
@@ -59,9 +55,10 @@ void Camera::Initialize()
 	XMFLOAT4X4 projection;
 	XMStoreFloat4x4(&projection, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
 
-	auto constBufferData = new ConstantBufferData{ world, view, projection };
+	auto eye = XMFLOAT4(m_eyePosition->x, m_eyePosition->y, m_eyePosition->z, 0.0f);
+	auto constBufferData = new ConstantBufferData{ world, view, projection, eye };
 
-	m_pCameraConstBufferData = shared_ptr<ConstantBufferData>(constBufferData);
+	m_pConstBufferData = shared_ptr<ConstantBufferData>(constBufferData);
 
 	InitializeConstantBuffer();
 }
@@ -86,17 +83,20 @@ void Camera::Rotate(POINT* p)
 
 void Camera::InitializeConstantBuffer()
 {
-	D3D11_BUFFER_DESC constantBufferDesc = { 0 };
+	D3D11_BUFFER_DESC constantBufferDesc;
 	constantBufferDesc.ByteWidth = sizeof(ConstantBufferData);
+	constantBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	constantBufferDesc.CPUAccessFlags = 0;
+	constantBufferDesc.MiscFlags = 0;
 	constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 
 
-	D3D11_SUBRESOURCE_DATA constantBufferData = { 0 };
+	D3D11_SUBRESOURCE_DATA constantBufferData;
 	constantBufferData.pSysMem = GetConstBufferData();
 	constantBufferData.SysMemPitch = 0;
 	constantBufferData.SysMemSlicePitch = 0;
 
 	ID3D11Buffer* constBuffer;
 	auto result = m_pDeviceResources->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &constBuffer);
-	m_pCameraConstBuffer = shared_ptr<ID3D11Buffer>(constBuffer);
+	m_pConstBuffer = shared_ptr<ID3D11Buffer>(constBuffer);
 }
