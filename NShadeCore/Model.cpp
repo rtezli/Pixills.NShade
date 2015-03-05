@@ -48,5 +48,5 @@ void Model::CreateBuffers()
 	// Check if Shaders			== null
 	// Check if VertexShader	== null
 	// If null, assign standard shader
-	GetMaterial()->Shaders->VertexShader->SetBuffers(m_pVertices, m_pIndices);
+	GetMaterial()->Shaders->VertexShader->SetBuffers(GetVertices(), GetIndices());
 }
