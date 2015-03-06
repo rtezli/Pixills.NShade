@@ -11,12 +11,10 @@ public:
 public:
 	struct ConstantBufferData
 	{
-		XMFLOAT4X4 world;
-		XMFLOAT4X4 view;
-		XMFLOAT4X4 projection;
-		XMFLOAT4X4 refection;
-		XMFLOAT3   camera;
-		FLOAT	   time;
+		XMFLOAT4X4 World;
+		XMFLOAT4X4 View;
+		XMFLOAT4X4 Projection;
+		XMFLOAT4   LightPosition;
 	};
 private:
 	shared_ptr<XMFLOAT3>	m_pColor;

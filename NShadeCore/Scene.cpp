@@ -118,8 +118,11 @@ Scene* Scene::CreateStandardScene(DeviceResources* pResources)
 	auto pointLightPosition = new XMFLOAT3(1.0f, 1.0f, 1.0f);
 	auto pointLightColor = new XMFLOAT3(1.0f, 1.0f, 1.0f);
 	auto pointLightIntensity = 1.0f;
-	auto stdPointLight = new PointLight(pointLightPosition, pointLightColor, &pointLightIntensity);
+	auto stdPointLight = new PointLight(pResources, pointLightPosition, pointLightColor, &pointLightIntensity);
 	scene->AddLight(stdPointLight);
+
+	//auto stdPixelShader = ResourceManager::Current->MainResourceMap->GetSubtree("Files")->GetValue("Assets/PhongPixelShader.cso");
+	//auto stdVertexShader = ResourceManager::Current->MainResourceMap->GetSubtree("Files")->GetValue("Assets/PhongVertexShader.cso");
 
 	auto stdPixelShader = new PhongShader::PhongPixelShader("../Debug/PhongPixelShader.cso", pResources);
 	auto stdVertexShader = new PhongShader::PhongVertexShader("../Debug/PhongVertexShader.cso", pResources);
@@ -131,6 +134,8 @@ Scene* Scene::CreateStandardScene(DeviceResources* pResources)
 	shaderSet->VertexShader = stdVertexShader;
 	stdMaterial->Shaders = shared_ptr<ShaderSet>(shaderSet);
 
+	//auto stdModelFile = ResourceManager::Current->MainResourceMap->GetSubtree("Files")->GetValue("Assets/teapot.fbx");
+ 
 	auto stdModel = new Model();
 	stdModel->LoadModelFromFBXFile("../Debug/teapot.fbx");
 	stdModel->AssignMaterial(stdMaterial);

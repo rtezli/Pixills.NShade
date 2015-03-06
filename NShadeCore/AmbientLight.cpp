@@ -12,3 +12,4 @@ AmbientLight::AmbientLight(XMFLOAT3* color, FLOAT* intensity)
 AmbientLight::~AmbientLight()
 {
 }
+

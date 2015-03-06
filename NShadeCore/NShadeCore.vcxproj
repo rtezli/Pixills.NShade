@@ -351,6 +351,8 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Debug\PhongPixelShader.cso" />
+    <None Include="..\Debug\PhongVertexShader.cso" />
     <None Include="..\Models\teapot.fbx" />
     <None Include="packages.config" />
     <None Include="scene.json" />

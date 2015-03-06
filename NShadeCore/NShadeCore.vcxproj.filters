@@ -335,5 +335,11 @@
     <None Include="..\Models\teapot.fbx">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="..\Debug\PhongPixelShader.cso">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Debug\PhongVertexShader.cso">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

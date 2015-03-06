@@ -26,7 +26,6 @@ public:
 	};
 
 public:
-
 	ID3D11Buffer*		const GetConstBuffer(){ return m_pConstBuffer.get(); };
 	ConstantBufferData*	const GetConstBufferData(){ return m_pConstBufferData.get(); };
 
