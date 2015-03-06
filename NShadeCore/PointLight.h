@@ -6,7 +6,7 @@
 class PointLight : public Light
 {
 public:
-	PointLight();
+	PointLight(XMFLOAT3* position, XMFLOAT3* color, FLOAT* intensity);
 	~PointLight();
 public:
 	struct ConstantBufferData
@@ -16,7 +16,11 @@ public:
 		XMFLOAT4X4 projection;
 		XMFLOAT4X4 refection;
 		XMFLOAT3   camera;
-		float	   time;
+		FLOAT	   time;
 	};
+private:
+	shared_ptr<XMFLOAT3>	m_pPosition;
+	shared_ptr<XMFLOAT3>	m_pColor;
+	shared_ptr<FLOAT>		m_pIntensity;
 };
 

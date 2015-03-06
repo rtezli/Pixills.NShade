@@ -6,7 +6,7 @@
 class AmbientLight : public Light
 {
 public:
-	AmbientLight();
+	AmbientLight(XMFLOAT3* color, FLOAT* intensity);
 	~AmbientLight();
 public:
 	struct ConstantBufferData
@@ -16,7 +16,10 @@ public:
 		XMFLOAT4X4 projection;
 		XMFLOAT4X4 refection;
 		XMFLOAT3   camera;
-		float	   time;
+		FLOAT	   time;
 	};
+private:
+	shared_ptr<XMFLOAT3>	m_pColor;
+	shared_ptr<FLOAT>		m_pIntensity;
 };
 

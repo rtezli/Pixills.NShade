@@ -105,20 +105,20 @@ Scene* Scene::CreateStandardScene(DeviceResources* pResources)
 	auto scene = new Scene(pResources);
 
 	auto stdCamera = new Camera(pResources);
-	//stdCamera->Position = new XMFLOAT3(1.0f, 1.0f, 1.0f);
-	//stdCamera->LookAt = new XMFLOAT3(1.0f, 1.0f, 1.0f);
+	stdCamera->SetPosition(new XMFLOAT3(0.0f, 0.0f, 5.0f));
+	stdCamera->SetFocusPoint(new XMFLOAT3(0.0f, 0.0f, 0.0f));
 	scene->AddCamera(stdCamera);
 
-	auto stdAmbientLight = new AmbientLight();
-	//stdAmbientLight->Color = new XMFLOAT3(1.0f, 1.0f, 1.0f, 1.0f);
-	//stdAmbientLight->Intensity = 1.0f;
+
+	auto ambientLightColor = new XMFLOAT3(1.0f, 1.0f, 1.0f);
+	auto ambientLightIntensity = 1.0f;
+	auto stdAmbientLight = new AmbientLight(ambientLightColor, &ambientLightIntensity);
 	scene->AddLight(stdAmbientLight);
 
-
-	auto stdPointLight = new PointLight();
-	//stdPointLight->Position = new XMFLOAT3(1.0f, 1.0f, 1.0f);
-	//stdPointLight->Color = new XMFLOAT3(1.0f, 1.0f, 1.0f);
-	//stdPointLight->Intensity = 1.0f;
+	auto pointLightPosition = new XMFLOAT3(1.0f, 1.0f, 1.0f);
+	auto pointLightColor = new XMFLOAT3(1.0f, 1.0f, 1.0f);
+	auto pointLightIntensity = 1.0f;
+	auto stdPointLight = new PointLight(pointLightPosition, pointLightColor, &pointLightIntensity);
 	scene->AddLight(stdPointLight);
 
 	auto stdPixelShader = new PhongShader::PhongPixelShader("../Debug/PhongPixelShader.cso", pResources);
@@ -139,42 +139,3 @@ Scene* Scene::CreateStandardScene(DeviceResources* pResources)
 
 	return scene;
 }
-
-//HRESULT Renderer::Render()
-//{
-//	// Clear
-//	ClearScene();
-//
-//	if (!m_isInitialized)
-//	{
-//		return 0;
-//	}
-//
-//	UINT stride = sizeof(nshade::VertexShaderInput);
-//	UINT offset = 0;
-//
-//	// Set model data
-//	GetDeviceContext()->IASetInputLayout(Resources()->InputLayout);
-//
-//	// Set multiple buffers here ? i.e. each for one model since some shaders are not applied to all models
-//	GetDeviceContext()->IASetVertexBuffers(0, 1, &Resources()->VertexBuffer, &stride, &offset);
-//	GetDeviceContext()->IASetIndexBuffer(Resources()->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-//	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-//
-//	// Set shader data
-//
-//
-//	// Set multiple shaders here ?
-//	auto vs = Resources()->Shaders->VertexShader;
-//	auto ps = Resources()->Shaders->PixelShader;
-//
-//	GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
-//	GetDeviceContext()->VSSetShader(vs, nullptr, 0);
-//
-//	GetDeviceContext()->PSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
-//	GetDeviceContext()->PSSetShader(ps, nullptr, 0);
-//	GetDeviceContext()->DrawIndexed(Resources()->IndexCount, 0, 0);
-//
-//	// Present
-//	return Resources()->SwapChain->Present(1, 0);
-//}

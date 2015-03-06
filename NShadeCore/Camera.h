@@ -31,23 +31,29 @@ public:
 	ConstantBufferData*	const GetConstBufferData(){ return m_pConstBufferData.get(); };
 
 	void				Initialize();
+	void				InitializeConstantBuffer();
+
 	void				Move(POINT* p);
 	void				Rotate(POINT* p);
-	void				InitializeConstantBuffer();
-	float				GetAspectRatio(){ return m_pDeviceResources->ViewPort->Width / m_pDeviceResources->ViewPort->Height; };
-	float				GetFieldOfView(){ return 70.0f * XM_PI / 180.0f; };
+	void				SetPosition(XMFLOAT3* p);
+	void				SetFocusPoint(XMFLOAT3* p);
+
+	FLOAT				const GetVerticalAngle(){ return m_vAngle; };
+	FLOAT				const GetHorizontalAngle(){ return m_hAngle; };
+	FLOAT				const GetAspectRatio(){ return m_pDeviceResources->ViewPort->Width / m_pDeviceResources->ViewPort->Height; };
+	FLOAT				const GetFieldOfView(){ return 70.0f * XM_PI / 180.0f; };
 private:
-	XMFLOAT3*						m_eyePosition;
-	XMFLOAT3*						m_focusPosition;
-	XMFLOAT3*						m_upDirection;
+	shared_ptr<XMFLOAT3>			m_eyePosition;
+	shared_ptr<XMFLOAT3>			m_focusPosition;
+	shared_ptr<XMFLOAT3>			m_upDirection;
 	
 	shared_ptr<ID3D11Buffer>		m_pConstBuffer;
 	shared_ptr<ConstantBufferData>	m_pConstBufferData;
 
 	DeviceResources*				m_pDeviceResources;
 
-	float							m_hAngle;
-	float							m_vAngle;
-	float							m_radius;
+	FLOAT							m_hAngle;
+	FLOAT							m_vAngle;
+	FLOAT							m_radius;
 };
 

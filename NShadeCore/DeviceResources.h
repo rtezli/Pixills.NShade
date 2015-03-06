@@ -51,13 +51,13 @@ public:
 	D3D11_VIEWPORT*				ViewPort;
 	//RenderingQuality*			RenderQuality;
 
-	int							SwapChainFlags;
-	int							BufferCount;
-	float						Dpi;
-	float						NearZ;
-	float						FarZ;
+	INT							SwapChainFlags;
+	INT							BufferCount;
+	FLOAT						Dpi;
+	FLOAT						NearZ;
+	FLOAT						FarZ;
 
-	bool						FullScreen;
-	bool						VSync;
+	BOOL						FullScreen;
+	BOOL						VSync;
 };
 

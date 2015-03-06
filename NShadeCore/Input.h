@@ -25,11 +25,11 @@ public:
 	HRESULT CreateKinect();
 	void(*OnInput)(MOVE_ROTATE_INPUT* move);
 private:
-	bool	Frame();
-	bool	ReadKeyboard();
-	bool	ReadMouse();
-	void	ProcessInput();
-	void	PublishInput(MOVE_ROTATE_INPUT* move){ (*OnInput)(move); }
+	BOOL	Frame();
+	BOOL	ReadKeyboard();
+	BOOL	ReadMouse();
+	VOID	ProcessInput();
+	VOID	PublishInput(MOVE_ROTATE_INPUT* move){ (*OnInput)(move); }
 private:
 	DeviceResources*		m_pDeviceResources;
 	IDirectInput8*			m_pDirectInput;
@@ -37,11 +37,11 @@ private:
 	IDirectInputDevice8*	m_pMouse;
 	IDirectInputDevice8*	m_pKinectMaybe;
 
-	unsigned char			m_keyboardState[256];
+	UINT					m_keyboardState[256];
 	DIMOUSESTATE			m_mouseState;
-	int						m_ScreenWidth, m_ScreenHeight;
-	int						m_MouseX, m_MouseY;
-	float					m_moveGain;
-	float					m_rotateGain;
+	INT						m_ScreenWidth, m_ScreenHeight;
+	INT						m_MouseX, m_MouseY;
+	FLOAT					m_moveGain;
+	FLOAT					m_rotateGain;
 };
 

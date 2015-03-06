@@ -108,9 +108,9 @@ HRESULT Input::CreateKinect()
 }
 
 
-bool Input::Frame()
+BOOL Input::Frame()
 {
-	bool result;
+	BOOL result;
 
 
 	// Read the current state of the keyboard.
@@ -133,7 +133,7 @@ bool Input::Frame()
 	return true;
 }
 
-bool Input::ReadKeyboard()
+BOOL Input::ReadKeyboard()
 {
 	// Read the keyboard device.
 	auto result = m_pKeyboard->GetDeviceState(sizeof(m_keyboardState), (LPVOID)&m_keyboardState);
@@ -152,7 +152,7 @@ bool Input::ReadKeyboard()
 	return true;
 }
 
-bool Input::ReadMouse()
+BOOL Input::ReadMouse()
 {
 	HRESULT result;
 
@@ -175,7 +175,7 @@ bool Input::ReadMouse()
 	return true;
 }
 
-void Input::ProcessInput()
+VOID Input::ProcessInput()
 {
 	// Update the location of the mouse cursor based on the change of the mouse location during the frame.
 	m_MouseX += m_mouseState.lX;

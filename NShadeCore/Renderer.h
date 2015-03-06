@@ -2,37 +2,10 @@
 #pragma comment(lib, "D3DCompiler.lib")
 
 #include "common.h"
+#include "export.h"
 #include "d3dcompiler.h"
 #include "phongvertexshader.h"
 #include "scene.h"
-
-//#ifndef PS_PROFILE
-//#define PS_PROFILE {"ps_5_0" }
-//#endif
-//
-//#ifndef VS_PROFILE
-//#define VS_PROFILE {"vs_5_0" }
-//#endif
-//
-//#ifndef GS_PROFILE
-//#define GS_PROFILE { "ps_5_0" }
-//#endif
-//
-//#ifndef HS_PROFILE
-//#define HS_PROFILE { "hs_5_0" }
-//#endif
-//
-//#ifndef DS_PROFILE
-//#define DS_PROFILE { "ds_5_0" }
-//#endif
-
-//DXGI_FORMAT swapChainBufferFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
-//DXGI_FORMAT depthBufferFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-//DXGI_FORMAT depthSencilViewFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-//DXGI_FORMAT depthSencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-//
-//DXGI_FORMAT vertexPositionFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
-//DXGI_FORMAT vertexColorFormat = DXGI_FORMAT_R32G32B32_FLOAT;
 
 enum MSAA : char
 {
@@ -71,7 +44,7 @@ struct RENDERER_SETTINGS
 };
 
 
-class Renderer
+EXTERN class API Renderer
 {
 public:
 	Renderer(DeviceResources* pResources, bool useSwapChain);

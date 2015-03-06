@@ -1,19 +1,10 @@
 #pragma once
 
 #include "common.h"
+#include "export.h"
 #include "pixelshader.h"
 #include "vertexshader.h"
-
-//struct ShaderSet
-//{
-//	ID3D11PixelShader*		PixelShader;
-//	ID3D11VertexShader*		VertexShader;
-//	ID3D11HullShader*		HullShader;
-//	ID3D11DomainShader*		DomainShader;
-//	ID3D11GeometryShader*	GeometryShader;
-//	ID3D11ComputeShader*	ComputeShader;
-//};
-
+ 
 struct ShaderSet
 {
 	PixelShader*			PixelShader;
@@ -25,7 +16,7 @@ struct ShaderSet
 	ID3D11ComputeShader*	ComputeShader;
 };
 
-class Material
+EXTERN class API Material
 {
 public:
 	Material();
@@ -41,6 +32,6 @@ public:
 	shared_ptr<ID3D11Texture2D>	BumpMap;
 	shared_ptr<ID3D11Texture2D>	DisplacementMap;
 	shared_ptr<ShaderSet>		Shaders;
-	float						SpecularPower;
+	FLOAT						SpecularPower;
 };
 

@@ -1,9 +1,10 @@
 #pragma once
 
 #include "common.h"
+#include "export.h"
 #include "material.h"
 
-class Model
+EXTERN class API Model
 {
 public:
 	Model();

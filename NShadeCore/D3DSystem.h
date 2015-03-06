@@ -4,9 +4,6 @@
 #include "export.h"
 
 #include "renderer.h"
-#include "camera.h"
-#include "model.h"
-#include "input.h"
 
 using namespace std::chrono;
 
@@ -19,18 +16,17 @@ public:
 	HRESULT InitializeForWindow(bool vsync, HINSTANCE*, HWND* window, bool fullscreen);
 	HRESULT InitializeWithWindow(int screenWidth, int screenHeight, bool vsync, bool fullscreen);
 	LRESULT MessageHandler(HWND* hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
-	HRESULT CreatScene();
+
 	HRESULT Initialize();
 	void	Render();
 private:
 	HRESULT					InitializeWindow(int screenWidth, int screenHeight);
 	HRESULT					CreateDevice();
-	HRESULT					CreateInput();
 	HRESULT					GetRenderQualitySettings(ID3D11Device* device);
 	vector<MSAA>* 			ProduceMsaaCapability(vector<MSAA>* msaaOptions, int i);
-	HRESULT					CreateCamera();
+
 	D3D11_VIEWPORT*			CreateViewPort(HWND* hwnd);
-	HRESULT					LoadModels();
+
 	HRESULT					CreateRenderer();
 	HRESULT					AttachOnRotate();
 	HRESULT					DetachOnRotate();
@@ -40,21 +36,15 @@ private:
 	HWND*									m_pWindowHandle;
 	POINT*									m_lastPointerPosition;
 	shared_ptr<Renderer>					m_pRenderer;
-	shared_ptr<Camera>						m_pCamera;
-	shared_ptr<Input>						m_pInputDevices;
-	shared_ptr<Model>						m_pModel;
 
 	D3D_FEATURE_LEVEL						m_D3dFeatureLevel;
 
-	XMVECTOR								m_Position;
-	XMVECTOR								m_Rotation;
+	FLOAT									m_viewportWidth;
+	FLOAT									m_viewportHeight;
+	FLOAT									m_nearZ;
+	FLOAT									m_farZ;
 
-	float									m_viewportWidth;
-	float									m_viewportHeight;
-	float									m_nearZ;
-	float									m_farZ;
-
-	bool									m_fullScreen;
-	bool									m_vSync;
-	bool									m_trackInput;
+	BOOL									m_fullScreen;
+	BOOL									m_vSync;
+	BOOL									m_trackInput;
 };

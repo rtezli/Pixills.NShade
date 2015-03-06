@@ -187,6 +187,8 @@
     <ClInclude Include="Export.h" />
     <ClInclude Include="FbxReader.h" />
     <ClInclude Include="File.h" />
+    <ClInclude Include="FirstPersonCamera.h" />
+    <ClInclude Include="IsometricCamera.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="OverlayRenderer.h" />
     <ClInclude Include="Common.h" />
@@ -211,6 +213,7 @@
     <ClInclude Include="TesselationVertexShader.h" />
     <ClInclude Include="TesselationHullShader.h" />
     <ClInclude Include="TextureTarget.h" />
+    <ClInclude Include="ThirdPersonCamera.h" />
     <ClInclude Include="TilePool.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="stdafx.h" />
@@ -242,6 +245,8 @@
     </ClCompile>
     <ClCompile Include="FbxReader.cpp" />
     <ClCompile Include="File.cpp" />
+    <ClCompile Include="FirstPersonCamera.cpp" />
+    <ClCompile Include="IsometricCamera.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="OverlayRenderer.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -271,6 +276,7 @@
     <ClCompile Include="TesselationHullShader.cpp" />
     <ClCompile Include="TesselationVertexShader.cpp" />
     <ClCompile Include="TextureTarget.cpp" />
+    <ClCompile Include="ThirdPersonCamera.cpp" />
     <ClCompile Include="TilePool.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="WireframePixelShader.cpp" />

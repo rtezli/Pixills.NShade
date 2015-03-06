@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.h"
+#include "export.h"
 #include "model.h"
 #include "material.h"
 #include "phongvertexshader.h"
@@ -14,7 +15,7 @@ struct SceneFile
 
 };
 
-class Scene
+EXTERN class API Scene
 {
 public:
 	Scene(DeviceResources* pResources);

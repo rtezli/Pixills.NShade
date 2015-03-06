@@ -137,9 +137,9 @@ HRESULT nshade::FbxReader::TraverseAndStoreFbxNode(vector<FbxNode*>* nodes, FbxA
 				mesh->GetPolygonVertexNormal(p, v, normal);
 				newVertex->Normal = XMFLOAT3
 				{
-					static_cast<float>(normal.mData[0]),
-					static_cast<float>(normal.mData[1]),
-					static_cast<float>(normal.mData[2])
+					static_cast<FLOAT>(normal.mData[0]),
+					static_cast<FLOAT>(normal.mData[1]),
+					static_cast<FLOAT>(normal.mData[2])
 				};
 
 				switch (v)
@@ -181,7 +181,7 @@ HRESULT nshade::FbxReader::TraverseAndStoreFbxNode(vector<FbxNode*>* nodes, FbxA
 	return 0;
 }
 
-XMFLOAT3 nshade::FbxReader::ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisSystem* axisSystem, float scale)
+XMFLOAT3 nshade::FbxReader::ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisSystem* axisSystem, FLOAT scale)
 {
 	bool rightHanded = true;
 	auto coordSystem = axisSystem->GetCoorSystem();
@@ -234,9 +234,9 @@ XMFLOAT3 nshade::FbxReader::ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, 
 
 	dxVector = XMFLOAT3
 	{
-		static_cast<float>(x),
-		static_cast<float>(y),
-		static_cast<float>(z)
+		static_cast<FLOAT>(x),
+		static_cast<FLOAT>(y),
+		static_cast<FLOAT>(z)
 	};
 	return dxVector;
 }

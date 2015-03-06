@@ -4,6 +4,14 @@
 Camera::Camera(DeviceResources* resources)
 {
 	m_pDeviceResources = resources;
+
+	m_hAngle = 0.0f;
+	m_vAngle = 0.0f;
+
+	m_radius = 6.0f;
+	m_hAngle = 0.0f;
+	m_vAngle = 0.0f;
+
 	Initialize();
 }
 
@@ -13,16 +21,17 @@ Camera::~Camera()
 
 void Camera::Initialize()
 {
-	m_radius = 6.0f;
-	m_hAngle = 0.0f;
-	m_vAngle = 0.0f;
-
 	auto z = m_radius * sin(m_hAngle * -1);
 	auto x = sqrt(pow(m_radius, 2) - pow(z, 2));
 
-	m_eyePosition = new XMFLOAT3{ 0.0f, 4.0f, m_radius };
-	m_focusPosition = new XMFLOAT3{ 0.0f, 0.0f, 0.0f };
-	m_upDirection = new XMFLOAT3{ 0.0f, 1.0f, 0.0f };
+	auto eyePos = new XMFLOAT3{ 0.0f, 4.0f, m_radius };
+	m_eyePosition = shared_ptr<XMFLOAT3>(eyePos);
+
+	auto focusPos = new XMFLOAT3{ 0.0f, 0.0f, 0.0f };
+	m_focusPosition = shared_ptr<XMFLOAT3>(focusPos);
+
+	auto upDir = new XMFLOAT3{ 0.0f, 1.0f, 0.0f };
+	m_upDirection = shared_ptr<XMFLOAT3>(upDir);
 
 	auto wMatrix = XMMatrixTranspose(XMMatrixIdentity());
 
@@ -31,17 +40,17 @@ void Camera::Initialize()
 
 	auto vMatrix = XMMatrixTranspose(
 		XMMatrixLookAtRH(
-		XMLoadFloat3(m_eyePosition),
-		XMLoadFloat3(m_focusPosition),
-		XMLoadFloat3(m_upDirection)
+		XMLoadFloat3(m_eyePosition.get()),
+		XMLoadFloat3(m_focusPosition.get()),
+		XMLoadFloat3(m_upDirection.get())
 		)
 		);
 
 	XMFLOAT4X4 view;
 	XMStoreFloat4x4(&view, vMatrix);
 
-	float fovAngleY = GetFieldOfView();
-	float aspectRatio = GetAspectRatio();
+	FLOAT fovAngleY = GetFieldOfView();
+	FLOAT aspectRatio = GetAspectRatio();
 
 	if (aspectRatio < 1.0f)
 	{
@@ -61,6 +70,16 @@ void Camera::Initialize()
 	m_pConstBufferData = shared_ptr<ConstantBufferData>(constBufferData);
 
 	InitializeConstantBuffer();
+}
+
+void Camera::SetPosition(XMFLOAT3* p)
+{
+	m_focusPosition = shared_ptr<XMFLOAT3>(p);
+}
+
+void Camera::SetFocusPoint(XMFLOAT3* p)
+{
+	m_eyePosition = shared_ptr<XMFLOAT3>(p);
 }
 
 void Camera::Move(POINT* p)

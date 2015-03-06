@@ -8,9 +8,8 @@ D3DSystem::D3DSystem()
 D3DSystem::~D3DSystem()
 {
 	m_pRenderer.reset();
-	m_pCamera.reset();
-	m_pInputDevices.reset();
-	m_pModel.reset();
+	//m_pInputDevices.reset();
+	//m_pModel.reset();
 
 	delete m_pDeviceResources;
 }
@@ -173,17 +172,6 @@ HRESULT D3DSystem::CreateDevice()
 	m_pDeviceResources = resources;
 
 	return createResult;
-}
-
-HRESULT D3DSystem::CreateInput()
-{
-	auto device = shared_ptr<Input>(new Input(m_pDeviceResources));
-	return device->Initialize();
-}
-
-HRESULT D3DSystem::CreatScene()
-{
-	return 0;
 }
 
 D3D11_VIEWPORT* D3DSystem::CreateViewPort(HWND* hwnd)
@@ -376,7 +364,7 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 			auto offsetH = p.x - m_lastPointerPosition->x;
 			auto offsetV = p.y - m_lastPointerPosition->y;
 			auto offset = new POINT{ offsetH, offsetV };
-			m_pCamera->Rotate(offset);
+			m_pRenderer->GetScene()->GetCamera()->Rotate(offset);
 			m_lastPointerPosition = new POINT(p);
 		}
 		return 0;

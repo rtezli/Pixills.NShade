@@ -29,7 +29,7 @@ namespace Debug
 #endif
 	}
 
-	static void WriteLine(float message)
+	static void WriteLine(FLOAT message)
 	{
 #ifdef _DEBUG
 		auto mes = to_wstring(message);
@@ -39,7 +39,7 @@ namespace Debug
 #endif
 	}
 
-	static void WriteLine(wstring m1, float m2)
+	static void WriteLine(wstring m1, FLOAT m2)
 	{
 #ifdef _DEBUG
 		auto mes = to_wstring(m2);
