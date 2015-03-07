@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "vertexshader.h"
 
-VertexShader::VertexShader(DeviceResources* pResources) //: Shader(pResources)
+VertexShader::VertexShader(DeviceResources* pResources)
 {
-	PResources = pResources;	
+	PResources = pResources;
 }
 
 VOID VertexShader::Load(CHAR *fileName)
@@ -12,7 +12,7 @@ VOID VertexShader::Load(CHAR *fileName)
 	auto result = PResources->Device->CreateVertexShader(PByteCode->Bytes, PByteCode->Length, NULL, &PVertexShader);
 }
 
-VOID VertexShader::Compile(char* file, ShaderVersion version)
+VOID VertexShader::Compile(CHAR *file, ShaderVersion version)
 {
 
 }
@@ -25,7 +25,16 @@ VOID VertexShader::SetExtraDataSize(UINT size)
 
 VOID VertexShader::CreateBuffers(vector<NVertex> *vertices, vector<UINT> *indices)
 {
-	// TODO : Merge the vertices with the InputLayout !
+	UINT size = vertices->size();
+	CHAR* dataArray;
+	dataArray = (CHAR*)malloc(size * InputDataSize);
+
+	for (UINT v = 0; v < size; v++)
+	{
+		auto vertex = vertices->at(v);
+		memcpy(&dataArray[v], &vertex, sizeof(NVertex));
+		memcpy(&dataArray[v], ExtraInputData, ExtraInputDataSize);
+	}
 
 	D3D11_BUFFER_DESC  vertexBufferDesc;
 	vertexBufferDesc.ByteWidth = sizeof(NVertex) * vertices->size();
@@ -62,3 +71,9 @@ VOID VertexShader::CreateBuffers(vector<NVertex> *vertices, vector<UINT> *indice
 	PIndexBuffer = shared_ptr<ID3D11Buffer>(indexBuffer);
 }
 
+VOID VertexShader::CreateExtraData(CHAR *data, UINT size)
+{
+	ExtraInputData = data;
+	ExtraInputDataSize = size;
+	InputDataSize = sizeof(NVertex) + size;
+}

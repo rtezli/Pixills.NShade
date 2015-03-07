@@ -180,6 +180,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ColorPixelShader.h" />
     <ClInclude Include="ColorVertexShader.h" />
+    <ClInclude Include="ConstantBufferProvider.h" />
     <ClInclude Include="D3DSystem.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Defines.h" />
@@ -227,6 +228,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ColorPixelShader.cpp" />
     <ClCompile Include="ColorVertexShader.cpp" />
+    <ClCompile Include="ConstantBufferProvider.cpp" />
     <ClCompile Include="D3DSystem.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="dllmain.cpp">

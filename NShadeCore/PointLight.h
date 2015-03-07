@@ -6,8 +6,7 @@
 class PointLight : public Light
 {
 public:
-	PointLight(DeviceResources* pDeviceResources, XMFLOAT3* position, XMFLOAT3* color, FLOAT* intensity);
-	~PointLight();
+	PointLight(DeviceResources* pDeviceResources, XMFLOAT3 *pPosition, XMFLOAT3 *pColor, FLOAT *pIntensity);
 public:
 	struct ConstantBufferData
 	{
@@ -20,8 +19,9 @@ public:
 	};
 	ID3D11Buffer*			const GetConstBuffer(){ return m_pConstBuffer.get(); };
 	ConstantBufferData*		const GetConstBufferData(){ return m_pConstBufferData.get(); };
+	XMFLOAT4*				GetPositionIntensity();
 private:
-	void							InitializeConstantBuffer();
+	VOID							InitializeConstantBuffer();
 
 	DeviceResources*				m_pDeviceResources;
 	shared_ptr<XMFLOAT3>			m_pPosition;

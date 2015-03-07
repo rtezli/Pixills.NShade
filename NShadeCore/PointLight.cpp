@@ -2,20 +2,15 @@
 #include "PointLight.h"
 
 
-PointLight::PointLight(DeviceResources* pDeviceResources, XMFLOAT3* position, XMFLOAT3* color, FLOAT* intensity)
+PointLight::PointLight(DeviceResources *pDeviceResources, XMFLOAT3 *pPosition, XMFLOAT3 *pColor, FLOAT *pIntensity)
 {
 	m_pDeviceResources = pDeviceResources;
-	m_pPosition = shared_ptr<XMFLOAT3>(position);
-	m_pColor = shared_ptr<XMFLOAT3>(color);
-	m_pIntensity = shared_ptr<FLOAT>(intensity);
+	m_pPosition = shared_ptr<XMFLOAT3>(pPosition);
+	m_pColor = shared_ptr<XMFLOAT3>(pColor);
+	m_pIntensity = shared_ptr<FLOAT>(pIntensity);
 }
 
-
-PointLight::~PointLight()
-{
-}
-
-void PointLight::InitializeConstantBuffer()
+VOID PointLight::InitializeConstantBuffer()
 {
 	D3D11_BUFFER_DESC constantBufferDesc;
 	constantBufferDesc.ByteWidth = sizeof(ConstantBufferData);
@@ -33,4 +28,9 @@ void PointLight::InitializeConstantBuffer()
 	ID3D11Buffer* constBuffer;
 	auto result = m_pDeviceResources->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &constBuffer);
 	m_pConstBuffer = shared_ptr<ID3D11Buffer>(constBuffer);
+}
+
+XMFLOAT4* PointLight::GetPositionIntensity()
+{
+	return new XMFLOAT4(m_pPosition->x, m_pPosition->y, m_pPosition->x, m_pIntensity);
 }

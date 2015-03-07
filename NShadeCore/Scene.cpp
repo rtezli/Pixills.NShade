@@ -56,6 +56,7 @@ VOID Scene::Render()
 		m_pResources->DeviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 		m_pResources->DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+		// maybe we provide extra data here and write it to the registers instead of merging data hardcoded
 		m_pResources->DeviceContext->VSSetConstantBuffers(0, 1, &constBuffer);
 		m_pResources->DeviceContext->VSSetShader(vertexShader->Shader(), NULL, 0);
 

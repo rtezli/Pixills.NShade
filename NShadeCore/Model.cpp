@@ -39,8 +39,12 @@ VOID Model::CreateBuffers()
 	auto vertexBuffer = GetVertices();
 	auto indexBuffer = GetIndices();
 	auto matrial = GetMaterial();
+	 
 	auto shaders = matrial->Shaders;
 	auto vertexShader = shaders->VertexShader;
 
+	CHAR* extraData = { 0 };
+	UINT size = 0;
+	vertexShader->CreateExtraData(extraData, size);
 	vertexShader->CreateBuffers(vertexBuffer, indexBuffer);
 }
