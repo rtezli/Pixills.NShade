@@ -24,7 +24,7 @@ struct RenderingQuality
 	UINT SampleCount;
 	DXGI_FORMAT TextureFormat;
 	DXGI_FORMAT BufferFormat;
-	bool IsMultisamplingSettings;
+	BOOL IsMultisamplingSettings;
 };
 
 struct MsaaOptions
@@ -47,8 +47,7 @@ struct RENDERER_SETTINGS
 EXTERN class API Renderer
 {
 public:
-	Renderer(DeviceResources* pResources, bool useSwapChain);
-	~Renderer();
+	Renderer(DeviceResources* pResources, BOOL useSwapChain);
 public:
 	HRESULT	ResizeSwapChain(UINT32 newWidth, UINT32 newHeight);
 	HRESULT SetShaderParameters();
@@ -58,7 +57,7 @@ public:
 
 public:
 	Scene*						const GetScene(){				return m_pScene.get(); }
-	bool						const GetInitialized(){			return m_isInitialized; };
+	BOOL						const GetInitialized(){			return m_isInitialized; };
 private:
 	ID3D11Device*				const GetDevice(){ return GetResources()->Device; }
 	ID3D11DeviceContext*		const GetDeviceContext(){ return GetResources()->DeviceContext; }
@@ -115,8 +114,8 @@ private:
 
 	D3D11_RASTERIZER_DESC				m_pRasterizerDesc;
 
-	bool								m_isInitialized;
-	bool								m_useSwapChain;
-	bool								m_renderShadows;
-	bool								m_rasterizerUseMultiSampling;
+	BOOL								m_isInitialized;
+	BOOL								m_useSwapChain;
+	BOOL								m_renderShadows;
+	BOOL								m_rasterizerUseMultiSampling;
 };

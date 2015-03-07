@@ -6,10 +6,4 @@ using namespace WireframeShader;
 
 WireframePixelShader::WireframePixelShader(DeviceResources* pResources) : PixelShader(pResources)
 {
-
-}
-
-WireframePixelShader::~WireframePixelShader()
-{
-
 }

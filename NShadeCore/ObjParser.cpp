@@ -1,17 +1,7 @@
 #include "stdafx.h"
 #include "ObjParser.h"
 
-
-ObjParser::ObjParser()
-{
-}
-
-
-ObjParser::~ObjParser()
-{
-}
-
-HRESULT ObjParser::Parse(vector<nshade::Vertex>* vertices, vector<unsigned int>* indices, char* fileName)
+HRESULT ObjParser::Parse(vector<NVertex> *vertices, vector<UINT> *indices, CHAR *fileName)
 {
 	auto isRightHand = true;
 
@@ -23,11 +13,11 @@ HRESULT ObjParser::Parse(vector<nshade::Vertex>* vertices, vector<unsigned int>*
 
 	vector<string> parts;
 
-	auto polygons = new vector<nshade::Polygon>();
+	auto polygons = new vector<NPolygon>();
 
-	for (unsigned long i = 0; i < fileLines.size(); i++)
+	for (UINT i = 0; i < fileLines.size(); i++)
 	{
-		auto vertex = new nshade::Vertex();
+		auto vertex = new NVertex();
 		string line = fileLines.at(i);
 		boost::split(parts, line, boost::is_any_of(" "));
 
@@ -59,10 +49,10 @@ HRESULT ObjParser::Parse(vector<nshade::Vertex>* vertices, vector<unsigned int>*
 		}
 	}
 
-	for (unsigned long i = 0; i < fileLines.size(); i++)
+	for (UINT i = 0; i < fileLines.size(); i++)
 	{
 		// UV coords
-		auto vertex = new nshade::Vertex();
+		auto vertex = new NVertex();
 		if (parts[0] == "vt")
 		{
 			auto x = boost::lexical_cast<FLOAT>(parts.at(1));
@@ -77,10 +67,10 @@ HRESULT ObjParser::Parse(vector<nshade::Vertex>* vertices, vector<unsigned int>*
 			vertex->UV = uv;
 		}
 	}
-	for (unsigned long i = 0; i < fileLines.size(); i++)
+	for (UINT i = 0; i < fileLines.size(); i++)
 	{
 		// Normals
-		auto vertex = new nshade::Vertex();
+		auto vertex = new NVertex();
 		if (parts[0] == "vn")
 		{
 			auto x = boost::lexical_cast<FLOAT>(parts.at(1));
@@ -96,7 +86,7 @@ HRESULT ObjParser::Parse(vector<nshade::Vertex>* vertices, vector<unsigned int>*
 			vertex->Normal = normal;
 		}
 	}
-	for (unsigned long i = 0; i < fileLines.size(); i++)
+	for (UINT i = 0; i < fileLines.size(); i++)
 	{
 		// Polygons
 		if (parts[0] == "f")
@@ -111,7 +101,7 @@ HRESULT ObjParser::Parse(vector<nshade::Vertex>* vertices, vector<unsigned int>*
 				boost::lexical_cast<UINT>(parts.at(4));
 			}
 
-			nshade::Polygon polygon;
+			NPolygon polygon;
 
 			if (isRightHand)
 			{

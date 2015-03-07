@@ -11,10 +11,10 @@ D3DSystem::~D3DSystem()
 }
 
 HRESULT D3DSystem::InitializeWithWindow(
-	int screenWidth,
-	int screenHeight,
-	bool vsync,
-	bool fullscreen)
+	INT screenWidth,
+	INT screenHeight,
+	BOOL vsync,
+	BOOL fullscreen)
 {
 	auto result = InitializeWindow(screenWidth, screenHeight);
 	if (FAILED(result))
@@ -24,7 +24,7 @@ HRESULT D3DSystem::InitializeWithWindow(
 	return InitializeForWindow(vsync, m_pHInstance, m_pWindowHandle, fullscreen);
 }
 
-HRESULT D3DSystem::InitializeWindow(int screenWidth, int screenHeight)
+HRESULT D3DSystem::InitializeWindow(INT screenWidth, INT screenHeight)
 {
 	HINSTANCE hInstance = 0;
 	HWND handle = 0;
@@ -37,10 +37,10 @@ HRESULT D3DSystem::InitializeWindow(int screenWidth, int screenHeight)
 		screenWidth,
 		CW_USEDEFAULT,
 		screenHeight,
-		nullptr,
-		nullptr,
+		NULL,
+		NULL,
 		hInstance,
-		nullptr);
+		NULL);
 
 	if (!handle)
 	{
@@ -52,10 +52,10 @@ HRESULT D3DSystem::InitializeWindow(int screenWidth, int screenHeight)
 }
 
 HRESULT D3DSystem::InitializeForWindow(
-	bool vsync,
+	BOOL vsync,
 	HINSTANCE* hInstance,
 	HWND* hwnd,
-	bool fullscreen)
+	BOOL fullscreen)
 {
 	m_pHInstance = hInstance;
 	m_pWindowHandle = hwnd;
@@ -89,7 +89,7 @@ HRESULT D3DSystem::Initialize()
 	auto sc = rxsc::make_new_thread();
 	auto so = rx::synchronize_in_one_worker(sc);
 	rx::observable<>::interval(sc.now(), FPS(25), so)
-		.subscribe([this](int val)
+		.subscribe([this](INT val)
 	{
 		D3DSystem::Render();
 	}
@@ -119,7 +119,7 @@ HRESULT D3DSystem::CreateDevice()
 	ID3D11DeviceContext* context = 0;
 
 	auto createResult = D3D11CreateDevice(
-		nullptr,
+		NULL,
 		D3D_DRIVER_TYPE_HARDWARE, // D3D_DRIVER_TYPE_WARP, //
 		0,
 		creationFlags,
@@ -133,7 +133,7 @@ HRESULT D3DSystem::CreateDevice()
 	if (FAILED(createResult))
 	{
 		createResult = D3D11CreateDevice(
-			nullptr,
+			NULL,
 			D3D_DRIVER_TYPE_SOFTWARE,
 			0,
 			creationFlags,
@@ -170,7 +170,7 @@ HRESULT D3DSystem::CreateDevice()
 	return createResult;
 }
 
-D3D11_VIEWPORT* D3DSystem::CreateViewPort(HWND* hwnd)
+D3D11_VIEWPORT* D3DSystem::CreateViewPort(HWND *hwnd)
 {
 	RECT rect;
 
@@ -191,7 +191,7 @@ D3D11_VIEWPORT* D3DSystem::CreateViewPort(HWND* hwnd)
 	return new D3D11_VIEWPORT(viewPort);
 }
 
-HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device* device)
+HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device *device)
 {
 	UINT numberOfLevels = 0;
 	HRESULT result;
@@ -243,7 +243,7 @@ HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device* device)
 	return result;
 }
 
-vector<MSAA>* D3DSystem::ProduceMsaaCapability(vector<MSAA>* options, int i)
+vector<MSAA>* D3DSystem::ProduceMsaaCapability(vector<MSAA> *options, INT i)
 {
 	auto localOptions = *options;
 	auto masaa = MSAA_0X;
@@ -258,7 +258,7 @@ vector<MSAA>* D3DSystem::ProduceMsaaCapability(vector<MSAA>* options, int i)
 	case 8:
 		masaa = MSAA_8X;
 	}
-	bool contains = false;
+	BOOL contains = false;
 	for (int i = 0; localOptions.size(); i++)
 	{
 		if (localOptions[i] == masaa)
@@ -286,9 +286,9 @@ VOID D3DSystem::Render()
 	m_pRenderer->Render();
 }
 
-LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPARAM lParam)
+LRESULT D3DSystem::MessageHandler(HWND *hWnd, UINT umessage, WPARAM wparam, LPARAM lParam)
 {
-	if (this == nullptr)
+	if (this == NULL)
 	{
 		return 0;
 	}

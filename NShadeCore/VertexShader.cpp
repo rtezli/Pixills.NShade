@@ -6,23 +6,23 @@ VertexShader::VertexShader(DeviceResources* pResources) //: Shader(pResources)
 	PResources = pResources;	
 }
 
-void VertexShader::Load(char* fileName)
+VOID VertexShader::Load(CHAR *fileName)
 {
 	PByteCode = File::ReadFileBytes(fileName);
-	auto result = PResources->Device->CreateVertexShader(PByteCode->Bytes, PByteCode->Length, nullptr, &PVertexShader);
+	auto result = PResources->Device->CreateVertexShader(PByteCode->Bytes, PByteCode->Length, NULL, &PVertexShader);
 }
 
-void VertexShader::Compile(char* file, ShaderVersion version)
+VOID VertexShader::Compile(char* file, ShaderVersion version)
 {
 
 }
 
-void VertexShader::CreateBuffers(vector<nshade::Vertex>* vertices, vector<unsigned int>* indices)
+VOID VertexShader::CreateBuffers(vector<NVertex> *vertices, vector<UINT> *indices)
 {
 	// TODO : Merge the vertices with the InputLayout !
 
 	D3D11_BUFFER_DESC  vertexBufferDesc;
-	vertexBufferDesc.ByteWidth = sizeof(nshade::Vertex) * vertices->size();
+	vertexBufferDesc.ByteWidth = sizeof(NVertex) * vertices->size();
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
@@ -39,7 +39,7 @@ void VertexShader::CreateBuffers(vector<nshade::Vertex>* vertices, vector<unsign
 	PVertexBuffer = shared_ptr<ID3D11Buffer>(vertexBuffer);
 
 	D3D11_BUFFER_DESC indexBufferDesc;
-	indexBufferDesc.ByteWidth = sizeof(unsigned int) * indices->size();
+	indexBufferDesc.ByteWidth = sizeof(CHAR) * indices->size();
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufferDesc.CPUAccessFlags = 0;
 	indexBufferDesc.MiscFlags = 0;

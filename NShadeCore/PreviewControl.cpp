@@ -7,16 +7,12 @@ PreviewControl::PreviewControl(DeviceResources* pResources)
 	m_pDeviceResources = pResources;
 }
 
-PreviewControl::~PreviewControl()
-{
-}
-
 HRESULT PreviewControl::Initialize()
 {
 	return 0;
 }
 
-HRESULT PreviewControl::Render(ID3D11DeviceContext* deviceContext, int positionX, int positionY)
+HRESULT PreviewControl::Render(ID3D11DeviceContext* deviceContext, INT positionX, INT positionY)
 {
 	// Re-build the dynamic vertex buffer for rendering to possibly a different location on the screen.
 	auto result = UpdateBuffers(deviceContext, positionX, positionY);
@@ -124,7 +120,7 @@ HRESULT PreviewControl::RenderBuffers(ID3D11DeviceContext* context)
 	return 0;
 }
 
-HRESULT PreviewControl::UpdateBuffers(ID3D11DeviceContext* context, int positionX, int positionY)
+HRESULT PreviewControl::UpdateBuffers(ID3D11DeviceContext* context, INT positionX, INT positionY)
 {
 	return 0;
 }

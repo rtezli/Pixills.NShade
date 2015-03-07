@@ -1,15 +1,9 @@
 #include "stdafx.h"
 #include "overlayrenderer.h"
 
-
-FpsTextRenderer::FpsTextRenderer(DeviceResources* pResources)
+FpsTextRenderer::FpsTextRenderer(DeviceResources *pResources)
 {
 	m_pDeviceResources = pResources;
-}
-
-
-FpsTextRenderer::~FpsTextRenderer()
-{
 }
 
 HRESULT FpsTextRenderer::Initialize()

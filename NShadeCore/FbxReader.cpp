@@ -2,15 +2,7 @@
 
 #include "fbxreader.h"
 
-nshade::FbxReader::FbxReader()
-{
-}
-
-nshade::FbxReader::~FbxReader()
-{
-}
-
-HRESULT nshade::FbxReader::Read(char* fileName, vector<nshade::Vertex>* vertices, vector<unsigned int>* indices)
+HRESULT nshade::FbxReader::Read(CHAR *fileName, vector<NVertex> *vertices, vector<UINT> *indices)
 {
 	auto sdkManager = FbxManager::Create();
 
@@ -60,7 +52,7 @@ HRESULT nshade::FbxReader::Read(char* fileName, vector<nshade::Vertex>* vertices
 	return 0;
 }
 
-HRESULT nshade::FbxReader::TraverseChildren(FbxNode* node, vector<FbxNode*>* mesh)
+HRESULT nshade::FbxReader::TraverseChildren(FbxNode *node, vector<FbxNode*> *mesh)
 {
 	auto count = node->GetChildCount();
 	for (auto s = 0; s < count; s++)
@@ -68,7 +60,7 @@ HRESULT nshade::FbxReader::TraverseChildren(FbxNode* node, vector<FbxNode*>* mes
 		node = node->GetChild(s);
 		count = node->GetChildCount();
 		auto nodeAttribute = node->GetNodeAttribute();
-		FbxNodeAttribute::EType nodeType = nodeAttribute == nullptr
+		FbxNodeAttribute::EType nodeType = nodeAttribute == NULL
 			? FbxNodeAttribute::eUnknown
 			: nodeAttribute->GetAttributeType();
 
@@ -82,7 +74,7 @@ HRESULT nshade::FbxReader::TraverseChildren(FbxNode* node, vector<FbxNode*>* mes
 			{
 				node = node->GetChild(s);
 				nodeAttribute = node->GetNodeAttribute();
-				nodeType = nodeAttribute == nullptr
+				nodeType = nodeAttribute == NULL
 					? FbxNodeAttribute::eUnknown
 					: nodeAttribute->GetAttributeType();
 
@@ -96,12 +88,12 @@ HRESULT nshade::FbxReader::TraverseChildren(FbxNode* node, vector<FbxNode*>* mes
 	return 0;
 }
 
-HRESULT nshade::FbxReader::TraverseAndStoreFbxNode(vector<FbxNode*>* nodes, FbxAxisSystem* axisSystem, vector<nshade::Vertex>* vertices, vector<unsigned int>* indices)
+HRESULT nshade::FbxReader::TraverseAndStoreFbxNode(vector<FbxNode*> *nodes, FbxAxisSystem *axisSystem, vector<NVertex> *vertices, vector<UINT> *indices)
 {
 	auto count = nodes->size();
 
 	// The scene maybe
-	for (unsigned int i = 0; i < count; i++)
+	for (UINT i = 0; i < count; i++)
 	{
 		auto child = nodes->at(i);
 
@@ -113,7 +105,7 @@ HRESULT nshade::FbxReader::TraverseAndStoreFbxNode(vector<FbxNode*>* nodes, FbxA
 		for (auto cp = 0; cp < controlPointsCount; cp++)
 		{
 			auto point = controlPoints[cp];
-			auto newVertex = new nshade::Vertex();
+			auto newVertex = new NVertex();
 			// Set vertex position (and invert Z)
 			newVertex->Position = FbxReader::ConvertFbxVector4ToXMFLOAT3(&point, axisSystem, 1.0f);
 			vertices->push_back(*newVertex);
@@ -130,7 +122,7 @@ HRESULT nshade::FbxReader::TraverseAndStoreFbxNode(vector<FbxNode*>* nodes, FbxA
 			for (auto v = 0; v < polygonSize; v++)
 			{
 				auto vertexIndex = mesh->GetPolygonVertex(p, v);
-				auto newVertex = new nshade::Vertex(vertices->at(vertexIndex));
+				auto newVertex = new NVertex(vertices->at(vertexIndex));
 
 				// Create the normal
 				FbxVector4 normal;
@@ -181,17 +173,17 @@ HRESULT nshade::FbxReader::TraverseAndStoreFbxNode(vector<FbxNode*>* nodes, FbxA
 	return 0;
 }
 
-XMFLOAT3 nshade::FbxReader::ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisSystem* axisSystem, FLOAT scale)
+XMFLOAT3 nshade::FbxReader::ConvertFbxVector4ToXMFLOAT3(FbxVector4 *coordinate, FbxAxisSystem *axisSystem, FLOAT scale)
 {
-	bool rightHanded = true;
+	BOOL rightHanded = true;
 	auto coordSystem = axisSystem->GetCoorSystem();
 	if (coordSystem != FbxAxisSystem::ECoordSystem::eRightHanded)
 	{
 		rightHanded = false;
 	}
 
-	bool yUp = true;
-	bool xFront = false;
+	BOOL yUp = true;
+	BOOL xFront = false;
 
 	int upInverter = 1.0f;
 	int upVectorSign;

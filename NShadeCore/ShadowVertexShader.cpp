@@ -9,11 +9,6 @@ ShadowVertexShader::ShadowVertexShader(DeviceResources* pResources, Light* light
 	m_pLight = make_shared<Light>(*light);
 }
 
-ShadowVertexShader::~ShadowVertexShader()
-{
-
-}
-
 //HRESULT Shader::Initialize()
 //{
 //	ShaderFilePath = L"../Debug/ShadowVertexShader.cso";

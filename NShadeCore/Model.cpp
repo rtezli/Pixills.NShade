@@ -1,46 +1,36 @@
 #include "stdafx.h"
 #include "model.h"
 
-Model::Model()
+VOID Model::LoadModelFromFBXFile(CHAR *fileName)
 {
-
-}
-
-Model::~Model()
-{
-
-}
-
-void Model::LoadModelFromFBXFile(char* fileName)
-{
-	auto vertices = new vector<nshade::Vertex>();
-	auto indices = new vector<unsigned int>();
+	auto vertices = new vector<NVertex>();
+	auto indices = new vector<UINT>();
 
 	auto result = nshade::FbxReader::Read(fileName, vertices, indices);
 
-	m_pVertices = shared_ptr<vector<nshade::Vertex>>(vertices);
-	m_pIndices = shared_ptr<vector<unsigned int>>(indices);
+	m_pVertices = shared_ptr<vector<NVertex>>(vertices);
+	m_pIndices = shared_ptr<vector<UINT>>(indices);
 }
 
-void Model::LoadModelFromOBJFile(char* fileName, bool isRightHand)
+VOID Model::LoadModelFromOBJFile(CHAR *fileName, BOOL isRightHand)
 {
-	auto vertices = new vector<nshade::Vertex>();
-	auto indices = new vector<unsigned int>();
+	auto vertices = new vector<NVertex>();
+	auto indices = new vector<UINT>();
 
 	auto result = ObjParser::Parse(GetVertices(), GetIndices(), fileName);
 
-	m_pVertices = shared_ptr<vector<nshade::Vertex>>(vertices);
-	m_pIndices = shared_ptr<vector<unsigned int>>(indices);
+	m_pVertices = shared_ptr<vector<NVertex>>(vertices);
+	m_pIndices = shared_ptr<vector<UINT>>(indices);
 
 	CreateBuffers();
 }
 
-void Model::AssignMaterial(Material* pMaterial)
+VOID Model::AssignMaterial(Material *pMaterial)
 {
 	m_pMaterial = shared_ptr<Material>(pMaterial);
 }
 
-void Model::CreateBuffers()
+VOID Model::CreateBuffers()
 {
 	// Check if Material		== null
 	// Check if Shaders			== null
@@ -51,5 +41,6 @@ void Model::CreateBuffers()
 	auto matrial = GetMaterial();
 	auto shaders = matrial->Shaders;
 	auto vertexShader = shaders->VertexShader;
-	vertexShader->SetBuffers(vertexBuffer, indexBuffer);
+
+	vertexShader->CreateBuffers(vertexBuffer, indexBuffer);
 }

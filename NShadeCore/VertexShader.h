@@ -8,19 +8,18 @@ class VertexShader //: public Shader
 {
 public:
 	VertexShader(DeviceResources* pResources);
-	~VertexShader();
 public:
 	ID3D11InputLayout*	const GetInputLayout(){ return PInputLayout; }
-	unsigned int		const GetInputSize(){ return ByteWidth; }
+	UINT				const GetInputSize(){ return ByteWidth; }
 	ID3D11VertexShader*	const Shader(){ return PVertexShader; }
 	ID3D11Buffer*		const GetVertexBuffer(){ return PVertexBuffer.get(); }
 	ID3D11Buffer*		const GetIndexBuffer(){ return PIndexBuffer.get(); }
 
-	void				CreateBuffers(vector<nshade::Vertex>* vertices, vector<unsigned int>* indices);
+	VOID				CreateBuffers(vector<NVertex>* vertices, vector<UINT> *indices);
 protected:
-	void						Load(char* file);
-	void						Compile(char* file, ShaderVersion version);
-	unsigned int				ByteWidth;
+	VOID						Load(CHAR *file);
+	VOID						Compile(CHAR *file, ShaderVersion version);
+	UINT						ByteWidth;
 
 	DeviceResources*			PResources;
 	ID3D11InputLayout*			PInputLayout;

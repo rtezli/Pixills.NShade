@@ -3,18 +3,7 @@
 
 using namespace std;
 
-File::File()
-{
-}
-
-
-File::~File()
-{
-
-
-}
-
-struct FileBytes* File::ReadFileBytes(CHAR* fileName)
+struct FileBytes* File::ReadFileBytes(CHAR *fileName)
 {
 	fstream stream;
 	FileBytes* result = (FileBytes*)malloc(sizeof(FileBytes));
@@ -66,7 +55,7 @@ struct FileBytes* File::ReadFileBytes(LPCWSTR fileName)
 	}
 }
 
-vector<string> File::ReadFileLines(CHAR* fileName)
+vector<string> File::ReadFileLines(CHAR *fileName)
 {
 	ifstream stream(fileName);
 

@@ -3,7 +3,7 @@
 #include "renderer.h"
 
 
-Renderer::Renderer(DeviceResources* pResources, bool useSwapChain)
+Renderer::Renderer(DeviceResources *pResources, BOOL useSwapChain)
 {
 	m_isInitialized = false;
 	m_pDeviceResources = shared_ptr<DeviceResources>(pResources);
@@ -25,12 +25,7 @@ Renderer::Renderer(DeviceResources* pResources, bool useSwapChain)
 	m_pRenderingQuality = new RenderingQuality(quality4_8);
 }
 
-Renderer::~Renderer()
-{
-
-}
-
-HRESULT Renderer::Initialize(Scene* scene)
+HRESULT Renderer::Initialize(Scene *scene)
 {
 	m_pScene = shared_ptr<Scene>(scene);
 	auto result = CreateSwapChain();
@@ -108,7 +103,7 @@ HRESULT Renderer::CreateRenderTargetDesciption()
 
 	ID3D11Texture2D* renderTarget = 0;
 
-	return GetDevice()->CreateTexture2D(&m_pRenderTargetDesc, nullptr, &renderTarget);
+	return GetDevice()->CreateTexture2D(&m_pRenderTargetDesc, NULL, &renderTarget);
 }
 
 HRESULT Renderer::CreateRenderTargetViewDesciption()
@@ -245,7 +240,7 @@ HRESULT Renderer::CreateDepthBuffer()
 	{
 		return result;
 	}
-	return GetDevice()->CreateTexture2D(&m_pDepthBufferDesc, nullptr, &GetResources()->DepthStencilBuffer);
+	return GetDevice()->CreateTexture2D(&m_pDepthBufferDesc, NULL, &GetResources()->DepthStencilBuffer);
 }
 
 
@@ -320,7 +315,7 @@ HRESULT Renderer::CreateDepthStencil()
 
 	ID3D11Texture2D* depthStencil = 0;
 
-	result = GetDevice()->CreateTexture2D(&m_pDepthStencilDesc, nullptr, &depthStencil);
+	result = GetDevice()->CreateTexture2D(&m_pDepthStencilDesc, NULL, &depthStencil);
 	result = GetDevice()->CreateDepthStencilView(depthStencil, &m_pDepthStencilViewDesc, &GetResources()->DepthStencilView);
 
 	if (FAILED(result))
@@ -439,11 +434,11 @@ HRESULT	Renderer::ResizeSwapChain(UINT32 newWidth, UINT32 newHeight)
 	return GetResources()->SwapChain->ResizeBuffers(GetResources()->BufferCount, 0, 0, m_pRenderingQuality->BufferFormat, GetResources()->SwapChainFlags);
 }
 
-HRESULT Renderer::Resize(D3D11_VIEWPORT* viewPort)
+HRESULT Renderer::Resize(D3D11_VIEWPORT *viewPort)
 {
 	HRESULT result;
 	GetResources()->ViewPort = viewPort;
-	if (nullptr != GetResources()->SwapChain && m_isInitialized)
+	if (NULL != GetResources()->SwapChain && m_isInitialized)
 	{
 		result = Initialize(GetScene());
 	}

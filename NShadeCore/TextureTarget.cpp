@@ -1,16 +1,10 @@
 #include "stdafx.h"
 #include "TextureTarget.h"
 
-
 TextureTarget::TextureTarget(DeviceResources* pResources)
 {
 	m_pResources = pResources;
 }
-
-
-//TextureTarget::~TextureTarget()
-//{
-//}
 
 HRESULT TextureTarget::Initialize()
 {

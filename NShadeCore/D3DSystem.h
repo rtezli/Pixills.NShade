@@ -12,8 +12,8 @@ EXTERN class API D3DSystem
 public:
 	~D3DSystem();
 public:
-	HRESULT InitializeForWindow(bool vsync, HINSTANCE*, HWND* window, bool fullscreen);
-	HRESULT InitializeWithWindow(int screenWidth, int screenHeight, bool vsync, bool fullscreen);
+	HRESULT InitializeForWindow(BOOL vsync, HINSTANCE*, HWND* window, BOOL fullscreen);
+	HRESULT InitializeWithWindow(int screenWidth, int screenHeight, BOOL vsync, BOOL fullscreen);
 	LRESULT MessageHandler(HWND* hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
 
 	HRESULT Initialize();

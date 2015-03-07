@@ -2,8 +2,7 @@
 
 #include "scene.h"
 
-
-Scene::Scene(DeviceResources* pResources)
+Scene::Scene(DeviceResources *pResources)
 {
 	m_pResources = pResources;
 
@@ -19,29 +18,24 @@ Scene::Scene(DeviceResources* pResources)
 	auto shaders = new vector<Shader>();
 	m_pShaders = shared_ptr<vector<Shader>>(shaders);
 
-	auto vertices = new vector<nshade::Vertex>();
-	m_pVertices = shared_ptr<vector<nshade::Vertex>>(vertices);
+	auto vertices = new vector<NVertex>();
+	m_pVertices = shared_ptr<vector<NVertex>>(vertices);
 
-	auto indices = new vector<unsigned int> ();
-	m_pIndices = shared_ptr<vector<unsigned int>>(indices);
+	auto indices = new vector<UINT>();
+	m_pIndices = shared_ptr<vector<UINT>>(indices);
 }
 
-Scene::~Scene()
-{
-
-}
-
-void Scene::Clear()
+VOID Scene::Clear()
 {
 	auto constBuffer = GetCamera()->GetConstBufferData();
-	m_pResources->DeviceContext->UpdateSubresource(GetCamera()->GetConstBuffer(), 0, nullptr, &constBuffer, 0, 0);
+	m_pResources->DeviceContext->UpdateSubresource(GetCamera()->GetConstBuffer(), 0, NULL, &constBuffer, 0, 0);
 }
 
-void Scene::Render()
+VOID Scene::Render()
 {
 	auto models = GetModels();
 
-	for (unsigned int m = 0; m < models->size(); m++)
+	for (UINT m = 0; m < models->size(); m++)
 	{
 		auto model = models->at(m);
 		auto material = model.GetMaterial();
@@ -63,40 +57,40 @@ void Scene::Render()
 		m_pResources->DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		m_pResources->DeviceContext->VSSetConstantBuffers(0, 1, &constBuffer);
-		m_pResources->DeviceContext->VSSetShader(vertexShader->Shader(), nullptr, 0);
+		m_pResources->DeviceContext->VSSetShader(vertexShader->Shader(), NULL, 0);
 
 		// Check if this is neccessary if the pixel shader does not use the registers
 		m_pResources->DeviceContext->PSSetConstantBuffers(0, 1, &constBuffer);
-		m_pResources->DeviceContext->PSSetShader(shaders->PixelShader->Shader(), nullptr, 0);
+		m_pResources->DeviceContext->PSSetShader(shaders->PixelShader->Shader(), NULL, 0);
 
 		m_pResources->DeviceContext->DrawIndexed(model.GetIndices()->size(), 0, 0);
 	}
 }
 
-void Scene::AddModel(Model* pModel)
+VOID Scene::AddModel(Model *pModel)
 {
-	if (m_pModels == nullptr)
+	if (m_pModels == NULL)
 	{
 		m_pModels = shared_ptr<vector<Model>>();
 	}
 	m_pModels->push_back(*pModel);
 }
 
-void Scene::AddLight(Light* pLight)
+VOID Scene::AddLight(Light *pLight)
 {
-	if (m_pLights == nullptr)
+	if (m_pLights == NULL)
 	{
 		m_pLights = shared_ptr<vector<Light>>();
 	}
 	m_pLights->push_back(*pLight);
 }
 
-void Scene::AddCamera(Camera* pCamera)
+VOID Scene::AddCamera(Camera *pCamera)
 {
 	m_pCamera = shared_ptr<Camera>(pCamera);
 }
 
-void Scene::Load(wstring fileName)
+VOID Scene::Load(wstring fileName)
 {
 }
 

@@ -28,7 +28,7 @@ namespace PhongShader
 	class PhongVertexShader : public VertexShader
 	{
 	public:
-		PhongVertexShader(char * file, DeviceResources* pResources);
+		PhongVertexShader(CHAR *file, DeviceResources *pResources);
 		~PhongVertexShader();
 	};
 }

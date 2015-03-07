@@ -19,7 +19,7 @@ EXTERN class API Scene
 {
 public:
 	Scene(DeviceResources* pResources);
-	~Scene();
+
 	void AddModel(Model* pModel);
 	void AddLight(Light* pLight);
 	void AddCamera(Camera* pCamera);
@@ -32,7 +32,7 @@ public:
 
 	vector<Light>*			const GetLights()		{ return m_pLights.get(); }
 	vector<Model>*			const GetModels()		{ return m_pModels.get(); }
-	vector<nshade::Vertex>*	const GetVertices()		{ return m_pVertices.get(); }
+	vector<NVertex>*	const GetVertices()		{ return m_pVertices.get(); }
 	vector<unsigned int>*	const GetIndices()		{ return m_pIndices.get(); }
 	
 	static Scene*			CreateStandardScene(DeviceResources* pResources);
@@ -43,7 +43,7 @@ private:
 	shared_ptr<vector<Light>>			m_pLights;
 	shared_ptr<vector<Model>>			m_pModels;
 	shared_ptr<vector<Shader>>			m_pShaders;
-	shared_ptr<vector<nshade::Vertex>>	m_pVertices;
+	shared_ptr<vector<NVertex>>	m_pVertices;
 	shared_ptr<vector<unsigned int>>	m_pIndices;
 	DeviceResources*					m_pResources;
 };

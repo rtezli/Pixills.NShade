@@ -5,24 +5,21 @@
 using namespace std;
 using namespace DirectX;
 
-namespace nshade
+struct NVertex
 {
-	struct Vertex
-	{
-		XMFLOAT3		Position;
-		XMFLOAT4		Color;
-		XMFLOAT3		Normal;
-		XMFLOAT2		UV;
-		XMFLOAT3		PolyPosition;
-	};
+	XMFLOAT3		Position;
+	XMFLOAT4		Color;
+	XMFLOAT3		Normal;
+	XMFLOAT2		UV;
+	XMFLOAT3		PolyPosition;
+};
 
-	struct Polygon
-	{
-		unsigned int P1;
-		unsigned int P2;
-		unsigned int P3;
-	};
-}
+struct NPolygon
+{
+	unsigned int P1;
+	unsigned int P2;
+	unsigned int P3;
+};
 
 namespace ScreenRotation
 {

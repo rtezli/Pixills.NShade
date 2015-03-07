@@ -7,7 +7,3 @@ using namespace ColorShader;
 ColorVertexShader::ColorVertexShader(DeviceResources* pResources) : VertexShader(pResources)
 {
 }
-
-ColorVertexShader::~ColorVertexShader()
-{
-}

@@ -20,7 +20,6 @@ EXTERN class API Material
 {
 public:
 	Material();
-	~Material();
 public:
 	ID3D11Texture2D*	const Getexture(){ return Texture.get(); }
 	ID3D11Texture2D*	const GetBumpMap(){ return BumpMap.get(); }
