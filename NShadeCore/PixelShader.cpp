@@ -2,16 +2,9 @@
 #include "pixelshader.h"
 
 
-PixelShader::PixelShader(DeviceResources* pResources) //: Shader(pResources)
+PixelShader::PixelShader(DeviceResources* pResources)
 {
 	PResources = pResources;
-	//m_pResources->DeviceContext->PSSetConstantBuffers(0, 1, &m_pResources > ConstBuffer);
-	//m_pResources->DeviceContext->PSSetShader(shaders->PixelShader, NULL, 0);
-}
-
-
-PixelShader::~PixelShader()
-{
 }
 
 void PixelShader::Load(char* fileName)

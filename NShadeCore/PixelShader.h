@@ -3,11 +3,11 @@
 #include "common.h"
 #include "shader.h"
 
-class PixelShader //: public Shader
+class PixelShader
 {
 public:
 	PixelShader(DeviceResources* pResources);
-	~PixelShader();
+
 	ID3D11PixelShader*	const Shader(){ return PPixelShader; }
 protected:
 	void				Load(char* file);

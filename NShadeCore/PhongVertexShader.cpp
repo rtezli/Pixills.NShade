@@ -7,6 +7,6 @@ using namespace PhongShader;
 PhongVertexShader::PhongVertexShader(CHAR *file, DeviceResources *pResources) : VertexShader(pResources)
 {
 	Load(file);
-	ByteWidth = sizeof(PhongShader::InputLayout);
+	SetExtraDataSize(sizeof(PhongShader::ExtraData));
 	PResources->Device->CreateInputLayout(InputDescription, ARRAYSIZE(InputDescription), PByteCode->Bytes, PByteCode->Length, &PInputLayout);
 }

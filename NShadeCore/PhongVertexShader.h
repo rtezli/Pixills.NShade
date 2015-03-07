@@ -5,12 +5,8 @@
 
 namespace PhongShader
 {
-	struct InputLayout
+	struct ExtraData
 	{
-		XMFLOAT3 Position;
-		XMFLOAT4 Color;
-		XMFLOAT3 Normal;
-
 		XMFLOAT4 AmbientColorIntensity;
 		XMFLOAT4 LightPositionIntensity;
 	};

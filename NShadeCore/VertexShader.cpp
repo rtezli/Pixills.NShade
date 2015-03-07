@@ -17,6 +17,12 @@ VOID VertexShader::Compile(char* file, ShaderVersion version)
 
 }
 
+VOID VertexShader::SetExtraDataSize(UINT size)
+{
+	ExtraInputDataSize = size;
+	InputDataSize = sizeof(NVertex) + size;
+}
+
 VOID VertexShader::CreateBuffers(vector<NVertex> *vertices, vector<UINT> *indices)
 {
 	// TODO : Merge the vertices with the InputLayout !
@@ -55,3 +61,4 @@ VOID VertexShader::CreateBuffers(vector<NVertex> *vertices, vector<UINT> *indice
 	result = PResources->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &indexBuffer);
 	PIndexBuffer = shared_ptr<ID3D11Buffer>(indexBuffer);
 }
+
