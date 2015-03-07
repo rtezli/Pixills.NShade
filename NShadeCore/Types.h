@@ -16,9 +16,9 @@ struct NVertex
 
 struct NPolygon
 {
-	unsigned int P1;
-	unsigned int P2;
-	unsigned int P3;
+	UINT P1;
+	UINT P2;
+	UINT P3;
 };
 
 namespace ScreenRotation

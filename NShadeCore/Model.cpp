@@ -8,8 +8,8 @@ VOID Model::LoadModelFromFBXFile(CHAR *fileName)
 
 	auto result = nshade::FbxReader::Read(fileName, vertices, indices);
 
-	m_pVertices = shared_ptr<vector<NVertex>>(vertices);
-	m_pIndices = shared_ptr<vector<UINT>>(indices);
+	_vertices = shared_ptr<vector<NVertex>>(vertices);
+	_indices = shared_ptr<vector<UINT>>(indices);
 }
 
 VOID Model::LoadModelFromOBJFile(CHAR *fileName, BOOL isRightHand)
@@ -19,15 +19,15 @@ VOID Model::LoadModelFromOBJFile(CHAR *fileName, BOOL isRightHand)
 
 	auto result = ObjParser::Parse(GetVertices(), GetIndices(), fileName);
 
-	m_pVertices = shared_ptr<vector<NVertex>>(vertices);
-	m_pIndices = shared_ptr<vector<UINT>>(indices);
+	_vertices = shared_ptr<vector<NVertex>>(vertices);
+	_indices = shared_ptr<vector<UINT>>(indices);
 
 	CreateBuffers();
 }
 
-VOID Model::AssignMaterial(Material *pMaterial)
+VOID Model::AssignMaterial(Material *material)
 {
-	m_pMaterial = shared_ptr<Material>(pMaterial);
+	_material = shared_ptr<Material>(material);
 }
 
 VOID Model::CreateBuffers()

@@ -3,11 +3,8 @@
 
 D3DSystem::~D3DSystem()
 {
-	m_pRenderer.reset();
-	//m_pInputDevices.reset();
-	//m_pModel.reset();
-
-	delete m_pDeviceResources;
+	_renderer.reset();
+	delete _deviceResources;
 }
 
 HRESULT D3DSystem::InitializeWithWindow(
@@ -21,12 +18,12 @@ HRESULT D3DSystem::InitializeWithWindow(
 	{
 		return result;
 	}
-	return InitializeForWindow(vsync, m_pHInstance, m_pWindowHandle, fullscreen);
+	return InitializeForWindow(vsync, _windowInstance, _windowHandle, fullscreen);
 }
 
 HRESULT D3DSystem::InitializeWindow(INT screenWidth, INT screenHeight)
 {
-	HINSTANCE hInstance = 0;
+	HINSTANCE instance = 0;
 	HWND handle = 0;
 
 	handle = CreateWindow(
@@ -39,30 +36,28 @@ HRESULT D3DSystem::InitializeWindow(INT screenWidth, INT screenHeight)
 		screenHeight,
 		NULL,
 		NULL,
-		hInstance,
+		instance,
 		NULL);
 
 	if (!handle)
 	{
 		return false;
 	}
-	m_pHInstance = &hInstance;
-	m_pWindowHandle = &handle;
+	_windowInstance = &instance;
+	_windowHandle = &handle;
 	return true;
 }
 
 HRESULT D3DSystem::InitializeForWindow(
 	BOOL vsync,
-	HINSTANCE* hInstance,
-	HWND* hwnd,
+	HINSTANCE* windowInstance,
+	HWND* windowHandle,
 	BOOL fullscreen)
 {
-	m_pHInstance = hInstance;
-	m_pWindowHandle = hwnd;
-	m_vSync = vsync;
-	m_fullScreen = fullscreen;
-
-	//ShowCursor(false);
+	_windowInstance = windowInstance;
+	_windowHandle = windowHandle;
+	_vSync = vsync;
+	_fullScreen = fullscreen;
 
 	return Initialize();
 }
@@ -71,8 +66,8 @@ HRESULT D3DSystem::Initialize()
 {
 	POINT p;
 	GetCursorPos(&p);
-	m_lastPointerPosition = new POINT{ 0.0, 0.0 };
-	m_trackInput = false;
+	_lastPointerPosition = new POINT{ 0.0, 0.0 };
+	_trackInput = false;
 
 	auto result = CreateDevice();
 	if (FAILED(result))
@@ -127,7 +122,7 @@ HRESULT D3DSystem::CreateDevice()
 		ARRAYSIZE(featureLevels),
 		D3D11_SDK_VERSION,
 		&device,
-		&m_D3dFeatureLevel,
+		&_d3dFeatureLevel,
 		&context);
 
 	if (FAILED(createResult))
@@ -141,7 +136,7 @@ HRESULT D3DSystem::CreateDevice()
 			ARRAYSIZE(featureLevels),
 			D3D11_SDK_VERSION,
 			&device,
-			&m_D3dFeatureLevel,
+			&_d3dFeatureLevel,
 			&context);
 	}
 
@@ -153,32 +148,32 @@ HRESULT D3DSystem::CreateDevice()
 	}
 
 	auto resources = new DeviceResources(device, context);
-	auto viewport = CreateViewPort(m_pWindowHandle);
+	auto viewport = CreateViewPort(_windowHandle);
 
 	resources->ViewPort = new D3D11_VIEWPORT(*viewport);
 	resources->Device = device;
 	resources->DeviceContext = context;
-	resources->WindowHandle = m_pWindowHandle;
-	resources->WindowInstance = m_pHInstance;
-	resources->FullScreen = m_fullScreen;
-	resources->VSync = m_vSync;
+	resources->WindowHandle = _windowHandle;
+	resources->WindowInstance = _windowInstance;
+	resources->FullScreen = _fullScreen;
+	resources->VSync = _vSync;
 	resources->NearZ = 0.0f;
 	resources->FarZ = 1000.0f;
 
-	m_pDeviceResources = resources;
+	_deviceResources = resources;
 
 	return createResult;
 }
 
-D3D11_VIEWPORT* D3DSystem::CreateViewPort(HWND *hwnd)
+D3D11_VIEWPORT* D3DSystem::CreateViewPort(HWND *windowHandle)
 {
-	RECT rect;
+	RECT windowRect;
 
-	GetWindowRect(*hwnd, &rect);
-	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, FALSE);
+	GetWindowRect(*windowHandle, &windowRect);
+	AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
 
-	auto width = rect.right - rect.left;
-	auto height = rect.bottom - rect.top;
+	auto width = windowRect.right - windowRect.left;
+	auto height = windowRect.bottom - windowRect.top;
 
 	D3D11_VIEWPORT viewPort;
 	viewPort.Width = width;
@@ -275,18 +270,18 @@ vector<MSAA>* D3DSystem::ProduceMsaaCapability(vector<MSAA> *options, INT i)
 
 HRESULT D3DSystem::CreateRenderer()
 {
-	auto scene = Scene::CreateStandardScene(m_pDeviceResources);
+	auto scene = Scene::CreateStandardScene(_deviceResources);
 
-	m_pRenderer = shared_ptr<Renderer>(new Renderer(m_pDeviceResources, true));
-	return m_pRenderer->Initialize(scene);
+	_renderer = shared_ptr<Renderer>(new Renderer(_deviceResources, true));
+	return _renderer->Initialize(scene);
 }
 
 VOID D3DSystem::Render()
 {
-	m_pRenderer->Render();
+	_renderer->Render();
 }
 
-LRESULT D3DSystem::MessageHandler(HWND *hWnd, UINT umessage, WPARAM wparam, LPARAM lParam)
+LRESULT D3DSystem::MessageHandler(HWND *hWnd, UINT message, WPARAM wparam, LPARAM lParam)
 {
 	if (this == NULL)
 	{
@@ -297,7 +292,7 @@ LRESULT D3DSystem::MessageHandler(HWND *hWnd, UINT umessage, WPARAM wparam, LPAR
 		return 0;
 	}
 
-	switch (umessage)
+	switch (message)
 	{
 	case WM_ACTIVATE:
 	{
@@ -313,7 +308,7 @@ LRESULT D3DSystem::MessageHandler(HWND *hWnd, UINT umessage, WPARAM wparam, LPAR
 	// press pointer (left mouse button)
 	case WM_LBUTTONDOWN:
 	{
-		SetCapture(*m_pWindowHandle);
+		SetCapture(*_windowHandle);
 		//ShowCursor(false);
 		POINT p;
 		auto result = GetCursorPos(&p);
@@ -321,8 +316,8 @@ LRESULT D3DSystem::MessageHandler(HWND *hWnd, UINT umessage, WPARAM wparam, LPAR
 		{
 			return result;
 		}
-		m_lastPointerPosition = new POINT(p);
-		m_trackInput = true;
+		_lastPointerPosition = new POINT(p);
+		_trackInput = true;
 		return 0;
 	}
 
@@ -330,7 +325,7 @@ LRESULT D3DSystem::MessageHandler(HWND *hWnd, UINT umessage, WPARAM wparam, LPAR
 	case WM_LBUTTONUP:
 	{
 		ReleaseCapture();
-		m_trackInput = false;
+		_trackInput = false;
 	}
 
 	// scrolling (mouse wheel)
@@ -349,7 +344,7 @@ LRESULT D3DSystem::MessageHandler(HWND *hWnd, UINT umessage, WPARAM wparam, LPAR
 	// move pointer (move mouse)
 	case WM_MOUSEMOVE:
 	{
-		if (m_trackInput)
+		if (_trackInput)
 		{
 			POINT p;
 			auto result = GetCursorPos(&p);
@@ -357,11 +352,11 @@ LRESULT D3DSystem::MessageHandler(HWND *hWnd, UINT umessage, WPARAM wparam, LPAR
 			{
 				return result;
 			}
-			auto offsetH = p.x - m_lastPointerPosition->x;
-			auto offsetV = p.y - m_lastPointerPosition->y;
+			auto offsetH = p.x - _lastPointerPosition->x;
+			auto offsetV = p.y - _lastPointerPosition->y;
 			auto offset = new POINT{ offsetH, offsetV };
-			m_pRenderer->GetScene()->GetCamera()->Rotate(offset);
-			m_lastPointerPosition = new POINT(p);
+			_renderer->GetScene()->GetCamera()->Rotate(offset);
+			_lastPointerPosition = new POINT(p);
 		}
 		return 0;
 	}

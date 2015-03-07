@@ -9,13 +9,13 @@ public:
 	File();
 	~File();
 public:
-	static struct FileBytes* ReadFileBytes(CHAR* fileName);
-	static struct FileBytes* ReadFileBytes(LPCWSTR fileName);
-	static vector<string>	 ReadFileLines(CHAR* fileName);
+	static struct FileBytes* ReadFileBytes(CHAR *pFileName);
+	static struct FileBytes* ReadFileBytes(LPCWSTR lpFileName);
+	static vector<string>	 ReadFileLines(CHAR *pFileName);
 };
 
 struct FileBytes
 {
-	char* Bytes;
-	long  Length;
+	CHAR* Bytes;
+	LONG  Length;
 };

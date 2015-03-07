@@ -5,7 +5,7 @@
 class FpsTextRenderer
 {
 public:
-	FpsTextRenderer(DeviceResources* pResources);
+	FpsTextRenderer(DeviceResources *pResources);
 	~FpsTextRenderer();
 	HRESULT Initialize();
 private:

@@ -9,7 +9,7 @@ public:
 	ObjParser();
 	~ObjParser();
 public:
-	static HRESULT Parse(vector<NVertex>* vertices, vector<unsigned int>* indices, char* fileName);
+	static HRESULT Parse(vector<NVertex> *vertices, vector<UINT> *indices, CHAR *fileName);
 };
 
 #pragma warning(restore:4996) 

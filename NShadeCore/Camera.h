@@ -2,7 +2,7 @@
 
 #include "common.h"
 
-enum Perspective : char
+enum Perspective : CHAR
 {
 	UNDEFINED = 0,
 	FIRST_PERSON = 1,

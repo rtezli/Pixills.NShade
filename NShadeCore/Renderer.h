@@ -7,7 +7,7 @@
 #include "phongvertexshader.h"
 #include "scene.h"
 
-enum MSAA : char
+enum MSAA : CHAR
 {
 	SIMPLEST_POSSIBLE = 9,
 	MSAA_0X = 0,
@@ -47,11 +47,11 @@ struct RENDERER_SETTINGS
 EXTERN class API Renderer
 {
 public:
-	Renderer(DeviceResources* pResources, BOOL useSwapChain);
+	Renderer(DeviceResources *pResources, BOOL useSwapChain);
 public:
 	HRESULT	ResizeSwapChain(UINT32 newWidth, UINT32 newHeight);
 	HRESULT SetShaderParameters();
-	HRESULT	Initialize(Scene* scene);
+	HRESULT	Initialize(Scene *scene);
 	HRESULT	Resize(D3D11_VIEWPORT* viewport);
 	HRESULT	Render();
 

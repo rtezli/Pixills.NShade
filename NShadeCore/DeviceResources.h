@@ -13,7 +13,7 @@ class DeviceResources
 {
 
 public:
-	DeviceResources(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
+	DeviceResources(ID3D11Device *device, ID3D11DeviceContext *deviceContext);
 public:
 	HINSTANCE*					WindowInstance;
 	HWND*						WindowHandle;
@@ -21,12 +21,6 @@ public:
 	ID3D11DeviceContext*		DeviceContext;
 	ID3D11RasterizerState*		RasterizerState;
 	IDXGISwapChain*				SwapChain;
-
-	/* buffers */
-	//ID3D11InputLayout*			InputLayout;
-
-	//ConstantBufferData*			LightConstBufferData;
-	//ConstantBufferData*			MirrorConstBufferData;
 
 	/* depth stencil */
 	ID3D11Texture2D*			DepthStencilBuffer;
@@ -48,7 +42,6 @@ public:
 	ID3D11ShaderResourceView*	MirrorResourceView;
 
 	D3D11_VIEWPORT*				ViewPort;
-	//RenderingQuality*			RenderQuality;
 
 	INT							SwapChainFlags;
 	INT							BufferCount;

@@ -15,7 +15,7 @@ public:
 	ID3D11Buffer*				const GetVertexBuffer(){ return PVertexBuffer.get(); }
 	ID3D11Buffer*				const GetIndexBuffer(){ return PIndexBuffer.get(); }
 
-	VOID						CreateBuffers(vector<NVertex> *vertices, vector<UINT> *indices);
+	VOID						CreateBuffers(vector<NVertex> *pVertices, vector<UINT> *pIndices);
 	VOID						CreateExtraData(CHAR *data, UINT size);
 	VOID						SetExtraDataSize(UINT size);
 protected:

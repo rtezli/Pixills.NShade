@@ -7,16 +7,16 @@
 EXTERN class API Model
 {
 public:
-	void LoadModelFromFBXFile(char* fileName);
-	void LoadModelFromOBJFile(char* fileName, BOOL isRightHand);
-	void AssignMaterial(Material* pMaterial);
+	void LoadModelFromFBXFile(CHAR *fileName);
+	void LoadModelFromOBJFile(CHAR *fileName, BOOL isRightHand);
+	void AssignMaterial(Material *material);
 
-	Material*					const GetMaterial(){ return m_pMaterial.get(); }
-	vector<unsigned int>*		const GetIndices(){ return m_pIndices.get(); }
-	vector<NVertex>*		const GetVertices(){ return m_pVertices.get(); }
-	void								CreateBuffers();
+	Material*			const GetMaterial(){ return _material.get(); }
+	vector<UINT>*		const GetIndices(){ return _indices.get(); }
+	vector<NVertex>*	const GetVertices(){ return _vertices.get(); }
+	void				CreateBuffers();
 private:	
-	shared_ptr<Material>				m_pMaterial;
-	shared_ptr<vector<NVertex>>	m_pVertices;
-	shared_ptr<vector<unsigned int>>	m_pIndices;
+	shared_ptr<Material>		_material;
+	shared_ptr<vector<NVertex>>	_vertices;
+	shared_ptr<vector<UINT>>	_indices;
 };

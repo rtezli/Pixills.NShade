@@ -5,7 +5,7 @@
 class TilePool
 {
 public:
-	TilePool(DeviceResources* pResources);
+	TilePool(DeviceResources *pResources);
 	~TilePool();
 public:
 	HRESULT Initialize();

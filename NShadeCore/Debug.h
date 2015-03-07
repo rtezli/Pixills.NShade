@@ -11,7 +11,7 @@ namespace Debug
 #endif
 	}
 
-	static void WriteLine(const char* m1, const char* m2)
+	static void WriteLine(const CHAR *m1, const CHAR *m2)
 	{
 #ifdef _DEBUG
 		//auto mes = new wstring(message);

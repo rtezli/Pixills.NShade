@@ -10,11 +10,11 @@ namespace nshade
 		FbxReader();
 		~FbxReader();
 	public:
-		static HRESULT Read(char* fileName, vector<NVertex>* vertices, vector<UINT>* indices);
+		static HRESULT Read(CHAR *pFileName, vector<NVertex> *pVertices, vector<UINT> *pIndices);
 	private:
-		static HRESULT	 TraverseChildren(FbxNode* node, vector<FbxNode*>* mesh);
-		static HRESULT   TraverseAndStoreFbxNode(vector<FbxNode*>* nodes, FbxAxisSystem* axisSystem, vector<NVertex>* vertices, vector<UINT>* indices);
-		static XMFLOAT3  ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisSystem* axisSystem, FLOAT scale);
+		static HRESULT	 TraverseChildren(FbxNode *pNode, vector<FbxNode*> *pMesh);
+		static HRESULT   TraverseAndStoreFbxNode(vector<FbxNode*> *pNodes, FbxAxisSystem *pAxisSystem, vector<NVertex> *pVertices, vector<UINT> *pIndices);
+		static XMFLOAT3  ConvertFbxVector4ToXMFLOAT3(FbxVector4 *pCoordinate, FbxAxisSystem *pAxisSystem, FLOAT scale);
 	};
 }
 

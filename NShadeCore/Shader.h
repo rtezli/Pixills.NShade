@@ -24,7 +24,7 @@
 #define DS_PROFILE { "ds_5_0" }
 #endif
 
-enum ShaderVersion : char
+enum ShaderVersion : CHAR
 {
 	V0 = 0,
 	V1 = 0,
@@ -34,7 +34,7 @@ enum ShaderVersion : char
 	V5 = 0
 };
 
-enum ShaderType : char
+enum ShaderType : CHAR
 {
 	VS = 1,
 	PS = 2,

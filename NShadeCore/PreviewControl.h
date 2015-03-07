@@ -10,7 +10,7 @@ public:
 
 	HRESULT Initialize();
 	HRESULT Shutdown();
-	HRESULT Render(ID3D11DeviceContext*, int, int);
+	HRESULT Render(ID3D11DeviceContext*, INT, INT);
 
 	int GetIndexCount();
 
@@ -22,16 +22,16 @@ private:
 		XMFLOAT3 texture;
 	};
 	HRESULT InitializeBuffers(ID3D11Device*);
-	HRESULT UpdateBuffers(ID3D11DeviceContext*, int, int);
+	HRESULT UpdateBuffers(ID3D11DeviceContext*, INT, INT);
 	HRESULT RenderBuffers(ID3D11DeviceContext*);
 
 private:
-	DeviceResources*		m_pDeviceResources;
-	ID3D11Buffer*			m_vertexBuffer;
-	ID3D11Buffer*			m_indexBuffer;
-	int						m_vertexCount, m_indexCount;
-	int						m_screenWidth,m_screenHeight;
-	int						m_bitmapWidth, m_bitmapHeight;
-	int						m_previousPosX, m_previousPosY;
+	DeviceResources*		_deviceResources;
+	ID3D11Buffer*			_vertexBuffer;
+	ID3D11Buffer*			_indexBuffer;
+	INT						_vertexCount, _indexCount;
+	INT						_screenWidth, _screenHeight;
+	INT						_bitmapWidth, _bitmapHeight;
+	INT						_previousPosX, _previousPosY;
 };
 

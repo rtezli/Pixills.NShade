@@ -12,38 +12,38 @@ EXTERN class API D3DSystem
 public:
 	~D3DSystem();
 public:
-	HRESULT InitializeForWindow(BOOL vsync, HINSTANCE*, HWND* window, BOOL fullscreen);
-	HRESULT InitializeWithWindow(int screenWidth, int screenHeight, BOOL vsync, BOOL fullscreen);
-	LRESULT MessageHandler(HWND* hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
+	HRESULT InitializeForWindow(BOOL vsync, HINSTANCE* instance, HWND* handle, BOOL fullscreen);
+	HRESULT InitializeWithWindow(INT screenWidth, INT screenHeight, BOOL vsync, BOOL fullscreen);
+	LRESULT MessageHandler(HWND *handle, UINT message, WPARAM wParam, LPARAM lParam);
 
 	HRESULT Initialize();
 	VOID	Render();
 private:
-	HRESULT					InitializeWindow(int screenWidth, int screenHeight);
+	HRESULT					InitializeWindow(INT screenWidth, INT screenHeight);
 	HRESULT					CreateDevice();
-	HRESULT					GetRenderQualitySettings(ID3D11Device* device);
-	vector<MSAA>* 			ProduceMsaaCapability(vector<MSAA>* msaaOptions, int i);
+	HRESULT					GetRenderQualitySettings(ID3D11Device *device);
+	vector<MSAA>* 			ProduceMsaaCapability(vector<MSAA> *msaaOptions, INT i);
 
-	D3D11_VIEWPORT*			CreateViewPort(HWND* hwnd);
+	D3D11_VIEWPORT*			CreateViewPort(HWND *hwnd);
 
 	HRESULT					CreateRenderer();
 	HRESULT					AttachOnRotate();
 	HRESULT					DetachOnRotate();
 private:
-	DeviceResources*						m_pDeviceResources;
-	HINSTANCE*								m_pHInstance;
-	HWND*									m_pWindowHandle;
-	POINT*									m_lastPointerPosition;
-	shared_ptr<Renderer>					m_pRenderer;
+	DeviceResources*						_deviceResources;
+	HINSTANCE*								_windowInstance;
+	HWND*									_windowHandle;
+	POINT*									_lastPointerPosition;
+	shared_ptr<Renderer>					_renderer;
 
-	D3D_FEATURE_LEVEL						m_D3dFeatureLevel;
+	D3D_FEATURE_LEVEL						_d3dFeatureLevel;
 
-	FLOAT									m_viewportWidth;
-	FLOAT									m_viewportHeight;
-	FLOAT									m_nearZ;
-	FLOAT									m_farZ;
+	FLOAT									_viewportWidth;
+	FLOAT									_viewportHeight;
+	FLOAT									_nearZ;
+	FLOAT									_farZ;
 
-	BOOL									m_fullScreen;
-	BOOL									m_vSync;
-	BOOL									m_trackInput;
+	BOOL									_fullScreen;
+	BOOL									_vSync;
+	BOOL									_trackInput;
 };

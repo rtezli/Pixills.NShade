@@ -16,14 +16,14 @@ private:
 		XMFLOAT3 Move;
 	};
 public:
-	Input(DeviceResources* pDeviceResources);
+	Input(DeviceResources *pDeviceResources);
 	~Input();
 public:
 	HRESULT Initialize();
 	HRESULT CreateMouse();
 	HRESULT CreateKeyboard();
 	HRESULT CreateKinect();
-	void(*OnInput)(MOVE_ROTATE_INPUT* move);
+	void(*OnInput)(MOVE_ROTATE_INPUT *pMove);
 private:
 	BOOL	Frame();
 	BOOL	ReadKeyboard();

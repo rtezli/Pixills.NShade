@@ -6,7 +6,7 @@
 class AmbientLight : public Light
 {
 public:
-	AmbientLight(XMFLOAT3 *pColor, FLOAT* pIntensity);
+	AmbientLight(XMFLOAT3 *pColor, FLOAT *pIntensity);
 public:
 	struct ConstantBufferData
 	{

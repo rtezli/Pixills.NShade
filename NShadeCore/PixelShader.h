@@ -10,8 +10,8 @@ public:
 
 	ID3D11PixelShader*	const Shader(){ return PPixelShader; }
 protected:
-	void				Load(char* file);
-	void				Compile(char* file, ShaderVersion version);
+	VOID				Load(CHAR *file);
+	VOID				Compile(CHAR *file, ShaderVersion version);
 	DeviceResources*	PResources;
 	FileBytes*			PByteCode;
 	ID3D11PixelShader*  PPixelShader;

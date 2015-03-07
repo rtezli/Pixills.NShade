@@ -5,7 +5,7 @@
 class TextureTarget
 {
 public:
-	TextureTarget(DeviceResources* pResources);
+	TextureTarget(DeviceResources *pResources);
 	~TextureTarget();
 	HRESULT Initialize();
 	HRESULT								SetRenderTarget(ID3D11DepthStencilView*  depthStencil);

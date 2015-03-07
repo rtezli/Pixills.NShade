@@ -18,24 +18,24 @@ struct SceneFile
 EXTERN class API Scene
 {
 public:
-	Scene(DeviceResources* pResources);
+	Scene(DeviceResources *pResources);
 
-	void AddModel(Model* pModel);
-	void AddLight(Light* pLight);
-	void AddCamera(Camera* pCamera);
-	void Load(wstring fileName);
-	void Clear();
-	void Render();
+	VOID AddModel(Model* pModel);
+	VOID AddLight(Light* pLight);
+	VOID AddCamera(Camera* pCamera);
+	VOID Load(wstring fileName);
+	VOID Clear();
+	VOID Render();
 public:
 	Camera*					const GetCamera()		{ return m_pCamera.get(); }
 	Material*				const GetMaterials()	{ return m_pMaterial.get(); }
 
 	vector<Light>*			const GetLights()		{ return m_pLights.get(); }
 	vector<Model>*			const GetModels()		{ return m_pModels.get(); }
-	vector<NVertex>*	const GetVertices()		{ return m_pVertices.get(); }
+	vector<NVertex>*		const GetVertices()		{ return m_pVertices.get(); }
 	vector<unsigned int>*	const GetIndices()		{ return m_pIndices.get(); }
 	
-	static Scene*			CreateStandardScene(DeviceResources* pResources);
+	static Scene*			CreateStandardScene(DeviceResources *pResources);
 private:
 	shared_ptr<Camera>					m_pCamera;
 	shared_ptr<Material>				m_pMaterial;

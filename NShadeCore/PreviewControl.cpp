@@ -2,9 +2,9 @@
 
 #include "previewcontrol.h"
 
-PreviewControl::PreviewControl(DeviceResources* pResources)
+PreviewControl::PreviewControl(DeviceResources* resources)
 {
-	m_pDeviceResources = pResources;
+	_deviceResources = resources;
 }
 
 HRESULT PreviewControl::Initialize()
@@ -36,76 +36,62 @@ HRESULT PreviewControl::InitializeBuffers(ID3D11Device* device)
 	int i;
 
 
-	// Set the number of vertices in the vertex array.
-	m_vertexCount = 6;
+	_vertexCount = 6;
+	_indexCount = _vertexCount;
 
-	// Set the number of indices in the index array.
-	m_indexCount = m_vertexCount;
-
-	// Create the vertex array.
-	vertices = new VertexType[m_vertexCount];
+	vertices = new VertexType[_vertexCount];
 	if (!vertices)
 	{
 		return false;
 	}
 
-	// Create the index array.
-	indices = new unsigned long[m_indexCount];
+	indices = new unsigned long[_indexCount];
 	if (!indices)
 	{
 		return false;
 	}
 
-	// Initialize vertex array to zeros at first.
-	memset(vertices, 0, (sizeof(VertexType) * m_vertexCount));
+	memset(vertices, 0, (sizeof(VertexType) * _vertexCount));
 
-	// Load the index array with data.
-	for (i = 0; i<m_indexCount; i++)
+	for (i = 0; i< _indexCount; i++)
 	{
 		indices[i] = i;
 	}
 
-	// Set up the description of the static vertex buffer.
 	vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
+	vertexBufferDesc.ByteWidth = sizeof(VertexType) * _vertexCount;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	vertexBufferDesc.MiscFlags = 0;
 	vertexBufferDesc.StructureByteStride = 0;
 
-	// Give the subresource structure a pointer to the vertex data.
 	vertexData.pSysMem = vertices;
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
 
-	// Now create the vertex buffer.
-	auto result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
+	auto result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &_vertexBuffer);
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	// Set up the description of the static index buffer.
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
+	indexBufferDesc.ByteWidth = sizeof(unsigned long) * _indexCount;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags = 0;
 	indexBufferDesc.MiscFlags = 0;
 	indexBufferDesc.StructureByteStride = 0;
 
-	// Give the subresource structure a pointer to the index data.
 	indexData.pSysMem = indices;
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;
 
-	// Create the index buffer.
-	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
+	result = device->CreateBuffer(&indexBufferDesc, &indexData, &_indexBuffer);
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	// Release the arrays now that the vertex and index buffers have been created and loaded.
 	delete[] vertices;
 	vertices = 0;
 

@@ -2,7 +2,7 @@
 
 #include "common.h"
 
-enum LightType : char
+enum LightType : CHAR
 {
 	Directional = 1,
 	Point = 2,
