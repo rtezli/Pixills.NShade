@@ -10,7 +10,6 @@ using namespace std::chrono;
 EXTERN class API D3DSystem
 {
 public:
-	D3DSystem();
 	~D3DSystem();
 public:
 	HRESULT InitializeForWindow(bool vsync, HINSTANCE*, HWND* window, bool fullscreen);
@@ -18,7 +17,7 @@ public:
 	LRESULT MessageHandler(HWND* hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
 
 	HRESULT Initialize();
-	void	Render();
+	VOID	Render();
 private:
 	HRESULT					InitializeWindow(int screenWidth, int screenHeight);
 	HRESULT					CreateDevice();

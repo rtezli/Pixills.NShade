@@ -15,11 +15,7 @@ Camera::Camera(DeviceResources* resources)
 	Initialize();
 }
 
-Camera::~Camera()
-{
-}
-
-void Camera::Initialize()
+VOID Camera::Initialize()
 {
 	auto z = m_radius * sin(m_hAngle * -1);
 	auto x = sqrt(pow(m_radius, 2) - pow(z, 2));
@@ -72,23 +68,23 @@ void Camera::Initialize()
 	InitializeConstantBuffer();
 }
 
-void Camera::SetPosition(XMFLOAT3* p)
+VOID Camera::SetPosition(XMFLOAT3* p)
 {
 	m_focusPosition = shared_ptr<XMFLOAT3>(p);
 }
 
-void Camera::SetFocusPoint(XMFLOAT3* p)
+VOID Camera::SetFocusPoint(XMFLOAT3* p)
 {
 	m_eyePosition = shared_ptr<XMFLOAT3>(p);
 }
 
-void Camera::Move(POINT* p)
+VOID Camera::Move(POINT* p)
 {
 	auto world = GetConstBufferData()->World;
 	XMStoreFloat4x4(&world, XMMatrixTranspose(XMMatrixTranslation(p->x, 0.0, p->y)));
 }
 
-void Camera::Rotate(POINT* p)
+VOID Camera::Rotate(POINT* p)
 {
 	auto moderationH = 0.001;
 	auto moderationV = 0.009;
@@ -100,7 +96,7 @@ void Camera::Rotate(POINT* p)
 	XMStoreFloat4x4(&world, XMMatrixTranspose(XMMatrixRotationY(m_hAngle)));
 }
 
-void Camera::InitializeConstantBuffer()
+VOID Camera::InitializeConstantBuffer()
 {
 	D3D11_BUFFER_DESC constantBufferDesc;
 	constantBufferDesc.ByteWidth = sizeof(ConstantBufferData);

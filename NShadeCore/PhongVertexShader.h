@@ -13,7 +13,6 @@ namespace PhongShader
 
 		XMFLOAT4 AmbientColorIntensity;
 		XMFLOAT4 LightPositionIntensity;
-		XMFLOAT4 CameraPosition;
 	};
 
 	static const D3D11_INPUT_ELEMENT_DESC InputDescription[] =

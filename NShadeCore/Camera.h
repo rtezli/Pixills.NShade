@@ -1,7 +1,6 @@
 #pragma once
 
 #include "common.h"
-#include "deviceresources.h"
 
 enum Perspective : char
 {
@@ -15,7 +14,6 @@ class Camera
 {
 public:
 	Camera(DeviceResources* resources);
-	~Camera();
 public:
 	struct ConstantBufferData
 	{
@@ -29,13 +27,13 @@ public:
 	ID3D11Buffer*		const GetConstBuffer(){ return m_pConstBuffer.get(); };
 	ConstantBufferData*	const GetConstBufferData(){ return m_pConstBufferData.get(); };
 
-	void				Initialize();
-	void				InitializeConstantBuffer();
+	VOID				Initialize();
+	VOID				InitializeConstantBuffer();
 
-	void				Move(POINT* p);
-	void				Rotate(POINT* p);
-	void				SetPosition(XMFLOAT3* p);
-	void				SetFocusPoint(XMFLOAT3* p);
+	VOID				Move(POINT* p);
+	VOID				Rotate(POINT* p);
+	VOID				SetPosition(XMFLOAT3* p);
+	VOID				SetFocusPoint(XMFLOAT3* p);
 
 	FLOAT				const GetVerticalAngle(){ return m_vAngle; };
 	FLOAT				const GetHorizontalAngle(){ return m_hAngle; };

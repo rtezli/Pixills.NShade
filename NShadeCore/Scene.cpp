@@ -109,7 +109,6 @@ Scene* Scene::CreateStandardScene(DeviceResources* pResources)
 	stdCamera->SetFocusPoint(new XMFLOAT3(0.0f, 0.0f, 0.0f));
 	scene->AddCamera(stdCamera);
 
-
 	auto ambientLightColor = new XMFLOAT3(1.0f, 1.0f, 1.0f);
 	auto ambientLightIntensity = 1.0f;
 	auto stdAmbientLight = new AmbientLight(ambientLightColor, &ambientLightIntensity);

@@ -16,7 +16,7 @@ public:
 	ID3D11Buffer*		const GetVertexBuffer(){ return PVertexBuffer.get(); }
 	ID3D11Buffer*		const GetIndexBuffer(){ return PIndexBuffer.get(); }
 
-	void				SetBuffers(vector<nshade::Vertex>* vertices, vector<unsigned int>* indices);
+	void				CreateBuffers(vector<nshade::Vertex>* vertices, vector<unsigned int>* indices);
 protected:
 	void						Load(char* file);
 	void						Compile(char* file, ShaderVersion version);

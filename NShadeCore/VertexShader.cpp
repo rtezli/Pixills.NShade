@@ -6,11 +6,6 @@ VertexShader::VertexShader(DeviceResources* pResources) //: Shader(pResources)
 	PResources = pResources;	
 }
 
-VertexShader::~VertexShader()
-{
-
-}
-
 void VertexShader::Load(char* fileName)
 {
 	PByteCode = File::ReadFileBytes(fileName);
@@ -22,7 +17,7 @@ void VertexShader::Compile(char* file, ShaderVersion version)
 
 }
 
-void VertexShader::SetBuffers(vector<nshade::Vertex>* vertices, vector<unsigned int>* indices)
+void VertexShader::CreateBuffers(vector<nshade::Vertex>* vertices, vector<unsigned int>* indices)
 {
 	// TODO : Merge the vertices with the InputLayout !
 

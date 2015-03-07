@@ -8,9 +8,9 @@ TextureTarget::TextureTarget(DeviceResources* pResources)
 }
 
 
-TextureTarget::~TextureTarget()
-{
-}
+//TextureTarget::~TextureTarget()
+//{
+//}
 
 HRESULT TextureTarget::Initialize()
 {

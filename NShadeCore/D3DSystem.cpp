@@ -1,10 +1,6 @@
 #include "stdafx.h"
 #include "d3dsystem.h"
 
-D3DSystem::D3DSystem()
-{
-}
-
 D3DSystem::~D3DSystem()
 {
 	m_pRenderer.reset();
@@ -285,7 +281,7 @@ HRESULT D3DSystem::CreateRenderer()
 	return m_pRenderer->Initialize(scene);
 }
 
-void D3DSystem::Render()
+VOID D3DSystem::Render()
 {
 	m_pRenderer->Render();
 }
