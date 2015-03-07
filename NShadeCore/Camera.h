@@ -13,7 +13,7 @@ enum Perspective : char
 class Camera : public ConstantBufferProvider
 {
 public:
-	Camera(DeviceResources* resources);
+	Camera(DeviceResources *resources);
 public:
 	struct ConstantBufferData
 	{
