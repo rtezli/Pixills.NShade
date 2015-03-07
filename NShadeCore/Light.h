@@ -12,11 +12,10 @@ enum LightType : char
 	Ambient = 6
 };
 
-class Light
+class Light : public ConstantBufferProvider
 {
 public:
 	Light();
-	virtual ~Light();
 public:
 	XMFLOAT4*	Color;
 	XMFLOAT4*	Position;

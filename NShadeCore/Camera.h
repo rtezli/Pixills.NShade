@@ -10,7 +10,7 @@ enum Perspective : char
 	ISOMETRIC = 3
 };
 
-class Camera
+class Camera : public ConstantBufferProvider
 {
 public:
 	Camera(DeviceResources* resources);

@@ -5,8 +5,3 @@
 Light::Light()
 {
 }
-
-
-Light::~Light()
-{
-}

@@ -36,5 +36,6 @@ namespace rxsub = rx::subjects;
 #include "file.h"
 #include "objparser.h"
 #include "fbxreader.h"
- 
+#include "constantbufferprovider.h"
+
 using namespace std;
