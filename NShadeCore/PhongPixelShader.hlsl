@@ -1,3 +1,5 @@
+#define PI acos(-1)
+
 struct PixelShaderInput
 {
 	float4 position			: SV_POSITION;

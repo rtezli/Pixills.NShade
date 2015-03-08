@@ -4,31 +4,31 @@
 
 Scene::Scene(DeviceResources *pResources)
 {
-	m_pResources = pResources;
+	_resources = pResources;
 
-	m_pMaterial = shared_ptr<Material>();
-	m_pCamera = shared_ptr<Camera>();
+	_material = shared_ptr<Material>();
+	_camera = shared_ptr<Camera>();
 
 	auto lights = new vector<Light>();
-	m_pLights = shared_ptr<vector<Light>>(lights);
+	_lights = shared_ptr<vector<Light>>(lights);
 
 	auto models = new vector<Model>();
-	m_pModels = shared_ptr<vector<Model>>(models);
+	_models = shared_ptr<vector<Model>>(models);
 
 	auto shaders = new vector<Shader>();
-	m_pShaders = shared_ptr<vector<Shader>>(shaders);
+	_shaders = shared_ptr<vector<Shader>>(shaders);
 
 	auto vertices = new vector<NVertex>();
-	m_pVertices = shared_ptr<vector<NVertex>>(vertices);
+	_vertices = shared_ptr<vector<NVertex>>(vertices);
 
 	auto indices = new vector<UINT>();
-	m_pIndices = shared_ptr<vector<UINT>>(indices);
+	_indices = shared_ptr<vector<UINT>>(indices);
 }
 
 VOID Scene::Clear()
 {
 	auto constBuffer = GetCamera()->GetConstBufferData();
-	m_pResources->DeviceContext->UpdateSubresource(GetCamera()->GetConstBuffer(), 0, NULL, &constBuffer, 0, 0);
+	_resources->DeviceContext->UpdateSubresource(GetCamera()->GetConstBuffer(), 0, NULL, &constBuffer, 0, 0);
 }
 
 VOID Scene::Render()
@@ -44,51 +44,62 @@ VOID Scene::Render()
 		auto vertexShader = shaders->VertexShader;
 		auto layout = shaders->VertexShader->GetInputLayout();
 
-		auto constBuffer = GetCamera()->GetConstBuffer();
+		auto cameraConstBuffer = GetCamera()->GetConstBuffer();
+		auto lights = GetLights();
+		auto ambientLightConstBuffer = GetCamera()->GetConstBuffer();
+
 		auto vertexBuffer = vertexShader->GetVertexBuffer();
 		auto indexBuffer = vertexShader->GetIndexBuffer();
 		auto strides = vertexShader->GetInputSize();
 		UINT offset = 0;
 
-		m_pResources->DeviceContext->IASetInputLayout(layout);
-		m_pResources->DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &strides, &offset);
 
-		m_pResources->DeviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-		m_pResources->DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		_resources->DeviceContext->IASetInputLayout(layout);
+		_resources->DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &strides, &offset);
+		_resources->DeviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+		_resources->DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		// maybe we provide extra data here and write it to the registers instead of merging data hardcoded
-		m_pResources->DeviceContext->VSSetConstantBuffers(0, 1, &constBuffer);
-		m_pResources->DeviceContext->VSSetShader(vertexShader->Shader(), NULL, 0);
+		_resources->DeviceContext->VSSetConstantBuffers(0, 1, &cameraConstBuffer);
+
+		for (UINT i = 0; i < lights->size(); i++)
+		{
+			auto light = lights->at(i);
+			auto lightResourceView = light.GetResourceView();
+			_resources->DeviceContext->VSSetShaderResources(i, lights->size(), &lightResourceView);
+		}
+
+		_resources->DeviceContext->VSSetShader(vertexShader->Shader(), NULL, 0);
 
 		// Check if this is neccessary if the pixel shader does not use the registers
-		m_pResources->DeviceContext->PSSetConstantBuffers(0, 1, &constBuffer);
-		m_pResources->DeviceContext->PSSetShader(shaders->PixelShader->Shader(), NULL, 0);
+		_resources->DeviceContext->PSSetConstantBuffers(0, 1, &cameraConstBuffer);
+		_resources->DeviceContext->PSSetShader(shaders->PixelShader->Shader(), NULL, 0);
 
-		m_pResources->DeviceContext->DrawIndexed(model.GetIndices()->size(), 0, 0);
+		_resources->DeviceContext->DrawIndexed(model.GetIndices()->size(), 0, 0);
 	}
 }
 
 VOID Scene::AddModel(Model *pModel)
 {
-	if (m_pModels == NULL)
+	if (_models == NULL)
 	{
-		m_pModels = shared_ptr<vector<Model>>();
+		_models = shared_ptr<vector<Model>>();
 	}
-	m_pModels->push_back(*pModel);
+	_models->push_back(*pModel);
 }
 
 VOID Scene::AddLight(Light *pLight)
 {
-	if (m_pLights == NULL)
+	if (_lights == NULL)
 	{
-		m_pLights = shared_ptr<vector<Light>>();
+		_lights = shared_ptr<vector<Light>>();
 	}
-	m_pLights->push_back(*pLight);
+	_lights->push_back(*pLight);
 }
 
 VOID Scene::AddCamera(Camera *pCamera)
 {
-	m_pCamera = shared_ptr<Camera>(pCamera);
+	_camera = shared_ptr<Camera>(pCamera);
 }
 
 VOID Scene::Load(wstring fileName)
@@ -120,16 +131,21 @@ Scene* Scene::CreateStandardScene(DeviceResources* pResources)
 
 	auto stdPixelShader = new PhongShader::PhongPixelShader("../Debug/PhongPixelShader.cso", pResources);
 	auto stdVertexShader = new PhongShader::PhongVertexShader("../Debug/PhongVertexShader.cso", pResources);
-	
-	auto stdMaterial = new Material();
 
+
+	//stdVertexShader->AppendExtraData(stdAmbientLight->GetColorIntensity(), sizeof(XMFLOAT4));
+	//stdVertexShader->AppendExtraData(stdPointLight->GetPositionIntensity(), sizeof(XMFLOAT4));
+	//stdVertexShader->CreateBuffers();
+
+	auto stdMaterial = new Material();
 	auto shaderSet = new ShaderSet();
+
 	shaderSet->PixelShader = stdPixelShader;
 	shaderSet->VertexShader = stdVertexShader;
 	stdMaterial->Shaders = shared_ptr<ShaderSet>(shaderSet);
 
 	//auto stdModelFile = ResourceManager::Current->MainResourceMap->GetSubtree("Files")->GetValue("Assets/teapot.fbx");
- 
+
 	auto stdModel = new Model();
 	stdModel->LoadModelFromFBXFile("../Debug/teapot.fbx");
 	stdModel->AssignMaterial(stdMaterial);

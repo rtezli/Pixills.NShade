@@ -17,11 +17,11 @@ VOID VertexShader::Compile(CHAR *file, ShaderVersion version)
 
 }
 
-VOID VertexShader::SetExtraDataSize(UINT size)
-{
-	ExtraInputDataSize = size;
-	InputDataSize = sizeof(NVertex) + size;
-}
+//VOID VertexShader::SetExtraDataSize(UINT size)
+//{
+//	ExtraInputDataSize = size;
+//	InputDataSize = sizeof(NVertex) + size;
+//}
 
 VOID VertexShader::CreateBuffers(vector<NVertex> *vertices, vector<UINT> *indices)
 {
@@ -71,9 +71,9 @@ VOID VertexShader::CreateBuffers(vector<NVertex> *vertices, vector<UINT> *indice
 	PIndexBuffer = shared_ptr<ID3D11Buffer>(indexBuffer);
 }
 
-VOID VertexShader::CreateExtraData(CHAR *data, UINT size)
+VOID VertexShader::AppendExtraData(CHAR *data, UINT size)
 {
 	ExtraInputData = data;
-	ExtraInputDataSize = size;
+	ExtraInputDataSize += size;
 	InputDataSize = sizeof(NVertex) + size;
 }

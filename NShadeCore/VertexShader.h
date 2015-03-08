@@ -14,10 +14,12 @@ public:
 	ID3D11VertexShader*			const Shader(){ return PVertexShader; }
 	ID3D11Buffer*				const GetVertexBuffer(){ return PVertexBuffer.get(); }
 	ID3D11Buffer*				const GetIndexBuffer(){ return PIndexBuffer.get(); }
+	CHAR*						const GetExtraData(){ return ExtraInputData; }
+	UINT						const GetExtraDataSize(){ return ExtraInputDataSize; }
 
 	VOID						CreateBuffers(vector<NVertex> *pVertices, vector<UINT> *pIndices);
-	VOID						CreateExtraData(CHAR *data, UINT size);
-	VOID						SetExtraDataSize(UINT size);
+	VOID						AppendExtraData(CHAR *data, UINT size);
+	//VOID						SetExtraDataSize(UINT size);
 protected:
 	VOID						Load(CHAR *file);
 	VOID						Compile(CHAR *file, ShaderVersion version);

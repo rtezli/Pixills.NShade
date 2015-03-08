@@ -16,8 +16,10 @@ class Light : public ConstantBufferProvider
 {
 public:
 	Light();
+	ID3D11ShaderResourceView*	const GetResourceView(){ return _resourceView.get(); };
 public:
-	XMFLOAT4*	Color;
-	XMFLOAT4*	Position;
+	shared_ptr<XMFLOAT4>					_color;
+	shared_ptr<XMFLOAT4>					_position;
+	shared_ptr<ID3D11ShaderResourceView>	_resourceView;
 };
 

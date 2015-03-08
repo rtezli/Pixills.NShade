@@ -18,33 +18,32 @@ struct SceneFile
 EXTERN class API Scene
 {
 public:
-	Scene(DeviceResources *pResources);
+	Scene(DeviceResources *resources);
 
-	VOID AddModel(Model* pModel);
-	VOID AddLight(Light* pLight);
-	VOID AddCamera(Camera* pCamera);
+	VOID AddModel(Model* model);
+	VOID AddLight(Light* light);
+	VOID AddCamera(Camera* camera);
 	VOID Load(wstring fileName);
 	VOID Clear();
 	VOID Render();
 public:
-	Camera*					const GetCamera()		{ return m_pCamera.get(); }
-	Material*				const GetMaterials()	{ return m_pMaterial.get(); }
+	Camera*					const GetCamera()		{ return _camera.get(); }
+	Material*				const GetMaterials()	{ return _material.get(); }
 
-	vector<Light>*			const GetLights()		{ return m_pLights.get(); }
-	vector<Model>*			const GetModels()		{ return m_pModels.get(); }
-	vector<NVertex>*		const GetVertices()		{ return m_pVertices.get(); }
-	vector<unsigned int>*	const GetIndices()		{ return m_pIndices.get(); }
+	vector<Light>*			const GetLights()		{ return _lights.get(); }
+	vector<Model>*			const GetModels()		{ return _models.get(); }
+	vector<NVertex>*		const GetVertices()		{ return _vertices.get(); }
+	vector<unsigned int>*	const GetIndices()		{ return _indices.get(); }
 	
 	static Scene*			CreateStandardScene(DeviceResources *pResources);
 private:
-	shared_ptr<Camera>					m_pCamera;
-	shared_ptr<Material>				m_pMaterial;
-
-	shared_ptr<vector<Light>>			m_pLights;
-	shared_ptr<vector<Model>>			m_pModels;
-	shared_ptr<vector<Shader>>			m_pShaders;
-	shared_ptr<vector<NVertex>>	m_pVertices;
-	shared_ptr<vector<unsigned int>>	m_pIndices;
-	DeviceResources*					m_pResources;
+	shared_ptr<Camera>					_camera;
+	shared_ptr<Material>				_material;
+	shared_ptr<vector<Light>>			_lights;
+	shared_ptr<vector<Model>>			_models;
+	shared_ptr<vector<Shader>>			_shaders;
+	shared_ptr<vector<NVertex>>			_vertices;
+	shared_ptr<vector<unsigned int>>	_indices;
+	DeviceResources*					_resources;
 };
 

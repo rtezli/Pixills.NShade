@@ -40,11 +40,12 @@ VOID Model::CreateBuffers()
 	auto indexBuffer = GetIndices();
 	auto matrial = GetMaterial();
 	 
-	auto shaders = matrial->Shaders;
-	auto vertexShader = shaders->VertexShader;
+	auto vertexShader = matrial->Shaders->VertexShader;
 
-	CHAR* extraData = { 0 };
-	UINT size = 0;
-	vertexShader->CreateExtraData(extraData, size);
+	//vertexShader->AppendExtraData(extraData, extraSite);
+
+	//auto extraData = vertexShader->GetExtraData();
+	//auto extraSite = vertexShader->GetExtraDataSize();
+
 	vertexShader->CreateBuffers(vertexBuffer, indexBuffer);
 }

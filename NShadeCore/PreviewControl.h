@@ -6,7 +6,6 @@ class PreviewControl
 {
 public:
 	PreviewControl(DeviceResources* pResources);
-	~PreviewControl();
 
 	HRESULT Initialize();
 	HRESULT Shutdown();

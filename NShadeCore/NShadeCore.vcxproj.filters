@@ -347,5 +347,8 @@
     <None Include="..\Debug\PhongVertexShader.cso">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="Graph.dgsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
