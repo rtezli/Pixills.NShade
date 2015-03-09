@@ -57,12 +57,6 @@ HRESULT Renderer::Initialize(Scene *scene)
 		return result;
 	}
 
-	result = CreateViewPort();
-	if (FAILED(result))
-	{
-		return result;
-	}
-
 	//result = SetVertexShader(m_standardVertexShader);
 	//if (FAILED(result))
 	//{
@@ -356,17 +350,10 @@ HRESULT Renderer::CreateRasterizer()
 	// Set rasterizer
 	ID3D11RasterizerState* tempState = 0;
 	GetDeviceContext()->RSSetState(GetResources()->RasterizerState);
-
-	return 0;
-}
-
-
-HRESULT Renderer::CreateViewPort()
-{
 	GetDeviceContext()->RSSetViewports(1, GetResources()->ViewPort);
-
 	return 0;
 }
+
 
 HRESULT Renderer::CreateShadows()
 {

@@ -91,8 +91,6 @@ private:
 	HRESULT CreateRasterizerDescription();
 	HRESULT CreateRasterizer();
 
-	HRESULT CreateViewPort();
-
 private:
 	shared_ptr<DeviceResources>			_deviceResources;
 	shared_ptr<Scene>					_scene;

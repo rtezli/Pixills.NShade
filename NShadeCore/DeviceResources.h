@@ -17,7 +17,7 @@ public:
 public:
 	//ID3D11Device*				const GetDevice(){ return Resources.get()->Device(); }
 	//ID3D11DeviceContext*		const GetDeviceContext{ return Resources.get()->DeviceContext(); }
-	//static DeviceResources*		const Get(){ return Resources.get(); }
+	//static DeviceResources*	const Get(){ return Resources.get(); }
 public:
 	HINSTANCE*					WindowInstance;
 	HWND*						WindowHandle;

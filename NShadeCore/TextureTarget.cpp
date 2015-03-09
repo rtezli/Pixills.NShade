@@ -1,45 +1,42 @@
 #include "stdafx.h"
 #include "texturetarget.h"
 
-TextureTarget::TextureTarget()
+TextureTarget::TextureTarget(DeviceResources *resources, TextureSettings *settings)
 {
+	_deviceResources = resources;
 	D3D11_TEXTURE2D_DESC textureDesc;
-	HRESULT result;
-	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
-	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+ 
+	textureDesc.Width				= settings->Width;
+	textureDesc.Height				= settings->Height;
+	textureDesc.MipLevels			= settings->MipLevels;
+	textureDesc.ArraySize			= settings->ArraySize;
+	textureDesc.Format				= settings->Format;
+	textureDesc.SampleDesc.Quality	= settings->Quality;
+	textureDesc.SampleDesc.Count	= settings->SampleCount;
 
-	// Setup the render target texture description.
-	textureDesc.Width = _deviceResources->ViewPort->Width;
-	textureDesc.Height = _deviceResources->ViewPort->Height;
-	textureDesc.MipLevels = 1;
-	textureDesc.ArraySize = 1;
-	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	//textureDesc.SampleDesc.Quality = m_pRenderingQuality->Quality;
-	//textureDesc.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
 	textureDesc.Usage = D3D11_USAGE_DEFAULT;
 	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 	textureDesc.CPUAccessFlags = 0;
 	textureDesc.MiscFlags = 0;
 
-	// Create the render target texture.
-	result = _deviceResources->Device->CreateTexture2D(&textureDesc, NULL, &_renderTargetTexture);
+	auto result = resources->Device->CreateTexture2D(&textureDesc, NULL, &_renderTargetTexture);
 
-	// Setup the description of the render target view.
+	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+
 	renderTargetViewDesc.Format = textureDesc.Format;
-	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	renderTargetViewDesc.ViewDimension = settings->Dimension;
 	renderTargetViewDesc.Texture2D.MipSlice = 0;
 
-	// Create the render target view.
-	result = _deviceResources->Device->CreateRenderTargetView(_renderTargetTexture, &renderTargetViewDesc, &_renderTargetView);
+	result = resources->Device->CreateRenderTargetView(_renderTargetTexture, &renderTargetViewDesc, &_renderTargetView);
 
-	// Setup the description of the shader resource view.
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+
 	shaderResourceViewDesc.Format = textureDesc.Format;
-	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
 	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
-	shaderResourceViewDesc.Texture2D.MipLevels = 1;
+	shaderResourceViewDesc.Texture2D.MipLevels = textureDesc.MipLevels;
 
-	// Create the shader resource view.
-	result = _deviceResources->Device->CreateShaderResourceView(_renderTargetTexture, &shaderResourceViewDesc, &_shaderResourceView);
+	result = resources->Device->CreateShaderResourceView(_renderTargetTexture, &shaderResourceViewDesc, &_shaderResourceView);
 }
 
 VOID TextureTarget::SetRenderTarget(ID3D11DepthStencilView *depthStencilView)
