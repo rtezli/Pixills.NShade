@@ -30,8 +30,8 @@ public:
 	VOID				Initialize();
 	VOID				InitializeConstantBuffer();
 
-	VOID				Move(POINT* p);
-	VOID				Rotate(POINT* p);
+	VOID				MoveTo(XMFLOAT3* p);
+	VOID				Rotate(XMFLOAT3* p);
 	VOID				SetPosition(XMFLOAT3* p);
 	VOID				SetFocusPoint(XMFLOAT3* p);
 

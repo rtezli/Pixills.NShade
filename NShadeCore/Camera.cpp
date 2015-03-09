@@ -77,19 +77,19 @@ VOID Camera::SetFocusPoint(XMFLOAT3* p)
 	_eyePosition = shared_ptr<XMFLOAT3>(p);
 }
 
-VOID Camera::Move(POINT* p)
+VOID Camera::MoveTo(XMFLOAT3* point)
 {
 	auto world = GetConstBufferData()->World;
-	XMStoreFloat4x4(&world, XMMatrixTranspose(XMMatrixTranslation(p->x, 0.0, p->y)));
+	XMStoreFloat4x4(&world, XMMatrixTranspose(XMMatrixTranslation(point->x, point->y, point->z)));
 }
 
-VOID Camera::Rotate(POINT* p)
+VOID Camera::Rotate(XMFLOAT3* point)
 {
 	auto moderationH = 0.001;
 	auto moderationV = 0.009;
 
-	_hAngle = _hAngle + p->x * moderationH;
-	_vAngle = _vAngle + p->y * moderationV;
+	_hAngle = _hAngle + point->x * moderationH;
+	_vAngle = _vAngle + point->y * moderationV;
 
 	auto world = GetConstBufferData()->World;
 	XMStoreFloat4x4(&world, XMMatrixTranspose(XMMatrixRotationY(_hAngle)));
