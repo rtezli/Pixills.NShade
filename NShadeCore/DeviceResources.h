@@ -15,6 +15,10 @@ class DeviceResources
 public:
 	DeviceResources(ID3D11Device *device, ID3D11DeviceContext *deviceContext);
 public:
+	//ID3D11Device*				const GetDevice(){ return Resources.get()->Device(); }
+	//ID3D11DeviceContext*		const GetDeviceContext{ return Resources.get()->DeviceContext(); }
+	//static DeviceResources*		const Get(){ return Resources.get(); }
+public:
 	HINSTANCE*					WindowInstance;
 	HWND*						WindowHandle;
 	ID3D11Device*				Device;
@@ -51,5 +55,7 @@ public:
 
 	BOOL						FullScreen;
 	BOOL						VSync;
+private:
+	static shared_ptr<DeviceResources> Resources;
 };
 

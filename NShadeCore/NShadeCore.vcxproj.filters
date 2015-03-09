@@ -177,6 +177,15 @@
     <ClInclude Include="ConstantBufferProvider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BufferTarget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IOC.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Global.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -300,6 +309,15 @@
       <Filter>Source Files\Cameras</Filter>
     </ClCompile>
     <ClCompile Include="ConstantBufferProvider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferTarget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IOC.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Global.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

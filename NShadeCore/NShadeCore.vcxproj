@@ -177,6 +177,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AmbientLight.h" />
+    <ClInclude Include="BufferTarget.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ColorPixelShader.h" />
     <ClInclude Include="ColorVertexShader.h" />
@@ -189,6 +190,8 @@
     <ClInclude Include="FbxReader.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="FirstPersonCamera.h" />
+    <ClInclude Include="Global.h" />
+    <ClInclude Include="IOC.h" />
     <ClInclude Include="IsometricCamera.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="OverlayRenderer.h" />
@@ -225,6 +228,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AmbientLight.cpp" />
+    <ClCompile Include="BufferTarget.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ColorPixelShader.cpp" />
     <ClCompile Include="ColorVertexShader.cpp" />
@@ -248,6 +252,8 @@
     <ClCompile Include="FbxReader.cpp" />
     <ClCompile Include="File.cpp" />
     <ClCompile Include="FirstPersonCamera.cpp" />
+    <ClCompile Include="Global.cpp" />
+    <ClCompile Include="IOC.cpp" />
     <ClCompile Include="IsometricCamera.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="OverlayRenderer.cpp" />

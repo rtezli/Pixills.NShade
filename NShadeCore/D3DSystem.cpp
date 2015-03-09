@@ -354,7 +354,7 @@ LRESULT D3DSystem::MessageHandler(HWND *hWnd, UINT message, WPARAM wparam, LPARA
 			}
 			auto offsetH = p.x - _lastPointerPosition->x;
 			auto offsetV = p.y - _lastPointerPosition->y;
-			auto offset = new POINT{ offsetH, offsetV };
+			auto offset = new XMFLOAT3(offsetH, 0.0f, offsetV);
 			_renderer->GetScene()->GetCamera()->Rotate(offset);
 			_lastPointerPosition = new POINT(p);
 		}
