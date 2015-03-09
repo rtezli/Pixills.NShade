@@ -3,31 +3,31 @@
 
 Camera::Camera(DeviceResources* resources)
 {
-	m_pDeviceResources = resources;
+	_deviceResources = resources;
 
-	m_hAngle = 0.0f;
-	m_vAngle = 0.0f;
+	_hAngle = 0.0f;
+	_vAngle = 0.0f;
 
-	m_radius = 6.0f;
-	m_hAngle = 0.0f;
-	m_vAngle = 0.0f;
+	_radius = 6.0f;
+	_hAngle = 0.0f;
+	_vAngle = 0.0f;
 
 	Initialize();
 }
 
 VOID Camera::Initialize()
 {
-	auto z = m_radius * sin(m_hAngle * -1);
-	auto x = sqrt(pow(m_radius, 2) - pow(z, 2));
+	auto z = _radius * sin(_hAngle * -1);
+	auto x = sqrt(pow(_radius, 2) - pow(z, 2));
 
-	auto eyePos = new XMFLOAT3{ 0.0f, 4.0f, m_radius };
-	m_eyePosition = shared_ptr<XMFLOAT3>(eyePos);
+	auto eyePos = new XMFLOAT3{ 0.0f, 4.0f, _radius };
+	_eyePosition = shared_ptr<XMFLOAT3>(eyePos);
 
 	auto focusPos = new XMFLOAT3{ 0.0f, 0.0f, 0.0f };
-	m_focusPosition = shared_ptr<XMFLOAT3>(focusPos);
+	_focusPosition = shared_ptr<XMFLOAT3>(focusPos);
 
 	auto upDir = new XMFLOAT3{ 0.0f, 1.0f, 0.0f };
-	m_upDirection = shared_ptr<XMFLOAT3>(upDir);
+	_upDirection = shared_ptr<XMFLOAT3>(upDir);
 
 	auto wMatrix = XMMatrixTranspose(XMMatrixIdentity());
 
@@ -36,10 +36,9 @@ VOID Camera::Initialize()
 
 	auto vMatrix = XMMatrixTranspose(
 		XMMatrixLookAtRH(
-		XMLoadFloat3(m_eyePosition.get()),
-		XMLoadFloat3(m_focusPosition.get()),
-		XMLoadFloat3(m_upDirection.get())
-		)
+			XMLoadFloat3(_eyePosition.get()),
+			XMLoadFloat3(_focusPosition.get()),
+			XMLoadFloat3(_upDirection.get()))
 		);
 
 	XMFLOAT4X4 view;
@@ -60,22 +59,22 @@ VOID Camera::Initialize()
 	XMFLOAT4X4 projection;
 	XMStoreFloat4x4(&projection, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
 
-	auto eye = XMFLOAT4(m_eyePosition->x, m_eyePosition->y, m_eyePosition->z, 0.0f);
-	auto constBufferData = new ConstantBufferData{ world, view, projection, eye };
+	auto cameraPosition = XMFLOAT4(_eyePosition->x, _eyePosition->y, _eyePosition->z, 0.0f);
+	auto constBufferData = new ConstantBufferData{ world, view, projection, cameraPosition };
 
-	m_pConstBufferData = shared_ptr<ConstantBufferData>(constBufferData);
+	_constBufferData = shared_ptr<ConstantBufferData>(constBufferData);
 
 	InitializeConstantBuffer();
 }
 
 VOID Camera::SetPosition(XMFLOAT3* p)
 {
-	m_focusPosition = shared_ptr<XMFLOAT3>(p);
+	_focusPosition = shared_ptr<XMFLOAT3>(p);
 }
 
 VOID Camera::SetFocusPoint(XMFLOAT3* p)
 {
-	m_eyePosition = shared_ptr<XMFLOAT3>(p);
+	_eyePosition = shared_ptr<XMFLOAT3>(p);
 }
 
 VOID Camera::Move(POINT* p)
@@ -89,11 +88,11 @@ VOID Camera::Rotate(POINT* p)
 	auto moderationH = 0.001;
 	auto moderationV = 0.009;
 
-	m_hAngle = m_hAngle + p->x * moderationH;
-	m_vAngle = m_vAngle + p->y * moderationV;
+	_hAngle = _hAngle + p->x * moderationH;
+	_vAngle = _vAngle + p->y * moderationV;
 
 	auto world = GetConstBufferData()->World;
-	XMStoreFloat4x4(&world, XMMatrixTranspose(XMMatrixRotationY(m_hAngle)));
+	XMStoreFloat4x4(&world, XMMatrixTranspose(XMMatrixRotationY(_hAngle)));
 }
 
 VOID Camera::InitializeConstantBuffer()
@@ -112,6 +111,6 @@ VOID Camera::InitializeConstantBuffer()
 	constantBufferData.SysMemSlicePitch = 0;
 
 	ID3D11Buffer* constBuffer;
-	auto result = m_pDeviceResources->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &constBuffer);
-	m_pConstBuffer = shared_ptr<ID3D11Buffer>(constBuffer);
+	auto result = _deviceResources->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &constBuffer);
+	_constBuffer = shared_ptr<ID3D11Buffer>(constBuffer);
 }
