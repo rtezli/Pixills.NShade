@@ -47,7 +47,7 @@ struct RENDERER_SETTINGS
 EXTERN class API Renderer
 {
 public:
-	Renderer(DeviceResources *pResources, BOOL useSwapChain);
+	Renderer(DeviceResources *resources, BOOL useSwapChain);
 public:
 	HRESULT	ResizeSwapChain(UINT32 newWidth, UINT32 newHeight);
 	HRESULT SetShaderParameters();
@@ -56,12 +56,11 @@ public:
 	HRESULT	Render();
 
 public:
-	Scene*						const GetScene(){				return m_pScene.get(); }
-	BOOL						const GetInitialized(){			return m_isInitialized; };
+	Scene*						const GetScene(){				return _scene.get(); }
 private:
 	ID3D11Device*				const GetDevice(){ return GetResources()->Device; }
 	ID3D11DeviceContext*		const GetDeviceContext(){ return GetResources()->DeviceContext; }
-	DeviceResources*			const GetResources(){ return m_pDeviceResources.get(); }
+	DeviceResources*			const GetResources(){ return _deviceResources.get(); }
 	/* render target */
 	HRESULT CreateRenderTargetDesciption();
 	HRESULT CreateRenderTargetViewDesciption();
@@ -88,8 +87,6 @@ private:
 	/* shadow map */
 	HRESULT CreateShadows();
 
-	HRESULT CreateLights();
-
 	/* rasterizer */
 	HRESULT CreateRasterizerDescription();
 	HRESULT CreateRasterizer();
@@ -97,25 +94,24 @@ private:
 	HRESULT CreateViewPort();
 
 private:
-	shared_ptr<DeviceResources>			m_pDeviceResources;
-	shared_ptr<Scene>					m_pScene;
+	shared_ptr<DeviceResources>			_deviceResources;
+	shared_ptr<Scene>					_scene;
 
-	RenderingQuality*					m_pRenderingQuality;
+	RenderingQuality*					_renderingQuality;
 
-	D3D11_TEXTURE2D_DESC				m_pDepthBufferDesc;
-	DXGI_SWAP_CHAIN_DESC				m_pSwapChainDescription;
+	D3D11_TEXTURE2D_DESC				_depthBufferDesc;
+	DXGI_SWAP_CHAIN_DESC				_swapChainDescription;
 
-	D3D11_TEXTURE2D_DESC				m_pDepthStencilDesc;
-	D3D11_DEPTH_STENCIL_DESC			m_pDepthStencilStateDesc;
-	D3D11_DEPTH_STENCIL_VIEW_DESC		m_pDepthStencilViewDesc;
+	D3D11_TEXTURE2D_DESC				_depthStencilDesc;
+	D3D11_DEPTH_STENCIL_DESC			_depthStencilStateDesc;
+	D3D11_DEPTH_STENCIL_VIEW_DESC		_depthStencilViewDesc;
 
-	D3D11_TEXTURE2D_DESC				m_pRenderTargetDesc;
-	D3D11_RENDER_TARGET_VIEW_DESC		m_pRenderTargetViewDesc;
+	D3D11_TEXTURE2D_DESC				_renderTargetDesc;
+	D3D11_RENDER_TARGET_VIEW_DESC		_renderTargetViewDesc;
 
-	D3D11_RASTERIZER_DESC				m_pRasterizerDesc;
+	D3D11_RASTERIZER_DESC				_rasterizerDesc;
 
-	BOOL								m_isInitialized;
-	BOOL								m_useSwapChain;
-	BOOL								m_renderShadows;
-	BOOL								m_rasterizerUseMultiSampling;
+	BOOL								_useSwapChain;
+	BOOL								_renderShadows;
+	BOOL								_rasterizerUseMultiSampling;
 };
