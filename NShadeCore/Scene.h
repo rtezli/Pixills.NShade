@@ -9,6 +9,7 @@
 #include "ambientlight.h"
 #include "pointlight.h"
 #include "camera.h"
+#include "d3d.h"
 
 struct SceneFile
 {

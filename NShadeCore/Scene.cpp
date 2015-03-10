@@ -61,12 +61,11 @@ VOID Scene::Render()
 
 		// maybe we provide extra data here and write it to the registers instead of merging data hardcoded
 		_resources->DeviceContext->VSSetConstantBuffers(0, 1, &cameraConstBuffer);
-
-		//for (UINT i = 0; i < lights->size(); i++)
+		//for (UINT i = 1; i <= lights->size(); i++)
 		//{
 		//	auto light = lights->at(i);
 		//	auto lightResourceView = light.GetResourceView();
-		//	_resources->DeviceContext->VSSetShaderResources(i, 1, &lightResourceView);
+		//	_resources->DeviceContext->VSSetConstantBuffers(i, 1, &lightResourceView);
 		//}
 
 		_resources->DeviceContext->VSSetShader(vertexShader->Shader(), NULL, 0);
