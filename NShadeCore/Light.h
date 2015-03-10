@@ -12,14 +12,17 @@ enum LightType : CHAR
 	Ambient = 6
 };
 
-class Light : public ConstantBufferProvider
+class Light
 {
 public:
-	Light();
-	ID3D11ShaderResourceView*	const GetResourceView(){ return _resourceView.get(); };
+	Light(DeviceResources *deviceResources);
 public:
-	shared_ptr<XMFLOAT4>					_color;
-	shared_ptr<XMFLOAT4>					_position;
-	shared_ptr<ID3D11ShaderResourceView>	_resourceView;
+	XMFLOAT4*		const Parameters(){ return _parameters.get(); };
+	ID3D11Buffer*	const GetBuffer(){ return _buffer.get(); };
+protected:
+	VOID						InitializeBuffer();
+	shared_ptr<ID3D11Buffer>	_buffer;
+	DeviceResources*			_deviceResources;
+	shared_ptr<XMFLOAT4>		_parameters;
 };
 

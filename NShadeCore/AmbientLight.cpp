@@ -2,13 +2,10 @@
 #include "AmbientLight.h"
 
 
-AmbientLight::AmbientLight(XMFLOAT3 *pColor, FLOAT *pIntensity)
+AmbientLight::AmbientLight(DeviceResources *deviceResources, XMFLOAT3 *color, FLOAT *intensity) : Light(deviceResources)
 {
-	m_pColor = shared_ptr<XMFLOAT3>(pColor);
-	m_pIntensity = shared_ptr<FLOAT>(pIntensity);
-}
-
-XMFLOAT4* AmbientLight::GetColorIntensity()
-{
-	return new XMFLOAT4(m_pColor->x, m_pColor->y, m_pColor->x, m_pIntensity);
+	_color = shared_ptr<XMFLOAT3>(color);
+	_intensity = shared_ptr<FLOAT>(intensity);
+	_parameters = shared_ptr<XMFLOAT4>(new XMFLOAT4(color->x, color->y, color->z, *intensity));
+	InitializeBuffer();
 }

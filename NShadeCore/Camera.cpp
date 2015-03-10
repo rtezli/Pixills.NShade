@@ -65,6 +65,7 @@ VOID Camera::Initialize()
 	_constBufferData = shared_ptr<ConstantBufferData>(constBufferData);
 
 	InitializeConstantBuffer();
+	InitializePositionBuffer();
 }
 
 VOID Camera::SetPosition(XMFLOAT3* p)
@@ -113,4 +114,24 @@ VOID Camera::InitializeConstantBuffer()
 	ID3D11Buffer* constBuffer;
 	auto result = _deviceResources->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &constBuffer);
 	_constBuffer = shared_ptr<ID3D11Buffer>(constBuffer);
+}
+
+VOID Camera::InitializePositionBuffer()
+{
+	D3D11_BUFFER_DESC positionBufferDesc;
+	positionBufferDesc.ByteWidth = sizeof(XMFLOAT3);
+	positionBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	positionBufferDesc.CPUAccessFlags = 0;
+	positionBufferDesc.MiscFlags = 0;
+	positionBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+
+	D3D11_SUBRESOURCE_DATA positionBufferData;
+	positionBufferData.pSysMem = GetPositionBufferData();
+	positionBufferData.SysMemPitch = 0;
+	positionBufferData.SysMemSlicePitch = 0;
+
+	ID3D11Buffer* positionBuffer;
+	auto result = _deviceResources->Device->CreateBuffer(&positionBufferDesc, &positionBufferData, &positionBuffer);
+	_positionBuffer = shared_ptr<ID3D11Buffer>(positionBuffer);
 }

@@ -27,9 +27,12 @@ public:
 	ID3D11Buffer*		const GetConstBuffer(){ return _constBuffer.get(); };
 	ConstantBufferData*	const GetConstBufferData(){ return _constBufferData.get(); };
 
+	ID3D11Buffer*		const GetPositionBuffer(){ return _positionBuffer.get(); };
+	XMFLOAT3*			const GetPositionBufferData(){ return _eyePosition.get(); };
+
 	VOID				Initialize();
 	VOID				InitializeConstantBuffer();
-
+	VOID				InitializePositionBuffer();
 	VOID				MoveTo(XMFLOAT3* p);
 	VOID				Rotate(XMFLOAT3* p);
 	VOID				SetPosition(XMFLOAT3* p);
@@ -39,6 +42,8 @@ public:
 	FLOAT				const GetHorizontalAngle(){ return _hAngle; };
 	FLOAT				const GetAspectRatio(){ return _deviceResources->ViewPort->Width / _deviceResources->ViewPort->Height; };
 	FLOAT				const GetFieldOfView(){ return 70.0f * XM_PI / 180.0f; };
+
+
 private:
 	shared_ptr<XMFLOAT3>			_eyePosition;
 	shared_ptr<XMFLOAT3>			_focusPosition;
@@ -46,6 +51,8 @@ private:
 	
 	shared_ptr<ID3D11Buffer>		_constBuffer;
 	shared_ptr<ConstantBufferData>	_constBufferData;
+
+	shared_ptr<ID3D11Buffer>		_positionBuffer;
 
 	DeviceResources*				_deviceResources;
 

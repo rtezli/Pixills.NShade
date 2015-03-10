@@ -1,15 +1,15 @@
 #include "stdafx.h"
 #include "vertexshader.h"
 
-VertexShader::VertexShader(DeviceResources* pResources)
+VertexShader::VertexShader(DeviceResources * deviceResources)
 {
-	PResources = pResources;
+	_Resources = deviceResources;
 }
 
 VOID VertexShader::Load(CHAR *fileName)
 {
-	PByteCode = File::ReadFileBytes(fileName);
-	auto result = PResources->Device->CreateVertexShader(PByteCode->Bytes, PByteCode->Length, NULL, &PVertexShader);
+	_ByteCode = File::ReadFileBytes(fileName);
+	auto result = _Resources->Device->CreateVertexShader(_ByteCode->Bytes, _ByteCode->Length, NULL, &_VertexShader);
 }
 
 VOID VertexShader::Compile(CHAR *file, ShaderVersion version)
@@ -17,25 +17,8 @@ VOID VertexShader::Compile(CHAR *file, ShaderVersion version)
 
 }
 
-//VOID VertexShader::SetExtraDataSize(UINT size)
-//{
-//	ExtraInputDataSize = size;
-//	InputDataSize = sizeof(NVertex) + size;
-//}
-
 VOID VertexShader::CreateBuffers(vector<NVertex> *vertices, vector<UINT> *indices)
 {
-	UINT size = vertices->size();
-	CHAR* dataArray;
-	dataArray = (CHAR*)malloc(size * InputDataSize);
-
-	for (UINT v = 0; v < size; v++)
-	{
-		auto vertex = vertices->at(v);
-		memcpy(&dataArray[v], &vertex, sizeof(NVertex));
-		memcpy(&dataArray[v], ExtraInputData, ExtraInputDataSize);
-	}
-
 	D3D11_BUFFER_DESC  vertexBufferDesc;
 	vertexBufferDesc.ByteWidth = sizeof(NVertex) * vertices->size();
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -50,8 +33,8 @@ VOID VertexShader::CreateBuffers(vector<NVertex> *vertices, vector<UINT> *indice
 	vertexBufferData.SysMemSlicePitch = 0;
 
 	ID3D11Buffer* vertexBuffer;
-	auto result = PResources->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &vertexBuffer);
-	PVertexBuffer = shared_ptr<ID3D11Buffer>(vertexBuffer);
+	auto result = _Resources->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &vertexBuffer);
+	_VertexBuffer = shared_ptr<ID3D11Buffer>(vertexBuffer);
 
 	D3D11_BUFFER_DESC indexBufferDesc;
 	indexBufferDesc.ByteWidth = sizeof(CHAR) * indices->size();
@@ -67,13 +50,13 @@ VOID VertexShader::CreateBuffers(vector<NVertex> *vertices, vector<UINT> *indice
 	indexBufferDesc.StructureByteStride = 0;
 
 	ID3D11Buffer* indexBuffer;
-	result = PResources->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &indexBuffer);
-	PIndexBuffer = shared_ptr<ID3D11Buffer>(indexBuffer);
+	result = _Resources->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &indexBuffer);
+	_IndexBuffer = shared_ptr<ID3D11Buffer>(indexBuffer);
 }
 
 VOID VertexShader::AppendExtraData(CHAR *data, UINT size)
 {
-	ExtraInputData = data;
-	ExtraInputDataSize += size;
-	InputDataSize = sizeof(NVertex) + size;
+	_ExtraInputData = data;
+	_ExtraInputDataSize += size;
+	_InputDataSize = sizeof(NVertex) + size;
 }

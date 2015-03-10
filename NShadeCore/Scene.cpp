@@ -44,7 +44,9 @@ VOID Scene::Render()
 		auto vertexShader = shaders->VertexShader;
 		auto layout = shaders->VertexShader->GetInputLayout();
 
-		auto cameraConstBuffer = GetCamera()->GetConstBuffer();
+		auto camera = GetCamera();
+		auto cameraConstBuffer = camera->GetConstBuffer();
+		auto cameraPositionBuffer = camera->GetPositionBuffer();
 		auto lights = GetLights();
 		auto ambientLightConstBuffer = GetCamera()->GetConstBuffer();
 
@@ -61,12 +63,14 @@ VOID Scene::Render()
 
 		// maybe we provide extra data here and write it to the registers instead of merging data hardcoded
 		_resources->DeviceContext->VSSetConstantBuffers(0, 1, &cameraConstBuffer);
-		//for (UINT i = 1; i <= lights->size(); i++)
-		//{
-		//	auto light = lights->at(i);
-		//	auto lightResourceView = light.GetResourceView();
-		//	_resources->DeviceContext->VSSetConstantBuffers(i, 1, &lightResourceView);
-		//}
+		_resources->DeviceContext->VSSetConstantBuffers(1, 1, &cameraPositionBuffer);
+
+		for (UINT i = 0; i < lights->size(); i++)
+		{
+			auto light = lights->at(i);
+			auto buffer = light.GetBuffer();
+			_resources->DeviceContext->VSSetConstantBuffers(i + 2, 1, &buffer);
+		}
 
 		_resources->DeviceContext->VSSetShader(vertexShader->Shader(), NULL, 0);
 
@@ -78,63 +82,58 @@ VOID Scene::Render()
 	}
 }
 
-VOID Scene::AddModel(Model *pModel)
+VOID Scene::AddModel(Model *model)
 {
 	if (_models == NULL)
 	{
 		_models = shared_ptr<vector<Model>>();
 	}
-	_models->push_back(*pModel);
+	_models->push_back(*model);
 }
 
-VOID Scene::AddLight(Light *pLight)
+VOID Scene::AddLight(Light *light)
 {
 	if (_lights == NULL)
 	{
 		_lights = shared_ptr<vector<Light>>();
 	}
-	_lights->push_back(*pLight);
+	_lights->push_back(*light);
 }
 
-VOID Scene::AddCamera(Camera *pCamera)
+VOID Scene::AddCamera(Camera *camera)
 {
-	_camera = shared_ptr<Camera>(pCamera);
+	_camera = shared_ptr<Camera>(camera);
 }
 
 VOID Scene::Load(wstring fileName)
 {
 }
 
-Scene* Scene::CreateStandardScene(DeviceResources* pResources)
+Scene* Scene::CreateStandardScene(DeviceResources *deviceResources)
 {
-	auto scene = new Scene(pResources);
+	auto scene = new Scene(deviceResources);
 
-	auto stdCamera = new Camera(pResources);
+	auto stdCamera = new Camera(deviceResources);
 	stdCamera->SetPosition(new XMFLOAT3(0.0f, 0.0f, 5.0f));
 	stdCamera->SetFocusPoint(new XMFLOAT3(0.0f, 0.0f, 0.0f));
 	scene->AddCamera(stdCamera);
 
 	auto ambientLightColor = new XMFLOAT3(1.0f, 1.0f, 1.0f);
 	auto ambientLightIntensity = 1.0f;
-	auto stdAmbientLight = new AmbientLight(ambientLightColor, &ambientLightIntensity);
+	auto stdAmbientLight = new AmbientLight(deviceResources, ambientLightColor, &ambientLightIntensity);
 	scene->AddLight(stdAmbientLight);
 
 	auto pointLightPosition = new XMFLOAT3(1.0f, 1.0f, 1.0f);
 	auto pointLightColor = new XMFLOAT3(1.0f, 1.0f, 1.0f);
 	auto pointLightIntensity = 1.0f;
-	auto stdPointLight = new PointLight(pResources, pointLightPosition, pointLightColor, &pointLightIntensity);
+	auto stdPointLight = new PointLight(deviceResources, pointLightPosition, pointLightColor, &pointLightIntensity);
 	scene->AddLight(stdPointLight);
 
 	//auto stdPixelShader = ResourceManager::Current->MainResourceMap->GetSubtree("Files")->GetValue("Assets/PhongPixelShader.cso");
 	//auto stdVertexShader = ResourceManager::Current->MainResourceMap->GetSubtree("Files")->GetValue("Assets/PhongVertexShader.cso");
 
-	auto stdPixelShader = new PhongShader::PhongPixelShader("../Debug/PhongPixelShader.cso", pResources);
-	auto stdVertexShader = new PhongShader::PhongVertexShader("../Debug/PhongVertexShader.cso", pResources);
-
-
-	//stdVertexShader->AppendExtraData(stdAmbientLight->GetColorIntensity(), sizeof(XMFLOAT4));
-	//stdVertexShader->AppendExtraData(stdPointLight->GetPositionIntensity(), sizeof(XMFLOAT4));
-	//stdVertexShader->CreateBuffers();
+	auto stdPixelShader = new PhongShader::PhongPixelShader("../Debug/PhongPixelShader.cso", deviceResources);
+	auto stdVertexShader = new PhongShader::PhongVertexShader("../Debug/PhongVertexShader.cso", deviceResources);
 
 	auto stdMaterial = new Material();
 	auto shaderSet = new ShaderSet();
