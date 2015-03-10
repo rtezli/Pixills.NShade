@@ -30,6 +30,7 @@ namespace rxsub = rx::subjects;
 #include "directxmath.h"
 #include "dinput.h"
 
+#include "ioc.h"
 #include "debug.h"
 #include "deviceresources.h"
 #include "types.h"

@@ -148,6 +148,7 @@ HRESULT D3DSystem::CreateDevice()
 	}
 
 	auto resources = new DeviceResources(device, context);
+
 	auto viewport = CreateViewPort(_windowHandle);
 
 	resources->ViewPort = new D3D11_VIEWPORT(*viewport);
@@ -159,7 +160,8 @@ HRESULT D3DSystem::CreateDevice()
 	resources->VSync = _vSync;
 	resources->NearZ = 0.0f;
 	resources->FarZ = 1000.0f;
-
+ 
+	//IOC::Register<DeviceResources>(resources);
 	_deviceResources = resources;
 
 	return createResult;

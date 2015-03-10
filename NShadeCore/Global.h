@@ -1,17 +1,21 @@
 #pragma once
-class Global
+
+#include "common.h"
+
+class G
 {
 public:
-	static Global& instance()
+	static G& I()
 	{
-		static Global _instance;
+		static G _instance;
 		return _instance;
 	}
-	~Global() {}
+	~G() {}
+	DeviceResources* Resources;
 private:
-	Global() {}
-	Global(const Global&);
-	Global & operator = (const Global &);
-	static Global* _instance;
+	G() {}
+	G(const G&);
+	G & operator = (const G &);
+	static G* _instance;
 };
 
