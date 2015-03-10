@@ -13,7 +13,7 @@ public:
 	static T* Get()
 	{
 		std::vector<T>* instances = IOC::GetInstances();
-		//auto tid = typeid(T).name();
+		auto tid = typeid(T).name();
 		//std::find(instances->begin(), instances->end(), tid)
 		//return (T*)(from(instances) >> first_or_default([&](void* obj) {return typeid(obj) == typeid(T); }));
 		return nullptr;
@@ -23,6 +23,7 @@ public:
 	static void Register(T* o)
 	{
 		std::vector<void*>* instances = IOC::GetInstances();
+		auto tid = typeid(T).name();
 		//T* any = (T*)(from(instances) >> first_or_default([&](void* obj) {return typeid(obj) == typeid(T); }));
 		//if (!any)
 		//{
@@ -34,6 +35,7 @@ public:
 	static void RegisterSingleton(T* o)
 	{
 		std::vector<void*>* instances = IOC::GetInstances();
+		auto tid = typeid(T).name();
 		//T* any = (T*)(from(instances) >> first_or_default([&](void* obj) {return typeid(obj) == typeid(T); }));
 		//if (!any)
 		//{
@@ -44,8 +46,8 @@ public:
 private:
 	IOC();
 private:
-	static std::vector<void*>* _instances;
-	static std::vector<void*>* GetInstances()
+	static std::vector<void*>* IOC::_instances;
+	static std::vector<void*>* IOC::GetInstances()
 	{
 		if (!_instances)
 		{
