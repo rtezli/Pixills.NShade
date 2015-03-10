@@ -66,7 +66,7 @@ VOID Scene::Render()
 		//{
 		//	auto light = lights->at(i);
 		//	auto lightResourceView = light.GetResourceView();
-		//	_resources->DeviceContext->VSSetShaderResources(i, lights->size(), &lightResourceView);
+		//	_resources->DeviceContext->VSSetShaderResources(i, 1, &lightResourceView);
 		//}
 
 		_resources->DeviceContext->VSSetShader(vertexShader->Shader(), NULL, 0);

@@ -1,12 +1,18 @@
 #include "stdafx.h"
-#include "D3D.h"
+#include "d3d.h"
 
-
-D3D::D3D()
+VOID D3D::SetRenderTarget(DeviceResources *resources, ID3D11Buffer *buffer, TextureSettings *settings)
 {
+	auto renderTarget = new BufferTarget(resources);
+	//auto view = renderTarget->GetView();
+	//resources->DeviceContext->OMSetRenderTargets(1, &view, NULL);
 }
 
-
-D3D::~D3D()
+VOID D3D::SetRenderTarget(DeviceResources *resources, ID3D11Texture2D *texture)
 {
+	TextureSettings settings;
+	auto renderTarget = new TextureTarget(resources, &settings);
+	//auto view = renderTarget->GetView();
+	//resources->DeviceContext->OMSetRenderTargets(1, &view, NULL);
 }
+

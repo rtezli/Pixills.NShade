@@ -13,6 +13,8 @@ public:
 	static T* Get()
 	{
 		std::vector<T>* instances = IOC::GetInstances();
+		//auto tid = typeid(T).name();
+		//std::find(instances->begin(), instances->end(), tid)
 		//return (T*)(from(instances) >> first_or_default([&](void* obj) {return typeid(obj) == typeid(T); }));
 		return nullptr;
 	}

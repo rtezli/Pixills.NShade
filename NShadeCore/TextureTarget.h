@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.h"
+#include "rendertarget.h"
 
 struct TextureSettings
 {
@@ -19,14 +20,13 @@ struct TextureSettings
 	UINT SampleCount;
 };
 
-class TextureTarget
+class TextureTarget : public RenderTarget
 {
 public:
 	TextureTarget(DeviceResources *resources, TextureSettings *settings);
 public:
 	VOID								SetRenderTarget(ID3D11DepthStencilView *depthStencil);
 	VOID								ClearRenderTarget(ID3D11DepthStencilView *depthStencil);
-	ID3D11ShaderResourceView*			const View(){ return _shaderResourceView; }
 private:
 	DeviceResources*					_deviceResources;
 	ID3D11Texture2D*					_renderTargetTexture;
