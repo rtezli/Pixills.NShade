@@ -9,7 +9,9 @@ VOID Model::LoadModelFromFBXFile(CHAR *fileName)
 	auto result = nshade::FbxReader::Read(fileName, vertices, indices);
 
 	_vertices = shared_ptr<vector<NVertex>>(vertices);
+	_vertexCount = _vertices->size();
 	_indices = shared_ptr<vector<UINT>>(indices);
+	_indexCount = _indices->size();
 }
 
 VOID Model::LoadModelFromOBJFile(CHAR *fileName, BOOL isRightHand)
@@ -20,7 +22,9 @@ VOID Model::LoadModelFromOBJFile(CHAR *fileName, BOOL isRightHand)
 	auto result = ObjParser::Parse(GetVertices(), GetIndices(), fileName);
 
 	_vertices = shared_ptr<vector<NVertex>>(vertices);
+	_vertexCount = _vertices->size();
 	_indices = shared_ptr<vector<UINT>>(indices);
+	_indexCount = _indices->size();
 
 	CreateBuffers();
 }

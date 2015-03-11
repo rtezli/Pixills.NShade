@@ -49,6 +49,7 @@ VOID Scene::Render()
 		auto lights = GetLights();
 		auto ambientLightConstBuffer = GetCamera()->GetConstBuffer();
 
+		auto vertexShader = shaders->VertexShader;
 		auto vertexBuffer = vertexShader->GetVertexBuffer();
 		auto indexBuffer = vertexShader->GetIndexBuffer();
 		auto strides = vertexShader->GetInputSize();
@@ -71,13 +72,13 @@ VOID Scene::Render()
 			_resources->DeviceContext->VSSetConstantBuffers(i + 2, 1, &buffer);
 		}
 
-		_resources->DeviceContext->VSSetShader(shaders->VertexShader->Shader(), NULL, 0);
+		_resources->DeviceContext->VSSetShader(vertexShader->Shader(), NULL, 0);
 
 		// Check if this is neccessary if the pixel shader does not use the registers
-		_resources->DeviceContext->PSSetConstantBuffers(0, 1, &cameraConstBuffer);
+		//_resources->DeviceContext->PSSetConstantBuffers(0, 1, &cameraConstBuffer);
 		_resources->DeviceContext->PSSetShader(shaders->PixelShader->Shader(), NULL, 0);
 
-		_resources->DeviceContext->DrawIndexed(model.GetIndices()->size(), 0, 0);
+		_resources->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
 	}
 }
 

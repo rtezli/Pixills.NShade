@@ -28,6 +28,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
 	float4 reflect = normalize(2 * diffuse * normal - light);
 
 	float4 specular = saturate(lightIntensity * pow(saturate(dot(reflect, camera)), specularPower));
-	
-	return (ambient + input.Color + diffuse + specular) * lightIntensity;
+
+	//return (ambient + input.Color + diffuse + specular) * lightIntensity;
+	return float4(1.0f, 0.0f, 0.0f, 1.0f);
 }
