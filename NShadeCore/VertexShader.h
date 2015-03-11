@@ -18,8 +18,6 @@ public:
 	UINT						const GetExtraDataSize(){ return _ExtraInputDataSize; }
 
 	VOID						CreateBuffers(vector<NVertex> *vertices, vector<UINT> *indices);
-	VOID						AppendExtraData(CHAR *data, UINT size);
-	//VOID						SetExtraDataSize(UINT size);
 protected:
 	VOID						Load(CHAR *file);
 	VOID						Compile(CHAR *file, ShaderVersion version);

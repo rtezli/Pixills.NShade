@@ -15,6 +15,7 @@ struct VertexShaderInput
 	float4 Color			: COLOR0;
 	float4 Normal			: NORMAL;
 	float2 Uv				: TEXCOORD;
+	float4 PolyPosition		: POSITION1;
 };
 
 struct VertexShaderOutput

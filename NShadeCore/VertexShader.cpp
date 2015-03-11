@@ -37,7 +37,7 @@ VOID VertexShader::CreateBuffers(vector<NVertex> *vertices, vector<UINT> *indice
 	_VertexBuffer = shared_ptr<ID3D11Buffer>(vertexBuffer);
 
 	D3D11_BUFFER_DESC indexBufferDesc;
-	indexBufferDesc.ByteWidth = sizeof(CHAR) * indices->size();
+	indexBufferDesc.ByteWidth = sizeof(UINT) * indices->size();
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufferDesc.CPUAccessFlags = 0;
 	indexBufferDesc.MiscFlags = 0;
@@ -52,11 +52,4 @@ VOID VertexShader::CreateBuffers(vector<NVertex> *vertices, vector<UINT> *indice
 	ID3D11Buffer* indexBuffer;
 	result = _Resources->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &indexBuffer);
 	_IndexBuffer = shared_ptr<ID3D11Buffer>(indexBuffer);
-}
-
-VOID VertexShader::AppendExtraData(CHAR *data, UINT size)
-{
-	_ExtraInputData = data;
-	_ExtraInputDataSize += size;
-	_InputDataSize = sizeof(NVertex) + size;
 }
