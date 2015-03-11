@@ -20,7 +20,6 @@ public:
 		XMFLOAT4X4 World;
 		XMFLOAT4X4 View;
 		XMFLOAT4X4 Projection;
-		XMFLOAT4   CameraPosition;
 	};
 
 public:
@@ -28,15 +27,15 @@ public:
 	ConstantBufferData*	const GetConstBufferData(){ return _constBufferData.get(); };
 
 	ID3D11Buffer*		const GetPositionBuffer(){ return _positionBuffer.get(); };
-	XMFLOAT3*			const GetPositionBufferData(){ return _eyePosition.get(); };
+	XMFLOAT4*			const GetPositionBufferData(){ return _eyePosition.get(); };
 
 	VOID				Initialize();
 	VOID				InitializeConstantBuffer();
 	VOID				InitializePositionBuffer();
-	VOID				MoveTo(XMFLOAT3* p);
+	VOID				MoveTo(XMFLOAT4* p);
 	VOID				Rotate(XMFLOAT3* p);
-	VOID				SetPosition(XMFLOAT3* p);
-	VOID				SetFocusPoint(XMFLOAT3* p);
+	VOID				SetPosition(XMFLOAT4* p);
+	VOID				SetFocusPoint(XMFLOAT4* p);
 
 	FLOAT				const GetVerticalAngle(){ return _vAngle; };
 	FLOAT				const GetHorizontalAngle(){ return _hAngle; };
@@ -45,9 +44,9 @@ public:
 
 
 private:
-	shared_ptr<XMFLOAT3>			_eyePosition;
-	shared_ptr<XMFLOAT3>			_focusPosition;
-	shared_ptr<XMFLOAT3>			_upDirection;
+	shared_ptr<XMFLOAT4>			_eyePosition;
+	shared_ptr<XMFLOAT4>			_focusPosition;
+	shared_ptr<XMFLOAT4>			_upDirection;
 	
 	shared_ptr<ID3D11Buffer>		_constBuffer;
 	shared_ptr<ConstantBufferData>	_constBufferData;

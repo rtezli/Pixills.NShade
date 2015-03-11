@@ -20,14 +20,14 @@ VOID Camera::Initialize()
 	auto z = _radius * sin(_hAngle * -1);
 	auto x = sqrt(pow(_radius, 2) - pow(z, 2));
 
-	auto eyePos = new XMFLOAT3{ 0.0f, 4.0f, _radius };
-	_eyePosition = shared_ptr<XMFLOAT3>(eyePos);
+	auto eyePos = new XMFLOAT4{ 0.0f, 4.0f, _radius, 0.0f };
+	_eyePosition = shared_ptr<XMFLOAT4>(eyePos);
 
-	auto focusPos = new XMFLOAT3{ 0.0f, 0.0f, 0.0f };
-	_focusPosition = shared_ptr<XMFLOAT3>(focusPos);
+	auto focusPos = new XMFLOAT4{ 0.0f, 0.0f, 0.0f, 0.0f };
+	_focusPosition = shared_ptr<XMFLOAT4>(focusPos);
 
-	auto upDir = new XMFLOAT3{ 0.0f, 1.0f, 0.0f };
-	_upDirection = shared_ptr<XMFLOAT3>(upDir);
+	auto upDir = new XMFLOAT4{ 0.0f, 1.0f, 0.0f, 0.0f };
+	_upDirection = shared_ptr<XMFLOAT4>(upDir);
 
 	auto wMatrix = XMMatrixTranspose(XMMatrixIdentity());
 
@@ -36,9 +36,9 @@ VOID Camera::Initialize()
 
 	auto vMatrix = XMMatrixTranspose(
 		XMMatrixLookAtRH(
-			XMLoadFloat3(_eyePosition.get()),
-			XMLoadFloat3(_focusPosition.get()),
-			XMLoadFloat3(_upDirection.get()))
+			XMLoadFloat4(_eyePosition.get()),
+			XMLoadFloat4(_focusPosition.get()),
+			XMLoadFloat4(_upDirection.get()))
 		);
 
 	XMFLOAT4X4 view;
@@ -60,7 +60,7 @@ VOID Camera::Initialize()
 	XMStoreFloat4x4(&projection, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
 
 	auto cameraPosition = XMFLOAT4(_eyePosition->x, _eyePosition->y, _eyePosition->z, 0.0f);
-	auto constBufferData = new ConstantBufferData{ world, view, projection, cameraPosition };
+	auto constBufferData = new ConstantBufferData{ world, view, projection };
 
 	_constBufferData = shared_ptr<ConstantBufferData>(constBufferData);
 
@@ -68,17 +68,17 @@ VOID Camera::Initialize()
 	InitializePositionBuffer();
 }
 
-VOID Camera::SetPosition(XMFLOAT3* p)
+VOID Camera::SetPosition(XMFLOAT4* p)
 {
-	_focusPosition = shared_ptr<XMFLOAT3>(p);
+	_focusPosition = shared_ptr<XMFLOAT4>(p);
 }
 
-VOID Camera::SetFocusPoint(XMFLOAT3* p)
+VOID Camera::SetFocusPoint(XMFLOAT4* p)
 {
-	_eyePosition = shared_ptr<XMFLOAT3>(p);
+	_eyePosition = shared_ptr<XMFLOAT4>(p);
 }
 
-VOID Camera::MoveTo(XMFLOAT3* point)
+VOID Camera::MoveTo(XMFLOAT4* point)
 {
 	auto world = GetConstBufferData()->World;
 	XMStoreFloat4x4(&world, XMMatrixTranspose(XMMatrixTranslation(point->x, point->y, point->z)));
@@ -105,9 +105,10 @@ VOID Camera::InitializeConstantBuffer()
 	constantBufferDesc.MiscFlags = 0;
 	constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 
+	auto constBufferData = GetConstBufferData();
 
 	D3D11_SUBRESOURCE_DATA constantBufferData;
-	constantBufferData.pSysMem = GetConstBufferData();
+	constantBufferData.pSysMem = constBufferData;
 	constantBufferData.SysMemPitch = 0;
 	constantBufferData.SysMemSlicePitch = 0;
 
@@ -118,8 +119,9 @@ VOID Camera::InitializeConstantBuffer()
 
 VOID Camera::InitializePositionBuffer()
 {
+
 	D3D11_BUFFER_DESC positionBufferDesc;
-	positionBufferDesc.ByteWidth = sizeof(XMFLOAT3);
+	positionBufferDesc.ByteWidth = sizeof(XMFLOAT4);
 	positionBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	positionBufferDesc.CPUAccessFlags = 0;
 	positionBufferDesc.MiscFlags = 0;

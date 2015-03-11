@@ -114,8 +114,8 @@ Scene* Scene::CreateStandardScene(DeviceResources *deviceResources)
 	auto scene = new Scene(deviceResources);
 
 	auto stdCamera = new Camera(deviceResources);
-	stdCamera->SetPosition(new XMFLOAT3(0.0f, 0.0f, 5.0f));
-	stdCamera->SetFocusPoint(new XMFLOAT3(0.0f, 0.0f, 0.0f));
+	stdCamera->SetPosition(new XMFLOAT4(0.0f, 0.0f, 5.0f, 0.0f));
+	stdCamera->SetFocusPoint(new XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f));
 	scene->AddCamera(stdCamera);
 
 	auto ambientLightColor = new XMFLOAT3(1.0f, 1.0f, 1.0f);
@@ -123,7 +123,7 @@ Scene* Scene::CreateStandardScene(DeviceResources *deviceResources)
 	auto stdAmbientLight = new AmbientLight(deviceResources, ambientLightColor, &ambientLightIntensity);
 	scene->AddLight(stdAmbientLight);
 
-	auto pointLightPosition = new XMFLOAT3(1.0f, 1.0f, 1.0f);
+	auto pointLightPosition = new XMFLOAT4(1.0f, 1.0f, 1.0f, 0.0f);
 	auto pointLightColor = new XMFLOAT3(1.0f, 1.0f, 1.0f);
 	auto pointLightIntensity = 1.0f;
 	auto stdPointLight = new PointLight(deviceResources, pointLightPosition, pointLightColor, &pointLightIntensity);
