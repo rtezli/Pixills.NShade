@@ -1,49 +1,59 @@
 #pragma once
 
-#include "common.h"
+#include "includes.h"
 #include "export.h"
 
 #include "renderer.h"
+#include "camera.h"
+#include "model.h"
+#include "input.h"
 
 using namespace std::chrono;
 
 EXTERN class API D3DSystem
 {
 public:
+	D3DSystem();
 	~D3DSystem();
 public:
-	HRESULT InitializeForWindow(BOOL vsync, HINSTANCE* instance, HWND* handle, BOOL fullscreen);
-	HRESULT InitializeWithWindow(INT screenWidth, INT screenHeight, BOOL vsync, BOOL fullscreen);
-	LRESULT MessageHandler(HWND *handle, UINT message, WPARAM wParam, LPARAM lParam);
-
+	HRESULT InitializeForWindow(bool vsync, HINSTANCE*, HWND* window, bool fullscreen);
+	HRESULT InitializeWithWindow(int screenWidth, int screenHeight, bool vsync, bool fullscreen);
+	LRESULT MessageHandler(HWND* hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
 	HRESULT Initialize();
-	VOID	Render();
+	void	Render();
 private:
-	HRESULT					InitializeWindow(INT screenWidth, INT screenHeight);
+	HRESULT					InitializeWindow(int screenWidth, int screenHeight);
 	HRESULT					CreateDevice();
-	HRESULT					GetRenderQualitySettings(ID3D11Device *device);
-	vector<MSAA>* 			ProduceMsaaCapability(vector<MSAA> *msaaOptions, INT i);
-
-	D3D11_VIEWPORT*			CreateViewPort(HWND *hwnd);
-
+	HRESULT					CreateInput();
+	HRESULT					GetRenderQualitySettings(ID3D11Device* device);
+	vector<MSAA>* 			ProduceMsaaCapability(vector<MSAA>* msaaOptions, int i);
+	HRESULT					CreateCamera();
+	D3D11_VIEWPORT*			CreateViewPort(HWND* hwnd);
+	HRESULT					LoadModels();
 	HRESULT					CreateRenderer();
 	HRESULT					AttachOnRotate();
 	HRESULT					DetachOnRotate();
 private:
-	DeviceResources*						_deviceResources;
-	HINSTANCE*								_windowInstance;
-	HWND*									_windowHandle;
-	POINT*									_lastPointerPosition;
-	shared_ptr<Renderer>					_renderer;
+	DeviceResources*						m_pDeviceResources;
+	HINSTANCE*								m_pHInstance;
+	HWND*									m_pWindowHandle;
+	POINT*									m_lastPointerPosition;
+	shared_ptr<Renderer>					m_pRenderer;
+	shared_ptr<Camera>						m_pCamera;
+	shared_ptr<Input>						m_pInputDevices;
+	shared_ptr<Model>						m_pModel;
 
-	D3D_FEATURE_LEVEL						_d3dFeatureLevel;
+	D3D_FEATURE_LEVEL						m_D3dFeatureLevel;
 
-	FLOAT									_viewportWidth;
-	FLOAT									_viewportHeight;
-	FLOAT									_nearZ;
-	FLOAT									_farZ;
+	XMVECTOR								m_Position;
+	XMVECTOR								m_Rotation;
 
-	BOOL									_fullScreen;
-	BOOL									_vSync;
-	BOOL									_trackInput;
+	float									m_viewportWidth;
+	float									m_viewportHeight;
+	float									m_nearZ;
+	float									m_farZ;
+
+	bool									m_fullScreen;
+	bool									m_vSync;
+	bool									m_trackInput;
 };

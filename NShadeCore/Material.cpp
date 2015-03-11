@@ -1,11 +1,12 @@
 #include "stdafx.h"
-
-#include "material.h"
+#include "Material.h"
 
 
 Material::Material()
 {
-	Texture = shared_ptr<ID3D11Texture2D>();
-	BumpMap = shared_ptr<ID3D11Texture2D>();
-	DisplacementMap = shared_ptr<ID3D11Texture2D>();
+}
+
+
+Material::~Material()
+{
 }

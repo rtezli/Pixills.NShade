@@ -1,14 +1,14 @@
 #pragma once
 
-#include "common.h"
-#include "pixelshader.h"
+#include "includes.h"
+#include "shader.h"
 
 namespace PhongShader
 {
-	class PhongPixelShader : public PixelShader
+	class PhongPixelSHader : public Shader
 	{
 	public:
-		PhongPixelShader(CHAR *file, DeviceResources* pResources);
-		~PhongPixelShader();
+		PhongPixelSHader(DeviceResources* pResources);
+		~PhongPixelSHader();
 	};
 }

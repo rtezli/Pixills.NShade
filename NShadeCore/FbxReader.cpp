@@ -2,7 +2,15 @@
 
 #include "fbxreader.h"
 
-HRESULT nshade::FbxReader::Read(CHAR *fileName, vector<NVertex> *vertices, vector<UINT> *indices)
+nshade::FbxReader::FbxReader()
+{
+}
+
+nshade::FbxReader::~FbxReader()
+{
+}
+
+HRESULT nshade::FbxReader::Read(char* fileName, vector<nshade::Vertex>* vertices, vector<unsigned int>* indices)
 {
 	auto sdkManager = FbxManager::Create();
 
@@ -52,7 +60,7 @@ HRESULT nshade::FbxReader::Read(CHAR *fileName, vector<NVertex> *vertices, vecto
 	return 0;
 }
 
-HRESULT nshade::FbxReader::TraverseChildren(FbxNode *node, vector<FbxNode*> *mesh)
+HRESULT nshade::FbxReader::TraverseChildren(FbxNode* node, vector<FbxNode*>* mesh)
 {
 	auto count = node->GetChildCount();
 	for (auto s = 0; s < count; s++)
@@ -60,7 +68,7 @@ HRESULT nshade::FbxReader::TraverseChildren(FbxNode *node, vector<FbxNode*> *mes
 		node = node->GetChild(s);
 		count = node->GetChildCount();
 		auto nodeAttribute = node->GetNodeAttribute();
-		FbxNodeAttribute::EType nodeType = nodeAttribute == NULL
+		FbxNodeAttribute::EType nodeType = nodeAttribute == nullptr
 			? FbxNodeAttribute::eUnknown
 			: nodeAttribute->GetAttributeType();
 
@@ -74,7 +82,7 @@ HRESULT nshade::FbxReader::TraverseChildren(FbxNode *node, vector<FbxNode*> *mes
 			{
 				node = node->GetChild(s);
 				nodeAttribute = node->GetNodeAttribute();
-				nodeType = nodeAttribute == NULL
+				nodeType = nodeAttribute == nullptr
 					? FbxNodeAttribute::eUnknown
 					: nodeAttribute->GetAttributeType();
 
@@ -88,12 +96,12 @@ HRESULT nshade::FbxReader::TraverseChildren(FbxNode *node, vector<FbxNode*> *mes
 	return 0;
 }
 
-HRESULT nshade::FbxReader::TraverseAndStoreFbxNode(vector<FbxNode*> *nodes, FbxAxisSystem *axisSystem, vector<NVertex> *vertices, vector<UINT> *indices)
+HRESULT nshade::FbxReader::TraverseAndStoreFbxNode(vector<FbxNode*>* nodes, FbxAxisSystem* axisSystem, vector<nshade::Vertex>* vertices, vector<unsigned int>* indices)
 {
 	auto count = nodes->size();
 
 	// The scene maybe
-	for (UINT i = 0; i < count; i++)
+	for (unsigned int i = 0; i < count; i++)
 	{
 		auto child = nodes->at(i);
 
@@ -105,7 +113,7 @@ HRESULT nshade::FbxReader::TraverseAndStoreFbxNode(vector<FbxNode*> *nodes, FbxA
 		for (auto cp = 0; cp < controlPointsCount; cp++)
 		{
 			auto point = controlPoints[cp];
-			auto newVertex = new NVertex();
+			auto newVertex = new nshade::Vertex();
 			// Set vertex position (and invert Z)
 			newVertex->Position = FbxReader::ConvertFbxVector4ToXMFLOAT3(&point, axisSystem, 1.0f);
 			vertices->push_back(*newVertex);
@@ -122,16 +130,16 @@ HRESULT nshade::FbxReader::TraverseAndStoreFbxNode(vector<FbxNode*> *nodes, FbxA
 			for (auto v = 0; v < polygonSize; v++)
 			{
 				auto vertexIndex = mesh->GetPolygonVertex(p, v);
-				auto newVertex = new NVertex(vertices->at(vertexIndex));
+				auto newVertex = new nshade::Vertex(vertices->at(vertexIndex));
 
 				// Create the normal
 				FbxVector4 normal;
 				mesh->GetPolygonVertexNormal(p, v, normal);
 				newVertex->Normal = XMFLOAT3
 				{
-					static_cast<FLOAT>(normal.mData[0]),
-					static_cast<FLOAT>(normal.mData[1]),
-					static_cast<FLOAT>(normal.mData[2])
+					static_cast<float>(normal.mData[0]),
+					static_cast<float>(normal.mData[1]),
+					static_cast<float>(normal.mData[2])
 				};
 
 				switch (v)
@@ -173,17 +181,17 @@ HRESULT nshade::FbxReader::TraverseAndStoreFbxNode(vector<FbxNode*> *nodes, FbxA
 	return 0;
 }
 
-XMFLOAT3 nshade::FbxReader::ConvertFbxVector4ToXMFLOAT3(FbxVector4 *coordinate, FbxAxisSystem *axisSystem, FLOAT scale)
+XMFLOAT3 nshade::FbxReader::ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisSystem* axisSystem, float scale)
 {
-	BOOL rightHanded = true;
+	bool rightHanded = true;
 	auto coordSystem = axisSystem->GetCoorSystem();
 	if (coordSystem != FbxAxisSystem::ECoordSystem::eRightHanded)
 	{
 		rightHanded = false;
 	}
 
-	BOOL yUp = true;
-	BOOL xFront = false;
+	bool yUp = true;
+	bool xFront = false;
 
 	int upInverter = 1.0f;
 	int upVectorSign;
@@ -226,9 +234,9 @@ XMFLOAT3 nshade::FbxReader::ConvertFbxVector4ToXMFLOAT3(FbxVector4 *coordinate, 
 
 	dxVector = XMFLOAT3
 	{
-		static_cast<FLOAT>(x),
-		static_cast<FLOAT>(y),
-		static_cast<FLOAT>(z)
+		static_cast<float>(x),
+		static_cast<float>(y),
+		static_cast<float>(z)
 	};
 	return dxVector;
 }

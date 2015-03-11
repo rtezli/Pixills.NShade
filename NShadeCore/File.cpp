@@ -3,10 +3,22 @@
 
 using namespace std;
 
-struct FileBytes* File::ReadFileBytes(CHAR *fileName)
+File::File()
+{
+}
+
+
+File::~File()
+{
+
+
+}
+
+struct FILE_BYTE_RESULT* File::ReadFileBytes(CHAR* fileName)
 {
 	fstream stream;
-	FileBytes* result = (FileBytes*)malloc(sizeof(FileBytes));
+	FILE_BYTE_RESULT* result;
+	ZeroMemory(&result, sizeof(FILE_BYTE_RESULT));
 
 	stream.open(fileName, ios::in | ios::binary);
 	if (stream.good())
@@ -18,7 +30,7 @@ struct FileBytes* File::ReadFileBytes(CHAR *fileName)
 		stream.read(bytes, size);
 		stream.close();
 
-		result->Bytes = bytes;
+		result->FileBytes = bytes;
 		result->Length = size;
 
 		return result;
@@ -29,10 +41,10 @@ struct FileBytes* File::ReadFileBytes(CHAR *fileName)
 	}
 }
 
-struct FileBytes* File::ReadFileBytes(LPCWSTR fileName)
+struct FILE_BYTE_RESULT* File::ReadFileBytes(LPCWSTR fileName)
 {
 	fstream stream;
-	FileBytes* result = (FileBytes*)malloc(sizeof(FileBytes));
+	FILE_BYTE_RESULT* result = (FILE_BYTE_RESULT *)malloc(sizeof(FILE_BYTE_RESULT));
 
 	stream.open(fileName, ios::in | ios::binary);
 	if (stream.good())
@@ -44,7 +56,7 @@ struct FileBytes* File::ReadFileBytes(LPCWSTR fileName)
 		stream.read(bytes, size);
 		stream.close();
 
-		result->Bytes = bytes;
+		result->FileBytes = bytes;
 		result->Length = size;
 
 		return result;
@@ -55,7 +67,7 @@ struct FileBytes* File::ReadFileBytes(LPCWSTR fileName)
 	}
 }
 
-vector<string> File::ReadFileLines(CHAR *fileName)
+vector<string> File::ReadFileLines(CHAR* fileName)
 {
 	ifstream stream(fileName);
 

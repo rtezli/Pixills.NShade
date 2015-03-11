@@ -2,7 +2,7 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
-#include "common.h"
+#include "includes.h"
 
 using namespace DirectX;
 
@@ -16,20 +16,20 @@ private:
 		XMFLOAT3 Move;
 	};
 public:
-	Input(DeviceResources *pDeviceResources);
+	Input(DeviceResources* pDeviceResources);
 	~Input();
 public:
 	HRESULT Initialize();
 	HRESULT CreateMouse();
 	HRESULT CreateKeyboard();
 	HRESULT CreateKinect();
-	void(*OnInput)(MOVE_ROTATE_INPUT *pMove);
+	void(*OnInput)(MOVE_ROTATE_INPUT* move);
 private:
-	BOOL	Frame();
-	BOOL	ReadKeyboard();
-	BOOL	ReadMouse();
-	VOID	ProcessInput();
-	VOID	PublishInput(MOVE_ROTATE_INPUT* move){ (*OnInput)(move); }
+	bool	Frame();
+	bool	ReadKeyboard();
+	bool	ReadMouse();
+	void	ProcessInput();
+	void	PublishInput(MOVE_ROTATE_INPUT* move){ (*OnInput)(move); }
 private:
 	DeviceResources*		m_pDeviceResources;
 	IDirectInput8*			m_pDirectInput;
@@ -37,11 +37,11 @@ private:
 	IDirectInputDevice8*	m_pMouse;
 	IDirectInputDevice8*	m_pKinectMaybe;
 
-	UINT					m_keyboardState[256];
+	unsigned char			m_keyboardState[256];
 	DIMOUSESTATE			m_mouseState;
-	INT						m_ScreenWidth, m_ScreenHeight;
-	INT						m_MouseX, m_MouseY;
-	FLOAT					m_moveGain;
-	FLOAT					m_rotateGain;
+	int						m_ScreenWidth, m_ScreenHeight;
+	int						m_MouseX, m_MouseY;
+	float					m_moveGain;
+	float					m_rotateGain;
 };
 

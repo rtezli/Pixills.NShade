@@ -1,11 +1,11 @@
 #pragma once
 
-#include "common.h"
-#include "vertexshader.h"
+#include "includes.h"
+#include "shader.h"
 
 namespace TesselationShader
 {
-	class TesselationVertexShader : public VertexShader
+	class TesselationVertexShader : public Shader
 	{
 	public:
 		TesselationVertexShader(DeviceResources* pResources);

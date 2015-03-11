@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common.h"
+#include "includes.h"
 
 class RenderingPipeline;
 
@@ -10,7 +10,7 @@ public:
 	RenderingPipelineStep10();
 	~RenderingPipelineStep10();
 public:
-	static RenderingPipeline* CreateForTarget(LPWSTR shaderByteCodeFile, ID3D11Buffer *constanBuffer);
+	static RenderingPipeline* CreateForTarget(LPWSTR shaderByteCodeFile, ID3D11Buffer* constanBuffer);
 };
 
 class RenderingPipelineStep9
@@ -28,8 +28,8 @@ public:
 	RenderingPipelineStep8();
 	~RenderingPipelineStep8();
 public:
-	static RenderingPipelineStep9* LoadPixielShader(LPWSTR shaderByteCodeFile, ID3D11Buffer *constanBuffer);
-	static RenderingPipelineStep9* CompilePixielShader(LPWSTR shaderSourceCode, ID3D11Buffer *constanBuffer);
+	static RenderingPipelineStep9* LoadPixielShader(LPWSTR shaderByteCodeFile, ID3D11Buffer* constanBuffer);
+	static RenderingPipelineStep9* CompilePixielShader(LPWSTR shaderSourceCode, ID3D11Buffer* constanBuffer);
 };
 
 class RenderingPipelineStep7
@@ -50,7 +50,7 @@ public:
 public:
 	static RenderingPipelineStep7* CreateGeometryShader(ID3D11Buffer* constanBuffer);
 	static RenderingPipelineStep7* Skip();
-	static RenderingPipelineStep6* WriteToBuffer(ID3D11Buffer *constanBuffer);
+	static RenderingPipelineStep6* WriteToBuffer(ID3D11Buffer* constanBuffer);
 };
 
 class RenderingPipelineStep5
@@ -59,7 +59,7 @@ public:
 	RenderingPipelineStep5();
 	~RenderingPipelineStep5();
 public:
-	static RenderingPipelineStep6* CreateDomainShader(ID3D11Buffer *constanBuffer);
+	static RenderingPipelineStep6* CreateDomainShader(ID3D11Buffer* constanBuffer);
 	static RenderingPipelineStep6* Skip();
 };
 
@@ -80,7 +80,7 @@ public:
 	RenderingPipelineStep3();
 	~RenderingPipelineStep3();
 public:
-	static RenderingPipelineStep4* LoadHullhaders(ID3D11Buffer *constanBuffer);
+	static RenderingPipelineStep4* LoadHullhaders(ID3D11Buffer* constanBuffer);
 	static RenderingPipelineStep4* Skip();
 };
 
@@ -91,8 +91,8 @@ public:
 	RenderingPipelineStep2();
 	~RenderingPipelineStep2();
 public:
-	static RenderingPipelineStep3* LoadVertexShader(LPWSTR shaderByteCodeFile, ID3D11Buffer *constanBuffer);
-	static RenderingPipelineStep3* CompileVertexShader(LPWSTR shaderSourceCode, ID3D11Buffer *constanBuffer);
+	static RenderingPipelineStep3* LoadVertexShader(LPWSTR shaderByteCodeFile, ID3D11Buffer* constanBuffer);
+	static RenderingPipelineStep3* CompileVertexShader(LPWSTR shaderSourceCode, ID3D11Buffer* constanBuffer);
 };
 
 class RenderingPipelineStep1
@@ -110,5 +110,5 @@ public:
 	RenderingPipeline();
 	~RenderingPipeline();
 public:
-	static RenderingPipelineStep1* LoadScene(vector<INT> indexBuffer, vector<XMFLOAT3> vertexBuffer);
+	static RenderingPipelineStep1* LoadScene(vector<int> indexBuffer, vector<XMFLOAT3> vertexBuffer);
 };

@@ -1,7 +1,8 @@
 #pragma once
 #pragma warning( disable : 4244 )
 
-#include "common.h"
+#include <fstream>
+#include "includes.h"
 
 class File
 {
@@ -9,13 +10,13 @@ public:
 	File();
 	~File();
 public:
-	static struct FileBytes* ReadFileBytes(CHAR *pFileName);
-	static struct FileBytes* ReadFileBytes(LPCWSTR lpFileName);
-	static vector<string>	 ReadFileLines(CHAR *pFileName);
+	static struct FILE_BYTE_RESULT* ReadFileBytes(CHAR* fileName);
+	static struct FILE_BYTE_RESULT* ReadFileBytes(LPCWSTR fileName);
+	static vector<string>			ReadFileLines(CHAR* fileName);
 };
 
-struct FileBytes
+struct FILE_BYTE_RESULT
 {
-	CHAR* Bytes;
-	LONG  Length;
+	CHAR* FileBytes;
+	long Length;
 };

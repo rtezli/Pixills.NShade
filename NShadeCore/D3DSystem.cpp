@@ -1,29 +1,37 @@
 #include "stdafx.h"
 #include "d3dsystem.h"
 
+D3DSystem::D3DSystem()
+{
+}
+
 D3DSystem::~D3DSystem()
 {
-	_renderer.reset();
-	delete _deviceResources;
+	m_pRenderer.reset();
+	m_pCamera.reset();
+	m_pInputDevices.reset();
+	m_pModel.reset();
+
+	delete m_pDeviceResources;
 }
 
 HRESULT D3DSystem::InitializeWithWindow(
-	INT screenWidth,
-	INT screenHeight,
-	BOOL vsync,
-	BOOL fullscreen)
+	int screenWidth,
+	int screenHeight,
+	bool vsync,
+	bool fullscreen)
 {
 	auto result = InitializeWindow(screenWidth, screenHeight);
 	if (FAILED(result))
 	{
 		return result;
 	}
-	return InitializeForWindow(vsync, _windowInstance, _windowHandle, fullscreen);
+	return InitializeForWindow(vsync, m_pHInstance, m_pWindowHandle, fullscreen);
 }
 
-HRESULT D3DSystem::InitializeWindow(INT screenWidth, INT screenHeight)
+HRESULT D3DSystem::InitializeWindow(int screenWidth, int screenHeight)
 {
-	HINSTANCE instance = 0;
+	HINSTANCE hInstance = 0;
 	HWND handle = 0;
 
 	handle = CreateWindow(
@@ -34,30 +42,32 @@ HRESULT D3DSystem::InitializeWindow(INT screenWidth, INT screenHeight)
 		screenWidth,
 		CW_USEDEFAULT,
 		screenHeight,
-		NULL,
-		NULL,
-		instance,
-		NULL);
+		nullptr,
+		nullptr,
+		hInstance,
+		nullptr);
 
 	if (!handle)
 	{
 		return false;
 	}
-	_windowInstance = &instance;
-	_windowHandle = &handle;
+	m_pHInstance = &hInstance;
+	m_pWindowHandle = &handle;
 	return true;
 }
 
 HRESULT D3DSystem::InitializeForWindow(
-	BOOL vsync,
-	HINSTANCE* windowInstance,
-	HWND* windowHandle,
-	BOOL fullscreen)
+	bool vsync,
+	HINSTANCE* hInstance,
+	HWND* hwnd,
+	bool fullscreen)
 {
-	_windowInstance = windowInstance;
-	_windowHandle = windowHandle;
-	_vSync = vsync;
-	_fullScreen = fullscreen;
+	m_pHInstance = hInstance;
+	m_pWindowHandle = hwnd;
+	m_vSync = vsync;
+	m_fullScreen = fullscreen;
+
+	//ShowCursor(false);
 
 	return Initialize();
 }
@@ -66,8 +76,8 @@ HRESULT D3DSystem::Initialize()
 {
 	POINT p;
 	GetCursorPos(&p);
-	_lastPointerPosition = new POINT{ 0.0, 0.0 };
-	_trackInput = false;
+	m_lastPointerPosition = new POINT{ 0.0, 0.0 };
+	m_trackInput = false;
 
 	auto result = CreateDevice();
 	if (FAILED(result))
@@ -81,10 +91,21 @@ HRESULT D3DSystem::Initialize()
 		return result;
 	}
 
+	result = LoadModels();
+	if (FAILED(result))
+	{
+		return result;
+	}
+
+	result = CreateCamera();
+	if (FAILED(result))
+	{
+		return result;
+	}
 	auto sc = rxsc::make_new_thread();
 	auto so = rx::synchronize_in_one_worker(sc);
 	rx::observable<>::interval(sc.now(), FPS(25), so)
-		.subscribe([this](INT val)
+		.subscribe([this](int val)
 	{
 		D3DSystem::Render();
 	}
@@ -114,7 +135,7 @@ HRESULT D3DSystem::CreateDevice()
 	ID3D11DeviceContext* context = 0;
 
 	auto createResult = D3D11CreateDevice(
-		NULL,
+		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE, // D3D_DRIVER_TYPE_WARP, //
 		0,
 		creationFlags,
@@ -122,13 +143,13 @@ HRESULT D3DSystem::CreateDevice()
 		ARRAYSIZE(featureLevels),
 		D3D11_SDK_VERSION,
 		&device,
-		&_d3dFeatureLevel,
+		&m_D3dFeatureLevel,
 		&context);
 
 	if (FAILED(createResult))
 	{
 		createResult = D3D11CreateDevice(
-			NULL,
+			nullptr,
 			D3D_DRIVER_TYPE_SOFTWARE,
 			0,
 			creationFlags,
@@ -136,7 +157,7 @@ HRESULT D3DSystem::CreateDevice()
 			ARRAYSIZE(featureLevels),
 			D3D11_SDK_VERSION,
 			&device,
-			&_d3dFeatureLevel,
+			&m_D3dFeatureLevel,
 			&context);
 	}
 
@@ -148,34 +169,38 @@ HRESULT D3DSystem::CreateDevice()
 	}
 
 	auto resources = new DeviceResources(device, context);
-
-	auto viewport = CreateViewPort(_windowHandle);
+	auto viewport = CreateViewPort(m_pWindowHandle);
 
 	resources->ViewPort = new D3D11_VIEWPORT(*viewport);
 	resources->Device = device;
 	resources->DeviceContext = context;
-	resources->WindowHandle = _windowHandle;
-	resources->WindowInstance = _windowInstance;
-	resources->FullScreen = _fullScreen;
-	resources->VSync = _vSync;
+	resources->WindowHandle = m_pWindowHandle;
+	resources->WindowInstance = m_pHInstance;
+	resources->FullScreen = m_fullScreen;
+	resources->VSync = m_vSync;
 	resources->NearZ = 0.0f;
 	resources->FarZ = 1000.0f;
- 
-	//IOC::Register<DeviceResources>(resources);
-	_deviceResources = resources;
+
+	m_pDeviceResources = resources;
 
 	return createResult;
 }
 
-D3D11_VIEWPORT* D3DSystem::CreateViewPort(HWND *windowHandle)
+HRESULT D3DSystem::CreateInput()
 {
-	RECT windowRect;
+	auto device = shared_ptr<Input>(new Input(m_pDeviceResources));
+	return device->Initialize();
+}
 
-	GetWindowRect(*windowHandle, &windowRect);
-	AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
+D3D11_VIEWPORT* D3DSystem::CreateViewPort(HWND* hwnd)
+{
+	RECT rect;
 
-	auto width = windowRect.right - windowRect.left;
-	auto height = windowRect.bottom - windowRect.top;
+	GetWindowRect(*hwnd, &rect);
+	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, FALSE);
+
+	auto width = rect.right - rect.left;
+	auto height = rect.bottom - rect.top;
 
 	D3D11_VIEWPORT viewPort;
 	viewPort.Width = width;
@@ -188,7 +213,7 @@ D3D11_VIEWPORT* D3DSystem::CreateViewPort(HWND *windowHandle)
 	return new D3D11_VIEWPORT(viewPort);
 }
 
-HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device *device)
+HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device* device)
 {
 	UINT numberOfLevels = 0;
 	HRESULT result;
@@ -240,7 +265,7 @@ HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device *device)
 	return result;
 }
 
-vector<MSAA>* D3DSystem::ProduceMsaaCapability(vector<MSAA> *options, INT i)
+vector<MSAA>* D3DSystem::ProduceMsaaCapability(vector<MSAA>* options, int i)
 {
 	auto localOptions = *options;
 	auto masaa = MSAA_0X;
@@ -255,7 +280,7 @@ vector<MSAA>* D3DSystem::ProduceMsaaCapability(vector<MSAA> *options, INT i)
 	case 8:
 		masaa = MSAA_8X;
 	}
-	BOOL contains = false;
+	bool contains = false;
 	for (int i = 0; localOptions.size(); i++)
 	{
 		if (localOptions[i] == masaa)
@@ -270,22 +295,34 @@ vector<MSAA>* D3DSystem::ProduceMsaaCapability(vector<MSAA> *options, INT i)
 	return new vector<MSAA>(localOptions);
 }
 
+HRESULT D3DSystem::CreateCamera()
+{
+	m_pCamera = shared_ptr<Camera>(new Camera(m_pDeviceResources));
+	m_pCamera->Initialize();
+	return 0;
+}
+
+HRESULT D3DSystem::LoadModels()
+{
+	m_pModel = shared_ptr<Model>(new Model(m_pDeviceResources));
+	auto result = m_pModel->Initialize();
+	return 0;
+}
+
 HRESULT D3DSystem::CreateRenderer()
 {
-	auto scene = Scene::CreateStandardScene(_deviceResources);
-
-	_renderer = shared_ptr<Renderer>(new Renderer(_deviceResources, true));
-	return _renderer->Initialize(scene);
+	m_pRenderer = shared_ptr<Renderer>(new Renderer(m_pDeviceResources, true));
+	return m_pRenderer->Initialize();
 }
 
-VOID D3DSystem::Render()
+void D3DSystem::Render()
 {
-	_renderer->Render();
+	m_pRenderer->Render();
 }
 
-LRESULT D3DSystem::MessageHandler(HWND *hWnd, UINT message, WPARAM wparam, LPARAM lParam)
+LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPARAM lParam)
 {
-	if (this == NULL)
+	if (this == nullptr)
 	{
 		return 0;
 	}
@@ -294,7 +331,7 @@ LRESULT D3DSystem::MessageHandler(HWND *hWnd, UINT message, WPARAM wparam, LPARA
 		return 0;
 	}
 
-	switch (message)
+	switch (umessage)
 	{
 	case WM_ACTIVATE:
 	{
@@ -310,7 +347,7 @@ LRESULT D3DSystem::MessageHandler(HWND *hWnd, UINT message, WPARAM wparam, LPARA
 	// press pointer (left mouse button)
 	case WM_LBUTTONDOWN:
 	{
-		SetCapture(*_windowHandle);
+		SetCapture(*m_pWindowHandle);
 		//ShowCursor(false);
 		POINT p;
 		auto result = GetCursorPos(&p);
@@ -318,8 +355,8 @@ LRESULT D3DSystem::MessageHandler(HWND *hWnd, UINT message, WPARAM wparam, LPARA
 		{
 			return result;
 		}
-		_lastPointerPosition = new POINT(p);
-		_trackInput = true;
+		m_lastPointerPosition = new POINT(p);
+		m_trackInput = true;
 		return 0;
 	}
 
@@ -327,7 +364,7 @@ LRESULT D3DSystem::MessageHandler(HWND *hWnd, UINT message, WPARAM wparam, LPARA
 	case WM_LBUTTONUP:
 	{
 		ReleaseCapture();
-		_trackInput = false;
+		m_trackInput = false;
 	}
 
 	// scrolling (mouse wheel)
@@ -346,7 +383,7 @@ LRESULT D3DSystem::MessageHandler(HWND *hWnd, UINT message, WPARAM wparam, LPARA
 	// move pointer (move mouse)
 	case WM_MOUSEMOVE:
 	{
-		if (_trackInput)
+		if (m_trackInput)
 		{
 			POINT p;
 			auto result = GetCursorPos(&p);
@@ -354,11 +391,11 @@ LRESULT D3DSystem::MessageHandler(HWND *hWnd, UINT message, WPARAM wparam, LPARA
 			{
 				return result;
 			}
-			auto offsetH = p.x - _lastPointerPosition->x;
-			auto offsetV = p.y - _lastPointerPosition->y;
-			auto offset = new XMFLOAT3(offsetH, 0.0f, offsetV);
-			_renderer->GetScene()->GetCamera()->Rotate(offset);
-			_lastPointerPosition = new POINT(p);
+			auto offsetH = p.x - m_lastPointerPosition->x;
+			auto offsetV = p.y - m_lastPointerPosition->y;
+			auto offset = new POINT{ offsetH, offsetV };
+			m_pCamera->Rotate(offset);
+			m_lastPointerPosition = new POINT(p);
 		}
 		return 0;
 	}

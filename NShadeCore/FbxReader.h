@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common.h"
+#include "includes.h"
 
 namespace nshade
 {
@@ -10,11 +10,11 @@ namespace nshade
 		FbxReader();
 		~FbxReader();
 	public:
-		static HRESULT Read(CHAR *pFileName, vector<NVertex> *pVertices, vector<UINT> *pIndices);
+		static HRESULT Read(char* fileName, vector<nshade::Vertex>* vertices, vector<unsigned int>* indices);
 	private:
-		static HRESULT	 TraverseChildren(FbxNode *pNode, vector<FbxNode*> *pMesh);
-		static HRESULT   TraverseAndStoreFbxNode(vector<FbxNode*> *pNodes, FbxAxisSystem *pAxisSystem, vector<NVertex> *pVertices, vector<UINT> *pIndices);
-		static XMFLOAT3  ConvertFbxVector4ToXMFLOAT3(FbxVector4 *pCoordinate, FbxAxisSystem *pAxisSystem, FLOAT scale);
+		static HRESULT	 TraverseChildren(FbxNode* node, vector<FbxNode*>* mesh);
+		static HRESULT   TraverseAndStoreFbxNode(vector<FbxNode*>* nodes, FbxAxisSystem* axisSystem, vector<nshade::Vertex>* vertices, vector<unsigned int>* indices);
+		static XMFLOAT3  ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisSystem* axisSystem, float scale);
 	};
 }
 

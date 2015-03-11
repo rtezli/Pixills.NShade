@@ -1,34 +1,29 @@
-#define PI acos(-1)
-
 struct PixelShaderInput
 {
-	float4 Position			: SV_POSITION;
-	float4 Color			: COLOR0;
-	float4 Normal			: NORMAL;
+	float4 position			: SV_POSITION;
+	float4 color			: COLOR0;
+	float4 normal			: NORMAL;
 
-	float3 CameraPosition	: POSITION1;
-
-	float3 AmbientColor		: COLOR1;
-	float  AmbientIntensity : PSIZE0;
-	float4 PointPosition	: POSITION2;
-	float  PointIntensity	: PSIZE1;
+	float4 ambient			: COLOR1;
+	float4 light			: POSITION1;
+	float4 camera			: POSITION2;
 };
 
 float4 main(PixelShaderInput input) : SV_TARGET
 {
-	float  lightIntensity = 0.45f;
-	float  specularPower = 70.00f;
+	float  lightIntensity = 0.5f;
 
-	float4 normal = normalize(input.Normal);
-	float4 light = normalize(input.PointPosition);
-	float4 camera = normalize(float4(input.CameraPosition, 0.0f));
+	float  specularPower = 50.00f;
 
-	float4 ambient = { 0.2f, 0.2f, 0.2f, 1.0f };
+	float4 normal = normalize(input.normal);
+	float4 light = normalize(input.light);
+	float4 camera = normalize(input.camera);
+
+	float4 ambient = { 1.0f, 0.0f, 1.0f, 1.0f };
 	float4 diffuse = saturate(dot(normal, light));
 	float4 reflect = normalize(2 * diffuse * normal - light);
 
 	float4 specular = saturate(lightIntensity * pow(saturate(dot(reflect, camera)), specularPower));
-
-	//return (ambient + input.Color + diffuse + specular) * lightIntensity;
-	return float4(1.0f, 0.0f, 0.0f, 1.0f);
+	
+	return (ambient + input.color + diffuse + specular) * lightIntensity;
 }

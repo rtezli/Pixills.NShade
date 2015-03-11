@@ -1,15 +1,14 @@
 #pragma once
 
-#include "common.h"
-
-#include "pixelshader.h"
+#include "includes.h"
+#include "shader.h"
 
 namespace ColorShader
 {
-	class ColorPixelShader : public PixelShader
+	class ColorPixelShader : public Shader
 	{
 	public:
-		ColorPixelShader(DeviceResources *pResources);
+		ColorPixelShader(DeviceResources* pResources);
 		~ColorPixelShader();
 	};
 }

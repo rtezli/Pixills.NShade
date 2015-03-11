@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\cpplinq.2013.08.10\build\native\cpplinq.props" Condition="Exists('..\packages\cpplinq.2013.08.10\build\native\cpplinq.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -68,7 +67,7 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros">
-    <NuGetPackageImportStamp>81cc12c4</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>be223af3</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -177,66 +176,41 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AmbientLight.h" />
-    <ClInclude Include="BufferTarget.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ColorPixelShader.h" />
     <ClInclude Include="ColorVertexShader.h" />
-    <ClInclude Include="ConstantBufferProvider.h" />
-    <ClInclude Include="D3D.h" />
     <ClInclude Include="D3DSystem.h" />
-    <ClInclude Include="Debug.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="Export.h" />
     <ClInclude Include="FbxReader.h" />
     <ClInclude Include="File.h" />
-    <ClInclude Include="FirstPersonCamera.h" />
-    <ClInclude Include="Global.h" />
-    <ClInclude Include="IOC.h" />
-    <ClInclude Include="IsometricCamera.h" />
-    <ClInclude Include="Light.h" />
-    <ClInclude Include="OverlayRenderer.h" />
-    <ClInclude Include="Common.h" />
+    <ClInclude Include="FpsTextRenderer.h" />
+    <ClInclude Include="Includes.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ObjParser.h" />
-    <ClInclude Include="Particles.h" />
     <ClInclude Include="PhongPixelShader.h" />
     <ClInclude Include="PhongVertexShader.h" />
-    <ClInclude Include="PixelShader.h" />
-    <ClInclude Include="PointLight.h" />
-    <ClInclude Include="PreviewControl.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderingPipeline.h" />
-    <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="ShadowPixelShader.h" />
-    <ClInclude Include="ShadowVertexShader.h" />
     <ClInclude Include="TesselationDomainShader.h" />
     <ClInclude Include="TesselationVertexShader.h" />
     <ClInclude Include="TesselationHullShader.h" />
-    <ClInclude Include="TextureTarget.h" />
-    <ClInclude Include="ThirdPersonCamera.h" />
-    <ClInclude Include="TilePool.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="VertexShader.h" />
     <ClInclude Include="WireframePixelShader.h" />
     <ClInclude Include="WireframeVertexShader.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AmbientLight.cpp" />
-    <ClCompile Include="BufferTarget.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ColorPixelShader.cpp" />
     <ClCompile Include="ColorVertexShader.cpp" />
-    <ClCompile Include="ConstantBufferProvider.cpp" />
-    <ClCompile Include="D3D.cpp" />
     <ClCompile Include="D3DSystem.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="dllmain.cpp">
@@ -255,30 +229,18 @@
     </ClCompile>
     <ClCompile Include="FbxReader.cpp" />
     <ClCompile Include="File.cpp" />
-    <ClCompile Include="FirstPersonCamera.cpp" />
-    <ClCompile Include="Global.cpp" />
-    <ClCompile Include="IOC.cpp" />
-    <ClCompile Include="IsometricCamera.cpp" />
-    <ClCompile Include="Light.cpp" />
-    <ClCompile Include="OverlayRenderer.cpp" />
+    <ClCompile Include="FpsTextRenderer.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ObjParser.cpp" />
-    <ClCompile Include="Particles.cpp" />
     <ClCompile Include="PhongPixelShader.cpp" />
     <ClCompile Include="PhongVertexShader.cpp" />
-    <ClCompile Include="PixelShader.cpp" />
-    <ClCompile Include="PointLight.cpp" />
-    <ClCompile Include="PreviewControl.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderingPipeline.cpp" />
-    <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="ShadowPixelShader.cpp" />
-    <ClCompile Include="ShadowVertexShader.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -288,10 +250,6 @@
     <ClCompile Include="TesselationDomainShader.cpp" />
     <ClCompile Include="TesselationHullShader.cpp" />
     <ClCompile Include="TesselationVertexShader.cpp" />
-    <ClCompile Include="TextureTarget.cpp" />
-    <ClCompile Include="ThirdPersonCamera.cpp" />
-    <ClCompile Include="TilePool.cpp" />
-    <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="WireframePixelShader.cpp" />
     <ClCompile Include="WireframeVertexShader.cpp" />
   </ItemGroup>
@@ -338,18 +296,6 @@
       <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</EnableDebuggingInformation>
       <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</EnableDebuggingInformation>
     </FxCompile>
-    <FxCompile Include="ShadowPixelShader.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="ShadowVertexShader.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-    </FxCompile>
     <FxCompile Include="WireframePixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
@@ -364,10 +310,6 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Debug\PhongPixelShader.cso" />
-    <None Include="..\Debug\PhongVertexShader.cso" />
-    <None Include="..\Models\teapot.fbx" />
-    <None Include="Graph.dgsl" />
     <None Include="packages.config" />
     <None Include="scene.json" />
   </ItemGroup>
@@ -383,7 +325,6 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\rxcpp.2.1.1\build\native\rxcpp.targets" Condition="Exists('..\packages\rxcpp.2.1.1\build\native\rxcpp.targets')" />
     <Import Project="..\packages\boost.1.57.0.0\build\native\boost.targets" Condition="Exists('..\packages\boost.1.57.0.0\build\native\boost.targets')" />
-    <Import Project="..\packages\cpplinq.2013.08.10\build\native\cpplinq.targets" Condition="Exists('..\packages\cpplinq.2013.08.10\build\native\cpplinq.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -391,7 +332,5 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\rxcpp.2.1.1\build\native\rxcpp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\rxcpp.2.1.1\build\native\rxcpp.targets'))" />
     <Error Condition="!Exists('..\packages\boost.1.57.0.0\build\native\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost.1.57.0.0\build\native\boost.targets'))" />
-    <Error Condition="!Exists('..\packages\cpplinq.2013.08.10\build\native\cpplinq.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cpplinq.2013.08.10\build\native\cpplinq.props'))" />
-    <Error Condition="!Exists('..\packages\cpplinq.2013.08.10\build\native\cpplinq.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cpplinq.2013.08.10\build\native\cpplinq.targets'))" />
   </Target>
 </Project>

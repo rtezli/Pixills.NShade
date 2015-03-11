@@ -1,66 +1,48 @@
 #pragma once
 #pragma comment(lib, "D3DCompiler.lib")
 
-#include "common.h"
-#include "export.h"
+#ifndef PS_PROFILE
+#define PS_PROFILE {"ps_5_0" }
+#endif
+
+#ifndef VS_PROFILE
+#define VS_PROFILE {"vs_5_0" }
+#endif
+
+#ifndef GS_PROFILE
+#define GS_PROFILE { "ps_5_0" }
+#endif
+
+#ifndef HS_PROFILE
+#define HS_PROFILE { "hs_5_0" }
+#endif
+
+#ifndef DS_PROFILE
+#define DS_PROFILE { "ds_5_0" }
+#endif
+
+#include "includes.h"
 #include "d3dcompiler.h"
 #include "phongvertexshader.h"
-#include "scene.h"
 
-enum MSAA : CHAR
-{
-	SIMPLEST_POSSIBLE = 9,
-	MSAA_0X = 0,
-	MSAA_1X = 1,
-	MSAA_2X = 2,
-	MSAA_4X = 4,
-	MSAA_8X = 8,
-	BEST_POSSIBLE = 8
-};
-
-struct RenderingQuality
-{
-	UINT Quality;
-	UINT SampleCount;
-	DXGI_FORMAT TextureFormat;
-	DXGI_FORMAT BufferFormat;
-	BOOL IsMultisamplingSettings;
-};
-
-struct MsaaOptions
-{
-	MSAA Msaa;
-	RenderingQuality Quality;
-};
-
-struct RENDERER_SETTINGS
-{
-	DXGI_FORMAT swapChainBufferFormat;
-	DXGI_FORMAT depthBufferFormat;
-	DXGI_FORMAT depthSencilViewFormat;
-	DXGI_FORMAT depthSencilFormat;
-	DXGI_FORMAT vertexPositionFormat;
-	DXGI_FORMAT vertexColorFormat;
-};
-
-
-EXTERN class API Renderer
+class Renderer
 {
 public:
-	Renderer(DeviceResources *resources, BOOL useSwapChain);
+	Renderer(DeviceResources* pResources, bool useSwapChain);
+	~Renderer();
 public:
 	HRESULT	ResizeSwapChain(UINT32 newWidth, UINT32 newHeight);
 	HRESULT SetShaderParameters();
-	HRESULT	Initialize(Scene *scene);
-	HRESULT	Resize(D3D11_VIEWPORT* viewport);
+	HRESULT	Initialize();
 	HRESULT	Render();
-
+	HRESULT	Resize(D3D11_VIEWPORT* viewport);
 public:
-	Scene*						const GetScene(){				return _scene.get(); }
+	void						ClearScene();
+	ID3D11Device*				const GetDevice(){ return Resources()->Device; }
+	ID3D11DeviceContext*		const GetDeviceContext(){ return Resources()->DeviceContext; }
+	DeviceResources*			const Resources(){ return m_pDeviceResources; }
+	bool						const Initialized(){ return m_isInitialized; };
 private:
-	ID3D11Device*				const GetDevice(){ return GetResources()->Device; }
-	ID3D11DeviceContext*		const GetDeviceContext(){ return GetResources()->DeviceContext; }
-	DeviceResources*			const GetResources(){ return _deviceResources.get(); }
 	/* render target */
 	HRESULT CreateRenderTargetDesciption();
 	HRESULT CreateRenderTargetViewDesciption();
@@ -84,32 +66,48 @@ private:
 	HRESULT CreateDepthStencilStateDescription();
 	HRESULT CreateDepthStencil();
 
-	/* shadow map */
-	HRESULT CreateShadows();
-
 	/* rasterizer */
 	HRESULT CreateRasterizerDescription();
 	HRESULT CreateRasterizer();
 
+	HRESULT CreateViewPort();
+
+	/* sahders */
+	HRESULT	SetVertexShader(LPCWSTR compiledShaderFile);
+	HRESULT	CompileVertexShader(LPCWSTR shaderSource);
+
+	HRESULT SetHullShader(LPCWSTR compiledShaderFile);
+	HRESULT CompileHullShader(LPCWSTR shaderSource);
+
+	HRESULT SetDomainShader(LPCWSTR compiledShaderFile);
+	HRESULT CompileDomainShader(LPCWSTR shaderSource);
+
+	HRESULT SetGeometryShader(LPCWSTR compiledShaderFile);
+	HRESULT CompileGeometryShader(LPCWSTR shaderSource);
+
+	HRESULT SetPixelShader(LPCWSTR compiledShaderFile);
+	HRESULT CompilePixelShader(LPCWSTR shaderSource);
+
+	HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
 private:
-	shared_ptr<DeviceResources>			_deviceResources;
-	shared_ptr<Scene>					_scene;
+	DeviceResources*					m_pDeviceResources;
 
-	RenderingQuality*					_renderingQuality;
+	LPCWSTR								m_standardVertexShader = L"../Debug/PhongVertexShader.cso";
+	LPCWSTR								m_standardPixelShader = L"../Debug/PhongPixelShader.cso";
 
-	D3D11_TEXTURE2D_DESC				_depthBufferDesc;
-	DXGI_SWAP_CHAIN_DESC				_swapChainDescription;
+	D3D11_TEXTURE2D_DESC				m_pDepthBufferDesc;
+	DXGI_SWAP_CHAIN_DESC				m_pSwapChainDescription;
 
-	D3D11_TEXTURE2D_DESC				_depthStencilDesc;
-	D3D11_DEPTH_STENCIL_DESC			_depthStencilStateDesc;
-	D3D11_DEPTH_STENCIL_VIEW_DESC		_depthStencilViewDesc;
+	D3D11_TEXTURE2D_DESC				m_pDepthStencilDesc;
+	D3D11_DEPTH_STENCIL_DESC			m_pDepthStencilStateDesc;
+	D3D11_DEPTH_STENCIL_VIEW_DESC		m_pDepthStencilViewDesc;
 
-	D3D11_TEXTURE2D_DESC				_renderTargetDesc;
-	D3D11_RENDER_TARGET_VIEW_DESC		_renderTargetViewDesc;
+	D3D11_TEXTURE2D_DESC				m_pRenderTargetDesc;
+	D3D11_RENDER_TARGET_VIEW_DESC		m_pRenderTargetViewDesc;
 
-	D3D11_RASTERIZER_DESC				_rasterizerDesc;
+	D3D11_RASTERIZER_DESC				m_pRasterizerDesc;
 
-	BOOL								_useSwapChain;
-	BOOL								_renderShadows;
-	BOOL								_rasterizerUseMultiSampling;
+	bool								m_isInitialized;
+	bool								m_useSwapChain;
+	bool								m_rasterizerUseMultiSampling;
 };

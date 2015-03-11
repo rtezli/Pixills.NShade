@@ -4,8 +4,10 @@
 
 using namespace PhongShader;
 
-PhongVertexShader::PhongVertexShader(CHAR *file, DeviceResources *deviceResources) : VertexShader(deviceResources)
+PhongVertexShader::PhongVertexShader(DeviceResources* pResources) : Shader(pResources)
 {
-	Load(file);
-	_Resources->Device->CreateInputLayout(InputDescription, ARRAYSIZE(InputDescription), _ByteCode->Bytes, _ByteCode->Length, &_InputLayout);
+}
+
+PhongVertexShader::~PhongVertexShader()
+{
 }
