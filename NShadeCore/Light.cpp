@@ -15,8 +15,10 @@ VOID Light::InitializeBuffer()
 	bufferDesc.CPUAccessFlags = 0;
 	bufferDesc.MiscFlags = 0;
 
+	auto params = Parameters();
+
 	D3D11_SUBRESOURCE_DATA bufferData;
-	bufferData.pSysMem = Parameters();
+	bufferData.pSysMem = params;
 	bufferData.SysMemPitch = 0;
 	bufferData.SysMemSlicePitch = 0;
 

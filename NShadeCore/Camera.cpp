@@ -119,7 +119,6 @@ VOID Camera::InitializeConstantBuffer()
 
 VOID Camera::InitializePositionBuffer()
 {
-
 	D3D11_BUFFER_DESC positionBufferDesc;
 	positionBufferDesc.ByteWidth = sizeof(XMFLOAT4);
 	positionBufferDesc.Usage = D3D11_USAGE_DEFAULT;

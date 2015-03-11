@@ -1,13 +1,24 @@
 cbuffer CameraConstBuffer	: register(b0)
 {
-	float4x4 world;
-	float4x4 view;
-	float4x4 projection;
+	float4x4 World;
+	float4x4 View;
+	float4x4 Projection;
 };
 
-float3 CameraPosition		: register(b1);
-float4 PointLight			: register(b2);
-float4 AmbientLight			: register(b3);
+cbuffer Camera				: register(b1)
+{
+	float4 CameraPosition;
+}
+
+cbuffer PointLight			: register(b2)
+{
+	float4 PointLightPosition;
+}
+
+cbuffer AmbientLight		: register(b3)
+{
+	float4 AmbientLightColor;
+}
 
 struct VertexShaderInput
 {
@@ -37,20 +48,20 @@ VertexShaderOutput main(VertexShaderInput input)
 	VertexShaderOutput vertexShaderOutput;
 	float4 position = float4(input.Position, 0.0f);
 
-	position = mul(position, world);
-	position = mul(position, view);
-	position = mul(position, projection);
+	position = mul(position, World);
+	position = mul(position, View);
+	position = mul(position, Projection);
 
 	vertexShaderOutput.Position = position;
 	vertexShaderOutput.Color = input.Color;
 
-	vertexShaderOutput.Normal = mul(input.Normal, world);
+	vertexShaderOutput.Normal = mul(input.Normal, World);
 	vertexShaderOutput.CameraPosition = CameraPosition;
 
-	vertexShaderOutput.AmbientColor = float3(AmbientLight.x, AmbientLight.y, AmbientLight.z);
-	vertexShaderOutput.AmbientIntensity = AmbientLight.w;
-	vertexShaderOutput.PointPosition = mul(float4(PointLight.x, PointLight.y, PointLight.z, 0.0f), world);
-	vertexShaderOutput.PointIntensity = PointLight.w;
+	vertexShaderOutput.AmbientColor = float3(AmbientLightColor.x, AmbientLightColor.y, AmbientLightColor.z);
+	vertexShaderOutput.AmbientIntensity = AmbientLightColor.w;
+	vertexShaderOutput.PointPosition = mul(float4(PointLightPosition.x, PointLightPosition.y, PointLightPosition.z, 0.0f), World);
+	vertexShaderOutput.PointIntensity = PointLightPosition.w;
 
 	return vertexShaderOutput;
 }
