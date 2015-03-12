@@ -41,7 +41,7 @@ public:
 	ID3D11Device*				const GetDevice(){ return Resources()->Device; }
 	ID3D11DeviceContext*		const GetDeviceContext(){ return Resources()->DeviceContext; }
 	DeviceResources*			const Resources(){ return _deviceResources; }
-	BOOL						const Initialized(){ return m_isInitialized; };
+	BOOL						const Initialized(){ return _isInitialized; };
 private:
 	/* render target */
 	HRESULT CreateRenderTargetDesciption();
@@ -92,22 +92,22 @@ private:
 private:
 	DeviceResources*					_deviceResources;
 
-	LPCWSTR								m_standardVertexShader = L"../Debug/PhongVertexShader.cso";
-	LPCWSTR								m_standardPixelShader = L"../Debug/PhongPixelShader.cso";
+	LPCWSTR								_standardVertexShader = L"../Debug/PhongVertexShader.cso";
+	LPCWSTR								_standardPixelShader = L"../Debug/PhongPixelShader.cso";
 
-	D3D11_TEXTURE2D_DESC				m_pDepthBufferDesc;
-	DXGI_SWAP_CHAIN_DESC				m_pSwapChainDescription;
+	D3D11_TEXTURE2D_DESC				_depthBufferDesc;
+	DXGI_SWAP_CHAIN_DESC				_swapChainDescription;
 
-	D3D11_TEXTURE2D_DESC				m_pDepthStencilDesc;
-	D3D11_DEPTH_STENCIL_DESC			m_pDepthStencilStateDesc;
-	D3D11_DEPTH_STENCIL_VIEW_DESC		m_pDepthStencilViewDesc;
+	D3D11_TEXTURE2D_DESC				_depthStencilDesc;
+	D3D11_DEPTH_STENCIL_DESC			_depthStencilStateDesc;
+	D3D11_DEPTH_STENCIL_VIEW_DESC		_depthStencilViewDesc;
 
-	D3D11_TEXTURE2D_DESC				m_pRenderTargetDesc;
-	D3D11_RENDER_TARGET_VIEW_DESC		m_pRenderTargetViewDesc;
+	D3D11_TEXTURE2D_DESC				_renderTargetDesc;
+	D3D11_RENDER_TARGET_VIEW_DESC		_renderTargetViewDesc;
 
-	D3D11_RASTERIZER_DESC				m_pRasterizerDesc;
+	D3D11_RASTERIZER_DESC				_rasterizerDesc;
 
-	BOOL								m_isInitialized;
-	BOOL								m_useSwapChain;
-	BOOL								m_rasterizerUseMultiSampling;
+	BOOL								_isInitialized;
+	BOOL								_useSwapChain;
+	BOOL								_rasterizerUseMultiSampling;
 };

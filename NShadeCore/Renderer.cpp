@@ -4,11 +4,11 @@
 
 Renderer::Renderer(DeviceResources *resources, BOOL useSwapChain)
 {
-	m_isInitialized = false;
+	_isInitialized = false;
 	_deviceResources = resources;
 	_deviceResources->Shaders = new ShaderSet();
-	m_useSwapChain = useSwapChain;
-	m_rasterizerUseMultiSampling = true;
+	_useSwapChain = useSwapChain;
+	_rasterizerUseMultiSampling = true;
 
 	DXGI_FORMAT swapChainBufferFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
 	DXGI_FORMAT depthBufferFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -62,39 +62,39 @@ HRESULT Renderer::Initialize()
 		return result;
 	}
 
-	result = SetVertexShader(m_standardVertexShader);
+	result = SetVertexShader(_standardVertexShader);
 	if (FAILED(result))
 	{
 		return result;
 	}
-	m_isInitialized = true;
-	return SetPixelShader(m_standardPixelShader);
+	_isInitialized = true;
+	return SetPixelShader(_standardPixelShader);
 }
 
 
 HRESULT Renderer::CreateRenderTargetDesciption()
 {
-	m_pRenderTargetDesc.Width = Resources()->ViewPort->Width;
-	m_pRenderTargetDesc.Height = Resources()->ViewPort->Height;
-	m_pRenderTargetDesc.MipLevels = 1;
-	m_pRenderTargetDesc.ArraySize = 1;
-	m_pRenderTargetDesc.Format = Resources()->RenderQuality->TextureFormat;
-	m_pRenderTargetDesc.SampleDesc.Quality = Resources()->RenderQuality->Quality;
-	m_pRenderTargetDesc.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
-	m_pRenderTargetDesc.Usage = D3D11_USAGE_DEFAULT;
-	m_pRenderTargetDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
-	m_pRenderTargetDesc.CPUAccessFlags = 0;
-	m_pRenderTargetDesc.MiscFlags = 0;
+	_renderTargetDesc.Width = Resources()->ViewPort->Width;
+	_renderTargetDesc.Height = Resources()->ViewPort->Height;
+	_renderTargetDesc.MipLevels = 1;
+	_renderTargetDesc.ArraySize = 1;
+	_renderTargetDesc.Format = Resources()->RenderQuality->TextureFormat;
+	_renderTargetDesc.SampleDesc.Quality = Resources()->RenderQuality->Quality;
+	_renderTargetDesc.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
+	_renderTargetDesc.Usage = D3D11_USAGE_DEFAULT;
+	_renderTargetDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
+	_renderTargetDesc.CPUAccessFlags = 0;
+	_renderTargetDesc.MiscFlags = 0;
 
 	ID3D11Texture2D* renderTarget = 0;
 
-	return GetDevice()->CreateTexture2D(&m_pRenderTargetDesc, nullptr, &renderTarget);
+	return GetDevice()->CreateTexture2D(&_renderTargetDesc, nullptr, &renderTarget);
 }
 
 HRESULT Renderer::CreateRenderTargetViewDesciption()
 {
-	m_pRenderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
-	m_pRenderTargetViewDesc.Format = m_pRenderTargetDesc.Format;
+	_renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
+	_renderTargetViewDesc.Format = _renderTargetDesc.Format;
 	return 0;
 }
 
@@ -112,41 +112,41 @@ HRESULT Renderer::CreateRenderTarget()
 		return result;
 	}
 
-	return GetDevice()->CreateRenderTargetView(Resources()->BackBuffer, &m_pRenderTargetViewDesc, &Resources()->RenderTargetView);
+	return GetDevice()->CreateRenderTargetView(Resources()->BackBuffer, &_renderTargetViewDesc, &Resources()->RenderTargetView);
 }
 
 
 HRESULT Renderer::CreateSwapChainDesciption()
 {
-	m_pSwapChainDescription = { 0 };
+	_swapChainDescription = { 0 };
 
-	m_pSwapChainDescription.BufferCount = Resources()->BufferCount;
-	m_pSwapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	_swapChainDescription.BufferCount = Resources()->BufferCount;
+	_swapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
-	m_pSwapChainDescription.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-	m_pSwapChainDescription.Flags = Resources()->SwapChainFlags;
+	_swapChainDescription.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+	_swapChainDescription.Flags = Resources()->SwapChainFlags;
 
-	m_pSwapChainDescription.BufferDesc.RefreshRate.Numerator = 0;
-	m_pSwapChainDescription.BufferDesc.RefreshRate.Denominator = 1;
-	m_pSwapChainDescription.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	m_pSwapChainDescription.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+	_swapChainDescription.BufferDesc.RefreshRate.Numerator = 0;
+	_swapChainDescription.BufferDesc.RefreshRate.Denominator = 1;
+	_swapChainDescription.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	_swapChainDescription.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
-	m_pSwapChainDescription.SampleDesc.Quality = Resources()->RenderQuality->Quality;
-	m_pSwapChainDescription.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
-	m_pSwapChainDescription.BufferDesc.Format = Resources()->RenderQuality->TextureFormat;
-	m_pSwapChainDescription.BufferDesc.Width = Resources()->ViewPort->Width;
-	m_pSwapChainDescription.BufferDesc.Height = Resources()->ViewPort->Height;
+	_swapChainDescription.SampleDesc.Quality = Resources()->RenderQuality->Quality;
+	_swapChainDescription.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
+	_swapChainDescription.BufferDesc.Format = Resources()->RenderQuality->TextureFormat;
+	_swapChainDescription.BufferDesc.Width = Resources()->ViewPort->Width;
+	_swapChainDescription.BufferDesc.Height = Resources()->ViewPort->Height;
 
 	auto handle = *Resources()->WindowHandle;
-	m_pSwapChainDescription.OutputWindow = handle;
+	_swapChainDescription.OutputWindow = handle;
 
 	if (Resources()->FullScreen)
 	{
-		m_pSwapChainDescription.Windowed = false;
+		_swapChainDescription.Windowed = false;
 	}
 	else
 	{
-		m_pSwapChainDescription.Windowed = true;
+		_swapChainDescription.Windowed = true;
 	}
 	return 0;
 }
@@ -181,7 +181,7 @@ HRESULT Renderer::CreateSwapChain()
 		return result;
 	}
 
-	result = dxgiFactory->CreateSwapChain(GetDevice(), &m_pSwapChainDescription, &Resources()->SwapChain);
+	result = dxgiFactory->CreateSwapChain(GetDevice(), &_swapChainDescription, &Resources()->SwapChain);
 	if (FAILED(result))
 	{
 		return result;
@@ -203,17 +203,17 @@ HRESULT Renderer::CreateSwapChain()
 
 HRESULT Renderer::CreateDepthBufferDescription()
 {
-	m_pDepthBufferDesc.Width = Resources()->ViewPort->Width;
-	m_pDepthBufferDesc.Height = Resources()->ViewPort->Height;
-	m_pDepthBufferDesc.MipLevels = 1;
-	m_pDepthBufferDesc.ArraySize = 1;
-	m_pDepthBufferDesc.Format = Resources()->RenderQuality->BufferFormat;
-	m_pDepthBufferDesc.SampleDesc.Quality = Resources()->RenderQuality->Quality;
-	m_pDepthBufferDesc.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
-	m_pDepthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	m_pDepthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	m_pDepthBufferDesc.CPUAccessFlags = 0;
-	m_pDepthBufferDesc.MiscFlags = 0;
+	_depthBufferDesc.Width = Resources()->ViewPort->Width;
+	_depthBufferDesc.Height = Resources()->ViewPort->Height;
+	_depthBufferDesc.MipLevels = 1;
+	_depthBufferDesc.ArraySize = 1;
+	_depthBufferDesc.Format = Resources()->RenderQuality->BufferFormat;
+	_depthBufferDesc.SampleDesc.Quality = Resources()->RenderQuality->Quality;
+	_depthBufferDesc.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
+	_depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	_depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	_depthBufferDesc.CPUAccessFlags = 0;
+	_depthBufferDesc.MiscFlags = 0;
 
 	return 0;
 }
@@ -225,45 +225,45 @@ HRESULT Renderer::CreateDepthBuffer()
 	{
 		return result;
 	}
-	return GetDevice()->CreateTexture2D(&m_pDepthBufferDesc, nullptr, &Resources()->DepthStencilBuffer);
+	return GetDevice()->CreateTexture2D(&_depthBufferDesc, nullptr, &Resources()->DepthStencilBuffer);
 }
 
 
 HRESULT Renderer::CreateDepthStencilDescription()
 {
-	m_pDepthStencilDesc.ArraySize = 1;
-	m_pDepthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	m_pDepthStencilDesc.MipLevels = Resources()->RenderQuality->Quality > 0 ? 1 : 0;
-	m_pDepthStencilDesc.SampleDesc.Quality = Resources()->RenderQuality->Quality;
-	m_pDepthStencilDesc.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
-	m_pDepthStencilDesc.Format = Resources()->RenderQuality->BufferFormat;
-	m_pDepthStencilDesc.Width = Resources()->ViewPort->Width;
-	m_pDepthStencilDesc.Height = Resources()->ViewPort->Height;
+	_depthStencilDesc.ArraySize = 1;
+	_depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	_depthStencilDesc.MipLevels = Resources()->RenderQuality->Quality > 0 ? 1 : 0;
+	_depthStencilDesc.SampleDesc.Quality = Resources()->RenderQuality->Quality;
+	_depthStencilDesc.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
+	_depthStencilDesc.Format = Resources()->RenderQuality->BufferFormat;
+	_depthStencilDesc.Width = Resources()->ViewPort->Width;
+	_depthStencilDesc.Height = Resources()->ViewPort->Height;
 
 	return 0;
 }
 
 HRESULT Renderer::CreateDepthStencilStateDescription()
 {
-	m_pDepthStencilStateDesc.DepthEnable = true;
-	m_pDepthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	m_pDepthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	_depthStencilStateDesc.DepthEnable = true;
+	_depthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	_depthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
 
-	m_pDepthStencilStateDesc.StencilEnable = true;
-	m_pDepthStencilStateDesc.StencilReadMask = 0xFF;
-	m_pDepthStencilStateDesc.StencilWriteMask = 0xFF;
+	_depthStencilStateDesc.StencilEnable = true;
+	_depthStencilStateDesc.StencilReadMask = 0xFF;
+	_depthStencilStateDesc.StencilWriteMask = 0xFF;
 
-	m_pDepthStencilStateDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-	m_pDepthStencilStateDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-	m_pDepthStencilStateDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-	m_pDepthStencilStateDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	_depthStencilStateDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	_depthStencilStateDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+	_depthStencilStateDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	_depthStencilStateDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-	m_pDepthStencilStateDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-	m_pDepthStencilStateDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-	m_pDepthStencilStateDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-	m_pDepthStencilStateDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	_depthStencilStateDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	_depthStencilStateDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+	_depthStencilStateDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	_depthStencilStateDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-	auto result = GetDevice()->CreateDepthStencilState(&m_pDepthStencilStateDesc, &Resources()->DepthStencilState);
+	auto result = GetDevice()->CreateDepthStencilState(&_depthStencilStateDesc, &Resources()->DepthStencilState);
 
 	GetDeviceContext()->OMSetDepthStencilState(Resources()->DepthStencilState, 1);
 	return result;
@@ -271,9 +271,9 @@ HRESULT Renderer::CreateDepthStencilStateDescription()
 
 HRESULT Renderer::CreateDepthStencilViewDescription()
 {
-	m_pDepthStencilViewDesc.Format = Resources()->RenderQuality->BufferFormat;
-	m_pDepthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
-	m_pDepthStencilViewDesc.Texture2D.MipSlice = 0;
+	_depthStencilViewDesc.Format = Resources()->RenderQuality->BufferFormat;
+	_depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
+	_depthStencilViewDesc.Texture2D.MipSlice = 0;
 
 	return 0;
 }
@@ -300,8 +300,8 @@ HRESULT Renderer::CreateDepthStencil()
 
 	ID3D11Texture2D* depthStencil = 0;
 
-	result = GetDevice()->CreateTexture2D(&m_pDepthStencilDesc, nullptr, &depthStencil);
-	result = GetDevice()->CreateDepthStencilView(depthStencil, &m_pDepthStencilViewDesc, &Resources()->DepthStencilView);
+	result = GetDevice()->CreateTexture2D(&_depthStencilDesc, nullptr, &depthStencil);
+	result = GetDevice()->CreateDepthStencilView(depthStencil, &_depthStencilViewDesc, &Resources()->DepthStencilView);
 
 	if (FAILED(result))
 	{
@@ -315,19 +315,19 @@ HRESULT Renderer::CreateRasterizerDescription()
 {
 	auto isRightHand = false;
 
-	m_pRasterizerDesc.AntialiasedLineEnable = m_rasterizerUseMultiSampling;
-	m_pRasterizerDesc.DepthBias = 0;
-	m_pRasterizerDesc.DepthBiasClamp = 0.0f;
-	m_pRasterizerDesc.DepthClipEnable = true;
-	m_pRasterizerDesc.FillMode = D3D11_FILL_SOLID;
-	//m_pRasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;
+	_rasterizerDesc.AntialiasedLineEnable = _rasterizerUseMultiSampling;
+	_rasterizerDesc.DepthBias = 0;
+	_rasterizerDesc.DepthBiasClamp = 0.0f;
+	_rasterizerDesc.DepthClipEnable = true;
+	_rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+	//_rasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;
 
-	m_pRasterizerDesc.MultisampleEnable = m_rasterizerUseMultiSampling;
-	m_pRasterizerDesc.ScissorEnable = false;
-	m_pRasterizerDesc.SlopeScaledDepthBias = 0.0f;
+	_rasterizerDesc.MultisampleEnable = _rasterizerUseMultiSampling;
+	_rasterizerDesc.ScissorEnable = false;
+	_rasterizerDesc.SlopeScaledDepthBias = 0.0f;
 
-	m_pRasterizerDesc.CullMode = D3D11_CULL_NONE;// D3D11_CULL_BACK;//
-	m_pRasterizerDesc.FrontCounterClockwise = true;
+	_rasterizerDesc.CullMode = D3D11_CULL_NONE;// D3D11_CULL_BACK;//
+	_rasterizerDesc.FrontCounterClockwise = true;
 
 	return 0;
 }
@@ -340,7 +340,7 @@ HRESULT Renderer::CreateRasterizer()
 		return result;
 	}
 
-	result = GetDevice()->CreateRasterizerState(&m_pRasterizerDesc, &Resources()->RasterizerState);
+	result = GetDevice()->CreateRasterizerState(&_rasterizerDesc, &Resources()->RasterizerState);
 	if (FAILED(result))
 	{
 		return result;
@@ -489,7 +489,7 @@ HRESULT Renderer::Render()
 	// Clear
 	ClearScene();
 
-	if (!m_isInitialized)
+	if (!_isInitialized)
 	{
 		return 0;
 	}
@@ -535,7 +535,7 @@ HRESULT Renderer::Resize(D3D11_VIEWPORT* viewPort)
 {
 	HRESULT result;
 	Resources()->ViewPort = viewPort;
-	if (nullptr != Resources()->SwapChain && m_isInitialized)
+	if (nullptr != Resources()->SwapChain && _isInitialized)
 	{
 		result = Initialize();
 	}
