@@ -2,7 +2,7 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
-#include "includes.h"
+#include "common.h"
 
 using namespace DirectX;
 

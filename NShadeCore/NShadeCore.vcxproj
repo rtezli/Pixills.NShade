@@ -186,7 +186,7 @@
     <ClInclude Include="FbxReader.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="FpsTextRenderer.h" />
-    <ClInclude Include="Includes.h" />
+    <ClInclude Include="Common.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />

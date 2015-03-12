@@ -1,6 +1,6 @@
 #pragma once
 
-#include "includes.h"
+#include "common.h"
 #include "shader.h"
 
 namespace WireframeShader

@@ -21,7 +21,7 @@
 #define DS_PROFILE { "ds_5_0" }
 #endif
 
-#include "includes.h"
+#include "common.h"
 #include "d3dcompiler.h"
 #include "phongvertexshader.h"
 

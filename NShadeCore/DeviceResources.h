@@ -1,7 +1,7 @@
 #pragma once
 #pragma comment(lib, "D2d1.lib")
 
-#include "includes.h"
+#include "common.h"
 #include "directxcolors.h"
 #include "dxgi1_2.h"
 #include "d2d1_1.h"

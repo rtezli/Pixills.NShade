@@ -2,7 +2,7 @@
 #pragma warning( disable : 4244 )
 
 #include <fstream>
-#include "includes.h"
+#include "common.h"
 
 class File
 {
