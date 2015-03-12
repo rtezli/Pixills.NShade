@@ -2,11 +2,11 @@
 #include "renderer.h"
 
 
-Renderer::Renderer(DeviceResources* pResources, bool useSwapChain)
+Renderer::Renderer(DeviceResources *resources, BOOL useSwapChain)
 {
 	m_isInitialized = false;
-	m_pDeviceResources = pResources;
-	m_pDeviceResources->Shaders = new ShaderSet();
+	_deviceResources = resources;
+	_deviceResources->Shaders = new ShaderSet();
 	m_useSwapChain = useSwapChain;
 	m_rasterizerUseMultiSampling = true;
 

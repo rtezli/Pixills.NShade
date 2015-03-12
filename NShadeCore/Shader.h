@@ -24,7 +24,7 @@
 #define DS_PROFILE { "ds_5_0" }
 #endif
 
-enum ShaderVersion : char
+enum ShaderVersion : CHAR
 {
 	V0 = 0,
 	V1 = 0,
@@ -34,7 +34,7 @@ enum ShaderVersion : char
 	V5 = 0
 };
 
-enum ShaderType : char
+enum ShaderType : CHAR
 {
 	VS = 1,
 	PS = 2,
@@ -47,7 +47,7 @@ enum ShaderType : char
 class Shader
 {
 public:
-	Shader(DeviceResources* pResources);
+	Shader(DeviceResources *resources);
    ~Shader(); 
 public:
 	HRESULT	SetVertexShader(LPCWSTR compiledShaderFile);
@@ -69,10 +69,10 @@ public:
 private:
 	HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
 private:
-	DeviceResources*					m_pDeviceResources;
-	DeviceResources*					const Resources(){		return m_pDeviceResources; }
-	ID3D11Device*						const Device(){			return m_pDeviceResources->Device; }
-	ID3D11DeviceContext*				const DeviceContext(){	return m_pDeviceResources->DeviceContext; }
+	DeviceResources*					_deviceResources;
+	DeviceResources*					const Resources(){		return _deviceResources; }
+	ID3D11Device*						const Device(){			return _deviceResources->Device; }
+	ID3D11DeviceContext*				const DeviceContext(){	return _deviceResources->DeviceContext; }
 	vector<D3D11_INPUT_ELEMENT_DESC>	m_inputDescription;
 	ShaderType							m_Type;
 	ID3D11PixelShader*					m_PixelShader;

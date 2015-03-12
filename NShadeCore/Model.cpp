@@ -3,7 +3,7 @@
 
 Model::Model(DeviceResources* resources)
 {
-	m_pDeviceResources = shared_ptr<DeviceResources>(resources);
+	_deviceResources = shared_ptr<DeviceResources>(resources);
 }
 
 Model::~Model()
@@ -13,8 +13,8 @@ Model::~Model()
 
 HRESULT Model::Initialize()
 {
-	m_Indices = new vector<unsigned int>();
-	m_Vertices = new vector<nshade::Vertex>();
+	_indices = new vector<UINT>();
+	_vertices = new vector<NVertex>();
 
 	auto result = LoadModelFromFBXFile("../Models/teapot.fbx");
 	if (FAILED(result))
@@ -29,7 +29,7 @@ HRESULT Model::Initialize()
 		return result;
 	}
 
-	result = FillVertexAndIndexBuffer(m_Indices, m_Vertices);
+	result = FillVertexAndIndexBuffer(_indices, _vertices);
 	if (FAILED(result))
 	{
 		return result;
@@ -38,12 +38,12 @@ HRESULT Model::Initialize()
 	return InitializeConstantBuffer();
 }
 
-HRESULT Model::LoadModelFromFBXFile(char* fileName)
+HRESULT Model::LoadModelFromFBXFile(CHAR* fileName)
 {
-	return nshade::FbxReader::Read(fileName, m_Vertices, m_Indices);
+	return nshade::FbxReader::Read(fileName, _vertices, _indices);
 }
 
-HRESULT Model::FillVertexAndIndexBuffer(vector<unsigned int>* modelIndexes, vector<nshade::Vertex>* modelVertices)
+HRESULT Model::FillVertexAndIndexBuffer(vector<UINT>* modelIndexes, vector<NVertex>* modelVertices)
 {
 	auto spot = XMFLOAT4{ 5.0f, 5.0f, 0.0f, 1.0f };
 	auto ambient = XMFLOAT4{ 1.0f, 1.0f, 1.0f, 0.0f };
@@ -51,7 +51,7 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<unsigned int>* modelIndexes, vect
 
 	auto input = new  vector<PhongShader::InputLayout>();
 
-	for (unsigned int i = 0; i < modelVertices->size(); i++)
+	for (UINT i = 0; i < modelVertices->size(); i++)
 	{
 		auto vertex = modelVertices->at(i);
 
@@ -90,12 +90,12 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<unsigned int>* modelIndexes, vect
 		return result;
 	}
 
-	unsigned int* indexArr;
-	indexArr = (unsigned int*)malloc(DeviceResource()->IndexCount * sizeof(unsigned int));
+	UINT* indexArr;
+	indexArr = (UINT*)malloc(DeviceResource()->IndexCount * sizeof(UINT));
 	copy(modelIndexes->begin(), modelIndexes->end(), indexArr);
 
 	D3D11_BUFFER_DESC indexBufferDesc = { 0 };
-	indexBufferDesc.ByteWidth = sizeof(unsigned int) * DeviceResource()->IndexCount;
+	indexBufferDesc.ByteWidth = sizeof(UINT) * DeviceResource()->IndexCount;
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags = 0;
@@ -110,9 +110,9 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<unsigned int>* modelIndexes, vect
 	return DeviceResource()->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &DeviceResource()->IndexBuffer);
 }
 
-HRESULT Model::LoadModelFromOBJFile(char* fileName, bool isRightHand)
+HRESULT Model::LoadModelFromOBJFile(CHAR* fileName, BOOL isRightHand)
 {
-	return ObjParser::Parse(m_Vertices, m_Indices, fileName);
+	return ObjParser::Parse(_vertices, _indices, fileName);
 }
 
 HRESULT Model::InitializeConstantBuffer()
@@ -132,7 +132,7 @@ HRESULT Model::InitializeConstantBuffer()
 
 HRESULT Model::InitializeVertexBuffer()
 {
-	static const nshade::Vertex cube[] =
+	static const NVertex cube[] =
 	{
 		{ XMFLOAT3(-0.5f, 0.0f, -0.5f), XMFLOAT4(0.0f, 0.0f, 0.0, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
 		{ XMFLOAT3(-0.5f, 0.0f, 0.5f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
@@ -152,7 +152,7 @@ HRESULT Model::InitializeVertexBuffer()
 	};
 
 	D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
-	vertexBufferDesc.ByteWidth = sizeof(nshade::Vertex) * ARRAYSIZE(cube);
+	vertexBufferDesc.ByteWidth = sizeof(NVertex) * ARRAYSIZE(cube);
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
@@ -167,10 +167,10 @@ HRESULT Model::InitializeVertexBuffer()
 	return DeviceResource()->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &DeviceResource()->VertexBuffer);
 }
 
-HRESULT Model::InitializeIndexBuffer(int indeces[])
+HRESULT Model::InitializeIndexBuffer(INT indeces[])
 {
 	// 6 faces * 4 vertices = 24 vertices. 
-	static const unsigned int cubeIndices[] =
+	static const UINT cubeIndices[] =
 	{
 		0, 2, 1, 1, 2, 3, // Face 1 (2 Polygons)
 		4, 5, 6, 5, 7, 6, // Face 2 (2 Polygons)
@@ -185,7 +185,7 @@ HRESULT Model::InitializeIndexBuffer(int indeces[])
 	DeviceResource()->IndexCount = ARRAYSIZE(cubeIndices);
 
 	D3D11_BUFFER_DESC indexBufferDesc;
-	indexBufferDesc.ByteWidth = sizeof(unsigned int) * ARRAYSIZE(cubeIndices);
+	indexBufferDesc.ByteWidth = sizeof(UINT) * ARRAYSIZE(cubeIndices);
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags = 0;
@@ -205,9 +205,9 @@ HRESULT Model::InitializeIndexBuffer(int indeces[])
 	return result;
 }
 
-HRESULT Model::CreateHorizontalPlane(float size, XMFLOAT3* position)
+HRESULT Model::CreateHorizontalPlane(FLOAT size, XMFLOAT3* position)
 {
-	static const nshade::Vertex plane[] =
+	static const NVertex plane[] =
 	{
 		{ 
 			XMFLOAT3(size * -1.0f + position->x, position->y, size * -1.0f + position->z),
@@ -241,19 +241,19 @@ HRESULT Model::CreateHorizontalPlane(float size, XMFLOAT3* position)
 
 	for (auto i = 0; i < 4; i++)
 	{
-		m_Vertices->push_back(plane[i]);
+		_vertices->push_back(plane[i]);
 	}
 
-	static const unsigned int cubeIndices[] =
+	static const UINT cubeIndices[] =
 	{
 		4, 3, 1, 
 		3, 2, 1
 	};
 
-	unsigned int highest = 0;
-	for (unsigned int i = 0; i < m_Indices->size(); i++)
+	UINT highest = 0;
+	for (UINT i = 0; i < _indices->size(); i++)
 	{
-		auto current = m_Indices->at(i);
+		auto current = _indices->at(i);
 		if (current > highest)
 		{
 			highest = current;
@@ -262,18 +262,18 @@ HRESULT Model::CreateHorizontalPlane(float size, XMFLOAT3* position)
 
 	for (auto i = 0; i < 6; i++)
 	{
-		m_Indices->push_back(cubeIndices[i] + highest);
+		_indices->push_back(cubeIndices[i] + highest);
 	}
 
 	return 0;
 }
 
-HRESULT Model::CreateCube(float size, XMFLOAT3* position)
+HRESULT Model::CreateCube(FLOAT size, XMFLOAT3* position)
 {
-	auto indices = new vector<unsigned int>();
-	auto vertices = new vector<nshade::Vertex>();
+	auto indices = new vector<UINT>();
+	auto vertices = new vector<NVertex>();
 
-	float halfSize = size / 2;
+	FLOAT halfSize = size / 2;
 	for (auto i = 0; i < 2; i++)
 	{
 		for (auto j = 0; j < 2; j++)
@@ -281,8 +281,8 @@ HRESULT Model::CreateCube(float size, XMFLOAT3* position)
 			for (auto k = 0; k < 2; k++)
 			{
 				XMFLOAT3 pos{ halfSize + i, halfSize, halfSize + j };
-				auto vertex = new nshade::Vertex{ pos };
-				m_Vertices->push_back(*vertex);
+				auto vertex = new NVertex{ pos };
+				_vertices->push_back(*vertex);
 			}
 		}
 	}
@@ -290,14 +290,14 @@ HRESULT Model::CreateCube(float size, XMFLOAT3* position)
 	return 0;
 }
 
-HRESULT Model::SetTopology(char verticesPerFace)
+HRESULT Model::SetTopology(CHAR verticesPerFace)
 {
 	switch (verticesPerFace)
 	{
 		case 3 :
-			m_Topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+			_topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		case 4:
-			m_Topology = D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST;
+			_topology = D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST;
 	}
 	return 0;
 }

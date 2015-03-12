@@ -25,7 +25,7 @@ struct FILE_BYTE_RESULT* File::ReadFileBytes(CHAR* fileName)
 	{
 		stream.seekg(0, ios::end);
 		SIZE_T size = size_t(stream.tellg());
-		CHAR* bytes = new char[size];
+		CHAR* bytes = new CHAR[size];
 		stream.seekg(0, ios::beg);
 		stream.read(bytes, size);
 		stream.close();
@@ -51,7 +51,7 @@ struct FILE_BYTE_RESULT* File::ReadFileBytes(LPCWSTR fileName)
 	{
 		stream.seekg(0, ios::end);
 		SIZE_T size = size_t(stream.tellg());
-		CHAR* bytes = new char[size];
+		CHAR* bytes = new CHAR[size];
 		stream.seekg(0, ios::beg);
 		stream.read(bytes, size);
 		stream.close();

@@ -3,9 +3,9 @@
 #include "scene.h"
 
 
-Scene::Scene(DeviceResources* pResources)
+Scene::Scene(DeviceResources *resources)
 {
-	m_pResources = pResources;
+	_deviceResources = resources;
 }
 
 Scene::~Scene()
@@ -15,17 +15,16 @@ Scene::~Scene()
 
 HRESULT Scene::Render()
 {
-	//for_each(Models()->begin(), Models - end(), [](Model &model){ model->Render()});
 	return 0;
 }
 
-HRESULT Scene::AddModel(Model* pModel)
+HRESULT Scene::AddModel(Model * model)
 {
-	if (m_Models == nullptr)
+	if (_models == nullptr)
 	{
-		m_Models = make_shared<vector<Model>>();
+		_models = make_shared<vector<Model>>();
 	}
-	Models()->push_back(*pModel);
+	Models()->push_back(*model);
 	return 0;
 }
 HRESULT Scene::Load(wstring fileName)

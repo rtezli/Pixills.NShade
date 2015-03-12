@@ -3,7 +3,7 @@ struct PixelShaderInput
 	float4 vertexPosition	: SV_POSITION;
 	float4 vertexColor		: COLOR0;
 	float4 normal			: NORMAL;
-	int    polyposition		: POSITION1;
+	float  polyposition		: POSITION1;
 	float4 ambientColor		: COLOR1;
 	float4 lightPosition	: POSITION2;
 };

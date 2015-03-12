@@ -4,7 +4,7 @@
 
 using namespace WireframeShader;
 
-WireframeVertexShader::WireframeVertexShader(DeviceResources* pResources) : Shader(pResources)
+WireframeVertexShader::WireframeVertexShader(DeviceResources *resources) : Shader(resources)
 {
 }
 

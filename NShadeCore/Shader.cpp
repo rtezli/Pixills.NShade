@@ -2,9 +2,9 @@
 
 #include "shader.h"
 
-Shader::Shader(DeviceResources* pResources)
+Shader::Shader(DeviceResources *resources)
 {
-	m_pDeviceResources = pResources;
+	_deviceResources = resources;
 }
 
 Shader::~Shader()

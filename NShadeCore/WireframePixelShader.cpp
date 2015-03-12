@@ -4,7 +4,7 @@
 
 using namespace WireframeShader;
 
-WireframePixelShader::WireframePixelShader(DeviceResources* pResources) : Shader(pResources)
+WireframePixelShader::WireframePixelShader(DeviceResources *resources) : Shader(resources)
 {
 }
 WireframePixelShader::~WireframePixelShader()

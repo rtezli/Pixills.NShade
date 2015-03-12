@@ -14,7 +14,7 @@ public:
 	HRESULT Move(XMVECTOR* vector);
 	HRESULT Rotate(XMVECTOR* vector);
 public:
-	shared_ptr<vector<Model>> m_Models;
+	shared_ptr<vector<Model>> _models;
 
 };
 

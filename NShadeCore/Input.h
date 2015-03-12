@@ -16,32 +16,32 @@ private:
 		XMFLOAT3 Move;
 	};
 public:
-	Input(DeviceResources* pDeviceResources);
+	Input(DeviceResources *deviceResources);
 	~Input();
 public:
 	HRESULT Initialize();
 	HRESULT CreateMouse();
 	HRESULT CreateKeyboard();
 	HRESULT CreateKinect();
-	void(*OnInput)(MOVE_ROTATE_INPUT* move);
+	void(*OnInput)(MOVE_ROTATE_INPUT *move);
 private:
-	bool	Frame();
-	bool	ReadKeyboard();
-	bool	ReadMouse();
+	BOOL	Frame();
+	BOOL	ReadKeyboard();
+	BOOL	ReadMouse();
 	void	ProcessInput();
-	void	PublishInput(MOVE_ROTATE_INPUT* move){ (*OnInput)(move); }
+	void	PublishInput(MOVE_ROTATE_INPUT *move){ (*OnInput)(move); }
 private:
-	DeviceResources*		m_pDeviceResources;
-	IDirectInput8*			m_pDirectInput;
-	IDirectInputDevice8*	m_pKeyboard;
-	IDirectInputDevice8*	m_pMouse;
-	IDirectInputDevice8*	m_pKinectMaybe;
+	DeviceResources*		_deviceResources;
+	IDirectInput8*			_directInput;
+	IDirectInputDevice8*	_keyboard;
+	IDirectInputDevice8*	_mouse;
+	IDirectInputDevice8*	_kinectMaybe;
 
-	unsigned char			m_keyboardState[256];
-	DIMOUSESTATE			m_mouseState;
-	int						m_ScreenWidth, m_ScreenHeight;
-	int						m_MouseX, m_MouseY;
-	float					m_moveGain;
-	float					m_rotateGain;
+	CHAR					_keyboardState[256];
+	DIMOUSESTATE			_mouseState;
+	INT						_screenWidth, _screenHeight;
+	INT						_mouseX, _mouseY;
+	FLOAT					_moveGain;
+	FLOAT					_rotateGain;
 };
 

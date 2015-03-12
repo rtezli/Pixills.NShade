@@ -110,5 +110,5 @@ public:
 	RenderingPipeline();
 	~RenderingPipeline();
 public:
-	static RenderingPipelineStep1* LoadScene(vector<int> indexBuffer, vector<XMFLOAT3> vertexBuffer);
+	static RenderingPipelineStep1* LoadScene(vector<INT> indexBuffer, vector<XMFLOAT3> vertexBuffer);
 };

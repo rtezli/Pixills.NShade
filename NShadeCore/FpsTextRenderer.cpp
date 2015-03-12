@@ -2,9 +2,9 @@
 #include "FpsTextRenderer.h"
 
 
-FpsTextRenderer::FpsTextRenderer(DeviceResources* pResources)
+FpsTextRenderer::FpsTextRenderer(DeviceResources *resources)
 {
-	m_pDeviceResources = pResources;
+	_deviceResources = resources;
 }
 
 

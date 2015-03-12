@@ -4,7 +4,7 @@
 
 using namespace TesselationShader;
 
-TesselationHullShader::TesselationHullShader(DeviceResources* pResources) : Shader(pResources)
+TesselationHullShader::TesselationHullShader(DeviceResources *resources) : Shader(resources)
 {
 }
 

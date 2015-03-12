@@ -3,7 +3,7 @@
 
 Camera::Camera(DeviceResources* resources)
 {
-	m_pDeviceResources = resources;
+	_deviceResources = resources;
 }
 
 Camera::~Camera()
@@ -40,8 +40,8 @@ void Camera::Initialize()
 
 	XMStoreFloat4x4(m_pViewMatrix, vMatrix);
 
-	float fovAngleY = GetFieldOfView();
-	float aspectRatio = GetAspectRatio();
+	FLOAT fovAngleY = GetFieldOfView();
+	FLOAT aspectRatio = GetAspectRatio();
 
 	if (aspectRatio < 1.0f)
 	{
@@ -72,11 +72,11 @@ void Camera::Rotate(POINT* p)
 	m_vAngle = m_vAngle + p->y * moderationV;
 
 	XMStoreFloat4x4(m_pWorldMatrix, XMMatrixTranspose(XMMatrixRotationY(m_hAngle)));
-	m_pDeviceResources->ConstBufferData->world = *m_pWorldMatrix;
+	_deviceResources->ConstBufferData->world = *m_pWorldMatrix;
 }
 
 void Camera::Update()
 {
 	ConstantBufferData constBuffer = { *m_pWorldMatrix, *m_pViewMatrix, *m_pProjectionMatrix, *m_eyePosition };
-	m_pDeviceResources->ConstBufferData = new ConstantBufferData(constBuffer);
+	_deviceResources->ConstBufferData = new ConstantBufferData(constBuffer);
 }

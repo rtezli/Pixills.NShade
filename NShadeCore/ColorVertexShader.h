@@ -14,7 +14,7 @@ namespace ColorShader
 	class ColorVertexShader : public Shader
 	{
 	public:
-		ColorVertexShader(DeviceResources* pResources);
+		ColorVertexShader(DeviceResources *resources);
 		~ColorVertexShader();
 	};
 }

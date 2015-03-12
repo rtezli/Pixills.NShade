@@ -12,14 +12,14 @@ D3DSystem::~D3DSystem()
 	m_pInputDevices.reset();
 	m_pModel.reset();
 
-	delete m_pDeviceResources;
+	delete _deviceResources;
 }
 
 HRESULT D3DSystem::InitializeWithWindow(
-	int screenWidth,
-	int screenHeight,
-	bool vsync,
-	bool fullscreen)
+	INT screenWidth,
+	INT screenHeight,
+	BOOL vsync,
+	BOOL fullscreen)
 {
 	auto result = InitializeWindow(screenWidth, screenHeight);
 	if (FAILED(result))
@@ -29,7 +29,7 @@ HRESULT D3DSystem::InitializeWithWindow(
 	return InitializeForWindow(vsync, m_pHInstance, m_pWindowHandle, fullscreen);
 }
 
-HRESULT D3DSystem::InitializeWindow(int screenWidth, int screenHeight)
+HRESULT D3DSystem::InitializeWindow(INT screenWidth, INT screenHeight)
 {
 	HINSTANCE hInstance = 0;
 	HWND handle = 0;
@@ -57,10 +57,10 @@ HRESULT D3DSystem::InitializeWindow(int screenWidth, int screenHeight)
 }
 
 HRESULT D3DSystem::InitializeForWindow(
-	bool vsync,
+	BOOL vsync,
 	HINSTANCE* hInstance,
 	HWND* hwnd,
-	bool fullscreen)
+	BOOL fullscreen)
 {
 	m_pHInstance = hInstance;
 	m_pWindowHandle = hwnd;
@@ -105,7 +105,7 @@ HRESULT D3DSystem::Initialize()
 	auto sc = rxsc::make_new_thread();
 	auto so = rx::synchronize_in_one_worker(sc);
 	rx::observable<>::interval(sc.now(), FPS(25), so)
-		.subscribe([this](int val)
+		.subscribe([this](INT val)
 	{
 		D3DSystem::Render();
 	}
@@ -181,14 +181,14 @@ HRESULT D3DSystem::CreateDevice()
 	resources->NearZ = 0.0f;
 	resources->FarZ = 1000.0f;
 
-	m_pDeviceResources = resources;
+	_deviceResources = resources;
 
 	return createResult;
 }
 
 HRESULT D3DSystem::CreateInput()
 {
-	auto device = shared_ptr<Input>(new Input(m_pDeviceResources));
+	auto device = shared_ptr<Input>(new Input(_deviceResources));
 	return device->Initialize();
 }
 
@@ -265,7 +265,7 @@ HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device* device)
 	return result;
 }
 
-vector<MSAA>* D3DSystem::ProduceMsaaCapability(vector<MSAA>* options, int i)
+vector<MSAA>* D3DSystem::ProduceMsaaCapability(vector<MSAA>* options, INT i)
 {
 	auto localOptions = *options;
 	auto masaa = MSAA_0X;
@@ -280,8 +280,8 @@ vector<MSAA>* D3DSystem::ProduceMsaaCapability(vector<MSAA>* options, int i)
 	case 8:
 		masaa = MSAA_8X;
 	}
-	bool contains = false;
-	for (int i = 0; localOptions.size(); i++)
+	BOOL contains = false;
+	for (INT i = 0; localOptions.size(); i++)
 	{
 		if (localOptions[i] == masaa)
 		{
@@ -297,21 +297,21 @@ vector<MSAA>* D3DSystem::ProduceMsaaCapability(vector<MSAA>* options, int i)
 
 HRESULT D3DSystem::CreateCamera()
 {
-	m_pCamera = shared_ptr<Camera>(new Camera(m_pDeviceResources));
+	m_pCamera = shared_ptr<Camera>(new Camera(_deviceResources));
 	m_pCamera->Initialize();
 	return 0;
 }
 
 HRESULT D3DSystem::LoadModels()
 {
-	m_pModel = shared_ptr<Model>(new Model(m_pDeviceResources));
+	m_pModel = shared_ptr<Model>(new Model(_deviceResources));
 	auto result = m_pModel->Initialize();
 	return 0;
 }
 
 HRESULT D3DSystem::CreateRenderer()
 {
-	m_pRenderer = shared_ptr<Renderer>(new Renderer(m_pDeviceResources, true));
+	m_pRenderer = shared_ptr<Renderer>(new Renderer(_deviceResources, true));
 	return m_pRenderer->Initialize();
 }
 

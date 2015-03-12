@@ -4,7 +4,7 @@
 
 using namespace ColorShader;
 
-ColorVertexShader::ColorVertexShader(DeviceResources* pResources) : Shader(pResources)
+ColorVertexShader::ColorVertexShader(DeviceResources *resources) : Shader(resources)
 {
 }
 

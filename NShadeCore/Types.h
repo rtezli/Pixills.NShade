@@ -6,33 +6,31 @@
 using namespace std;
 using namespace DirectX;
 
-enum Perspective : char
+enum Perspective : CHAR
 {
 	UNDEFINED = 0,
 	FIRST_PERSON = 1,
 	THIRD_PERSON = 2,
 	ISOMETRIC = 3
 };
-namespace nshade
+
+struct NVertex
 {
-	struct Vertex
-	{
-		XMFLOAT3		Position;
-		XMFLOAT4		Color;
-		XMFLOAT3		Normal;
-		XMFLOAT2		UV;
-		XMFLOAT3		PolyPosition;
-	};
+	XMFLOAT3		Position;
+	XMFLOAT4		Color;
+	XMFLOAT3		Normal;
+	XMFLOAT2		UV;
+	XMFLOAT3		PolyPosition;
+};
 
-	struct Polygon
-	{
-		unsigned int P1;
-		unsigned int P2;
-		unsigned int P3;
-	};
-}
+struct NPolygon
+{
+	UINT P1;
+	UINT P2;
+	UINT P3;
+};
 
-enum LightType : char
+enum LightType : CHAR
 {
 	Directional = 1,
 	Point = 2,
@@ -50,7 +48,7 @@ struct Light
 
 struct VertexShaderInput
 {
-	nshade::Vertex Vertex;
+	NVertex Vertex;
 	Light Light;
 };
 
@@ -60,10 +58,10 @@ struct RenderingQuality
 	UINT SampleCount;
 	DXGI_FORMAT TextureFormat;
 	DXGI_FORMAT BufferFormat;
-	bool IsMultisamplingSettings;
+	BOOL IsMultisamplingSettings;
 };
 
-enum MSAA : char
+enum MSAA : CHAR
 {
 	SIMPLEST_POSSIBLE = 9,
 	MSAA_0X = 0,
@@ -86,7 +84,7 @@ struct ConstantBufferData
 	XMFLOAT4X4 view;
 	XMFLOAT4X4 projection;
 	XMFLOAT3   camera;
-	float	   time;
+	FLOAT	   time;
 };
 
 struct ShaderSet
@@ -142,7 +140,7 @@ namespace Debug
 #endif
 	}
 
-	static void WriteLine(const char* m1, const char* m2)
+	static void WriteLine(const CHAR* m1, const CHAR* m2)
 	{
 #ifdef _DEBUG
 		//auto mes = new wstring(message);
@@ -160,7 +158,7 @@ namespace Debug
 #endif
 	}
 
-	static void WriteLine(float message)
+	static void WriteLine(FLOAT message)
 	{
 #ifdef _DEBUG
 		auto mes = to_wstring(message);
@@ -170,7 +168,7 @@ namespace Debug
 #endif
 	}
 
-	static void WriteLine(wstring m1, float m2)
+	static void WriteLine(wstring m1, FLOAT m2)
 	{
 #ifdef _DEBUG
 		auto mes = to_wstring(m2);

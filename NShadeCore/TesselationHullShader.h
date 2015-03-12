@@ -15,7 +15,7 @@ namespace TesselationShader
 	class TesselationHullShader : public Shader
 	{
 	public:
-		TesselationHullShader(DeviceResources* pResources);
+		TesselationHullShader(DeviceResources *resources);
 		~TesselationHullShader();
 	};
 }

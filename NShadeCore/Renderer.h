@@ -28,7 +28,7 @@
 class Renderer
 {
 public:
-	Renderer(DeviceResources* pResources, bool useSwapChain);
+	Renderer(DeviceResources *resources, BOOL useSwapChain);
 	~Renderer();
 public:
 	HRESULT	ResizeSwapChain(UINT32 newWidth, UINT32 newHeight);
@@ -40,8 +40,8 @@ public:
 	void						ClearScene();
 	ID3D11Device*				const GetDevice(){ return Resources()->Device; }
 	ID3D11DeviceContext*		const GetDeviceContext(){ return Resources()->DeviceContext; }
-	DeviceResources*			const Resources(){ return m_pDeviceResources; }
-	bool						const Initialized(){ return m_isInitialized; };
+	DeviceResources*			const Resources(){ return _deviceResources; }
+	BOOL						const Initialized(){ return m_isInitialized; };
 private:
 	/* render target */
 	HRESULT CreateRenderTargetDesciption();
@@ -90,7 +90,7 @@ private:
 
 	HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
 private:
-	DeviceResources*					m_pDeviceResources;
+	DeviceResources*					_deviceResources;
 
 	LPCWSTR								m_standardVertexShader = L"../Debug/PhongVertexShader.cso";
 	LPCWSTR								m_standardPixelShader = L"../Debug/PhongPixelShader.cso";
@@ -107,7 +107,7 @@ private:
 
 	D3D11_RASTERIZER_DESC				m_pRasterizerDesc;
 
-	bool								m_isInitialized;
-	bool								m_useSwapChain;
-	bool								m_rasterizerUseMultiSampling;
+	BOOL								m_isInitialized;
+	BOOL								m_useSwapChain;
+	BOOL								m_rasterizerUseMultiSampling;
 };

@@ -43,17 +43,17 @@ public:
 	D3D11_VIEWPORT*				ViewPort;
 	RenderingQuality*			RenderQuality;
 
-	int							SwapChainFlags;
-	int							BufferCount;
-	int							IndexCount;
-	int							VertexCount;
+	INT							SwapChainFlags;
+	INT							BufferCount;
+	INT							IndexCount;
+	INT							VertexCount;
 
 	XMVECTORF32					DefaultColor;
-	float						Dpi;
-	float						NearZ;
-	float						FarZ;
+	FLOAT						Dpi;
+	FLOAT						NearZ;
+	FLOAT						FarZ;
 
-	bool						FullScreen;
-	bool						VSync;
+	BOOL						FullScreen;
+	BOOL						VSync;
 };
 

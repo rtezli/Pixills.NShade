@@ -4,7 +4,7 @@
 
 using namespace PhongShader;
 
-PhongPixelSHader::PhongPixelSHader(DeviceResources* pResources) : Shader(pResources)
+PhongPixelSHader::PhongPixelSHader(DeviceResources *resources) : Shader(resources)
 {
 }
 PhongPixelSHader::~PhongPixelSHader()

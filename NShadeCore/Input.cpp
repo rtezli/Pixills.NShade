@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "input.h"
 
-Input::Input(DeviceResources* pDeviceResources)
+Input::Input(DeviceResources *deviceResources)
 {
-	m_pDeviceResources = pDeviceResources;
+	_deviceResources = deviceResources;
 }
 
 Input::~Input()
@@ -12,11 +12,10 @@ Input::~Input()
 
 HRESULT Input::Initialize()
 {
-	auto result = DirectInput8Create(
-		*m_pDeviceResources->WindowInstance,
+	auto result = DirectInput8Create(*_deviceResources->WindowInstance,
 		DIRECTINPUT_VERSION,
 		IID_IDirectInput8,
-		(void**)&m_pDirectInput, nullptr);
+		(void**)&_directInput, nullptr);
 
 	if (FAILED(result))
 	{
@@ -46,25 +45,25 @@ HRESULT Input::Initialize()
 
 HRESULT Input::CreateKeyboard()
 {
-	auto result = m_pDirectInput->CreateDevice(GUID_SysKeyboard, &m_pKeyboard, nullptr);
+	auto result = _directInput->CreateDevice(GUID_SysKeyboard, &_keyboard, nullptr);
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	result = m_pKeyboard->SetDataFormat(&c_dfDIKeyboard);
+	result = _keyboard->SetDataFormat(&c_dfDIKeyboard);
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	result = m_pKeyboard->SetCooperativeLevel(*m_pDeviceResources->WindowHandle, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+	result = _keyboard->SetCooperativeLevel(*_deviceResources->WindowHandle, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	result = m_pKeyboard->Acquire();
+	result = _keyboard->Acquire();
 	if (FAILED(result))
 	{
 		return result;
@@ -75,25 +74,25 @@ HRESULT Input::CreateKeyboard()
 
 HRESULT Input::CreateMouse()
 {
-	auto result = m_pDirectInput->CreateDevice(GUID_SysMouse, &m_pMouse, nullptr);
+	auto result = _directInput->CreateDevice(GUID_SysMouse, &_mouse, nullptr);
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	result = m_pMouse->SetDataFormat(&c_dfDIMouse);
+	result = _mouse->SetDataFormat(&c_dfDIMouse);
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	result = m_pMouse->SetCooperativeLevel(*m_pDeviceResources->WindowHandle, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	result = _mouse->SetCooperativeLevel(*_deviceResources->WindowHandle, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	result = m_pMouse->Acquire();
+	result = _mouse->Acquire();
 	if (FAILED(result))
 	{
 		return result;
@@ -108,9 +107,9 @@ HRESULT Input::CreateKinect()
 }
 
 
-bool Input::Frame()
+BOOL Input::Frame()
 {
-	bool result;
+	BOOL result;
 
 
 	// Read the current state of the keyboard.
@@ -133,16 +132,16 @@ bool Input::Frame()
 	return true;
 }
 
-bool Input::ReadKeyboard()
+BOOL Input::ReadKeyboard()
 {
 	// Read the keyboard device.
-	auto result = m_pKeyboard->GetDeviceState(sizeof(m_keyboardState), (LPVOID)&m_keyboardState);
+	auto result = _keyboard->GetDeviceState(sizeof(_keyboardState), (LPVOID)&_keyboardState);
 	if (FAILED(result))
 	{
 		// If the keyboard lost focus or was not acquired then try to get control back.
 		if ((result == DIERR_INPUTLOST) || (result == DIERR_NOTACQUIRED))
 		{
-			m_pKeyboard->Acquire();
+			_keyboard->Acquire();
 		}
 		else
 		{
@@ -152,19 +151,18 @@ bool Input::ReadKeyboard()
 	return true;
 }
 
-bool Input::ReadMouse()
+BOOL Input::ReadMouse()
 {
 	HRESULT result;
 
-
 	// Read the mouse device.
-	result = m_pMouse->GetDeviceState(sizeof(DIMOUSESTATE), (LPVOID)&m_mouseState);
+	result = _mouse->GetDeviceState(sizeof(DIMOUSESTATE), (LPVOID)&_mouseState);
 	if (FAILED(result))
 	{
 		// If the mouse lost focus or was not acquired then try to get control back.
 		if ((result == DIERR_INPUTLOST) || (result == DIERR_NOTACQUIRED))
 		{
-			m_pMouse->Acquire();
+			_mouse->Acquire();
 		}
 		else
 		{
@@ -178,15 +176,15 @@ bool Input::ReadMouse()
 void Input::ProcessInput()
 {
 	// Update the location of the mouse cursor based on the change of the mouse location during the frame.
-	m_MouseX += m_mouseState.lX;
-	m_MouseY += m_mouseState.lY;
+	_mouseX += _mouseState.lX;
+	_mouseY += _mouseState.lY;
 
 	// Ensure the mouse location doesn't exceed the screen width or height.
-	if (m_MouseX < 0)  { m_MouseX = 0; }
-	if (m_MouseY < 0)  { m_MouseY = 0; }
+	if (_mouseX < 0)  { _mouseX = 0; }
+	if (_mouseY < 0)  { _mouseY = 0; }
 
-	if (m_MouseX > m_ScreenWidth)  { m_MouseX = m_ScreenWidth; }
-	if (m_MouseY > m_ScreenHeight) { m_MouseY = m_ScreenHeight; }
+	if (_mouseX > _screenWidth)  { _mouseX = _screenWidth; }
+	if (_mouseY > _screenHeight) { _mouseY = _screenHeight; }
 
 	return;
 }

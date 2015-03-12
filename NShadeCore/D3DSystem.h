@@ -16,17 +16,17 @@ public:
 	D3DSystem();
 	~D3DSystem();
 public:
-	HRESULT InitializeForWindow(bool vsync, HINSTANCE*, HWND* window, bool fullscreen);
-	HRESULT InitializeWithWindow(int screenWidth, int screenHeight, bool vsync, bool fullscreen);
+	HRESULT InitializeForWindow(BOOL vsync, HINSTANCE*, HWND* window, BOOL fullscreen);
+	HRESULT InitializeWithWindow(INT screenWidth, INT screenHeight, BOOL vsync, BOOL fullscreen);
 	LRESULT MessageHandler(HWND* hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
 	HRESULT Initialize();
 	void	Render();
 private:
-	HRESULT					InitializeWindow(int screenWidth, int screenHeight);
+	HRESULT					InitializeWindow(INT screenWidth, INT screenHeight);
 	HRESULT					CreateDevice();
 	HRESULT					CreateInput();
 	HRESULT					GetRenderQualitySettings(ID3D11Device* device);
-	vector<MSAA>* 			ProduceMsaaCapability(vector<MSAA>* msaaOptions, int i);
+	vector<MSAA>* 			ProduceMsaaCapability(vector<MSAA>* msaaOptions, INT i);
 	HRESULT					CreateCamera();
 	D3D11_VIEWPORT*			CreateViewPort(HWND* hwnd);
 	HRESULT					LoadModels();
@@ -34,7 +34,7 @@ private:
 	HRESULT					AttachOnRotate();
 	HRESULT					DetachOnRotate();
 private:
-	DeviceResources*						m_pDeviceResources;
+	DeviceResources*						_deviceResources;
 	HINSTANCE*								m_pHInstance;
 	HWND*									m_pWindowHandle;
 	POINT*									m_lastPointerPosition;
@@ -48,12 +48,12 @@ private:
 	XMVECTOR								m_Position;
 	XMVECTOR								m_Rotation;
 
-	float									m_viewportWidth;
-	float									m_viewportHeight;
-	float									m_nearZ;
-	float									m_farZ;
+	FLOAT									m_viewportWidth;
+	FLOAT									m_viewportHeight;
+	FLOAT									m_nearZ;
+	FLOAT									m_farZ;
 
-	bool									m_fullScreen;
-	bool									m_vSync;
-	bool									m_trackInput;
+	BOOL									m_fullScreen;
+	BOOL									m_vSync;
+	BOOL									m_trackInput;
 };
