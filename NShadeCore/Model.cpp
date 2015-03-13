@@ -3,8 +3,8 @@
 
 HRESULT Model::Initialize()
 {
-	_indices = new vector<UINT>();
-	_vertices = new vector<NVertex>();
+	_indices = shared_ptr<vector<UINT>>(new vector<UINT>());
+	_vertices = shared_ptr<vector<NVertex>>(new vector<NVertex>());
 
 	auto result = LoadModelFromFBXFile("../Models/teapot.fbx");
 	if (FAILED(result))
@@ -19,7 +19,7 @@ HRESULT Model::Initialize()
 		return result;
 	}
 
-	result = FillVertexAndIndexBuffer(_indices, _vertices);
+	result = FillVertexAndIndexBuffer(GetIndices(), GetVertices());
 	if (FAILED(result))
 	{
 		return result;
@@ -30,7 +30,7 @@ HRESULT Model::Initialize()
 
 HRESULT Model::LoadModelFromFBXFile(CHAR* fileName)
 {
-	return nshade::FbxReader::Read(fileName, _vertices, _indices);
+	return nshade::FbxReader::Read(fileName, GetVertices(), GetIndices());
 }
 
 HRESULT Model::FillVertexAndIndexBuffer(vector<UINT>* modelIndexes, vector<NVertex>* modelVertices)
@@ -102,7 +102,7 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<UINT>* modelIndexes, vector<NVert
 
 HRESULT Model::LoadModelFromOBJFile(CHAR* fileName, BOOL isRightHand)
 {
-	return ObjParser::Parse(_vertices, _indices, fileName);
+	return ObjParser::Parse(GetVertices(), GetIndices(), fileName);
 }
 
 HRESULT Model::InitializeConstantBuffer()

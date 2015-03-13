@@ -17,7 +17,6 @@ public:
 	HRESULT InitializeWithWindow(INT screenWidth, INT screenHeight, BOOL vsync, BOOL fullscreen);
 	LRESULT MessageHandler(HWND* hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
 	HRESULT Initialize();
-	VOID	Render();
 private:
 	HRESULT					InitializeWindow(INT screenWidth, INT screenHeight);
 	HRESULT					CreateDevice();
@@ -25,14 +24,13 @@ private:
 	HRESULT					GetRenderQualitySettings(ID3D11Device* device);
 	vector<MSAA>* 			ProduceMsaaCapability(vector<MSAA>* msaaOptions, INT i);
 	HRESULT					CreateCamera();
-	VOID					CreateViewPort();
 	HRESULT					LoadModels();
 	HRESULT					CreateRenderer();
 	HRESULT					AttachOnRotate();
 	HRESULT					DetachOnRotate();
+	VOID					CreateViewPort();
+	VOID					Render();
 private:
-	//HINSTANCE				*_windowInstance;
-	//HWND					*_windowHandle;
 	POINT					*_lastPointerPosition;
 	shared_ptr<Renderer>	_renderer;
 	shared_ptr<Camera>		_camera;
@@ -48,9 +46,5 @@ private:
 	FLOAT					_viewportHeight;
 	FLOAT					_nearZ;
 	FLOAT					_farZ;
-
-	//BOOL					_fullScreen;
-	//BOOL					_vSync;
-
 	BOOL					_trackInput;
 };
