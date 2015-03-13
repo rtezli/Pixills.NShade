@@ -5,6 +5,5 @@
 EXTERN class API FpsTextRenderer
 {
 public:
-	HRESULT Initialize();
+    HRESULT Initialize();
 };
-

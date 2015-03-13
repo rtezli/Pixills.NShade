@@ -31,7 +31,6 @@ namespace rxsub = rx::subjects;
 #include "res.h"
 #include "export.h"
 #include "dinput.h"
-#include "deviceresources.h"
 #include "types.h"
 #include "file.h"
 #include "objparser.h"

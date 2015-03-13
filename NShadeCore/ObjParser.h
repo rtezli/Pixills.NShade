@@ -6,7 +6,7 @@
 EXTERN class API ObjParser
 {
 public:
-	static HRESULT Parse(vector<NVertex>* vertices, vector<UINT>* indices, CHAR* fileName);
+    static HRESULT Parse(vector<NVertex>* vertices, vector<UINT>* indices, CHAR* fileName);
 };
 
-#pragma warning(restore:4996) 
+#pragma warning(restore:4996)

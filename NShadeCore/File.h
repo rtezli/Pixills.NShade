@@ -7,13 +7,13 @@
 class File
 {
 public:
-	static struct FILE_BYTE_RESULT* ReadFileBytes(CHAR* fileName);
-	static struct FILE_BYTE_RESULT* ReadFileBytes(LPCWSTR fileName);
-	static vector<string>			ReadFileLines(CHAR* fileName);
+    static struct FILE_BYTE_RESULT* ReadFileBytes(CHAR* fileName);
+    static struct FILE_BYTE_RESULT* ReadFileBytes(LPCWSTR fileName);
+    static vector<string>           ReadFileLines(CHAR* fileName);
 };
 
 struct FILE_BYTE_RESULT
 {
-	CHAR* FileBytes;
-	long Length;
+    CHAR*   FileBytes;
+    long    Length;
 };
