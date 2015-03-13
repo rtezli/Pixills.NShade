@@ -301,7 +301,7 @@ HRESULT D3DSystem::CreateRenderer()
 	return _renderer->Initialize();
 }
 
-void D3DSystem::Render()
+VOID D3DSystem::Render()
 {
 	_renderer->Render();
 }

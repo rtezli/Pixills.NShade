@@ -133,14 +133,14 @@ namespace ScreenRotation
 
 namespace Debug
 {
-	static void WriteLine(LPCWSTR message)
+	static VOID WriteLine(LPCWSTR message)
 	{
 #ifdef _DEBUG
 		OutputDebugString(message);
 #endif
 	}
 
-	static void WriteLine(const CHAR* m1, const CHAR* m2)
+	static VOID WriteLine(const CHAR* m1, const CHAR* m2)
 	{
 #ifdef _DEBUG
 		//auto mes = new wstring(message);
@@ -150,7 +150,7 @@ namespace Debug
 #endif
 	}
 
-	static void WriteLine(wstring message)
+	static VOID WriteLine(wstring message)
 	{
 #ifdef _DEBUG
 		LPCWSTR str = message.c_str();
@@ -158,7 +158,7 @@ namespace Debug
 #endif
 	}
 
-	static void WriteLine(FLOAT message)
+	static VOID WriteLine(FLOAT message)
 	{
 #ifdef _DEBUG
 		auto mes = to_wstring(message);
@@ -168,7 +168,7 @@ namespace Debug
 #endif
 	}
 
-	static void WriteLine(wstring m1, FLOAT m2)
+	static VOID WriteLine(wstring m1, FLOAT m2)
 	{
 #ifdef _DEBUG
 		auto mes = to_wstring(m2);
@@ -178,7 +178,7 @@ namespace Debug
 		OutputDebugString(str);
 #endif
 	}
-	static void WriteCurrentDir()
+	static VOID WriteCurrentDir()
 	{
 #ifdef _DEBUG
 		wchar_t wtext[MAX_PATH];

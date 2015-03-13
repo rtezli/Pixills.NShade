@@ -6,7 +6,7 @@ Camera::Camera(DeviceResources *resources)
 	_deviceResources = resources;
 }
 
-void Camera::Initialize()
+VOID Camera::Initialize()
 {
 	_worldMatrix		= new XMFLOAT4X4();
 	_viewMatrix		= new XMFLOAT4X4();
@@ -53,13 +53,13 @@ void Camera::Initialize()
 	Update();
 }
 
-void Camera::Move(POINT* p)
+VOID Camera::Move(POINT* p)
 {
 	XMStoreFloat4x4(_worldMatrix, XMMatrixTranspose(XMMatrixTranslation(p->x, 0.0, p->y)));
 	Update();
 }
 
-void Camera::Rotate(POINT* p)
+VOID Camera::Rotate(POINT* p)
 {
 	auto moderationH = 0.001;
 	auto moderationV = 0.009;
@@ -71,7 +71,7 @@ void Camera::Rotate(POINT* p)
 	_deviceResources->ConstBufferData->world = *_worldMatrix;
 }
 
-void Camera::Update()
+VOID Camera::Update()
 {
 	ConstantBufferData constBuffer = { *_worldMatrix, *_viewMatrix, *_projectionMatrix, *_eyePosition };
 	_deviceResources->ConstBufferData = new ConstantBufferData(constBuffer);

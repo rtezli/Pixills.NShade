@@ -169,7 +169,7 @@ BOOL Input::ReadMouse()
 	return true;
 }
 
-void Input::ProcessInput()
+VOID Input::ProcessInput()
 {
 	// Update the location of the mouse cursor based on the change of the mouse location during the frame.
 	_mouseX += _mouseState.lX;

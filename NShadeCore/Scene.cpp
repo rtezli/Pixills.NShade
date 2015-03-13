@@ -13,7 +13,7 @@ HRESULT Scene::Render()
 	return 0;
 }
 
-HRESULT Scene::AddModel(Model * model)
+HRESULT Scene::AddModel(Model *model)
 {
 	if (_models == nullptr)
 	{
@@ -22,6 +22,17 @@ HRESULT Scene::AddModel(Model * model)
 	Models()->push_back(*model);
 	return 0;
 }
+
+HRESULT Scene::AddLight(Light *light)
+{
+	if (_models == nullptr)
+	{
+		_lights = make_shared<vector<Light>>();
+	}
+	Lights()->push_back(*light);
+	return 0;
+}
+
 HRESULT Scene::Load(wstring fileName)
 {
 	return 0;

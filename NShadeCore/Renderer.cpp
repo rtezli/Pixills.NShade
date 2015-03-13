@@ -158,19 +158,19 @@ HRESULT Renderer::CreateSwapChain()
 	IDXGIAdapter* dxgiAdapter = 0;
 	IDXGIFactory* dxgiFactory = 0;
 
-	result = GetDevice()->QueryInterface(__uuidof(IDXGIDevice), (void **)&dxgiDevice);
+	result = GetDevice()->QueryInterface(__uuidof(IDXGIDevice), (VOID **)&dxgiDevice);
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	result = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&dxgiAdapter);
+	result = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (VOID **)&dxgiAdapter);
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	result = dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&dxgiFactory);
+	result = dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (VOID **)&dxgiFactory);
 	if (FAILED(result))
 	{
 		return result;
@@ -468,7 +468,7 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
 	return D3DCompileFromFile(compiledShaderFile,defines, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", shaderProfile, flags, 0, &shaderBlob, &shaderBlob);
 }
 
-void Renderer::ClearScene()
+VOID Renderer::ClearScene()
 {
 	// Update the model data
 	GetDeviceContext()->UpdateSubresource(Resources()->ConstBuffer, 0, nullptr, Resources()->ConstBufferData, 0, 0);

@@ -195,7 +195,8 @@
     <ClInclude Include="PhongPixelShader.h" />
     <ClInclude Include="PhongVertexShader.h" />
     <ClInclude Include="Renderer.h" />
-    <ClInclude Include="RenderingPipeline.h" />
+    <ClInclude Include="RenderInput.h" />
+    <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="TesselationDomainShader.h" />
@@ -238,7 +239,8 @@
     <ClCompile Include="PhongPixelShader.cpp" />
     <ClCompile Include="PhongVertexShader.cpp" />
     <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="RenderingPipeline.cpp" />
+    <ClCompile Include="RenderInput.cpp" />
+    <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="stdafx.cpp">
