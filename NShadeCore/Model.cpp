@@ -66,7 +66,7 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<UINT>* modelIndexes, vector<NVert
 	vertexArr = (PhongShader::InputLayout*)malloc(_resources->VertexCount * sizeof(PhongShader::InputLayout));
 	copy(input->begin(), input->end(), vertexArr);
 
-	D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
+	D3D11_BUFFER_DESC vertexBufferDesc;
 	vertexBufferDesc.ByteWidth = sizeof(PhongShader::InputLayout) * _resources->VertexCount;
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -74,7 +74,7 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<UINT>* modelIndexes, vector<NVert
 	vertexBufferDesc.MiscFlags = 0;
 	vertexBufferDesc.StructureByteStride = 0;
 
-	D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
+	D3D11_SUBRESOURCE_DATA vertexBufferData;
 	vertexBufferData.pSysMem = vertexArr;
 	vertexBufferData.SysMemPitch = 0;
 	vertexBufferData.SysMemSlicePitch = 0;
@@ -89,7 +89,7 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<UINT>* modelIndexes, vector<NVert
 	indexArr = (UINT*)malloc(_resources->IndexCount * sizeof(UINT));
 	copy(modelIndexes->begin(), modelIndexes->end(), indexArr);
 
-	D3D11_BUFFER_DESC indexBufferDesc = { 0 };
+	D3D11_BUFFER_DESC indexBufferDesc;
 	indexBufferDesc.ByteWidth = sizeof(UINT) * _resources->IndexCount;
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
@@ -97,7 +97,7 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<UINT>* modelIndexes, vector<NVert
 	indexBufferDesc.MiscFlags = 0;
 	indexBufferDesc.StructureByteStride = 0;
 
-	D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
+	D3D11_SUBRESOURCE_DATA indexBufferData;
 	indexBufferData.pSysMem = indexArr;
 	indexBufferData.SysMemPitch = 0;
 	indexBufferData.SysMemSlicePitch = 0;

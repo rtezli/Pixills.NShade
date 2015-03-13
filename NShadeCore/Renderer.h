@@ -36,7 +36,7 @@ public:
 	HRESULT	Render();
 	HRESULT	Resize(D3D11_VIEWPORT* viewport);
 public:
-	void						ClearScene();
+	VOID						ClearScene();
 	BOOL						const Initialized(){ return _isInitialized; };
 private:
 	/* render target */

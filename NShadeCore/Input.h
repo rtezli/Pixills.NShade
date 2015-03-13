@@ -22,13 +22,13 @@ public:
 	HRESULT CreateMouse();
 	HRESULT CreateKeyboard();
 	HRESULT CreateKinect();
-	void(*OnInput)(MOVE_ROTATE_INPUT *move);
+	VOID(*OnInput)(MOVE_ROTATE_INPUT *move);
 private:
 	BOOL	Frame();
 	BOOL	ReadKeyboard();
 	BOOL	ReadMouse();
-	void	ProcessInput();
-	void	PublishInput(MOVE_ROTATE_INPUT *move){ (*OnInput)(move); }
+	VOID	ProcessInput();
+	VOID	PublishInput(MOVE_ROTATE_INPUT *move){ (*OnInput)(move); }
 private:
 	DeviceResources			*_resources;
 	IDirectInput8*			_directInput;

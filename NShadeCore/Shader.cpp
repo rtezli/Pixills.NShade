@@ -12,7 +12,7 @@ HRESULT Shader::SetVertexShader(LPCWSTR compiledShaderFile)
 	//ID3D11ClassLinkage linkage;
 	Debug::WriteCurrentDir();
 	auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
-	auto result = _resources->Device->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, nullptr, &_resources->Shaders->VertexShader);
+	auto result = _resources->Device->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &_resources->Shaders->VertexShader);
 
 	if (FAILED(result))
 	{
@@ -42,14 +42,14 @@ HRESULT Shader::CompileVertexShader(LPCWSTR compiledShaderFile)
 	{
 		return result;
 	}
-	return _resources->Device->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &vertexShader);
+	return _resources->Device->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &vertexShader);
 }
 
 HRESULT Shader::SetHullShader(LPCWSTR compiledShaderFile)
 {
 	auto hsByteCode = File::ReadFileBytes(compiledShaderFile);
 	auto shaders = _resources->Shaders;
-	return _resources->Device->CreateHullShader(hsByteCode->FileBytes, hsByteCode->Length, nullptr, &shaders->HullShader);
+	return _resources->Device->CreateHullShader(hsByteCode->FileBytes, hsByteCode->Length, NULL, &shaders->HullShader);
 }
 
 HRESULT Shader::CompileHullShader(LPCWSTR compiledShaderFile)
@@ -62,14 +62,14 @@ HRESULT Shader::CompileHullShader(LPCWSTR compiledShaderFile)
 	{
 		return result;
 	}
-	return _resources->Device->CreateHullShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &hullShader);
+	return _resources->Device->CreateHullShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &hullShader);
 }
 
 HRESULT Shader::SetGeometryShader(LPCWSTR compiledShaderFile)
 {
 	auto gsByteCode = File::ReadFileBytes(compiledShaderFile);
 	auto shaders = _resources->Shaders;
-	return _resources->Device->CreateGeometryShader(gsByteCode->FileBytes, gsByteCode->Length, nullptr, &shaders->GeometryShader);
+	return _resources->Device->CreateGeometryShader(gsByteCode->FileBytes, gsByteCode->Length, NULL, &shaders->GeometryShader);
 }
 
 HRESULT Shader::CompileGeometryShader(LPCWSTR compiledShaderFile)
@@ -82,13 +82,13 @@ HRESULT Shader::CompileGeometryShader(LPCWSTR compiledShaderFile)
 	{
 		return result;
 	}
-	return _resources->Device->CreateGeometryShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &geometryShader);
+	return _resources->Device->CreateGeometryShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &geometryShader);
 }
 
 HRESULT Shader::SetPixelShader(LPCWSTR compiledShaderFile)
 {
 	auto psByteCode = File::ReadFileBytes(compiledShaderFile);
-	return _resources->Device->CreatePixelShader(psByteCode->FileBytes, psByteCode->Length, nullptr, &_resources->Shaders->PixelShader);
+	return _resources->Device->CreatePixelShader(psByteCode->FileBytes, psByteCode->Length, NULL, &_resources->Shaders->PixelShader);
 }
 
 HRESULT Shader::CompilePixelShader(LPCWSTR compiledShaderFile)
@@ -101,7 +101,7 @@ HRESULT Shader::CompilePixelShader(LPCWSTR compiledShaderFile)
 	{
 		return result;
 	}
-	return _resources->Device->CreatePixelShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &pixelShader);
+	return _resources->Device->CreatePixelShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &pixelShader);
 }
 
 HRESULT Shader::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile)
@@ -117,12 +117,12 @@ HRESULT Shader::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR
 	{
 		"EXAMPLE_DEFINE",
 		"1",
-		nullptr,
-		nullptr
+		NULL,
+		NULL
 	};
 
 	return D3DCompileFromFile(compiledShaderFile,
-		nullptr, // Defines
+		NULL, // Defines
 		D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", // Entrypoint
 		shaderProfile, flags, 0, &shaderBlob, &shaderBlob);
 }
@@ -134,35 +134,35 @@ HRESULT Shader::Set()
 		case ShaderType::VS:
 		{
 			_resources->DeviceContext->VSSetConstantBuffers(0, 1, &_resources->ConstBuffer);
-			_resources->DeviceContext->VSSetShader(_vertexShader, nullptr, 0);
+			_resources->DeviceContext->VSSetShader(_vertexShader, NULL, 0);
 		}
 
 		case ShaderType::PS:
 		{
 			_resources->DeviceContext->PSSetConstantBuffers(0, 1, &_resources->ConstBuffer);
-			_resources->DeviceContext->PSSetShader(_pixelShader, nullptr, 0);
+			_resources->DeviceContext->PSSetShader(_pixelShader, NULL, 0);
 		}
 
 		case ShaderType::GS:
 		{
 			_resources->DeviceContext->GSSetConstantBuffers(0, 1, &_resources->ConstBuffer);
-			_resources->DeviceContext->GSSetShader(_geometryShader, nullptr, 0);
+			_resources->DeviceContext->GSSetShader(_geometryShader, NULL, 0);
 		}
 
 		case ShaderType::DS:
 		{
 			_resources->DeviceContext->DSSetConstantBuffers(0, 1, &_resources->ConstBuffer);
-			_resources->DeviceContext->DSSetShader(_domainShader, nullptr, 0);
+			_resources->DeviceContext->DSSetShader(_domainShader, NULL, 0);
 		}
 		case ShaderType::HS:
 		{
 			_resources->DeviceContext->HSSetConstantBuffers(0, 1, &_resources->ConstBuffer);
-			_resources->DeviceContext->HSSetShader(_hullShader, nullptr, 0);
+			_resources->DeviceContext->HSSetShader(_hullShader, NULL, 0);
 		}
 		case ShaderType::CS:
 		{
 			_resources->DeviceContext->CSSetConstantBuffers(0, 1, &_resources->ConstBuffer);
-			_resources->DeviceContext->CSSetShader(_computeShader, nullptr, 0);
+			_resources->DeviceContext->CSSetShader(_computeShader, NULL, 0);
 		}
 	}
 	return 0;

@@ -28,10 +28,10 @@ HRESULT D3DSystem::InitializeWindow(INT screenWidth, INT screenHeight)
 		screenWidth,
 		CW_USEDEFAULT,
 		screenHeight,
-		nullptr,
-		nullptr,
+		NULL,
+		NULL,
 		hInstance,
-		nullptr);
+		NULL);
 
 	if (!handle)
 	{
@@ -92,9 +92,9 @@ HRESULT D3DSystem::Initialize()
 	auto so = rx::synchronize_in_one_worker(sc);
 	rx::observable<>::interval(sc.now(), FPS(25), so)
 		.subscribe([this](INT val)
-	{
-		D3DSystem::Render();
-	}
+		{
+			D3DSystem::Render();
+		}
 	);
 	return result;
 }
@@ -121,7 +121,7 @@ HRESULT D3DSystem::CreateDevice()
 	ID3D11DeviceContext* context = 0;
 
 	auto createResult = D3D11CreateDevice(
-		nullptr,
+		NULL,
 		D3D_DRIVER_TYPE_HARDWARE, // D3D_DRIVER_TYPE_WARP, //
 		0,
 		creationFlags,
@@ -135,7 +135,7 @@ HRESULT D3DSystem::CreateDevice()
 	if (FAILED(createResult))
 	{
 		createResult = D3D11CreateDevice(
-			nullptr,
+			NULL,
 			D3D_DRIVER_TYPE_SOFTWARE,
 			0,
 			creationFlags,
@@ -154,20 +154,18 @@ HRESULT D3DSystem::CreateDevice()
 		return createResult;
 	}
 
-	auto resources = new DeviceResources(device, context);
+	_resources = new DeviceResources(device, context);
 	auto viewport = CreateViewPort(_windowHandle);
 
-	resources->ViewPort = new D3D11_VIEWPORT(*viewport);
-	resources->Device = device;
-	resources->DeviceContext = context;
-	resources->WindowHandle = _windowHandle;
-	resources->WindowInstance = _windowInstance;
-	resources->FullScreen = _fullScreen;
-	resources->VSync = _vSync;
-	resources->NearZ = 0.0f;
-	resources->FarZ = 1000.0f;
-
-	_resources = resources;
+	_resources->ViewPort = new D3D11_VIEWPORT(*viewport);
+	_resources->Device = device;
+	_resources->DeviceContext = context;
+	_resources->WindowHandle = _windowHandle;
+	_resources->WindowInstance = _windowInstance;
+	_resources->FullScreen = _fullScreen;
+	_resources->VSync = _vSync;
+	_resources->NearZ = 0.0f;
+	_resources->FarZ = 1000.0f;
 
 	return createResult;
 }
@@ -308,7 +306,7 @@ VOID D3DSystem::Render()
 
 LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPARAM lParam)
 {
-	if (this == nullptr)
+	if (this == NULL)
 	{
 		return 0;
 	}

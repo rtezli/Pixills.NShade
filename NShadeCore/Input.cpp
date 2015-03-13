@@ -11,7 +11,7 @@ HRESULT Input::Initialize()
 	auto result = DirectInput8Create(*_resources->WindowInstance,
 		DIRECTINPUT_VERSION,
 		IID_IDirectInput8,
-		(void**)&_directInput, nullptr);
+		(VOID**)&_directInput, NULL);
 
 	if (FAILED(result))
 	{
@@ -41,7 +41,7 @@ HRESULT Input::Initialize()
 
 HRESULT Input::CreateKeyboard()
 {
-	auto result = _directInput->CreateDevice(GUID_SysKeyboard, &_keyboard, nullptr);
+	auto result = _directInput->CreateDevice(GUID_SysKeyboard, &_keyboard, NULL);
 	if (FAILED(result))
 	{
 		return result;
@@ -70,7 +70,7 @@ HRESULT Input::CreateKeyboard()
 
 HRESULT Input::CreateMouse()
 {
-	auto result = _directInput->CreateDevice(GUID_SysMouse, &_mouse, nullptr);
+	auto result = _directInput->CreateDevice(GUID_SysMouse, &_mouse, NULL);
 	if (FAILED(result))
 	{
 		return result;

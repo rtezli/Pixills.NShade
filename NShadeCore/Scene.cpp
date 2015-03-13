@@ -15,7 +15,7 @@ HRESULT Scene::Render()
 
 HRESULT Scene::AddModel(Model *model)
 {
-	if (_models == nullptr)
+	if (_models == NULL)
 	{
 		_models = make_shared<vector<Model>>();
 	}
@@ -25,7 +25,7 @@ HRESULT Scene::AddModel(Model *model)
 
 HRESULT Scene::AddLight(Light *light)
 {
-	if (_models == nullptr)
+	if (_models == NULL)
 	{
 		_lights = make_shared<vector<Light>>();
 	}

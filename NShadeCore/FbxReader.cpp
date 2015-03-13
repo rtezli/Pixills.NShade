@@ -60,7 +60,7 @@ HRESULT nshade::FbxReader::TraverseChildren(FbxNode* node, vector<FbxNode*>* mes
 		node = node->GetChild(s);
 		count = node->GetChildCount();
 		auto nodeAttribute = node->GetNodeAttribute();
-		FbxNodeAttribute::EType nodeType = nodeAttribute == nullptr
+		FbxNodeAttribute::EType nodeType = nodeAttribute == NULL
 			? FbxNodeAttribute::eUnknown
 			: nodeAttribute->GetAttributeType();
 
@@ -74,7 +74,7 @@ HRESULT nshade::FbxReader::TraverseChildren(FbxNode* node, vector<FbxNode*>* mes
 			{
 				node = node->GetChild(s);
 				nodeAttribute = node->GetNodeAttribute();
-				nodeType = nodeAttribute == nullptr
+				nodeType = nodeAttribute == NULL
 					? FbxNodeAttribute::eUnknown
 					: nodeAttribute->GetAttributeType();
 

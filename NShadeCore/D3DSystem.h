@@ -17,7 +17,7 @@ public:
 	HRESULT InitializeWithWindow(INT screenWidth, INT screenHeight, BOOL vsync, BOOL fullscreen);
 	LRESULT MessageHandler(HWND* hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
 	HRESULT Initialize();
-	void	Render();
+	VOID	Render();
 private:
 	HRESULT					InitializeWindow(INT screenWidth, INT screenHeight);
 	HRESULT					CreateDevice();
