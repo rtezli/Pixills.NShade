@@ -12,7 +12,7 @@ public:
 	VOID				Move(POINT* p);
 	VOID				Rotate(POINT* p);
 	VOID				Update();
-	FLOAT				GetAspectRatio(){ return _resources->ViewPort->Width / _resources->ViewPort->Height; };
+	FLOAT				GetAspectRatio(){ return Res::Get()->ViewPort->Width / Res::Get()->ViewPort->Height; };
 	FLOAT				GetFieldOfView(){ return 70.0f * XM_PI / 180.0f; };
 private:
 	DeviceResources		*_resources;

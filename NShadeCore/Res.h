@@ -61,7 +61,7 @@ public:
 	ID3D11InputLayout*			InputLayout;
 
 	ShaderSet*					Shaders;
-	XMVECTORF32					DefaultColor;
+	FLOAT*						DefaultColor;
 	D3D11_VIEWPORT*				ViewPort;
 	RenderingQuality*			RenderQuality;
 

@@ -59,15 +59,15 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<UINT>* modelIndexes, vector<NVert
 		input->push_back(*vertexInput);
 	}
 
-	_resources->VertexCount = modelVertices->size();
-	_resources->IndexCount = modelIndexes->size();
+	Res::Get()->VertexCount = modelVertices->size();
+	Res::Get()->IndexCount = modelIndexes->size();
 
 	PhongShader::InputLayout* vertexArr;
-	vertexArr = (PhongShader::InputLayout*)malloc(_resources->VertexCount * sizeof(PhongShader::InputLayout));
+	vertexArr = (PhongShader::InputLayout*)malloc(Res::Get()->VertexCount * sizeof(PhongShader::InputLayout));
 	copy(input->begin(), input->end(), vertexArr);
 
 	D3D11_BUFFER_DESC vertexBufferDesc;
-	vertexBufferDesc.ByteWidth = sizeof(PhongShader::InputLayout) * _resources->VertexCount;
+	vertexBufferDesc.ByteWidth = sizeof(PhongShader::InputLayout) * Res::Get()->VertexCount;
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
@@ -79,18 +79,18 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<UINT>* modelIndexes, vector<NVert
 	vertexBufferData.SysMemPitch = 0;
 	vertexBufferData.SysMemSlicePitch = 0;
 
-	auto result = _resources->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &_resources->VertexBuffer);
+	auto result = Res::Get()->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &Res::Get()->VertexBuffer);
 	if (FAILED(result))
 	{
 		return result;
 	}
 
 	UINT* indexArr;
-	indexArr = (UINT*)malloc(_resources->IndexCount * sizeof(UINT));
+	indexArr = (UINT*)malloc(Res::Get()->IndexCount * sizeof(UINT));
 	copy(modelIndexes->begin(), modelIndexes->end(), indexArr);
 
 	D3D11_BUFFER_DESC indexBufferDesc;
-	indexBufferDesc.ByteWidth = sizeof(UINT) * _resources->IndexCount;
+	indexBufferDesc.ByteWidth = sizeof(UINT) * Res::Get()->IndexCount;
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags = 0;
@@ -102,7 +102,7 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<UINT>* modelIndexes, vector<NVert
 	indexBufferData.SysMemPitch = 0;
 	indexBufferData.SysMemSlicePitch = 0;
 
-	return _resources->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &_resources->IndexBuffer);
+	return Res::Get()->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &Res::Get()->IndexBuffer);
 }
 
 HRESULT Model::LoadModelFromOBJFile(CHAR* fileName, BOOL isRightHand)
@@ -118,12 +118,12 @@ HRESULT Model::InitializeConstantBuffer()
 	constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 
 	D3D11_SUBRESOURCE_DATA constantBufferData = { 0 };
-	constantBufferData.pSysMem = &_resources->ConstBuffer;
+	constantBufferData.pSysMem = &Res::Get()->ConstBuffer;
 	constantBufferData.SysMemPitch = 0;
 	constantBufferData.SysMemSlicePitch = 0;
 
-	_resources->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &Res::Get()->ConstBuffer);
-	return _resources->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &_resources->ConstBuffer);
+	Res::Get()->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &Res::Get()->ConstBuffer);
+	return Res::Get()->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &Res::Get()->ConstBuffer);
 }
 
 HRESULT Model::InitializeVertexBuffer()
@@ -160,7 +160,7 @@ HRESULT Model::InitializeVertexBuffer()
 	vertexBufferData.SysMemPitch = 0;
 	vertexBufferData.SysMemSlicePitch = 0;
 
-	return _resources->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &_resources->VertexBuffer);
+	return Res::Get()->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &Res::Get()->VertexBuffer);
 }
 
 HRESULT Model::InitializeIndexBuffer(INT indeces[])
@@ -178,7 +178,7 @@ HRESULT Model::InitializeIndexBuffer(INT indeces[])
 		8, 10, 11, 8, 9, 10 // F7 (The Plane)
 	};
 
-	_resources->IndexCount = ARRAYSIZE(cubeIndices);
+	Res::Get()->IndexCount = ARRAYSIZE(cubeIndices);
 
 	D3D11_BUFFER_DESC indexBufferDesc;
 	indexBufferDesc.ByteWidth = sizeof(UINT) * ARRAYSIZE(cubeIndices);
@@ -193,7 +193,7 @@ HRESULT Model::InitializeIndexBuffer(INT indeces[])
 	indexBufferData.SysMemPitch = 0;
 	indexBufferData.SysMemSlicePitch = 0;
 
-	auto result = _resources->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &_resources->IndexBuffer);
+	auto result = Res::Get()->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &Res::Get()->IndexBuffer);
 	if (FAILED(result))
 	{
 		return result;

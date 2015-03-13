@@ -8,7 +8,7 @@ Input::Input(DeviceResources *resources)
 
 HRESULT Input::Initialize()
 {
-	auto result = DirectInput8Create(*_resources->WindowInstance,
+	auto result = DirectInput8Create(*Res::Get()->WindowInstance,
 		DIRECTINPUT_VERSION,
 		IID_IDirectInput8,
 		(VOID**)&_directInput, NULL);
@@ -53,7 +53,7 @@ HRESULT Input::CreateKeyboard()
 		return result;
 	}
 
-	result = _keyboard->SetCooperativeLevel(*_resources->WindowHandle, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+	result = _keyboard->SetCooperativeLevel(*Res::Get()->WindowHandle, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
 	if (FAILED(result))
 	{
 		return result;
@@ -82,7 +82,7 @@ HRESULT Input::CreateMouse()
 		return result;
 	}
 
-	result = _mouse->SetCooperativeLevel(*_resources->WindowHandle, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	result = _mouse->SetCooperativeLevel(*Res::Get()->WindowHandle, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 	if (FAILED(result))
 	{
 		return result;

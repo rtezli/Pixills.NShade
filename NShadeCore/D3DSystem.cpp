@@ -156,11 +156,11 @@ HRESULT D3DSystem::CreateDevice()
 
 	_resources = new DeviceResources(device, context);
 
-	_resources->BufferCount = 2;
-	_resources->SwapChainFlags = 0;
-	_resources->DefaultColor = new FLOAT[4]{1.0f, 1.0f, 1.0f, 1.0f};
+	Res::Get()->BufferCount = 2;
+	Res::Get()->SwapChainFlags = 0;
+	Res::Get()->DefaultColor = new FLOAT[4]{1.0f, 1.0f, 1.0f, 1.0f};
 	// TODO : Calculate DPI
-	_resources->Dpi = 96.00;
+	Res::Get()->Dpi = 96.00;
 
 	// TODO : Get available formats dynamically
 	// 8 bit per channel (rgba)
@@ -172,19 +172,19 @@ HRESULT D3DSystem::CreateDevice()
 	// 16 bit per channel  (rgba)
 	RenderingQuality quality0_16 = { 0, 1, DXGI_FORMAT_R16G16B16A16_UNORM, DXGI_FORMAT_D32_FLOAT, true };
 
-	_resources->RenderQuality = new RenderingQuality(quality4_8);
+	Res::Get()->RenderQuality = new RenderingQuality(quality4_8);
 
 	auto viewport = CreateViewPort(_windowHandle);
 
-	_resources->ViewPort = new D3D11_VIEWPORT(*viewport);
-	_resources->Device = device;
-	_resources->DeviceContext = context;
-	_resources->WindowHandle = _windowHandle;
-	_resources->WindowInstance = _windowInstance;
-	_resources->FullScreen = _fullScreen;
-	_resources->VSync = _vSync;
-	_resources->NearZ = 0.0f;
-	_resources->FarZ = 1000.0f;
+	Res::Get()->ViewPort = new D3D11_VIEWPORT(*viewport);
+	Res::Get()->Device = device;
+	Res::Get()->DeviceContext = context;
+	Res::Get()->WindowHandle = _windowHandle;
+	Res::Get()->WindowInstance = _windowInstance;
+	Res::Get()->FullScreen = _fullScreen;
+	Res::Get()->VSync = _vSync;
+	Res::Get()->NearZ = 0.0f;
+	Res::Get()->FarZ = 1000.0f;
 
 	return createResult;
 }

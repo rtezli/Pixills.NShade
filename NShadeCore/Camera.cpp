@@ -68,12 +68,12 @@ VOID Camera::Rotate(POINT* p)
 	_vAngle = _vAngle + p->y * moderationV;
 
 	XMStoreFloat4x4(_worldMatrix, XMMatrixTranspose(XMMatrixRotationY(_hAngle)));
-	_resources->ConstBufferData->world = *_worldMatrix;
+	Res::Get()->ConstBufferData->world = *_worldMatrix;
 }
 
 VOID Camera::Update()
 {
 	ConstantBufferData constBufferData = { *_worldMatrix, *_viewMatrix, *_projectionMatrix, *_eyePosition };
-	_resources->ConstBufferData = new ConstantBufferData(constBufferData);
-	Res::Get()->ConstBufferData = _resources->ConstBufferData;
+	Res::Get()->ConstBufferData = new ConstantBufferData(constBufferData);
+	Res::Get()->ConstBufferData = Res::Get()->ConstBufferData;
 }

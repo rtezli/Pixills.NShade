@@ -12,12 +12,12 @@ HRESULT FpsTextRenderer::Initialize()
 	D2D1_BITMAP_PROPERTIES1 bitmapProperties =
 		D2D1::BitmapProperties1(
 		D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
-		D2D1::PixelFormat(_resources->RenderQuality->TextureFormat, D2D1_ALPHA_MODE_PREMULTIPLIED),
-		_resources->Dpi,
-		_resources->Dpi);
+		D2D1::PixelFormat(Res::Get()->RenderQuality->TextureFormat, D2D1_ALPHA_MODE_PREMULTIPLIED),
+		Res::Get()->Dpi,
+		Res::Get()->Dpi);
 
 	IDXGISurface2* dxgiBackBuffer;
-	_resources->SwapChain->GetBuffer(0, IID_PPV_ARGS(&dxgiBackBuffer));
+	Res::Get()->SwapChain->GetBuffer(0, IID_PPV_ARGS(&dxgiBackBuffer));
 
 	//ID2D1Bitmap1* targetBitmap;
 	// DeviceContext()->CreateBitmapFromDxgiSurface(dxgiBackBuffer, &bitmapProperties, &targetBitmap);
