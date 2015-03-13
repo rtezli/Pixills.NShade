@@ -8,11 +8,6 @@ Scene::Scene(DeviceResources *resources)
 	_deviceResources = resources;
 }
 
-Scene::~Scene()
-{
-
-}
-
 HRESULT Scene::Render()
 {
 	return 0;

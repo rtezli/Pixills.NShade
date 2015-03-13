@@ -7,7 +7,3 @@ using namespace WireframeShader;
 WireframeVertexShader::WireframeVertexShader(DeviceResources *resources) : Shader(resources)
 {
 }
-
-WireframeVertexShader::~WireframeVertexShader()
-{
-}

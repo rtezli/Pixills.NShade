@@ -7,7 +7,3 @@ using namespace TesselationShader;
 TesselationDomainShader::TesselationDomainShader(DeviceResources *resources) : Shader(resources)
 {
 }
-
-TesselationDomainShader::~TesselationDomainShader()
-{
-}

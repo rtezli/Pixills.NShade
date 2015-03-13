@@ -1,16 +1,6 @@
 #include "stdafx.h"
 #include "ObjParser.h"
 
-
-ObjParser::ObjParser()
-{
-}
-
-
-ObjParser::~ObjParser()
-{
-}
-
 HRESULT ObjParser::Parse(vector<NVertex>* vertices, vector<UINT>* indices, CHAR* fileName)
 {
 	auto isRightHand = true;

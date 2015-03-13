@@ -7,6 +7,3 @@ using namespace WireframeShader;
 WireframePixelShader::WireframePixelShader(DeviceResources *resources) : Shader(resources)
 {
 }
-WireframePixelShader::~WireframePixelShader()
-{
-}

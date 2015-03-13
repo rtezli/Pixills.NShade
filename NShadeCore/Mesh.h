@@ -3,11 +3,8 @@
 #include "common.h"
 #include "model.h"
 
-class Mesh
+EXTERN class API Mesh
 {
-public:
-	Mesh();
-	~Mesh();
 public:
 	HRESULT AddModel(Model* model);
 	HRESULT RemoveModel(Model* model);

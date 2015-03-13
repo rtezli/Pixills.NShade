@@ -2,14 +2,6 @@
 
 #include "fbxreader.h"
 
-nshade::FbxReader::FbxReader()
-{
-}
-
-nshade::FbxReader::~FbxReader()
-{
-}
-
 HRESULT nshade::FbxReader::Read(CHAR* fileName, vector<NVertex>* vertices, vector<UINT>* indices)
 {
 	auto sdkManager = FbxManager::Create();

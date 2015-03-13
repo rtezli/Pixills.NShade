@@ -1,17 +1,6 @@
 #include "stdafx.h"
 #include "mesh.h"
 
-
-Mesh::Mesh()
-{
-}
-
-
-Mesh::~Mesh()
-{
- 
-}
-
 HRESULT AddModel(Model* model)
 {
 	return 0;

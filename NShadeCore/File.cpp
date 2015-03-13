@@ -3,17 +3,6 @@
 
 using namespace std;
 
-File::File()
-{
-}
-
-
-File::~File()
-{
-
-
-}
-
 struct FILE_BYTE_RESULT* File::ReadFileBytes(CHAR* fileName)
 {
 	fstream stream;

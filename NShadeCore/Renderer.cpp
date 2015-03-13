@@ -19,11 +19,6 @@ Renderer::Renderer(DeviceResources *resources, BOOL useSwapChain)
 	DXGI_FORMAT vertexColorFormat = DXGI_FORMAT_R32G32B32_FLOAT;
 }
 
-Renderer::~Renderer()
-{
-
-}
-
 HRESULT Renderer::Initialize()
 {
 	auto result = CreateSwapChain();

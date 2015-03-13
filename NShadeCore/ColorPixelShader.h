@@ -9,6 +9,5 @@ namespace ColorShader
 	{
 	public:
 		ColorPixelShader(DeviceResources *resources);
-		~ColorPixelShader();
 	};
 }

@@ -6,10 +6,6 @@ Camera::Camera(DeviceResources *resources)
 	_deviceResources = resources;
 }
 
-Camera::~Camera()
-{
-}
-
 void Camera::Initialize()
 {
 	_worldMatrix		= new XMFLOAT4X4();

@@ -4,11 +4,8 @@
 
 namespace nshade
 {
-	class FbxReader
+	EXTERN class API FbxReader
 	{
-	public:
-		FbxReader();
-		~FbxReader();
 	public:
 		static HRESULT Read(CHAR* fileName, vector<NVertex>* vertices, vector<UINT>* indices);
 	private:

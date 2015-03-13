@@ -6,11 +6,6 @@ Model::Model(DeviceResources* resources)
 	_deviceResources = shared_ptr<DeviceResources>(resources);
 }
 
-Model::~Model()
-{
-
-}
-
 HRESULT Model::Initialize()
 {
 	_indices = new vector<UINT>();

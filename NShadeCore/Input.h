@@ -7,7 +7,7 @@
 using namespace DirectX;
 
 
-class Input
+EXTERN class API Input
 {
 private:
 	struct MOVE_ROTATE_INPUT
@@ -17,7 +17,6 @@ private:
 	};
 public:
 	Input(DeviceResources *resources);
-	~Input();
 public:
 	HRESULT Initialize();
 	HRESULT CreateMouse();

@@ -7,6 +7,3 @@ using namespace TesselationShader;
 TesselationVertexShader::TesselationVertexShader(DeviceResources *resources) : Shader(resources)
 {
 }
-TesselationVertexShader::~TesselationVertexShader()
-{
-}

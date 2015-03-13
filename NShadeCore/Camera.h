@@ -3,11 +3,10 @@
 #include "common.h"
 #include "deviceresources.h"
 
-class Camera
+EXTERN class API Camera
 {
 public:
 	Camera(DeviceResources *resources);
-	~Camera();
 public:
 	void				Initialize();
 	void				Move(POINT* p);

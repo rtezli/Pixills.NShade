@@ -44,11 +44,10 @@ enum ShaderType : CHAR
 	DS = 6
 };
 
-class Shader
+EXTERN class API Shader
 {
 public:
 	Shader(DeviceResources *resources);
-   ~Shader(); 
 public:
 	HRESULT	SetVertexShader(LPCWSTR compiledShaderFile);
 	HRESULT	CompileVertexShader(LPCWSTR shaderSource);

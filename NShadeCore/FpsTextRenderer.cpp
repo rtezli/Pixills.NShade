@@ -7,11 +7,6 @@ FpsTextRenderer::FpsTextRenderer(DeviceResources *resources)
 	_deviceResources = resources;
 }
 
-
-FpsTextRenderer::~FpsTextRenderer()
-{
-}
-
 HRESULT FpsTextRenderer::Initialize()
 {
 	D2D1_BITMAP_PROPERTIES1 bitmapProperties =

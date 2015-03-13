@@ -7,7 +7,3 @@ using namespace TesselationShader;
 TesselationHullShader::TesselationHullShader(DeviceResources *resources) : Shader(resources)
 {
 }
-
-TesselationHullShader::~TesselationHullShader()
-{
-}

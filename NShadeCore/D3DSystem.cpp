@@ -1,20 +1,6 @@
 #include "stdafx.h"
 #include "d3dsystem.h"
 
-D3DSystem::D3DSystem()
-{
-}
-
-D3DSystem::~D3DSystem()
-{
-	_renderer.reset();
-	_camera.reset();
-	_inputDevices.reset();
-	_model.reset();
-
-	delete _deviceResources;
-}
-
 HRESULT D3DSystem::InitializeWithWindow(
 	INT screenWidth,
 	INT screenHeight,

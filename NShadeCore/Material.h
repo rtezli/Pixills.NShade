@@ -3,12 +3,8 @@
 #include "common.h"
 #include "shader.h"
 
-class Material
+EXTERN class API Material
 {
-public:
-	Material();
-	~Material();
-
 public:
 	XMFLOAT4					Color;
 	shared_ptr<ID3D10Texture2D>	Texture;

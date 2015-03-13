@@ -6,10 +6,6 @@ Input::Input(DeviceResources *resources)
 	_deviceResources = resources;
 }
 
-Input::~Input()
-{
-}
-
 HRESULT Input::Initialize()
 {
 	auto result = DirectInput8Create(*_deviceResources->WindowInstance,

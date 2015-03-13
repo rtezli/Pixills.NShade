@@ -3,11 +3,8 @@
 
 #include "common.h"
 
-class ObjParser
+EXTERN class API ObjParser
 {
-public:
-	ObjParser();
-	~ObjParser();
 public:
 	static HRESULT Parse(vector<NVertex>* vertices, vector<UINT>* indices, CHAR* fileName);
 };

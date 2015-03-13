@@ -27,6 +27,8 @@ namespace rxsub = rx::subjects;
 #include "d3d11.h"
 #include "dxgi.h"
 #include "directxmath.h"
+
+#include "export.h"
 #include "dinput.h"
 #include "deviceresources.h"
 #include "types.h"

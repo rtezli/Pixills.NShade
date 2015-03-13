@@ -7,11 +7,6 @@ Shader::Shader(DeviceResources *resources)
 	_deviceResources = resources;
 }
 
-Shader::~Shader()
-{
-
-}
-
 HRESULT Shader::SetVertexShader(LPCWSTR compiledShaderFile)
 {
 	//ID3D11ClassLinkage linkage;

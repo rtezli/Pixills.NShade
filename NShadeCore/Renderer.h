@@ -25,11 +25,10 @@
 #include "d3dcompiler.h"
 #include "phongvertexshader.h"
 
-class Renderer
+EXTERN class API Renderer
 {
 public:
 	Renderer(DeviceResources *resources, BOOL useSwapChain);
-	~Renderer();
 public:
 	HRESULT	ResizeSwapChain(UINT32 newWidth, UINT32 newHeight);
 	HRESULT SetShaderParameters();

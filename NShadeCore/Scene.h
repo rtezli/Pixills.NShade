@@ -9,11 +9,11 @@ struct SceneFile
 
 };
 
-class Scene
+EXTERN class API Scene
 {
 public:
 	Scene(DeviceResources *resources);
-	~Scene();
+
 	HRESULT AddModel(Model *model);
 	HRESULT Load(wstring fileName);
 	HRESULT Render();
@@ -31,7 +31,7 @@ private:
 	shared_ptr<vector<ShaderSet>>		_shaders;
 	shared_ptr<vector<Material>>		_materials;
 	shared_ptr<vector<NVertex>>			_vertices;
-	shared_ptr<vector<UINT>>	_indices;
+	shared_ptr<vector<UINT>>			_indices;
 
 	DeviceResources*					_deviceResources;
 };

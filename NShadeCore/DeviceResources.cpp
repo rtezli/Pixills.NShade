@@ -22,8 +22,3 @@ DeviceResources::DeviceResources(ID3D11Device* device, ID3D11DeviceContext* devi
  
 	RenderQuality = new RenderingQuality(quality4_8);
 }
-
-DeviceResources::~DeviceResources()
-{
-
-}

@@ -5,11 +5,11 @@
 #include "material.h"
 #include "phongvertexshader.h"
 
-class Model
+EXTERN class API Model
 {
 public:
 	Model(DeviceResources *resources);
-	~Model();
+
 	HRESULT LoadModelFromFBXFile(CHAR *fileName);
 	HRESULT LoadModelFromOBJFile(CHAR *fileName, BOOL isRightHand);
 	HRESULT CreateCube(FLOAT size, XMFLOAT3 *position);
