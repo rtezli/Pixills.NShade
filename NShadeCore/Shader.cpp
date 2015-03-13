@@ -134,40 +134,40 @@ HRESULT Shader::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR
 
 HRESULT Shader::Set()
 {
-	switch (m_Type)
+	switch (_type)
 	{
 		case ShaderType::VS:
 		{
 			DeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
-			DeviceContext()->VSSetShader(m_VertexShader, nullptr, 0);
+			DeviceContext()->VSSetShader(_vertexShader, nullptr, 0);
 		}
 
 		case ShaderType::PS:
 		{
 			DeviceContext()->PSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
-			DeviceContext()->PSSetShader(m_PixelShader, nullptr, 0);
+			DeviceContext()->PSSetShader(_pixelShader, nullptr, 0);
 		}
 
 		case ShaderType::GS:
 		{
 			DeviceContext()->GSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
-			DeviceContext()->GSSetShader(m_GeometryShader, nullptr, 0);
+			DeviceContext()->GSSetShader(_geometryShader, nullptr, 0);
 		}
 
 		case ShaderType::DS:
 		{
 			DeviceContext()->DSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
-			DeviceContext()->DSSetShader(m_DomainShader, nullptr, 0);
+			DeviceContext()->DSSetShader(_domainShader, nullptr, 0);
 		}
 		case ShaderType::HS:
 		{
 			DeviceContext()->HSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
-			DeviceContext()->HSSetShader(m_HullShader, nullptr, 0);
+			DeviceContext()->HSSetShader(_hullShader, nullptr, 0);
 		}
 		case ShaderType::CS:
 		{
 			DeviceContext()->CSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
-			DeviceContext()->CSSetShader(m_ComputeShader, nullptr, 0);
+			DeviceContext()->CSSetShader(_computeShader, nullptr, 0);
 		}
 	}
 	return 0;

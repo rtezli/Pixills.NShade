@@ -16,7 +16,7 @@ private:
 		XMFLOAT3 Move;
 	};
 public:
-	Input(DeviceResources *deviceResources);
+	Input(DeviceResources *resources);
 	~Input();
 public:
 	HRESULT Initialize();

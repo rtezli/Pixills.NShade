@@ -7,10 +7,10 @@ D3DSystem::D3DSystem()
 
 D3DSystem::~D3DSystem()
 {
-	m_pRenderer.reset();
-	m_pCamera.reset();
-	m_pInputDevices.reset();
-	m_pModel.reset();
+	_renderer.reset();
+	_camera.reset();
+	_inputDevices.reset();
+	_model.reset();
 
 	delete _deviceResources;
 }
@@ -26,7 +26,7 @@ HRESULT D3DSystem::InitializeWithWindow(
 	{
 		return result;
 	}
-	return InitializeForWindow(vsync, m_pHInstance, m_pWindowHandle, fullscreen);
+	return InitializeForWindow(vsync, _windowInstance, _windowHandle, fullscreen);
 }
 
 HRESULT D3DSystem::InitializeWindow(INT screenWidth, INT screenHeight)
@@ -51,8 +51,8 @@ HRESULT D3DSystem::InitializeWindow(INT screenWidth, INT screenHeight)
 	{
 		return false;
 	}
-	m_pHInstance = &hInstance;
-	m_pWindowHandle = &handle;
+	_windowInstance = &hInstance;
+	_windowHandle = &handle;
 	return true;
 }
 
@@ -62,10 +62,10 @@ HRESULT D3DSystem::InitializeForWindow(
 	HWND* hwnd,
 	BOOL fullscreen)
 {
-	m_pHInstance = hInstance;
-	m_pWindowHandle = hwnd;
-	m_vSync = vsync;
-	m_fullScreen = fullscreen;
+	_windowInstance = hInstance;
+	_windowHandle = hwnd;
+	_vSync = vsync;
+	_fullScreen = fullscreen;
 
 	//ShowCursor(false);
 
@@ -76,8 +76,8 @@ HRESULT D3DSystem::Initialize()
 {
 	POINT p;
 	GetCursorPos(&p);
-	m_lastPointerPosition = new POINT{ 0.0, 0.0 };
-	m_trackInput = false;
+	_lastPointerPosition = new POINT{ 0.0, 0.0 };
+	_trackInput = false;
 
 	auto result = CreateDevice();
 	if (FAILED(result))
@@ -143,7 +143,7 @@ HRESULT D3DSystem::CreateDevice()
 		ARRAYSIZE(featureLevels),
 		D3D11_SDK_VERSION,
 		&device,
-		&m_D3dFeatureLevel,
+		&_d3dFeatureLevel,
 		&context);
 
 	if (FAILED(createResult))
@@ -157,7 +157,7 @@ HRESULT D3DSystem::CreateDevice()
 			ARRAYSIZE(featureLevels),
 			D3D11_SDK_VERSION,
 			&device,
-			&m_D3dFeatureLevel,
+			&_d3dFeatureLevel,
 			&context);
 	}
 
@@ -169,15 +169,15 @@ HRESULT D3DSystem::CreateDevice()
 	}
 
 	auto resources = new DeviceResources(device, context);
-	auto viewport = CreateViewPort(m_pWindowHandle);
+	auto viewport = CreateViewPort(_windowHandle);
 
 	resources->ViewPort = new D3D11_VIEWPORT(*viewport);
 	resources->Device = device;
 	resources->DeviceContext = context;
-	resources->WindowHandle = m_pWindowHandle;
-	resources->WindowInstance = m_pHInstance;
-	resources->FullScreen = m_fullScreen;
-	resources->VSync = m_vSync;
+	resources->WindowHandle = _windowHandle;
+	resources->WindowInstance = _windowInstance;
+	resources->FullScreen = _fullScreen;
+	resources->VSync = _vSync;
 	resources->NearZ = 0.0f;
 	resources->FarZ = 1000.0f;
 
@@ -297,27 +297,27 @@ vector<MSAA>* D3DSystem::ProduceMsaaCapability(vector<MSAA>* options, INT i)
 
 HRESULT D3DSystem::CreateCamera()
 {
-	m_pCamera = shared_ptr<Camera>(new Camera(_deviceResources));
-	m_pCamera->Initialize();
+	_camera = shared_ptr<Camera>(new Camera(_deviceResources));
+	_camera->Initialize();
 	return 0;
 }
 
 HRESULT D3DSystem::LoadModels()
 {
-	m_pModel = shared_ptr<Model>(new Model(_deviceResources));
-	auto result = m_pModel->Initialize();
+	_model = shared_ptr<Model>(new Model(_deviceResources));
+	auto result = _model->Initialize();
 	return 0;
 }
 
 HRESULT D3DSystem::CreateRenderer()
 {
-	m_pRenderer = shared_ptr<Renderer>(new Renderer(_deviceResources, true));
-	return m_pRenderer->Initialize();
+	_renderer = shared_ptr<Renderer>(new Renderer(_deviceResources, true));
+	return _renderer->Initialize();
 }
 
 void D3DSystem::Render()
 {
-	m_pRenderer->Render();
+	_renderer->Render();
 }
 
 LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPARAM lParam)
@@ -347,7 +347,7 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 	// press pointer (left mouse button)
 	case WM_LBUTTONDOWN:
 	{
-		SetCapture(*m_pWindowHandle);
+		SetCapture(*_windowHandle);
 		//ShowCursor(false);
 		POINT p;
 		auto result = GetCursorPos(&p);
@@ -355,8 +355,8 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 		{
 			return result;
 		}
-		m_lastPointerPosition = new POINT(p);
-		m_trackInput = true;
+		_lastPointerPosition = new POINT(p);
+		_trackInput = true;
 		return 0;
 	}
 
@@ -364,7 +364,7 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 	case WM_LBUTTONUP:
 	{
 		ReleaseCapture();
-		m_trackInput = false;
+		_trackInput = false;
 	}
 
 	// scrolling (mouse wheel)
@@ -383,7 +383,7 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 	// move pointer (move mouse)
 	case WM_MOUSEMOVE:
 	{
-		if (m_trackInput)
+		if (_trackInput)
 		{
 			POINT p;
 			auto result = GetCursorPos(&p);
@@ -391,11 +391,11 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 			{
 				return result;
 			}
-			auto offsetH = p.x - m_lastPointerPosition->x;
-			auto offsetV = p.y - m_lastPointerPosition->y;
+			auto offsetH = p.x - _lastPointerPosition->x;
+			auto offsetV = p.y - _lastPointerPosition->y;
 			auto offset = new POINT{ offsetH, offsetV };
-			m_pCamera->Rotate(offset);
-			m_lastPointerPosition = new POINT(p);
+			_camera->Rotate(offset);
+			_lastPointerPosition = new POINT(p);
 		}
 		return 0;
 	}

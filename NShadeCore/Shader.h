@@ -73,13 +73,13 @@ private:
 	DeviceResources*					const Resources(){		return _deviceResources; }
 	ID3D11Device*						const Device(){			return _deviceResources->Device; }
 	ID3D11DeviceContext*				const DeviceContext(){	return _deviceResources->DeviceContext; }
-	vector<D3D11_INPUT_ELEMENT_DESC>	m_inputDescription;
-	ShaderType							m_Type;
-	ID3D11PixelShader*					m_PixelShader;
-	ID3D11VertexShader*					m_VertexShader;
-	ID3D11HullShader*					m_HullShader;
-	ID3D11DomainShader*					m_DomainShader;
-	ID3D11GeometryShader*				m_GeometryShader;
-	ID3D11ComputeShader*				m_ComputeShader;
+	vector<D3D11_INPUT_ELEMENT_DESC>	_inputDescription;
+	ShaderType							_type;
+	ID3D11PixelShader*					_pixelShader;
+	ID3D11VertexShader*					_vertexShader;
+	ID3D11HullShader*					_hullShader;
+	ID3D11DomainShader*					_domainShader;
+	ID3D11GeometryShader*				_geometryShader;
+	ID3D11ComputeShader*				_computeShader;
 };
 

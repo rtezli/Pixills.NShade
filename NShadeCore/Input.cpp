@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "input.h"
 
-Input::Input(DeviceResources *deviceResources)
+Input::Input(DeviceResources *resources)
 {
-	_deviceResources = deviceResources;
+	_deviceResources = resources;
 }
 
 Input::~Input()

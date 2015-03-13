@@ -6,7 +6,7 @@
 class Camera
 {
 public:
-	Camera(DeviceResources* resources);
+	Camera(DeviceResources *resources);
 	~Camera();
 public:
 	void				Initialize();
@@ -16,15 +16,15 @@ public:
 	FLOAT				GetAspectRatio(){ return _deviceResources->ViewPort->Width / _deviceResources->ViewPort->Height; };
 	FLOAT				GetFieldOfView(){ return 70.0f * XM_PI / 180.0f; };
 private:
-	XMFLOAT4X4*			m_pWorldMatrix;
-	XMFLOAT4X4*			m_pViewMatrix;
-	XMFLOAT4X4*			m_pProjectionMatrix;
+	XMFLOAT4X4*			_worldMatrix;
+	XMFLOAT4X4*			_viewMatrix;
+	XMFLOAT4X4*			_projectionMatrix;
 	DeviceResources*	_deviceResources;
-	XMFLOAT3*			m_eyePosition;
-	XMFLOAT3*			m_focusPosition;
-	XMFLOAT3*			m_upDirection;
-	FLOAT				m_hAngle;
-	FLOAT				m_vAngle;
-	FLOAT				m_radius;
+	XMFLOAT3*			_eyePosition;
+	XMFLOAT3*			_focusPosition;
+	XMFLOAT3*			_upDirection;
+	FLOAT				_hAngle;
+	FLOAT				_vAngle;
+	FLOAT				_radius;
 };
 
