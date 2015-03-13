@@ -12,7 +12,7 @@ HRESULT D3DSystem::InitializeWithWindow(
 	{
 		return result;
 	}
-	return InitializeForWindow(vsync, _windowInstance, _windowHandle, fullscreen);
+	return InitializeForWindow(vsync, Res::Get()->WindowInstance, Res::Get()->WindowHandle, fullscreen);
 }
 
 HRESULT D3DSystem::InitializeWindow(INT screenWidth, INT screenHeight)
@@ -37,24 +37,17 @@ HRESULT D3DSystem::InitializeWindow(INT screenWidth, INT screenHeight)
 	{
 		return false;
 	}
-	_windowInstance = &hInstance;
-	_windowHandle = &handle;
+	Res::Get()->WindowInstance = &hInstance;
+	Res::Get()->WindowHandle = &handle;
 	return true;
 }
 
-HRESULT D3DSystem::InitializeForWindow(
-	BOOL vsync,
-	HINSTANCE* hInstance,
-	HWND* hwnd,
-	BOOL fullscreen)
+HRESULT D3DSystem::InitializeForWindow(BOOL vsync, HINSTANCE* windowInstance, HWND* windowHandle, BOOL fullscreen)
 {
-	_windowInstance = hInstance;
-	_windowHandle = hwnd;
-	_vSync = vsync;
-	_fullScreen = fullscreen;
-
-	//ShowCursor(false);
-
+	Res::Get()->WindowInstance = windowInstance;
+	Res::Get()->WindowHandle = windowHandle;
+	Res::Get()->VSync = vsync;
+	Res::Get()->FullScreen = fullscreen;
 	return Initialize();
 }
 
@@ -157,6 +150,7 @@ HRESULT D3DSystem::CreateDevice()
 	Res::Get()->BufferCount = 2;
 	Res::Get()->SwapChainFlags = 0;
 	Res::Get()->DefaultColor = new FLOAT[4]{1.0f, 1.0f, 1.0f, 1.0f};
+
 	// TODO : Calculate DPI
 	Res::Get()->Dpi = 96.00;
 
@@ -172,15 +166,10 @@ HRESULT D3DSystem::CreateDevice()
 
 	Res::Get()->RenderQuality = new RenderingQuality(quality4_8);
 
-	auto viewport = CreateViewPort(_windowHandle);
+	CreateViewPort();
 
-	Res::Get()->ViewPort = new D3D11_VIEWPORT(*viewport);
 	Res::Get()->Device = device;
 	Res::Get()->DeviceContext = context;
-	Res::Get()->WindowHandle = _windowHandle;
-	Res::Get()->WindowInstance = _windowInstance;
-	Res::Get()->FullScreen = _fullScreen;
-	Res::Get()->VSync = _vSync;
 	Res::Get()->NearZ = 0.0f;
 	Res::Get()->FarZ = 1000.0f;
 
@@ -193,11 +182,11 @@ HRESULT D3DSystem::CreateInput()
 	return device->Initialize();
 }
 
-D3D11_VIEWPORT* D3DSystem::CreateViewPort(HWND* hwnd)
+VOID D3DSystem::CreateViewPort()
 {
 	RECT rect;
-
-	GetWindowRect(*hwnd, &rect);
+	auto handle = Res::Get()->WindowHandle;
+	GetWindowRect(*handle, &rect);
 	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, FALSE);
 
 	auto width = rect.right - rect.left;
@@ -211,7 +200,7 @@ D3D11_VIEWPORT* D3DSystem::CreateViewPort(HWND* hwnd)
 	viewPort.MinDepth = D3D11_MIN_DEPTH;
 	viewPort.MaxDepth = D3D11_MAX_DEPTH;
 
-	return new D3D11_VIEWPORT(viewPort);
+	Res::Get()->ViewPort = new D3D11_VIEWPORT(viewPort);
 }
 
 HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device* device)
@@ -348,7 +337,7 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPAR
 	// press pointer (left mouse button)
 	case WM_LBUTTONDOWN:
 	{
-		SetCapture(*_windowHandle);
+		SetCapture(*Res::Get()->WindowHandle);
 		//ShowCursor(false);
 		POINT p;
 		auto result = GetCursorPos(&p);
