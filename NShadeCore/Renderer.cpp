@@ -5,23 +5,7 @@
 Renderer::Renderer(DeviceResources *resources, BOOL useSwapChain)
 {
 	_resources = resources;
-	//Res::Get()->Device = resources->Device;
-	//Res::Get()->DeviceContext = resources->DeviceContext;
-	//Res::Get()->FullScreen = resources->FullScreen;
-	//Res::Get()->RenderQuality = resources->RenderQuality;
-	//Res::Get()->ViewPort = resources->ViewPort;
-	//Res::Get()->WindowHandle = resources->WindowHandle;
-	//Res::Get()->BufferCount = resources->BufferCount;
-	//Res::Get()->BackBuffer = resources->BackBuffer;
-	//Res::Get()->ConstBuffer = resources->ConstBuffer;
-	//Res::Get()->ConstBufferData = resources->ConstBufferData;
-	//Res::Get()->VertexBuffer = resources->VertexBuffer;
-	//Res::Get()->VertexCount = resources->VertexCount;
-	//Res::Get()->IndexBuffer = resources->IndexBuffer;
-	//Res::Get()->IndexCount = resources->IndexCount;
-
 	_isInitialized = false;
-	//_deviceResources = resources;
 	_resources->Shaders = new ShaderSet();
 	_useSwapChain = useSwapChain;
 	_rasterizerUseMultiSampling = true;
@@ -525,8 +509,8 @@ HRESULT Renderer::Render()
 	_resources->DeviceContext->VSSetConstantBuffers(0, 1, &_resources->ConstBuffer);
 	_resources->DeviceContext->VSSetShader(vs, NULL, 0);
 	
-	_resources->DeviceContext->VSSetConstantBuffers(0, 1, &_resources->ConstBuffer);
-	_resources->DeviceContext->VSSetShader(vs, NULL, 0);
+	//_resources->DeviceContext->VSSetConstantBuffers(0, 1, &_resources->ConstBuffer);
+	//_resources->DeviceContext->VSSetShader(vs, NULL, 0);
 
 	_resources->DeviceContext->PSSetConstantBuffers(0, 1, &_resources->ConstBuffer);
 	_resources->DeviceContext->PSSetShader(ps, NULL, 0);

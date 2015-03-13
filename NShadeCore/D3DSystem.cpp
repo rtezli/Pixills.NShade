@@ -92,9 +92,9 @@ HRESULT D3DSystem::Initialize()
 	auto so = rx::synchronize_in_one_worker(sc);
 	rx::observable<>::interval(sc.now(), FPS(25), so)
 		.subscribe([this](INT val)
-		{
-			D3DSystem::Render();
-		}
+	{
+		D3DSystem::Render();
+	}
 	);
 	return result;
 }
@@ -155,6 +155,25 @@ HRESULT D3DSystem::CreateDevice()
 	}
 
 	_resources = new DeviceResources(device, context);
+
+	_resources->BufferCount = 2;
+	_resources->SwapChainFlags = 0;
+	_resources->DefaultColor = new FLOAT[4]{1.0f, 1.0f, 1.0f, 1.0f};
+	// TODO : Calculate DPI
+	_resources->Dpi = 96.00;
+
+	// TODO : Get available formats dynamically
+	// 8 bit per channel (rgba)
+	RenderingQuality quality0_8 = { 0, 1, DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT, false }; // Should work for everyone
+	RenderingQuality quality2_8 = { 2, 2, DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT, true };
+	RenderingQuality quality4_8 = { 16, 4, DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT, true };
+	RenderingQuality quality8_8 = { 32, 8, DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT, true }; // Works on my machine ;)
+
+	// 16 bit per channel  (rgba)
+	RenderingQuality quality0_16 = { 0, 1, DXGI_FORMAT_R16G16B16A16_UNORM, DXGI_FORMAT_D32_FLOAT, true };
+
+	_resources->RenderQuality = new RenderingQuality(quality4_8);
+
 	auto viewport = CreateViewPort(_windowHandle);
 
 	_resources->ViewPort = new D3D11_VIEWPORT(*viewport);

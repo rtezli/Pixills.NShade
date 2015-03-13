@@ -47,7 +47,7 @@ public:
 	INT							IndexCount;
 	INT							VertexCount;
 
-	XMVECTORF32					DefaultColor;
+	FLOAT*						DefaultColor;
 	FLOAT						Dpi;
 	FLOAT						NearZ;
 	FLOAT						FarZ;
