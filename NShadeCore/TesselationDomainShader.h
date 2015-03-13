@@ -14,9 +14,7 @@ namespace TesselationShader
 
 	class TesselationDomainShader : Shader
 	{
-	public:
-		TesselationDomainShader(DeviceResources *resources);
-		~TesselationDomainShader();
+
 	};
 }
 

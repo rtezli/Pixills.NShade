@@ -2,9 +2,8 @@
 #include "renderer.h"
 
 
-Renderer::Renderer(DeviceResources *resources, BOOL useSwapChain)
+Renderer::Renderer(BOOL useSwapChain)
 {
-	_resources = resources;
 	_isInitialized = false;
 	Res::Get()->Shaders = new ShaderSet();
 	_useSwapChain = useSwapChain;

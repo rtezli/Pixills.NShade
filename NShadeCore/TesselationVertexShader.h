@@ -7,9 +7,7 @@ namespace TesselationShader
 {
 	class TesselationVertexShader : public Shader
 	{
-	public:
-		TesselationVertexShader(DeviceResources *resources);
-		~TesselationVertexShader();
+
 	};
 }
 

@@ -1,11 +1,6 @@
 #include "stdafx.h"
 #include "model.h"
 
-Model::Model(DeviceResources* resources)
-{
-	_resources = resources;
-}
-
 HRESULT Model::Initialize()
 {
 	_indices = new vector<UINT>();

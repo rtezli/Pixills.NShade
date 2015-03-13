@@ -14,8 +14,6 @@ namespace WireframeShader
 
 	class WireframeVertexShader : public Shader
 	{
-	public:
-		WireframeVertexShader(DeviceResources *resources);
-		~WireframeVertexShader();
+
 	};
 }

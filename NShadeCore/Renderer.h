@@ -28,7 +28,7 @@
 EXTERN class API Renderer
 {
 public:
-	Renderer(DeviceResources *resources, BOOL useSwapChain);
+	Renderer(BOOL useSwapChain);
 public:
 	HRESULT	ResizeSwapChain(UINT32 newWidth, UINT32 newHeight);
 	HRESULT SetShaderParameters();
@@ -86,7 +86,6 @@ private:
 
 	HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
 private:
-	DeviceResources						*_resources;
 	LPCWSTR								_standardVertexShader = L"../Debug/PhongVertexShader.cso";
 	LPCWSTR								_standardPixelShader = L"../Debug/PhongPixelShader.cso";
 

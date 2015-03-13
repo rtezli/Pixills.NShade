@@ -31,7 +31,6 @@ private:
 	HRESULT					AttachOnRotate();
 	HRESULT					DetachOnRotate();
 private:
-	DeviceResources			*_resources;
 	HINSTANCE				*_windowInstance;
 	HWND					*_windowHandle;
 	POINT					*_lastPointerPosition;

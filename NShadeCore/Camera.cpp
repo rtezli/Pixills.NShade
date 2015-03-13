@@ -1,16 +1,11 @@
 #include "stdafx.h"
 #include "camera.h"
 
-Camera::Camera(DeviceResources *resources)
-{
-	_resources = resources;
-}
-
 VOID Camera::Initialize()
 {
 	_worldMatrix		= new XMFLOAT4X4();
-	_viewMatrix		= new XMFLOAT4X4();
-	_projectionMatrix = new XMFLOAT4X4();
+	_viewMatrix			= new XMFLOAT4X4();
+	_projectionMatrix	= new XMFLOAT4X4();
 
 	_radius = 6.0f;
 	_hAngle = 0.0f;

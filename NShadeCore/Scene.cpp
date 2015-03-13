@@ -2,12 +2,6 @@
 
 #include "scene.h"
 
-
-Scene::Scene(DeviceResources *resources)
-{
-	_resources = resources;
-}
-
 HRESULT Scene::Render()
 {
 	return 0;

@@ -1,11 +1,6 @@
 #include "stdafx.h"
 #include "input.h"
 
-Input::Input(DeviceResources *resources)
-{
-	_resources = resources;
-}
-
 HRESULT Input::Initialize()
 {
 	auto result = DirectInput8Create(*Res::Get()->WindowInstance,

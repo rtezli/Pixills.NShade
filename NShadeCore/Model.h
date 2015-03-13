@@ -8,8 +8,6 @@
 EXTERN class API Model
 {
 public:
-	Model(DeviceResources *resources);
-
 	HRESULT AssignMaterial(Material *material);
 	HRESULT LoadModelFromFBXFile(CHAR *fileName);
 	HRESULT LoadModelFromOBJFile(CHAR *fileName, BOOL isRightHand);
@@ -34,7 +32,6 @@ private:
 	unsigned short				_indexCount = 0;
 	D3D11_BUFFER_DESC			_bufferDesc;
 	D3D11_SUBRESOURCE_DATA		_initData;
-	DeviceResources				*_resources;
 	Material*					_material;
 	vector<UINT>*				_indices;
 	vector<NVertex>*			_vertices;

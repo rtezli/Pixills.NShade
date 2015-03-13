@@ -16,8 +16,6 @@ private:
 		XMFLOAT3 Move;
 	};
 public:
-	Input(DeviceResources *resources);
-public:
 	HRESULT Initialize();
 	HRESULT CreateMouse();
 	HRESULT CreateKeyboard();
@@ -30,7 +28,6 @@ private:
 	VOID	ProcessInput();
 	VOID	PublishInput(MOVE_ROTATE_INPUT *move){ (*OnInput)(move); }
 private:
-	DeviceResources			*_resources;
 	IDirectInput8*			_directInput;
 	IDirectInputDevice8*	_keyboard;
 	IDirectInputDevice8*	_mouse;

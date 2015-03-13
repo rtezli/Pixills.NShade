@@ -154,8 +154,6 @@ HRESULT D3DSystem::CreateDevice()
 		return createResult;
 	}
 
-	_resources = new DeviceResources(device, context);
-
 	Res::Get()->BufferCount = 2;
 	Res::Get()->SwapChainFlags = 0;
 	Res::Get()->DefaultColor = new FLOAT[4]{1.0f, 1.0f, 1.0f, 1.0f};
@@ -191,7 +189,7 @@ HRESULT D3DSystem::CreateDevice()
 
 HRESULT D3DSystem::CreateInput()
 {
-	auto device = shared_ptr<Input>(new Input(_resources));
+	auto device = shared_ptr<Input>(new Input());
 	return device->Initialize();
 }
 
@@ -300,21 +298,21 @@ vector<MSAA>* D3DSystem::ProduceMsaaCapability(vector<MSAA>* options, INT i)
 
 HRESULT D3DSystem::CreateCamera()
 {
-	_camera = shared_ptr<Camera>(new Camera(_resources));
+	_camera = shared_ptr<Camera>(new Camera());
 	_camera->Initialize();
 	return 0;
 }
 
 HRESULT D3DSystem::LoadModels()
 {
-	_model = shared_ptr<Model>(new Model(_resources));
+	_model = shared_ptr<Model>(new Model());
 	auto result = _model->Initialize();
 	return 0;
 }
 
 HRESULT D3DSystem::CreateRenderer()
 {
-	_renderer = shared_ptr<Renderer>(new Renderer(_resources, true));
+	_renderer = shared_ptr<Renderer>(new Renderer(true));
 	return _renderer->Initialize();
 }
 

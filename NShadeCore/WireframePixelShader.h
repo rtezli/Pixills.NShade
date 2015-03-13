@@ -7,8 +7,6 @@ namespace WireframeShader
 {
 	class WireframePixelShader : public Shader
 	{
-	public:
-		WireframePixelShader(DeviceResources *resources);
-		~WireframePixelShader();
+
 	};
 }

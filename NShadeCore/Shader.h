@@ -47,8 +47,6 @@ enum ShaderType : CHAR
 EXTERN class API Shader
 {
 public:
-	Shader(DeviceResources *resources);
-public:
 	HRESULT	SetVertexShader(LPCWSTR compiledShaderFile);
 	HRESULT	CompileVertexShader(LPCWSTR shaderSource);
 
@@ -68,7 +66,6 @@ public:
 private:
 	HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
 private:
-	DeviceResources						*_resources;
 	vector<D3D11_INPUT_ELEMENT_DESC>	_inputDescription;
 	ShaderType							_type;
 	ID3D11PixelShader*					_pixelShader;

@@ -2,11 +2,6 @@
 
 #include "shader.h"
 
-Shader::Shader(DeviceResources *resources)
-{
-	_resources = resources;
-}
-
 HRESULT Shader::SetVertexShader(LPCWSTR compiledShaderFile)
 {
 	//ID3D11ClassLinkage linkage;

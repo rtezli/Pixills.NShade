@@ -1,12 +1,6 @@
 #include "stdafx.h"
 #include "FpsTextRenderer.h"
 
-
-FpsTextRenderer::FpsTextRenderer(DeviceResources *resources)
-{
-	_resources = resources;
-}
-
 HRESULT FpsTextRenderer::Initialize()
 {
 	D2D1_BITMAP_PROPERTIES1 bitmapProperties =
