@@ -52,15 +52,7 @@ struct VertexShaderInput
 	Light Light;
 };
 
-struct RenderingQuality
-{
-	UINT Quality;
-	UINT SampleCount;
-	DXGI_FORMAT TextureFormat;
-	DXGI_FORMAT BufferFormat;
-	BOOL IsMultisamplingSettings;
-};
-
+  
 enum MSAA : CHAR
 {
 	SIMPLEST_POSSIBLE = 9,
@@ -78,25 +70,7 @@ struct MsaaOptions
 	RenderingQuality Quality;
 };
 
-struct ConstantBufferData
-{
-	XMFLOAT4X4 world;
-	XMFLOAT4X4 view;
-	XMFLOAT4X4 projection;
-	XMFLOAT3   camera;
-	FLOAT	   time;
-};
-
-struct ShaderSet
-{
-	ID3D11PixelShader*		PixelShader;
-	ID3D11VertexShader*		VertexShader;
-	ID3D11HullShader*		HullShader;
-	ID3D11DomainShader*		DomainShader;
-	ID3D11GeometryShader*	GeometryShader;
-	ID3D11ComputeShader*	ComputeShader;
-};
-
+ 
 namespace ScreenRotation
 {
 	static const XMFLOAT4X4 Rotation0(

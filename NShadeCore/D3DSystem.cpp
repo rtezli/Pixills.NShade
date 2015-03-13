@@ -167,14 +167,14 @@ HRESULT D3DSystem::CreateDevice()
 	resources->NearZ = 0.0f;
 	resources->FarZ = 1000.0f;
 
-	_deviceResources = resources;
+	_resources = resources;
 
 	return createResult;
 }
 
 HRESULT D3DSystem::CreateInput()
 {
-	auto device = shared_ptr<Input>(new Input(_deviceResources));
+	auto device = shared_ptr<Input>(new Input(_resources));
 	return device->Initialize();
 }
 
@@ -283,21 +283,21 @@ vector<MSAA>* D3DSystem::ProduceMsaaCapability(vector<MSAA>* options, INT i)
 
 HRESULT D3DSystem::CreateCamera()
 {
-	_camera = shared_ptr<Camera>(new Camera(_deviceResources));
+	_camera = shared_ptr<Camera>(new Camera(_resources));
 	_camera->Initialize();
 	return 0;
 }
 
 HRESULT D3DSystem::LoadModels()
 {
-	_model = shared_ptr<Model>(new Model(_deviceResources));
+	_model = shared_ptr<Model>(new Model(_resources));
 	auto result = _model->Initialize();
 	return 0;
 }
 
 HRESULT D3DSystem::CreateRenderer()
 {
-	_renderer = shared_ptr<Renderer>(new Renderer(_deviceResources, true));
+	_renderer = shared_ptr<Renderer>(new Renderer(_resources, true));
 	return _renderer->Initialize();
 }
 

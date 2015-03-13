@@ -5,7 +5,7 @@
 
 Scene::Scene(DeviceResources *resources)
 {
-	_deviceResources = resources;
+	_resources = resources;
 }
 
 HRESULT Scene::Render()

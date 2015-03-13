@@ -28,6 +28,7 @@ namespace rxsub = rx::subjects;
 #include "dxgi.h"
 #include "directxmath.h"
 
+#include "res.h"
 #include "export.h"
 #include "dinput.h"
 #include "deviceresources.h"

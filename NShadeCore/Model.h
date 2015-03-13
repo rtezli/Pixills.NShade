@@ -25,7 +25,7 @@ private:
 	HRESULT						TraverseChildren(FbxNode *node, vector<FbxNode*> *mesh);
 	HRESULT						FillVertexAndIndexBuffer(vector<UINT> *modelIndexes, vector<NVertex> *modelVertices);
 	XMFLOAT3					ConvertFbxVector4ToXMFLOAT3(FbxVector4 *coordinate, FbxAxisSystem *axisSystem, FLOAT scale);
-	DeviceResources*			DeviceResource(){ return _deviceResources.get(); }
+
 	HRESULT						InitializeVertexBuffer();
 	HRESULT						InitializeIndexBuffer(INT indeces[]);
 	HRESULT						InitializeConstantBuffer();
@@ -34,7 +34,7 @@ private:
 	unsigned short				_indexCount = 0;
 	D3D11_BUFFER_DESC			_bufferDesc;
 	D3D11_SUBRESOURCE_DATA		_initData;
-	shared_ptr<DeviceResources>	_deviceResources;
+	DeviceResources				*_resources;
 	Material*					_material;
 	vector<UINT>*				_indices;
 	vector<NVertex>*			_vertices;

@@ -4,9 +4,25 @@
 
 Renderer::Renderer(DeviceResources *resources, BOOL useSwapChain)
 {
+	_resources = resources;
+	//Res::Get()->Device = resources->Device;
+	//Res::Get()->DeviceContext = resources->DeviceContext;
+	//Res::Get()->FullScreen = resources->FullScreen;
+	//Res::Get()->RenderQuality = resources->RenderQuality;
+	//Res::Get()->ViewPort = resources->ViewPort;
+	//Res::Get()->WindowHandle = resources->WindowHandle;
+	//Res::Get()->BufferCount = resources->BufferCount;
+	//Res::Get()->BackBuffer = resources->BackBuffer;
+	//Res::Get()->ConstBuffer = resources->ConstBuffer;
+	//Res::Get()->ConstBufferData = resources->ConstBufferData;
+	//Res::Get()->VertexBuffer = resources->VertexBuffer;
+	//Res::Get()->VertexCount = resources->VertexCount;
+	//Res::Get()->IndexBuffer = resources->IndexBuffer;
+	//Res::Get()->IndexCount = resources->IndexCount;
+
 	_isInitialized = false;
-	_deviceResources = resources;
-	_deviceResources->Shaders = new ShaderSet();
+	//_deviceResources = resources;
+	_resources->Shaders = new ShaderSet();
 	_useSwapChain = useSwapChain;
 	_rasterizerUseMultiSampling = true;
 
@@ -69,13 +85,13 @@ HRESULT Renderer::Initialize()
 
 HRESULT Renderer::CreateRenderTargetDesciption()
 {
-	_renderTargetDesc.Width = Resources()->ViewPort->Width;
-	_renderTargetDesc.Height = Resources()->ViewPort->Height;
+	_renderTargetDesc.Width = _resources->ViewPort->Width;
+	_renderTargetDesc.Height = _resources->ViewPort->Height;
 	_renderTargetDesc.MipLevels = 1;
 	_renderTargetDesc.ArraySize = 1;
-	_renderTargetDesc.Format = Resources()->RenderQuality->TextureFormat;
-	_renderTargetDesc.SampleDesc.Quality = Resources()->RenderQuality->Quality;
-	_renderTargetDesc.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
+	_renderTargetDesc.Format = _resources->RenderQuality->TextureFormat;
+	_renderTargetDesc.SampleDesc.Quality = _resources->RenderQuality->Quality;
+	_renderTargetDesc.SampleDesc.Count = _resources->RenderQuality->SampleCount;
 	_renderTargetDesc.Usage = D3D11_USAGE_DEFAULT;
 	_renderTargetDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
 	_renderTargetDesc.CPUAccessFlags = 0;
@@ -83,7 +99,7 @@ HRESULT Renderer::CreateRenderTargetDesciption()
 
 	ID3D11Texture2D* renderTarget = 0;
 
-	return GetDevice()->CreateTexture2D(&_renderTargetDesc, nullptr, &renderTarget);
+	return _resources->Device->CreateTexture2D(&_renderTargetDesc, nullptr, &renderTarget);
 }
 
 HRESULT Renderer::CreateRenderTargetViewDesciption()
@@ -107,7 +123,7 @@ HRESULT Renderer::CreateRenderTarget()
 		return result;
 	}
 
-	return GetDevice()->CreateRenderTargetView(Resources()->BackBuffer, &_renderTargetViewDesc, &Resources()->RenderTargetView);
+	return _resources->Device->CreateRenderTargetView(_resources->BackBuffer, &_renderTargetViewDesc, &_resources->RenderTargetView);
 }
 
 
@@ -115,27 +131,27 @@ HRESULT Renderer::CreateSwapChainDesciption()
 {
 	_swapChainDescription = { 0 };
 
-	_swapChainDescription.BufferCount = Resources()->BufferCount;
+	_swapChainDescription.BufferCount = _resources->BufferCount;
 	_swapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
 	_swapChainDescription.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-	_swapChainDescription.Flags = Resources()->SwapChainFlags;
+	_swapChainDescription.Flags = _resources->SwapChainFlags;
 
 	_swapChainDescription.BufferDesc.RefreshRate.Numerator = 0;
 	_swapChainDescription.BufferDesc.RefreshRate.Denominator = 1;
 	_swapChainDescription.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	_swapChainDescription.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 
-	_swapChainDescription.SampleDesc.Quality = Resources()->RenderQuality->Quality;
-	_swapChainDescription.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
-	_swapChainDescription.BufferDesc.Format = Resources()->RenderQuality->TextureFormat;
-	_swapChainDescription.BufferDesc.Width = Resources()->ViewPort->Width;
-	_swapChainDescription.BufferDesc.Height = Resources()->ViewPort->Height;
+	_swapChainDescription.SampleDesc.Quality = _resources->RenderQuality->Quality;
+	_swapChainDescription.SampleDesc.Count = _resources->RenderQuality->SampleCount;
+	_swapChainDescription.BufferDesc.Format = _resources->RenderQuality->TextureFormat;
+	_swapChainDescription.BufferDesc.Width = _resources->ViewPort->Width;
+	_swapChainDescription.BufferDesc.Height = _resources->ViewPort->Height;
 
-	auto handle = *Resources()->WindowHandle;
+	auto handle = *_resources->WindowHandle;
 	_swapChainDescription.OutputWindow = handle;
 
-	if (Resources()->FullScreen)
+	if (_resources->FullScreen)
 	{
 		_swapChainDescription.Windowed = false;
 	}
@@ -158,7 +174,7 @@ HRESULT Renderer::CreateSwapChain()
 	IDXGIAdapter* dxgiAdapter = 0;
 	IDXGIFactory* dxgiFactory = 0;
 
-	result = GetDevice()->QueryInterface(__uuidof(IDXGIDevice), (VOID **)&dxgiDevice);
+	result = _resources->Device->QueryInterface(__uuidof(IDXGIDevice), (VOID **)&dxgiDevice);
 	if (FAILED(result))
 	{
 		return result;
@@ -176,13 +192,13 @@ HRESULT Renderer::CreateSwapChain()
 		return result;
 	}
 
-	result = dxgiFactory->CreateSwapChain(GetDevice(), &_swapChainDescription, &Resources()->SwapChain);
+	result = dxgiFactory->CreateSwapChain(_resources->Device, &_swapChainDescription, &_resources->SwapChain);
 	if (FAILED(result))
 	{
 		return result;
 	}
 
-	result = Resources()->SwapChain->GetBuffer(0, IID_PPV_ARGS(&Resources()->BackBuffer));
+	result = _resources->SwapChain->GetBuffer(0, IID_PPV_ARGS(&_resources->BackBuffer));
 	if (FAILED(result))
 	{
 		return result;
@@ -198,13 +214,13 @@ HRESULT Renderer::CreateSwapChain()
 
 HRESULT Renderer::CreateDepthBufferDescription()
 {
-	_depthBufferDesc.Width = Resources()->ViewPort->Width;
-	_depthBufferDesc.Height = Resources()->ViewPort->Height;
+	_depthBufferDesc.Width = _resources->ViewPort->Width;
+	_depthBufferDesc.Height = _resources->ViewPort->Height;
 	_depthBufferDesc.MipLevels = 1;
 	_depthBufferDesc.ArraySize = 1;
-	_depthBufferDesc.Format = Resources()->RenderQuality->BufferFormat;
-	_depthBufferDesc.SampleDesc.Quality = Resources()->RenderQuality->Quality;
-	_depthBufferDesc.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
+	_depthBufferDesc.Format = _resources->RenderQuality->BufferFormat;
+	_depthBufferDesc.SampleDesc.Quality = _resources->RenderQuality->Quality;
+	_depthBufferDesc.SampleDesc.Count = _resources->RenderQuality->SampleCount;
 	_depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	_depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	_depthBufferDesc.CPUAccessFlags = 0;
@@ -220,7 +236,7 @@ HRESULT Renderer::CreateDepthBuffer()
 	{
 		return result;
 	}
-	return GetDevice()->CreateTexture2D(&_depthBufferDesc, nullptr, &Resources()->DepthStencilBuffer);
+	return _resources->Device->CreateTexture2D(&_depthBufferDesc, nullptr, &_resources->DepthStencilBuffer);
 }
 
 
@@ -228,12 +244,12 @@ HRESULT Renderer::CreateDepthStencilDescription()
 {
 	_depthStencilDesc.ArraySize = 1;
 	_depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	_depthStencilDesc.MipLevels = Resources()->RenderQuality->Quality > 0 ? 1 : 0;
-	_depthStencilDesc.SampleDesc.Quality = Resources()->RenderQuality->Quality;
-	_depthStencilDesc.SampleDesc.Count = Resources()->RenderQuality->SampleCount;
-	_depthStencilDesc.Format = Resources()->RenderQuality->BufferFormat;
-	_depthStencilDesc.Width = Resources()->ViewPort->Width;
-	_depthStencilDesc.Height = Resources()->ViewPort->Height;
+	_depthStencilDesc.MipLevels = _resources->RenderQuality->Quality > 0 ? 1 : 0;
+	_depthStencilDesc.SampleDesc.Quality = _resources->RenderQuality->Quality;
+	_depthStencilDesc.SampleDesc.Count = _resources->RenderQuality->SampleCount;
+	_depthStencilDesc.Format = _resources->RenderQuality->BufferFormat;
+	_depthStencilDesc.Width = _resources->ViewPort->Width;
+	_depthStencilDesc.Height = _resources->ViewPort->Height;
 
 	return 0;
 }
@@ -258,15 +274,15 @@ HRESULT Renderer::CreateDepthStencilStateDescription()
 	_depthStencilStateDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 	_depthStencilStateDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-	auto result = GetDevice()->CreateDepthStencilState(&_depthStencilStateDesc, &Resources()->DepthStencilState);
+	auto result = _resources->Device->CreateDepthStencilState(&_depthStencilStateDesc, &_resources->DepthStencilState);
 
-	GetDeviceContext()->OMSetDepthStencilState(Resources()->DepthStencilState, 1);
+	_resources->DeviceContext->OMSetDepthStencilState(_resources->DepthStencilState, 1);
 	return result;
 }
 
 HRESULT Renderer::CreateDepthStencilViewDescription()
 {
-	_depthStencilViewDesc.Format = Resources()->RenderQuality->BufferFormat;
+	_depthStencilViewDesc.Format = _resources->RenderQuality->BufferFormat;
 	_depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
 	_depthStencilViewDesc.Texture2D.MipSlice = 0;
 
@@ -295,8 +311,8 @@ HRESULT Renderer::CreateDepthStencil()
 
 	ID3D11Texture2D* depthStencil = 0;
 
-	result = GetDevice()->CreateTexture2D(&_depthStencilDesc, nullptr, &depthStencil);
-	result = GetDevice()->CreateDepthStencilView(depthStencil, &_depthStencilViewDesc, &Resources()->DepthStencilView);
+	result = _resources->Device->CreateTexture2D(&_depthStencilDesc, nullptr, &depthStencil);
+	result = _resources->Device->CreateDepthStencilView(depthStencil, &_depthStencilViewDesc, &_resources->DepthStencilView);
 
 	if (FAILED(result))
 	{
@@ -335,7 +351,7 @@ HRESULT Renderer::CreateRasterizer()
 		return result;
 	}
 
-	result = GetDevice()->CreateRasterizerState(&_rasterizerDesc, &Resources()->RasterizerState);
+	result = _resources->Device->CreateRasterizerState(&_rasterizerDesc, &_resources->RasterizerState);
 	if (FAILED(result))
 	{
 		return result;
@@ -343,14 +359,14 @@ HRESULT Renderer::CreateRasterizer()
 
 	// Set rasterizer
 	ID3D11RasterizerState* tempState = 0;
-	GetDeviceContext()->RSSetState(Resources()->RasterizerState);
+	_resources->DeviceContext->RSSetState(_resources->RasterizerState);
 
 	return 0;
 }
 
 HRESULT Renderer::CreateViewPort()
 {
-	GetDeviceContext()->RSSetViewports(1, Resources()->ViewPort);
+	_resources->DeviceContext->RSSetViewports(1, _resources->ViewPort);
 
 	return 0;
 }
@@ -359,7 +375,7 @@ HRESULT Renderer::CreateViewPort()
 HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 {
 	auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
-	auto result = GetDevice()->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, nullptr, &Resources()->Shaders->VertexShader);
+	auto result = _resources->Device->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, nullptr, &_resources->Shaders->VertexShader);
 
 	if (FAILED(result))
 	{
@@ -376,7 +392,7 @@ HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 		{ "POSITION", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }  // Point light position w is intensity
 	};
 
-	return GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), vsByteCode->FileBytes, vsByteCode->Length, &Resources()->InputLayout);
+	return _resources->Device->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), vsByteCode->FileBytes, vsByteCode->Length, &_resources->InputLayout);
 }
 
 HRESULT Renderer::CompileVertexShader(LPCWSTR compiledShaderFile)
@@ -389,14 +405,14 @@ HRESULT Renderer::CompileVertexShader(LPCWSTR compiledShaderFile)
 	{
 		return result;
 	}
-	return GetDevice()->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &vertexShader);
+	return _resources->Device->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &vertexShader);
 }
 
 HRESULT Renderer::SetHullShader(LPCWSTR compiledShaderFile)
 {
 	auto hsByteCode = File::ReadFileBytes(compiledShaderFile);
-	auto shaders = Resources()->Shaders;
-	return GetDevice()->CreateHullShader(hsByteCode->FileBytes, hsByteCode->Length, nullptr, &shaders->HullShader);
+	auto shaders = _resources->Shaders;
+	return _resources->Device->CreateHullShader(hsByteCode->FileBytes, hsByteCode->Length, nullptr, &shaders->HullShader);
 }
 
 HRESULT Renderer::CompileHullShader(LPCWSTR compiledShaderFile)
@@ -409,14 +425,14 @@ HRESULT Renderer::CompileHullShader(LPCWSTR compiledShaderFile)
 	{
 		return result;
 	}
-	return GetDevice()->CreateHullShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &hullShader);
+	return _resources->Device->CreateHullShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &hullShader);
 }
 
 HRESULT Renderer::SetGeometryShader(LPCWSTR compiledShaderFile)
 {
 	auto gsByteCode = File::ReadFileBytes(compiledShaderFile);
-	auto shaders = Resources()->Shaders;
-	return GetDevice()->CreateGeometryShader(gsByteCode->FileBytes, gsByteCode->Length, nullptr, &shaders->GeometryShader);
+	auto shaders = _resources->Shaders;
+	return _resources->Device->CreateGeometryShader(gsByteCode->FileBytes, gsByteCode->Length, nullptr, &shaders->GeometryShader);
 }
 
 HRESULT Renderer::CompileGeometryShader(LPCWSTR compiledShaderFile)
@@ -429,13 +445,13 @@ HRESULT Renderer::CompileGeometryShader(LPCWSTR compiledShaderFile)
 	{
 		return result;
 	}
-	return GetDevice()->CreateGeometryShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &geometryShader);
+	return _resources->Device->CreateGeometryShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &geometryShader);
 }
 
 HRESULT Renderer::SetPixelShader(LPCWSTR compiledShaderFile)
 {
 	auto psByteCode = File::ReadFileBytes(compiledShaderFile);
-	return GetDevice()->CreatePixelShader(psByteCode->FileBytes, psByteCode->Length, nullptr, &Resources()->Shaders->PixelShader);
+	return _resources->Device->CreatePixelShader(psByteCode->FileBytes, psByteCode->Length, nullptr, &_resources->Shaders->PixelShader);
 }
 
 HRESULT Renderer::CompilePixelShader(LPCWSTR compiledShaderFile)
@@ -448,7 +464,7 @@ HRESULT Renderer::CompilePixelShader(LPCWSTR compiledShaderFile)
 	{
 		return result;
 	}
-	return GetDevice()->CreatePixelShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &pixelShader);
+	return _resources->Device->CreatePixelShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), nullptr, &pixelShader);
 }
 
 HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile)
@@ -471,12 +487,12 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
 VOID Renderer::ClearScene()
 {
 	// Update the model data
-	GetDeviceContext()->UpdateSubresource(Resources()->ConstBuffer, 0, nullptr, Resources()->ConstBufferData, 0, 0);
+	_resources->DeviceContext->UpdateSubresource(_resources->ConstBuffer, 0, nullptr, _resources->ConstBufferData, 0, 0);
 
 	// Clear render targets and depth stencil
-	GetDeviceContext()->OMSetRenderTargets(1, &Resources()->RenderTargetView, Resources()->DepthStencilView);
-	GetDeviceContext()->ClearRenderTargetView(Resources()->RenderTargetView, Resources()->DefaultColor);
-	GetDeviceContext()->ClearDepthStencilView(Resources()->DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	_resources->DeviceContext->OMSetRenderTargets(1, &_resources->RenderTargetView, _resources->DepthStencilView);
+	_resources->DeviceContext->ClearRenderTargetView(_resources->RenderTargetView, _resources->DefaultColor);
+	_resources->DeviceContext->ClearDepthStencilView(_resources->DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 HRESULT Renderer::Render()
@@ -493,44 +509,44 @@ HRESULT Renderer::Render()
 	UINT offset = 0;
 
 	// Set model data
-	GetDeviceContext()->IASetInputLayout(Resources()->InputLayout);
+	_resources->DeviceContext->IASetInputLayout(_resources->InputLayout);
 	
 	// Set multiple buffers here ? i.e. each for one model since some shaders are not applied to all models
-	GetDeviceContext()->IASetVertexBuffers(0, 1, &Resources()->VertexBuffer, &stride, &offset);
-	GetDeviceContext()->IASetIndexBuffer(Resources()->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	_resources->DeviceContext->IASetVertexBuffers(0, 1, &_resources->VertexBuffer, &stride, &offset);
+	_resources->DeviceContext->IASetIndexBuffer(_resources->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	_resources->DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	// Set shader data
 	
 
 	// Set multiple shaders here ?
-	auto vs = Resources()->Shaders->VertexShader;
-	auto ps = Resources()->Shaders->PixelShader;
+	auto vs = _resources->Shaders->VertexShader;
+	auto ps = _resources->Shaders->PixelShader;
 
-	GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
-	GetDeviceContext()->VSSetShader(vs, nullptr, 0);
+	_resources->DeviceContext->VSSetConstantBuffers(0, 1, &_resources->ConstBuffer);
+	_resources->DeviceContext->VSSetShader(vs, nullptr, 0);
 	
-	GetDeviceContext()->VSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
-	GetDeviceContext()->VSSetShader(vs, nullptr, 0);
+	_resources->DeviceContext->VSSetConstantBuffers(0, 1, &_resources->ConstBuffer);
+	_resources->DeviceContext->VSSetShader(vs, nullptr, 0);
 
-	GetDeviceContext()->PSSetConstantBuffers(0, 1, &Resources()->ConstBuffer);
-	GetDeviceContext()->PSSetShader(ps, nullptr, 0);
+	_resources->DeviceContext->PSSetConstantBuffers(0, 1, &_resources->ConstBuffer);
+	_resources->DeviceContext->PSSetShader(ps, nullptr, 0);
 
-	GetDeviceContext()->DrawIndexed(Resources()->IndexCount, 0, 0);
+	_resources->DeviceContext->DrawIndexed(_resources->IndexCount, 0, 0);
 
 	// Present
-	return Resources()->SwapChain->Present(1, 0);
+	return _resources->SwapChain->Present(1, 0);
 }
 
 HRESULT	Renderer::ResizeSwapChain(UINT32 newWidth, UINT32 newHeight)
 {
-	return Resources()->SwapChain->ResizeBuffers(Resources()->BufferCount, 0, 0, Resources()->RenderQuality->BufferFormat, Resources()->SwapChainFlags);
+	return _resources->SwapChain->ResizeBuffers(_resources->BufferCount, 0, 0, _resources->RenderQuality->BufferFormat, _resources->SwapChainFlags);
 }
 
 HRESULT Renderer::Resize(D3D11_VIEWPORT* viewPort)
 {
 	HRESULT result;
-	Resources()->ViewPort = viewPort;
-	if (nullptr != Resources()->SwapChain && _isInitialized)
+	_resources->ViewPort = viewPort;
+	if (nullptr != _resources->SwapChain && _isInitialized)
 	{
 		result = Initialize();
 	}

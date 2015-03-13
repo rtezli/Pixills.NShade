@@ -3,7 +3,7 @@
 
 Model::Model(DeviceResources* resources)
 {
-	_deviceResources = shared_ptr<DeviceResources>(resources);
+	_resources = resources;
 }
 
 HRESULT Model::Initialize()
@@ -59,15 +59,15 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<UINT>* modelIndexes, vector<NVert
 		input->push_back(*vertexInput);
 	}
 
-	DeviceResource()->VertexCount = modelVertices->size();
-	DeviceResource()->IndexCount = modelIndexes->size();
+	_resources->VertexCount = modelVertices->size();
+	_resources->IndexCount = modelIndexes->size();
 
 	PhongShader::InputLayout* vertexArr;
-	vertexArr = (PhongShader::InputLayout*)malloc(DeviceResource()->VertexCount * sizeof(PhongShader::InputLayout));
+	vertexArr = (PhongShader::InputLayout*)malloc(_resources->VertexCount * sizeof(PhongShader::InputLayout));
 	copy(input->begin(), input->end(), vertexArr);
 
 	D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
-	vertexBufferDesc.ByteWidth = sizeof(PhongShader::InputLayout) * DeviceResource()->VertexCount;
+	vertexBufferDesc.ByteWidth = sizeof(PhongShader::InputLayout) * _resources->VertexCount;
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
@@ -79,18 +79,18 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<UINT>* modelIndexes, vector<NVert
 	vertexBufferData.SysMemPitch = 0;
 	vertexBufferData.SysMemSlicePitch = 0;
 
-	auto result = DeviceResource()->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &DeviceResource()->VertexBuffer);
+	auto result = _resources->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &_resources->VertexBuffer);
 	if (FAILED(result))
 	{
 		return result;
 	}
 
 	UINT* indexArr;
-	indexArr = (UINT*)malloc(DeviceResource()->IndexCount * sizeof(UINT));
+	indexArr = (UINT*)malloc(_resources->IndexCount * sizeof(UINT));
 	copy(modelIndexes->begin(), modelIndexes->end(), indexArr);
 
 	D3D11_BUFFER_DESC indexBufferDesc = { 0 };
-	indexBufferDesc.ByteWidth = sizeof(UINT) * DeviceResource()->IndexCount;
+	indexBufferDesc.ByteWidth = sizeof(UINT) * _resources->IndexCount;
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags = 0;
@@ -102,7 +102,7 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<UINT>* modelIndexes, vector<NVert
 	indexBufferData.SysMemPitch = 0;
 	indexBufferData.SysMemSlicePitch = 0;
 
-	return DeviceResource()->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &DeviceResource()->IndexBuffer);
+	return _resources->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &_resources->IndexBuffer);
 }
 
 HRESULT Model::LoadModelFromOBJFile(CHAR* fileName, BOOL isRightHand)
@@ -118,11 +118,12 @@ HRESULT Model::InitializeConstantBuffer()
 	constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 
 	D3D11_SUBRESOURCE_DATA constantBufferData = { 0 };
-	constantBufferData.pSysMem = &DeviceResource()->ConstBuffer;
+	constantBufferData.pSysMem = &_resources->ConstBuffer;
 	constantBufferData.SysMemPitch = 0;
 	constantBufferData.SysMemSlicePitch = 0;
 
-	return DeviceResource()->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &DeviceResource()->ConstBuffer);
+	_resources->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &Res::Get()->ConstBuffer);
+	return _resources->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &_resources->ConstBuffer);
 }
 
 HRESULT Model::InitializeVertexBuffer()
@@ -159,7 +160,7 @@ HRESULT Model::InitializeVertexBuffer()
 	vertexBufferData.SysMemPitch = 0;
 	vertexBufferData.SysMemSlicePitch = 0;
 
-	return DeviceResource()->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &DeviceResource()->VertexBuffer);
+	return _resources->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &_resources->VertexBuffer);
 }
 
 HRESULT Model::InitializeIndexBuffer(INT indeces[])
@@ -177,7 +178,7 @@ HRESULT Model::InitializeIndexBuffer(INT indeces[])
 		8, 10, 11, 8, 9, 10 // F7 (The Plane)
 	};
 
-	DeviceResource()->IndexCount = ARRAYSIZE(cubeIndices);
+	_resources->IndexCount = ARRAYSIZE(cubeIndices);
 
 	D3D11_BUFFER_DESC indexBufferDesc;
 	indexBufferDesc.ByteWidth = sizeof(UINT) * ARRAYSIZE(cubeIndices);
@@ -192,7 +193,7 @@ HRESULT Model::InitializeIndexBuffer(INT indeces[])
 	indexBufferData.SysMemPitch = 0;
 	indexBufferData.SysMemSlicePitch = 0;
 
-	auto result = DeviceResource()->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &DeviceResource()->IndexBuffer);
+	auto result = _resources->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &_resources->IndexBuffer);
 	if (FAILED(result))
 	{
 		return result;

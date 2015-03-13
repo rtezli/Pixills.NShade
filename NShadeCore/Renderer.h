@@ -37,9 +37,6 @@ public:
 	HRESULT	Resize(D3D11_VIEWPORT* viewport);
 public:
 	void						ClearScene();
-	ID3D11Device*				const GetDevice(){ return Resources()->Device; }
-	ID3D11DeviceContext*		const GetDeviceContext(){ return Resources()->DeviceContext; }
-	DeviceResources*			const Resources(){ return _deviceResources; }
 	BOOL						const Initialized(){ return _isInitialized; };
 private:
 	/* render target */
@@ -89,8 +86,7 @@ private:
 
 	HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
 private:
-	DeviceResources*					_deviceResources;
-
+	DeviceResources						*_resources;
 	LPCWSTR								_standardVertexShader = L"../Debug/PhongVertexShader.cso";
 	LPCWSTR								_standardPixelShader = L"../Debug/PhongPixelShader.cso";
 

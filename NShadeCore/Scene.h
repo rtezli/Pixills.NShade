@@ -34,6 +34,6 @@ private:
 	shared_ptr<vector<NVertex>>			_vertices;
 	shared_ptr<vector<UINT>>			_indices;
 	shared_ptr<Light>					_ambientLight;
-	DeviceResources*					_deviceResources;
+	DeviceResources						*_resources;
 };
 

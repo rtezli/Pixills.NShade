@@ -31,26 +31,26 @@ private:
 	HRESULT					AttachOnRotate();
 	HRESULT					DetachOnRotate();
 private:
-	DeviceResources*						_deviceResources;
-	HINSTANCE*								_windowInstance;
-	HWND*									_windowHandle;
-	POINT*									_lastPointerPosition;
-	shared_ptr<Renderer>					_renderer;
-	shared_ptr<Camera>						_camera;
-	shared_ptr<Input>						_inputDevices;
-	shared_ptr<Model>						_model;
+	DeviceResources			*_resources;
+	HINSTANCE				*_windowInstance;
+	HWND					*_windowHandle;
+	POINT					*_lastPointerPosition;
+	shared_ptr<Renderer>	_renderer;
+	shared_ptr<Camera>		_camera;
+	shared_ptr<Input>		_inputDevices;
+	shared_ptr<Model>		_model;
 
-	D3D_FEATURE_LEVEL						_d3dFeatureLevel;
+	D3D_FEATURE_LEVEL		_d3dFeatureLevel;
 
-	XMVECTOR								_position;
-	XMVECTOR								_rotation;
+	XMVECTOR				_position;
+	XMVECTOR				_rotation;
 
-	FLOAT									_viewportWidth;
-	FLOAT									_viewportHeight;
-	FLOAT									_nearZ;
-	FLOAT									_farZ;
+	FLOAT					_viewportWidth;
+	FLOAT					_viewportHeight;
+	FLOAT					_nearZ;
+	FLOAT					_farZ;
 
-	BOOL									_fullScreen;
-	BOOL									_vSync;
-	BOOL									_trackInput;
+	BOOL					_fullScreen;
+	BOOL					_vSync;
+	BOOL					_trackInput;
 };

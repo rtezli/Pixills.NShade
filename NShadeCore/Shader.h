@@ -68,10 +68,7 @@ public:
 private:
 	HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
 private:
-	DeviceResources*					_deviceResources;
-	DeviceResources*					const Resources(){		return _deviceResources; }
-	ID3D11Device*						const Device(){			return _deviceResources->Device; }
-	ID3D11DeviceContext*				const DeviceContext(){	return _deviceResources->DeviceContext; }
+	DeviceResources						*_resources;
 	vector<D3D11_INPUT_ELEMENT_DESC>	_inputDescription;
 	ShaderType							_type;
 	ID3D11PixelShader*					_pixelShader;

@@ -30,7 +30,7 @@ private:
 	void	ProcessInput();
 	void	PublishInput(MOVE_ROTATE_INPUT *move){ (*OnInput)(move); }
 private:
-	DeviceResources*		_deviceResources;
+	DeviceResources			*_resources;
 	IDirectInput8*			_directInput;
 	IDirectInputDevice8*	_keyboard;
 	IDirectInputDevice8*	_mouse;

@@ -197,6 +197,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderInput.h" />
     <ClInclude Include="RenderTarget.h" />
+    <ClInclude Include="Res.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="TesselationDomainShader.h" />
@@ -241,6 +242,7 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderInput.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="Res.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="stdafx.cpp">

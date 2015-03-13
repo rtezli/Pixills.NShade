@@ -3,7 +3,7 @@
 
 Camera::Camera(DeviceResources *resources)
 {
-	_deviceResources = resources;
+	_resources = resources;
 }
 
 VOID Camera::Initialize()
@@ -68,11 +68,12 @@ VOID Camera::Rotate(POINT* p)
 	_vAngle = _vAngle + p->y * moderationV;
 
 	XMStoreFloat4x4(_worldMatrix, XMMatrixTranspose(XMMatrixRotationY(_hAngle)));
-	_deviceResources->ConstBufferData->world = *_worldMatrix;
+	_resources->ConstBufferData->world = *_worldMatrix;
 }
 
 VOID Camera::Update()
 {
-	ConstantBufferData constBuffer = { *_worldMatrix, *_viewMatrix, *_projectionMatrix, *_eyePosition };
-	_deviceResources->ConstBufferData = new ConstantBufferData(constBuffer);
+	ConstantBufferData constBufferData = { *_worldMatrix, *_viewMatrix, *_projectionMatrix, *_eyePosition };
+	_resources->ConstBufferData = new ConstantBufferData(constBufferData);
+	Res::Get()->ConstBufferData = _resources->ConstBufferData;
 }
