@@ -4,8 +4,7 @@
 
 Renderer::Renderer(bool useSwapChain)
 {
-    _isInitialized = false;
-    Res::Get()->Shaders = new ShaderSet();
+    _isInitialized = false;    
     _useSwapChain = useSwapChain;
     _rasterizerUseMultiSampling = true;
 
@@ -16,6 +15,8 @@ Renderer::Renderer(bool useSwapChain)
 
     DXGI_FORMAT vertexPositionFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
     DXGI_FORMAT vertexColorFormat = DXGI_FORMAT_R32G32B32_FLOAT;
+
+    Res::Get()->Shaders = new ShaderSet();
 }
 
 HRESULT Renderer::Initialize()
@@ -466,6 +467,7 @@ HRESULT Renderer::CompileShader(wchar_t *compiledShaderFile, ID3DBlob *blob, LPC
 
     return D3DCompileFromFile(compiledShaderFile, defines, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", shaderProfile, flags, 0, &shaderBlob, &shaderBlob);
 }
+
 
 void Renderer::ClearScene()
 {

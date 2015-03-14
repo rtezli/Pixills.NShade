@@ -70,5 +70,21 @@ void Camera::Update()
 {
     ConstantBufferData constBufferData = { *_worldMatrix, *_viewMatrix, *_projectionMatrix, *_eyePosition };
     Res::Get()->ConstBufferData = new ConstantBufferData(constBufferData);
-    Res::Get()->ConstBufferData = Res::Get()->ConstBufferData;
+    InitializeConstantBuffer();
+}
+
+HRESULT Camera::InitializeConstantBuffer()
+{
+    // Belongs to renderer class
+    D3D11_BUFFER_DESC constantBufferDesc = { 0 };
+    constantBufferDesc.ByteWidth = sizeof(ConstantBufferData);
+    constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+    D3D11_SUBRESOURCE_DATA constantBufferData = { 0 };
+    constantBufferData.pSysMem = &Res::Get()->ConstBuffer;
+    constantBufferData.SysMemPitch = 0;
+    constantBufferData.SysMemSlicePitch = 0;
+
+    Res::Get()->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &Res::Get()->ConstBuffer);
+    return Res::Get()->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &Res::Get()->ConstBuffer);
 }

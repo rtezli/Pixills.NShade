@@ -19,13 +19,7 @@ HRESULT Model::Initialize()
         return result;
     }
 
-    result = FillVertexAndIndexBuffer(GetIndices(), GetVertices());
-    if (FAILED(result))
-    {
-        return result;
-    }
-
-    return InitializeConstantBuffer();
+    return FillVertexAndIndexBuffer(GetIndices(), GetVertices());
 }
 
 HRESULT Model::LoadModelFromFBXFile(char* fileName)
@@ -103,22 +97,6 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<unsigned int>* modelIndexes, vect
 HRESULT Model::LoadModelFromOBJFile(char* fileName, bool isRightHand)
 {
     return ObjParser::Parse(GetVertices(), GetIndices(), fileName);
-}
-
-HRESULT Model::InitializeConstantBuffer()
-{
-    // Belongs to renderer class
-    D3D11_BUFFER_DESC constantBufferDesc = { 0 };
-    constantBufferDesc.ByteWidth = sizeof(ConstantBufferData);
-    constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-
-    D3D11_SUBRESOURCE_DATA constantBufferData = { 0 };
-    constantBufferData.pSysMem = &Res::Get()->ConstBuffer;
-    constantBufferData.SysMemPitch = 0;
-    constantBufferData.SysMemSlicePitch = 0;
-
-    Res::Get()->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &Res::Get()->ConstBuffer);
-    return Res::Get()->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &Res::Get()->ConstBuffer);
 }
 
 HRESULT Model::InitializeVertexBuffer()

@@ -37,7 +37,6 @@ private:
 
     HRESULT             InitializeVertexBuffer();
     HRESULT             InitializeIndexBuffer(int indeces[]);
-    HRESULT             InitializeConstantBuffer();
     HRESULT             SetTopology(char verticesPerFace);
 private:
     shared_ptr<vector<NVertex>>         _vertices;

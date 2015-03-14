@@ -119,17 +119,16 @@ public:
     ID3D11Buffer                *IndexBuffer;
     ID3D11Buffer                *ConstBuffer;
     ConstantBufferData          *ConstBufferData;
-
     ID3D11Texture2D             *BackBuffer;
-    ID3D11Texture2D             *DepthStencilBuffer;
 
+    ID3D11Texture2D             *DepthStencilBuffer;
     ID3D11DepthStencilState     *DepthStencilState;
+    ID3D11DepthStencilView      *DepthStencilView;
+
     ID3D11RasterizerState       *RasterizerState;
 
     IDXGISwapChain              *SwapChain;
-
     ID3D11RenderTargetView      *RenderTargetView;
-    ID3D11DepthStencilView      *DepthStencilView;
     ID3D11InputLayout           *InputLayout;
 
     ShaderSet                   *Shaders;
