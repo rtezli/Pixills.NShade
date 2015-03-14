@@ -70,7 +70,7 @@ HRESULT Renderer::CreateRenderTargetDesciption()
 {
     _renderTargetDesc.Width = Res::Get()->ViewPort->Width;
     _renderTargetDesc.Height = Res::Get()->ViewPort->Height;
-    _renderTargetDesc.MipLevels = 1;
+    _renderTargetDesc.MipLevels = Res::Get()->RenderQuality->MipLevels;
     _renderTargetDesc.ArraySize = 1;
     _renderTargetDesc.Format = Res::Get()->RenderQuality->TextureFormat;
     _renderTargetDesc.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
@@ -199,7 +199,7 @@ HRESULT Renderer::CreateDepthBufferDescription()
 {
     _depthBufferDesc.Width = Res::Get()->ViewPort->Width;
     _depthBufferDesc.Height = Res::Get()->ViewPort->Height;
-    _depthBufferDesc.MipLevels = 1;
+    _depthBufferDesc.MipLevels = Res::Get()->RenderQuality->MipLevels;
     _depthBufferDesc.ArraySize = 1;
     _depthBufferDesc.Format = Res::Get()->RenderQuality->BufferFormat;
     _depthBufferDesc.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
@@ -227,7 +227,7 @@ HRESULT Renderer::CreateDepthStencilDescription()
 {
     _depthStencilDesc.ArraySize = 1;
     _depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    _depthStencilDesc.MipLevels = Res::Get()->RenderQuality->Quality > 0 ? 1 : 0;
+    _depthStencilDesc.MipLevels = Res::Get()->RenderQuality->MipLevels;
     _depthStencilDesc.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
     _depthStencilDesc.SampleDesc.Count = Res::Get()->RenderQuality->SampleCount;
     _depthStencilDesc.Format = Res::Get()->RenderQuality->BufferFormat;

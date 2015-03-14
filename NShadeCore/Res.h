@@ -11,7 +11,13 @@ struct RenderingQuality
     UINT        SampleCount;
     DXGI_FORMAT TextureFormat;
     DXGI_FORMAT BufferFormat;
-    BOOL        IsMultisamplingSettings;
+    UINT        MipLevels;
+};
+
+struct ResourceSettings
+{
+    RECT                Size;
+    RenderingQuality    Quality;
 };
 
 struct ConstantBufferData
@@ -25,12 +31,12 @@ struct ConstantBufferData
 
 struct ShaderSet
 {
-    ID3D11PixelShader*      PixelShader;
-    ID3D11VertexShader*     VertexShader;
-    ID3D11HullShader*       HullShader;
-    ID3D11DomainShader*     DomainShader;
-    ID3D11GeometryShader*   GeometryShader;
-    ID3D11ComputeShader*    ComputeShader;
+    ID3D11PixelShader      *PixelShader;
+    ID3D11VertexShader     *VertexShader;
+    ID3D11HullShader       *HullShader;
+    ID3D11DomainShader     *DomainShader;
+    ID3D11GeometryShader   *GeometryShader;
+    ID3D11ComputeShader    *ComputeShader;
 };
 
 class Res
@@ -48,8 +54,8 @@ public:
     ID3D11Buffer                *ConstBuffer;
     ConstantBufferData          *ConstBufferData;
 
-    ID3D11Texture2D*            BackBuffer;
-    ID3D11Texture2D*            DepthStencilBuffer;
+    ID3D11Texture2D             *BackBuffer;
+    ID3D11Texture2D             *DepthStencilBuffer;
 
     ID3D11DepthStencilState     *DepthStencilState;
     ID3D11RasterizerState       *RasterizerState;
