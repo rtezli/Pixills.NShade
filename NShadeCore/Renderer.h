@@ -21,14 +21,14 @@
 #define DS_PROFILE { "ds_5_0" }
 #endif
 
-#include "common.h"
+#include "d3d11.h"
 #include "d3dcompiler.h"
 #include "phongvertexshader.h"
 
 EXTERN class API Renderer
 {
 public:
-    Renderer(BOOL useSwapChain);
+    Renderer(bool useSwapChain);
 public:
     HRESULT	ResizeSwapChain(UINT32 newWidth, UINT32 newHeight);
     HRESULT SetShaderParameters();
@@ -36,8 +36,8 @@ public:
     HRESULT	Render();
     HRESULT	Resize(D3D11_VIEWPORT* viewport);
 public:
-    VOID ClearScene();
-    BOOL const Initialized(){ return _isInitialized; };
+    void ClearScene();
+    bool const Initialized(){ return _isInitialized; };
 private:
     /* render target */
     HRESULT CreateRenderTargetDesciption();
@@ -101,7 +101,7 @@ private:
 
     D3D11_RASTERIZER_DESC           _rasterizerDesc;
 
-    BOOL                            _isInitialized;
-    BOOL                            _useSwapChain;
-    BOOL                            _rasterizerUseMultiSampling;
+    bool                            _isInitialized;
+    bool                            _useSwapChain;
+    bool                            _rasterizerUseMultiSampling;
 };

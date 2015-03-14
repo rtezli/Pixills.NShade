@@ -2,7 +2,7 @@
 #include "renderer.h"
 
 
-Renderer::Renderer(BOOL useSwapChain)
+Renderer::Renderer(bool useSwapChain)
 {
     _isInitialized = false;
     Res::Get()->Shaders = new ShaderSet();
@@ -157,19 +157,19 @@ HRESULT Renderer::CreateSwapChain()
     IDXGIAdapter *dxgiAdapter = 0;
     IDXGIFactory *dxgiFactory = 0;
 
-    result = Res::Get()->Device->QueryInterface(__uuidof(IDXGIDevice), (VOID **)&dxgiDevice);
+    result = Res::Get()->Device->QueryInterface(__uuidof(IDXGIDevice), (void **)&dxgiDevice);
     if (FAILED(result))
     {
         return result;
     }
 
-    result = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (VOID **)&dxgiAdapter);
+    result = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&dxgiAdapter);
     if (FAILED(result))
     {
         return result;
     }
 
-    result = dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (VOID **)&dxgiFactory);
+    result = dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&dxgiFactory);
     if (FAILED(result))
     {
         return result;
@@ -358,7 +358,7 @@ HRESULT Renderer::CreateViewPort()
 HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
 {
     auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
-    auto result = Res::Get()->Device->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &Res::Get()->Shaders->VertexShader);
+    auto result = Res::Get()->Device->CreateVertexShader(vsByteCode->Bytes, vsByteCode->Length, NULL, &Res::Get()->Shaders->VertexShader);
 
     if (FAILED(result))
     {
@@ -375,7 +375,7 @@ HRESULT Renderer::SetVertexShader(LPCWSTR compiledShaderFile)
         { "POSITION", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }  // Point light position w is intensity
     };
 
-    return Res::Get()->Device->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), vsByteCode->FileBytes, vsByteCode->Length, &Res::Get()->InputLayout);
+    return Res::Get()->Device->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), vsByteCode->Bytes, vsByteCode->Length, &Res::Get()->InputLayout);
 }
 
 HRESULT Renderer::CompileVertexShader(LPCWSTR compiledShaderFile)
@@ -395,7 +395,7 @@ HRESULT Renderer::SetHullShader(LPCWSTR compiledShaderFile)
 {
     auto hsByteCode = File::ReadFileBytes(compiledShaderFile);
     auto shaders = Res::Get()->Shaders;
-    return Res::Get()->Device->CreateHullShader(hsByteCode->FileBytes, hsByteCode->Length, NULL, &shaders->HullShader);
+    return Res::Get()->Device->CreateHullShader(hsByteCode->Bytes, hsByteCode->Length, NULL, &shaders->HullShader);
 }
 
 HRESULT Renderer::CompileHullShader(LPCWSTR compiledShaderFile)
@@ -415,7 +415,7 @@ HRESULT Renderer::SetGeometryShader(LPCWSTR compiledShaderFile)
 {
     auto gsByteCode = File::ReadFileBytes(compiledShaderFile);
     auto shaders = Res::Get()->Shaders;
-    return Res::Get()->Device->CreateGeometryShader(gsByteCode->FileBytes, gsByteCode->Length, NULL, &shaders->GeometryShader);
+    return Res::Get()->Device->CreateGeometryShader(gsByteCode->Bytes, gsByteCode->Length, NULL, &shaders->GeometryShader);
 }
 
 HRESULT Renderer::CompileGeometryShader(LPCWSTR compiledShaderFile)
@@ -434,7 +434,7 @@ HRESULT Renderer::CompileGeometryShader(LPCWSTR compiledShaderFile)
 HRESULT Renderer::SetPixelShader(LPCWSTR compiledShaderFile)
 {
     auto psByteCode = File::ReadFileBytes(compiledShaderFile);
-    return Res::Get()->Device->CreatePixelShader(psByteCode->FileBytes, psByteCode->Length, NULL, &Res::Get()->Shaders->PixelShader);
+    return Res::Get()->Device->CreatePixelShader(psByteCode->Bytes, psByteCode->Length, NULL, &Res::Get()->Shaders->PixelShader);
 }
 
 HRESULT Renderer::CompilePixelShader(LPCWSTR compiledShaderFile)
@@ -453,7 +453,7 @@ HRESULT Renderer::CompilePixelShader(LPCWSTR compiledShaderFile)
 HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile)
 {
     ID3DBlob* shaderBlob = 0;
-    UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
+    unsigned int flags = D3DCOMPILE_ENABLE_STRICTNESS;
 
 #if defined( DEBUG ) || defined( _DEBUG )
     flags |= D3DCOMPILE_DEBUG;
@@ -467,7 +467,7 @@ HRESULT Renderer::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCS
     return D3DCompileFromFile(compiledShaderFile, defines, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", shaderProfile, flags, 0, &shaderBlob, &shaderBlob);
 }
 
-VOID Renderer::ClearScene()
+void Renderer::ClearScene()
 {
     // Update the model data
     Res::Get()->DeviceContext->UpdateSubresource(Res::Get()->ConstBuffer, 0, NULL, Res::Get()->ConstBufferData, 0, 0);
@@ -488,8 +488,8 @@ HRESULT Renderer::Render()
         return 0;
     }
 
-    UINT stride = sizeof(PhongShader::InputLayout);
-    UINT offset = 0;
+    unsigned int stride = sizeof(PhongShader::InputLayout);
+    unsigned int offset = 0;
 
     // Set model data
     Res::Get()->DeviceContext->IASetInputLayout(Res::Get()->InputLayout);

@@ -1,35 +1,42 @@
 #pragma once
 
-#include "common.h"
+//#include "common.h"
+#include "windows.h"
+#include "d3d11.h"
+#include "res.h"
+#include "rx.hpp"
 #include "export.h"
-
 #include "renderer.h"
 #include "camera.h"
 #include "model.h"
 #include "input.h"
+
+namespace rx = rxcpp;
+namespace rxsc = rxcpp::schedulers;
+namespace rxsub = rx::subjects;
 
 using namespace std::chrono;
 
 EXTERN class API D3DSystem
 {
 public:
-    HRESULT InitializeForWindow(BOOL vsync, HINSTANCE* windowInstance, HWND* windowHandle, BOOL fullscreen);
-    HRESULT InitializeWithWindow(INT screenWidth, INT screenHeight, BOOL vsync, BOOL fullscreen);
-    LRESULT MessageHandler(HWND* hwnd, UINT umessage, WPARAM wparam, LPARAM lparam);
+    HRESULT InitializeForWindow(bool vsync, HINSTANCE* windowInstance, HWND* windowHandle, bool fullscreen);
+    HRESULT InitializeWithWindow(int screenWidth, int screenHeight, bool vsync, bool fullscreen);
+    LRESULT MessageHandler(HWND* hwnd, unsigned int umessage, WPARAM wparam, LPARAM lparam);
     HRESULT Initialize();
 private:
-    HRESULT                 InitializeWindow(INT screenWidth, INT screenHeight);
+    HRESULT                 InitializeWindow(int screenWidth, int screenHeight);
     HRESULT                 CreateDevice();
     HRESULT                 CreateInput();
     HRESULT                 GetRenderQualitySettings(ID3D11Device* device);
-    vector<MSAA>*           ProduceMsaaCapability(vector<MSAA>* msaaOptions, INT i);
+    vector<MSAA>*           ProduceMsaaCapability(vector<MSAA>* msaaOptions, int i);
     HRESULT                 CreateCamera();
     HRESULT                 LoadModels();
     HRESULT                 CreateRenderer();
     HRESULT                 AttachOnRotate();
     HRESULT                 DetachOnRotate();
-    VOID                    CreateViewPort();
-    VOID                    Render();
+    void                    CreateViewPort();
+    void                    Render();
 private:
     POINT                   *_lastPointerPosition;
     shared_ptr<Renderer>    _renderer;
@@ -42,9 +49,9 @@ private:
     XMVECTOR                _position;
     XMVECTOR                _rotation;
 
-    FLOAT                   _viewportWidth;
-    FLOAT                   _viewportHeight;
-    FLOAT                   _nearZ;
-    FLOAT                   _farZ;
-    BOOL                    _trackInput;
+    float                   _viewportWidth;
+    float                   _viewportHeight;
+    float                   _nearZ;
+    float                   _farZ;
+    bool                    _trackInput;
 };

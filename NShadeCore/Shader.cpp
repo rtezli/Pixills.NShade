@@ -7,7 +7,7 @@ HRESULT Shader::SetVertexShader(LPCWSTR compiledShaderFile)
     //ID3D11ClassLinkage linkage;
     Debug::WriteCurrentDir();
     auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
-    auto result = Res::Get()->Device->CreateVertexShader(vsByteCode->FileBytes, vsByteCode->Length, NULL, &Res::Get()->Shaders->VertexShader);
+    auto result = Res::Get()->Device->CreateVertexShader(vsByteCode->Bytes, vsByteCode->Length, NULL, &Res::Get()->Shaders->VertexShader);
 
     if (FAILED(result))
     {
@@ -24,7 +24,7 @@ HRESULT Shader::SetVertexShader(LPCWSTR compiledShaderFile)
         { "POSITION", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }  // Point light position w is intensity
     };
 
-    return  Res::Get()->Device->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), vsByteCode->FileBytes, vsByteCode->Length, &Res::Get()->InputLayout);
+    return  Res::Get()->Device->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), vsByteCode->Bytes, vsByteCode->Length, &Res::Get()->InputLayout);
 }
 
 HRESULT Shader::CompileVertexShader(LPCWSTR compiledShaderFile)
@@ -44,7 +44,7 @@ HRESULT Shader::SetHullShader(LPCWSTR compiledShaderFile)
 {
     auto hsByteCode = File::ReadFileBytes(compiledShaderFile);
     auto shaders = Res::Get()->Shaders;
-    return Res::Get()->Device->CreateHullShader(hsByteCode->FileBytes, hsByteCode->Length, NULL, &shaders->HullShader);
+    return Res::Get()->Device->CreateHullShader(hsByteCode->Bytes, hsByteCode->Length, NULL, &shaders->HullShader);
 }
 
 HRESULT Shader::CompileHullShader(LPCWSTR compiledShaderFile)
@@ -64,7 +64,7 @@ HRESULT Shader::SetGeometryShader(LPCWSTR compiledShaderFile)
 {
     auto gsByteCode = File::ReadFileBytes(compiledShaderFile);
     auto shaders = Res::Get()->Shaders;
-    return Res::Get()->Device->CreateGeometryShader(gsByteCode->FileBytes, gsByteCode->Length, NULL, &shaders->GeometryShader);
+    return Res::Get()->Device->CreateGeometryShader(gsByteCode->Bytes, gsByteCode->Length, NULL, &shaders->GeometryShader);
 }
 
 HRESULT Shader::CompileGeometryShader(LPCWSTR compiledShaderFile)
@@ -83,7 +83,7 @@ HRESULT Shader::CompileGeometryShader(LPCWSTR compiledShaderFile)
 HRESULT Shader::SetPixelShader(LPCWSTR compiledShaderFile)
 {
     auto psByteCode = File::ReadFileBytes(compiledShaderFile);
-    return Res::Get()->Device->CreatePixelShader(psByteCode->FileBytes, psByteCode->Length, NULL, &Res::Get()->Shaders->PixelShader);
+    return Res::Get()->Device->CreatePixelShader(psByteCode->Bytes, psByteCode->Length, NULL, &Res::Get()->Shaders->PixelShader);
 }
 
 HRESULT Shader::CompilePixelShader(LPCWSTR compiledShaderFile)
@@ -102,7 +102,7 @@ HRESULT Shader::CompilePixelShader(LPCWSTR compiledShaderFile)
 HRESULT Shader::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile)
 {
     ID3DBlob* shaderBlob = 0;
-    UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
+    unsigned int flags = D3DCOMPILE_ENABLE_STRICTNESS;
 
 #if defined( DEBUG ) || defined( _DEBUG )
     flags |= D3DCOMPILE_DEBUG;

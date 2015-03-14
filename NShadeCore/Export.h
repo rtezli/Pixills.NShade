@@ -13,5 +13,3 @@
 #else
 #define EXTERN extern "C"
 #endif
-
-

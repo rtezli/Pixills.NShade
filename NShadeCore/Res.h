@@ -5,13 +5,29 @@
 
 using namespace DirectX;
 
+struct NVertex
+{
+    XMFLOAT3 Position;
+    XMFLOAT4 Color;
+    XMFLOAT3 Normal;
+    XMFLOAT2 UV;
+    XMFLOAT3 PolyPosition;
+};
+
+struct NPolygon
+{
+    unsigned int P1;
+    unsigned int P2;
+    unsigned int P3;
+};
+
 struct RenderingQuality
 {
-    UINT        Quality;
-    UINT        SampleCount;
-    DXGI_FORMAT TextureFormat;
-    DXGI_FORMAT BufferFormat;
-    UINT        MipLevels;
+    unsigned int    Quality;
+    unsigned int    SampleCount;
+    DXGI_FORMAT     TextureFormat;
+    DXGI_FORMAT     BufferFormat;
+    unsigned int    MipLevels;
 };
 
 struct ResourceSettings
@@ -20,13 +36,30 @@ struct ResourceSettings
     RenderingQuality    Quality;
 };
 
+enum MSAA : char
+{
+    SIMPLEST_POSSIBLE = 9,
+    MSAA_0X = 0,
+    MSAA_1X = 1,
+    MSAA_2X = 2,
+    MSAA_4X = 4,
+    MSAA_8X = 8,
+    BEST_POSSIBLE = 8
+};
+
+struct MsaaOptions
+{
+    MSAA Msaa;
+    RenderingQuality Quality;
+};
+
 struct ConstantBufferData
 {
     XMFLOAT4X4  world;
     XMFLOAT4X4  view;
     XMFLOAT4X4  projection;
     XMFLOAT3    camera;
-    FLOAT       time;
+    float       time;
 };
 
 struct ShaderSet
@@ -67,21 +100,21 @@ public:
     ID3D11InputLayout           *InputLayout;
 
     ShaderSet                   *Shaders;
-    FLOAT                       *DefaultColor;
+    float                       *DefaultColor;
     D3D11_VIEWPORT              *ViewPort;
     RenderingQuality            *RenderQuality;
 
-    INT                         SwapChainFlags;
-    INT                         BufferCount;
-    INT                         IndexCount;
-    INT                         VertexCount;
+    int                         SwapChainFlags;
+    int                         BufferCount;
+    int                         IndexCount;
+    int                         VertexCount;
 
-    FLOAT                       Dpi;
-    FLOAT                       NearZ;
-    FLOAT                       FarZ;
+    float                       Dpi;
+    float                       NearZ;
+    float                       FarZ;
 
-    BOOL                        FullScreen;
-    BOOL                        VSync;
+    bool                        FullScreen;
+    bool                        VSync;
 private:
     static Res *instance;
     Res(){}

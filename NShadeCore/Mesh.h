@@ -1,6 +1,5 @@
 #pragma once
 
-#include "common.h"
 #include "model.h"
 
 EXTERN class API Mesh

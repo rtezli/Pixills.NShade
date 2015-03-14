@@ -2,10 +2,10 @@
 #include "d3dsystem.h"
 
 HRESULT D3DSystem::InitializeWithWindow(
-    INT screenWidth,
-    INT screenHeight,
-    BOOL vsync,
-    BOOL fullscreen)
+    int screenWidth,
+    int screenHeight,
+    bool vsync,
+    bool fullscreen)
 {
     auto result = InitializeWindow(screenWidth, screenHeight);
     if (FAILED(result))
@@ -15,7 +15,7 @@ HRESULT D3DSystem::InitializeWithWindow(
     return InitializeForWindow(vsync, Res::Get()->WindowInstance, Res::Get()->WindowHandle, fullscreen);
 }
 
-HRESULT D3DSystem::InitializeWindow(INT screenWidth, INT screenHeight)
+HRESULT D3DSystem::InitializeWindow(int screenWidth, int screenHeight)
 {
     HINSTANCE hInstance = 0;
     HWND handle = 0;
@@ -42,7 +42,7 @@ HRESULT D3DSystem::InitializeWindow(INT screenWidth, INT screenHeight)
     return true;
 }
 
-HRESULT D3DSystem::InitializeForWindow(BOOL vsync, HINSTANCE* windowInstance, HWND* windowHandle, BOOL fullscreen)
+HRESULT D3DSystem::InitializeForWindow(bool vsync, HINSTANCE* windowInstance, HWND* windowHandle, bool fullscreen)
 {
     Res::Get()->WindowInstance = windowInstance;
     Res::Get()->WindowHandle = windowHandle;
@@ -84,7 +84,7 @@ HRESULT D3DSystem::Initialize()
     auto sc = rxsc::make_new_thread();
     auto so = rx::synchronize_in_one_worker(sc);
     rx::observable<>::interval(sc.now(), FPS(25), so)
-        .subscribe([this](INT val)
+        .subscribe([this](int val)
     {
         D3DSystem::Render();
     }
@@ -94,7 +94,7 @@ HRESULT D3DSystem::Initialize()
 
 HRESULT D3DSystem::CreateDevice()
 {
-    UINT creationFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+    unsigned int creationFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #if defined(_DEBUG)
     creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
@@ -149,7 +149,7 @@ HRESULT D3DSystem::CreateDevice()
 
     Res::Get()->BufferCount = 2;
     Res::Get()->SwapChainFlags = 0;
-    Res::Get()->DefaultColor = new FLOAT[4]{1.0f, 1.0f, 1.0f, 1.0f};
+    Res::Get()->DefaultColor = new float[4]{1.0f, 1.0f, 1.0f, 1.0f};
 
     // TODO : Calculate DPI
     Res::Get()->Dpi = 96.00;
@@ -182,7 +182,7 @@ HRESULT D3DSystem::CreateInput()
     return device->Initialize();
 }
 
-VOID D3DSystem::CreateViewPort()
+void D3DSystem::CreateViewPort()
 {
     RECT rect;
     auto handle = Res::Get()->WindowHandle;
@@ -205,13 +205,13 @@ VOID D3DSystem::CreateViewPort()
 
 HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device* device)
 {
-    UINT numberOfLevels = 0;
+    unsigned int numberOfLevels = 0;
     HRESULT result;
     vector<RenderingQuality> availableLevels;
 
-    UINT maxSamples = D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT;
+    unsigned int maxSamples = D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT;
 
-    for (UINT i = maxSamples; i > 0; i--)
+    for (unsigned int i = maxSamples; i > 0; i--)
     {
         result = device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, i, &numberOfLevels);
         if (SUCCEEDED(result))
@@ -225,7 +225,7 @@ HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device* device)
         }
     }
 
-    for (UINT i = maxSamples; i > 0; i--)
+    for (unsigned int i = maxSamples; i > 0; i--)
     {
         result = device->CheckMultisampleQualityLevels(DXGI_FORMAT_R16G16B16A16_UNORM, i, &numberOfLevels);
         if (SUCCEEDED(result))
@@ -239,7 +239,7 @@ HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device* device)
         }
     }
 
-    for (UINT i = maxSamples; i > 0; i--)
+    for (unsigned int i = maxSamples; i > 0; i--)
     {
         result = device->CheckMultisampleQualityLevels(DXGI_FORMAT_D24_UNORM_S8_UINT, i, &numberOfLevels);
         if (SUCCEEDED(result))
@@ -255,7 +255,7 @@ HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device* device)
     return result;
 }
 
-vector<MSAA>* D3DSystem::ProduceMsaaCapability(vector<MSAA>* options, INT i)
+vector<MSAA>* D3DSystem::ProduceMsaaCapability(vector<MSAA>* options, int i)
 {
     auto localOptions = *options;
     auto masaa = MSAA_0X;
@@ -270,8 +270,8 @@ vector<MSAA>* D3DSystem::ProduceMsaaCapability(vector<MSAA>* options, INT i)
     case 8:
         masaa = MSAA_8X;
     }
-    BOOL contains = false;
-    for (INT i = 0; localOptions.size(); i++)
+    bool contains = false;
+    for (int i = 0; localOptions.size(); i++)
     {
         if (localOptions[i] == masaa)
         {
@@ -305,12 +305,12 @@ HRESULT D3DSystem::CreateRenderer()
     return _renderer->Initialize();
 }
 
-VOID D3DSystem::Render()
+void D3DSystem::Render()
 {
     _renderer->Render();
 }
 
-LRESULT D3DSystem::MessageHandler(HWND* hWnd, UINT umessage, WPARAM wparam, LPARAM lParam)
+LRESULT D3DSystem::MessageHandler(HWND* hWnd, unsigned int umessage, WPARAM wparam, LPARAM lParam)
 {
     if (this == NULL)
     {

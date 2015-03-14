@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "camera.h"
 
-VOID Camera::Initialize()
+void Camera::Initialize()
 {
     _worldMatrix = new XMFLOAT4X4();
     _viewMatrix = new XMFLOAT4X4();
@@ -48,13 +48,13 @@ VOID Camera::Initialize()
     Update();
 }
 
-VOID Camera::Move(POINT* p)
+void Camera::Move(POINT* p)
 {
     XMStoreFloat4x4(_worldMatrix, XMMatrixTranspose(XMMatrixTranslation(p->x, 0.0, p->y)));
     Update();
 }
 
-VOID Camera::Rotate(POINT* p)
+void Camera::Rotate(POINT* p)
 {
     auto moderationH = 0.001;
     auto moderationV = 0.009;
@@ -66,7 +66,7 @@ VOID Camera::Rotate(POINT* p)
     Res::Get()->ConstBufferData->world = *_worldMatrix;
 }
 
-VOID Camera::Update()
+void Camera::Update()
 {
     ConstantBufferData constBufferData = { *_worldMatrix, *_viewMatrix, *_projectionMatrix, *_eyePosition };
     Res::Get()->ConstBufferData = new ConstantBufferData(constBufferData);

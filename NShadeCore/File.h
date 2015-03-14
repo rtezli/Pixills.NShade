@@ -1,19 +1,23 @@
 #pragma once
 #pragma warning( disable : 4244 )
 
-#include <fstream>
-#include "common.h"
+#include "vector"
+#include "fstream"
+#include "string"
+#include "windows.h"
+
+using namespace std;
 
 class File
 {
 public:
-    static struct FILE_BYTE_RESULT* ReadFileBytes(CHAR* fileName);
-    static struct FILE_BYTE_RESULT* ReadFileBytes(LPCWSTR fileName);
-    static vector<string>           ReadFileLines(CHAR* fileName);
+    static struct FileBytes*    ReadFileBytes(char *fileName);
+    static struct FileBytes*    ReadFileBytes(LPCWSTR fileName);
+    static vector<string>       ReadFileLines(char *fileName);
 };
 
-struct FILE_BYTE_RESULT
+struct FileBytes
 {
-    CHAR*   FileBytes;
+    char*   Bytes;
     long    Length;
 };

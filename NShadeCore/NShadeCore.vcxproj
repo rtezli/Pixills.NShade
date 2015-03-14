@@ -179,8 +179,10 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ColorPixelShader.h" />
     <ClInclude Include="ColorVertexShader.h" />
+    <ClInclude Include="ConstBufferProvider.h" />
     <ClInclude Include="D3DHelpers.h" />
     <ClInclude Include="D3DSystem.h" />
+    <ClInclude Include="Debug.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="Export.h" />
     <ClInclude Include="FbxReader.h" />
@@ -188,6 +190,7 @@
     <ClInclude Include="FpsTextRenderer.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
@@ -213,6 +216,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ColorPixelShader.cpp" />
     <ClCompile Include="ColorVertexShader.cpp" />
+    <ClCompile Include="ConstBufferProvider.cpp" />
     <ClCompile Include="D3DHelpers.cpp" />
     <ClCompile Include="D3DSystem.cpp" />
     <ClCompile Include="dllmain.cpp">
@@ -233,6 +237,7 @@
     <ClCompile Include="File.cpp" />
     <ClCompile Include="FpsTextRenderer.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />

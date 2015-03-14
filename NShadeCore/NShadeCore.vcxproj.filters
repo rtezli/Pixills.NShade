@@ -25,6 +25,12 @@
     <Filter Include="Header Files\Shaders">
       <UniqueIdentifier>{2608c4fa-7eae-47c2-8d5f-3e399b797dd7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Lights">
+      <UniqueIdentifier>{fc7a9863-0757-4f91-a5c3-90f7533597ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Lights">
+      <UniqueIdentifier>{cc4023b6-36f5-4455-b715-79f9c0eb52ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -123,6 +129,15 @@
     <ClInclude Include="D3DHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ConstBufferProvider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -208,6 +223,12 @@
     </ClCompile>
     <ClCompile Include="D3DHelpers.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstBufferProvider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Files\Lights</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

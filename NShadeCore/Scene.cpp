@@ -13,7 +13,7 @@ HRESULT Scene::AddModel(Model *model)
     {
         _models = make_shared<vector<Model>>();
     }
-    Models()->push_back(*model);
+    GetModels()->push_back(*model);
     return 0;
 }
 
@@ -23,7 +23,7 @@ HRESULT Scene::AddLight(Light *light)
     {
         _lights = make_shared<vector<Light>>();
     }
-    Lights()->push_back(*light);
+    GetLights()->push_back(*light);
     return 0;
 }
 

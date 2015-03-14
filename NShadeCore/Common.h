@@ -14,21 +14,12 @@
 #include "ppltasks.h"
 using namespace concurrency;
 
-#include "rx.hpp"
-namespace rx = rxcpp;
-namespace rxsc = rxcpp::schedulers;
-namespace rxsub = rx::subjects;
-
-#include "fbxsdk.h"
-#include "fbxsdk/scene/fbxaxissystem.h"
-#include "boost/algorithm/string.hpp"
-#include "boost/lexical_cast.hpp"
 
 #include "d3d11.h"
 #include "dxgi.h"
 #include "directxmath.h"
-
 #include "res.h"
+#include "debug.h"
 #include "export.h"
 #include "dinput.h"
 #include "types.h"

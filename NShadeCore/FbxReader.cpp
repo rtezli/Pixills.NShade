@@ -2,7 +2,7 @@
 
 #include "fbxreader.h"
 
-HRESULT nshade::FbxReader::Read(CHAR* fileName, vector<NVertex>* vertices, vector<UINT>* indices)
+HRESULT nshade::FbxReader::Read(char *fileName, vector<NVertex> *vertices, vector<unsigned int> *indices)
 {
     auto sdkManager = FbxManager::Create();
 
@@ -88,12 +88,12 @@ HRESULT nshade::FbxReader::TraverseChildren(FbxNode* node, vector<FbxNode*>* mes
     return 0;
 }
 
-HRESULT nshade::FbxReader::TraverseAndStoreFbxNode(vector<FbxNode*>* nodes, FbxAxisSystem* axisSystem, vector<NVertex>* vertices, vector<UINT>* indices)
+HRESULT nshade::FbxReader::TraverseAndStoreFbxNode(vector<FbxNode*> *nodes, FbxAxisSystem *axisSystem, vector<NVertex> *vertices, vector<unsigned int> *indices)
 {
     auto count = nodes->size();
 
     // The scene maybe
-    for (UINT i = 0; i < count; i++)
+    for (unsigned int i = 0; i < count; i++)
     {
         auto child = nodes->at(i);
 
@@ -129,9 +129,9 @@ HRESULT nshade::FbxReader::TraverseAndStoreFbxNode(vector<FbxNode*>* nodes, FbxA
                 mesh->GetPolygonVertexNormal(p, v, normal);
                 newVertex->Normal = XMFLOAT3
                 {
-                    static_cast<FLOAT>(normal.mData[0]),
-                    static_cast<FLOAT>(normal.mData[1]),
-                    static_cast<FLOAT>(normal.mData[2])
+                    static_cast<float>(normal.mData[0]),
+                    static_cast<float>(normal.mData[1]),
+                    static_cast<float>(normal.mData[2])
                 };
 
                 switch (v)
@@ -173,7 +173,7 @@ HRESULT nshade::FbxReader::TraverseAndStoreFbxNode(vector<FbxNode*>* nodes, FbxA
     return 0;
 }
 
-XMFLOAT3 nshade::FbxReader::ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisSystem* axisSystem, FLOAT scale)
+XMFLOAT3 nshade::FbxReader::ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, FbxAxisSystem* axisSystem, float scale)
 {
     auto rightHanded = true;
     auto coordSystem = axisSystem->GetCoorSystem();
@@ -186,7 +186,7 @@ XMFLOAT3 nshade::FbxReader::ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, 
     auto xFront = false;
 
     auto upInverter = 1.0f;
-    INT upVectorSign;
+    int upVectorSign;
     auto upVector = axisSystem->GetUpVector(upVectorSign);
     if (upVectorSign != 1)
     {
@@ -198,7 +198,7 @@ XMFLOAT3 nshade::FbxReader::ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, 
     }
 
     auto frontInverter = 1.0f;
-    INT frontVectorSign;
+    int frontVectorSign;
     auto frontVector = axisSystem->GetFrontVector(frontVectorSign);
     if (frontVectorSign != -1)
     {
@@ -226,9 +226,9 @@ XMFLOAT3 nshade::FbxReader::ConvertFbxVector4ToXMFLOAT3(FbxVector4* coordinate, 
 
     dxVector = XMFLOAT3
     {
-        static_cast<FLOAT>(x),
-        static_cast<FLOAT>(y),
-        static_cast<FLOAT>(z)
+        static_cast<float>(x),
+        static_cast<float>(y),
+        static_cast<float>(z)
     };
     return dxVector;
 }

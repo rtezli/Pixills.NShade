@@ -24,55 +24,54 @@
 #define DS_PROFILE { "ds_5_0" }
 #endif
 
-enum ShaderVersion : CHAR
+enum ShaderVersion : char
 {
-	V0 = 0,
-	V1 = 0,
-	V2 = 0,
-	V3 = 0,
-	V4 = 0,
-	V5 = 0
+    V0 = 0,
+    V1 = 0,
+    V2 = 0,
+    V3 = 0,
+    V4 = 0,
+    V5 = 0
 };
 
-enum ShaderType : CHAR
+enum ShaderType : char
 {
-	VS = 1,
-	PS = 2,
-	GS = 3,
-	HS = 4,
-	CS = 5,
-	DS = 6
+    VS = 1,
+    PS = 2,
+    GS = 3,
+    HS = 4,
+    CS = 5,
+    DS = 6
 };
 
 EXTERN class API Shader
 {
 public:
-	HRESULT	SetVertexShader(LPCWSTR compiledShaderFile);
-	HRESULT	CompileVertexShader(LPCWSTR shaderSource);
+    HRESULT	SetVertexShader(LPCWSTR compiledShaderFile);
+    HRESULT	CompileVertexShader(LPCWSTR shaderSource);
 
-	HRESULT SetHullShader(LPCWSTR compiledShaderFile);
-	HRESULT CompileHullShader(LPCWSTR shaderSource);
+    HRESULT SetHullShader(LPCWSTR compiledShaderFile);
+    HRESULT CompileHullShader(LPCWSTR shaderSource);
 
-	HRESULT SetDomainShader(LPCWSTR compiledShaderFile);
-	HRESULT CompileDomainShader(LPCWSTR shaderSource);
+    HRESULT SetDomainShader(LPCWSTR compiledShaderFile);
+    HRESULT CompileDomainShader(LPCWSTR shaderSource);
 
-	HRESULT SetGeometryShader(LPCWSTR compiledShaderFile);
-	HRESULT CompileGeometryShader(LPCWSTR shaderSource);
+    HRESULT SetGeometryShader(LPCWSTR compiledShaderFile);
+    HRESULT CompileGeometryShader(LPCWSTR shaderSource);
 
-	HRESULT SetPixelShader(LPCWSTR compiledShaderFile);
-	HRESULT CompilePixelShader(LPCWSTR shaderSource);
+    HRESULT SetPixelShader(LPCWSTR compiledShaderFile);
+    HRESULT CompilePixelShader(LPCWSTR shaderSource);
 
-	HRESULT Set();
+    HRESULT Set();
 private:
-	HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
+    HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
 private:
-	vector<D3D11_INPUT_ELEMENT_DESC>	_inputDescription;
-	ShaderType							_type;
-	ID3D11PixelShader*					_pixelShader;
-	ID3D11VertexShader*					_vertexShader;
-	ID3D11HullShader*					_hullShader;
-	ID3D11DomainShader*					_domainShader;
-	ID3D11GeometryShader*				_geometryShader;
-	ID3D11ComputeShader*				_computeShader;
+    vector<D3D11_INPUT_ELEMENT_DESC>    _inputDescription;
+    ShaderType                          _type;
+    ID3D11PixelShader*                  _pixelShader;
+    ID3D11VertexShader*                 _vertexShader;
+    ID3D11HullShader*                   _hullShader;
+    ID3D11DomainShader*                 _domainShader;
+    ID3D11GeometryShader*               _geometryShader;
+    ID3D11ComputeShader*                _computeShader;
 };
-

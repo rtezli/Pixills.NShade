@@ -11,9 +11,9 @@ struct PixelShaderInput
 
 float4 main(PixelShaderInput input) : SV_TARGET
 {
-	FLOAT  lightIntensity = 0.5f;
+	float  lightIntensity = 0.5f;
 
-	FLOAT  specularPower = 50.00f;
+	float  specularPower = 50.00f;
 
 	float4 normal = normalize(input.normal);
 	float4 light = normalize(input.light);

@@ -1,7 +1,11 @@
 #pragma once
 
-#include "common.h"
+//#include "common.h"
+#include "vector"
 #include "model.h"
+#include "light.h"
+
+using namespace std;
 
 struct SceneFile
 {
@@ -18,8 +22,8 @@ public:
 public:
     const XMFLOAT3* AmbientColor;
 
-    vector<Light>*          Lights(){ return _lights.get(); }
-    vector<Model>*          Models(){ return _models.get(); }
+    vector<Light>*          GetLights(){ return _lights.get(); }
+    vector<Model>*          GetModels(){ return _models.get(); }
 private:
     shared_ptr<vector<Light>>   _lights;
     shared_ptr<vector<Model>>   _models;

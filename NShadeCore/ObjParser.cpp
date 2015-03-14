@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "ObjParser.h"
+#include "objparser.h"
 
-HRESULT ObjParser::Parse(vector<NVertex>* vertices, vector<UINT>* indices, CHAR* fileName)
+HRESULT ObjParser::Parse(vector<NVertex> *vertices, vector<unsigned int> *indices, char *fileName)
 {
     auto isRightHand = true;
 
@@ -29,9 +29,9 @@ HRESULT ObjParser::Parse(vector<NVertex>* vertices, vector<UINT>* indices, CHAR*
         if (parts[0] == "v")
         {
             XMFLOAT3 position;
-            auto x = boost::lexical_cast<FLOAT>(parts.at(1));
-            auto y = boost::lexical_cast<FLOAT>(parts.at(2));
-            auto z = boost::lexical_cast<FLOAT>(parts.at(3));
+            auto x = boost::lexical_cast<float>(parts.at(1));
+            auto y = boost::lexical_cast<float>(parts.at(2));
+            auto z = boost::lexical_cast<float>(parts.at(3));
 
             if (isRightHand)
             {
@@ -55,8 +55,8 @@ HRESULT ObjParser::Parse(vector<NVertex>* vertices, vector<UINT>* indices, CHAR*
         auto vertex = new NVertex();
         if (parts[0] == "vt")
         {
-            auto x = boost::lexical_cast<FLOAT>(parts.at(1));
-            auto y = boost::lexical_cast<FLOAT>(parts.at(2));
+            auto x = boost::lexical_cast<float>(parts.at(1));
+            auto y = boost::lexical_cast<float>(parts.at(2));
 
             if (isRightHand)
             {
@@ -67,15 +67,16 @@ HRESULT ObjParser::Parse(vector<NVertex>* vertices, vector<UINT>* indices, CHAR*
             vertex->UV = uv;
         }
     }
+
     for (unsigned long i = 0; i < fileLines.size(); i++)
     {
         // Normals
         auto vertex = new NVertex();
         if (parts[0] == "vn")
         {
-            auto x = boost::lexical_cast<FLOAT>(parts.at(1));
-            auto y = boost::lexical_cast<FLOAT>(parts.at(2));
-            auto z = boost::lexical_cast<FLOAT>(parts.at(3));
+            auto x = boost::lexical_cast<float>(parts.at(1));
+            auto y = boost::lexical_cast<float>(parts.at(2));
+            auto z = boost::lexical_cast<float>(parts.at(3));
 
             if (isRightHand)
             {
@@ -86,19 +87,20 @@ HRESULT ObjParser::Parse(vector<NVertex>* vertices, vector<UINT>* indices, CHAR*
             vertex->Normal = normal;
         }
     }
+
     for (unsigned long i = 0; i < fileLines.size(); i++)
     {
         // Polygons
         if (parts[0] == "f")
         {
-            auto i1 = boost::lexical_cast<UINT>(parts.at(1));
-            auto i2 = boost::lexical_cast<UINT>(parts.at(2));
-            auto i3 = boost::lexical_cast<UINT>(parts.at(3));
+            auto i1 = boost::lexical_cast<unsigned int>(parts.at(1));
+            auto i2 = boost::lexical_cast<unsigned int>(parts.at(2));
+            auto i3 = boost::lexical_cast<unsigned int>(parts.at(3));
             auto i4 = 0;
 
             if (parts.size() == 4)
             {
-                boost::lexical_cast<UINT>(parts.at(4));
+                boost::lexical_cast<unsigned int>(parts.at(4));
             }
 
             NPolygon polygon;
