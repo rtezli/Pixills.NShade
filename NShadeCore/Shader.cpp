@@ -1,11 +1,9 @@
 #include "stdafx.h"
-
 #include "shader.h"
 
-HRESULT Shader::SetVertexShader(LPCWSTR compiledShaderFile)
+HRESULT Shader::SetVertexShader(wchar_t *compiledShaderFile)
 {
     //ID3D11ClassLinkage linkage;
-    Debug::WriteCurrentDir();
     auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
     auto result = Res::Get()->Device->CreateVertexShader(vsByteCode->Bytes, vsByteCode->Length, NULL, &Res::Get()->Shaders->VertexShader);
 
@@ -27,7 +25,7 @@ HRESULT Shader::SetVertexShader(LPCWSTR compiledShaderFile)
     return  Res::Get()->Device->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), vsByteCode->Bytes, vsByteCode->Length, &Res::Get()->InputLayout);
 }
 
-HRESULT Shader::CompileVertexShader(LPCWSTR compiledShaderFile)
+HRESULT Shader::CompileVertexShader(wchar_t *compiledShaderFile)
 {
     ID3DBlob* shaderBlob = 0;
     ID3D11VertexShader* vertexShader = 0;
@@ -40,14 +38,14 @@ HRESULT Shader::CompileVertexShader(LPCWSTR compiledShaderFile)
     return Res::Get()->Device->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &vertexShader);
 }
 
-HRESULT Shader::SetHullShader(LPCWSTR compiledShaderFile)
+HRESULT Shader::SetHullShader(wchar_t *compiledShaderFile)
 {
     auto hsByteCode = File::ReadFileBytes(compiledShaderFile);
     auto shaders = Res::Get()->Shaders;
     return Res::Get()->Device->CreateHullShader(hsByteCode->Bytes, hsByteCode->Length, NULL, &shaders->HullShader);
 }
 
-HRESULT Shader::CompileHullShader(LPCWSTR compiledShaderFile)
+HRESULT Shader::CompileHullShader(wchar_t *compiledShaderFile)
 {
     ID3DBlob* shaderBlob = 0;
     ID3D11HullShader* hullShader = 0;
@@ -60,14 +58,14 @@ HRESULT Shader::CompileHullShader(LPCWSTR compiledShaderFile)
     return Res::Get()->Device->CreateHullShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &hullShader);
 }
 
-HRESULT Shader::SetGeometryShader(LPCWSTR compiledShaderFile)
+HRESULT Shader::SetGeometryShader(wchar_t *compiledShaderFile)
 {
     auto gsByteCode = File::ReadFileBytes(compiledShaderFile);
     auto shaders = Res::Get()->Shaders;
     return Res::Get()->Device->CreateGeometryShader(gsByteCode->Bytes, gsByteCode->Length, NULL, &shaders->GeometryShader);
 }
 
-HRESULT Shader::CompileGeometryShader(LPCWSTR compiledShaderFile)
+HRESULT Shader::CompileGeometryShader(wchar_t *compiledShaderFile)
 {
     ID3DBlob* shaderBlob = 0;
     ID3D11GeometryShader* geometryShader = 0;
@@ -80,13 +78,13 @@ HRESULT Shader::CompileGeometryShader(LPCWSTR compiledShaderFile)
     return Res::Get()->Device->CreateGeometryShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &geometryShader);
 }
 
-HRESULT Shader::SetPixelShader(LPCWSTR compiledShaderFile)
+HRESULT Shader::SetPixelShader(wchar_t *compiledShaderFile)
 {
     auto psByteCode = File::ReadFileBytes(compiledShaderFile);
     return Res::Get()->Device->CreatePixelShader(psByteCode->Bytes, psByteCode->Length, NULL, &Res::Get()->Shaders->PixelShader);
 }
 
-HRESULT Shader::CompilePixelShader(LPCWSTR compiledShaderFile)
+HRESULT Shader::CompilePixelShader(wchar_t *compiledShaderFile)
 {
     ID3DBlob* shaderBlob = 0;
     ID3D11PixelShader* pixelShader = 0;
@@ -99,7 +97,7 @@ HRESULT Shader::CompilePixelShader(LPCWSTR compiledShaderFile)
     return Res::Get()->Device->CreatePixelShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &pixelShader);
 }
 
-HRESULT Shader::CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile)
+HRESULT Shader::CompileShader(wchar_t *compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile)
 {
     ID3DBlob* shaderBlob = 0;
     unsigned int flags = D3DCOMPILE_ENABLE_STRICTNESS;

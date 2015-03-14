@@ -5,7 +5,7 @@
 
 namespace Debug
 {
-    static void WriteLine(LPCWSTR message)
+    static void WriteLine(wchar_t *message)
     {
 #ifdef _DEBUG
         OutputDebugString(message);
@@ -17,7 +17,7 @@ namespace Debug
 #ifdef _DEBUG
         //auto mes = new wstring(message);
         //auto cstr = mes->c_str();
-        //LPCWSTR str = cstr;
+        //wchar_t *str = cstr;
         //OutputDebugString(mes->c_str());
 #endif
     }
@@ -25,7 +25,7 @@ namespace Debug
     static void WriteLine(std::wstring message)
     {
 #ifdef _DEBUG
-        LPCWSTR str = message.c_str();
+        const wchar_t *str = message.c_str();
         OutputDebugString(str);
 #endif
     }
@@ -35,7 +35,7 @@ namespace Debug
 #ifdef _DEBUG
         auto mes = std::to_wstring(message);
         mes.append(L"\n");
-        LPCWSTR str = mes.c_str();
+        const wchar_t *str = mes.c_str();
         OutputDebugString(str);
 #endif
     }
@@ -46,17 +46,16 @@ namespace Debug
         auto mes = std::to_wstring(m2);
         m1.append(mes);
         m1.append(L"\n");
-        LPCWSTR str = m1.c_str();
+        const wchar_t *str = m1.c_str();
         OutputDebugString(str);
 #endif
     }
     static void WriteCurrentDir()
     {
 #ifdef _DEBUG
-        wchar_t wtext[MAX_PATH];
-        LPWSTR result = wtext;
-        GetCurrentDirectory(MAX_PATH, result);
-        OutputDebugString(result);
+        wchar_t text[MAX_PATH];
+        GetCurrentDirectory(MAX_PATH, text);
+        OutputDebugString(text);
 #endif
     }
 }

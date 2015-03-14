@@ -1,7 +1,9 @@
 #pragma once
 
-//#include "common.h"
-#include "windows.h"
+#ifndef FPS
+#define FPS(fps) {std::chrono::milliseconds(1000 / fps)}
+#endif
+
 #include "d3d11.h"
 #include "res.h"
 #include "rx.hpp"

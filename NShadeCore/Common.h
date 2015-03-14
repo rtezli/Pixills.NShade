@@ -22,7 +22,6 @@ using namespace concurrency;
 #include "debug.h"
 #include "export.h"
 #include "dinput.h"
-#include "types.h"
 #include "file.h"
 #include "objparser.h"
 #include "fbxreader.h"

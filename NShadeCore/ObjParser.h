@@ -1,9 +1,10 @@
 #pragma once
 #pragma warning(disable:4996)
 
-#include "windows.h"
+//#include "windows.h"
 #include "export.h"
 #include "res.h"
+#include "memory"
 #include "file.h"
 #include "vector"
 #include "boost/algorithm/string.hpp"

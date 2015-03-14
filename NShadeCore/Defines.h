@@ -5,10 +5,6 @@
 
 #define DIRECTINPUT_VERSION 0x0800
 
-#ifndef FPS
-#define FPS(fps) {std::chrono::milliseconds(1000 / fps)}
-#endif
-
 #ifndef SAFE_DELETE
 #define SAFE_DELETE(p)       { if (p) { delete (p);     (p)=NULL; } }
 #endif

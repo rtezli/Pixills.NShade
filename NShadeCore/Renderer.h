@@ -69,25 +69,25 @@ private:
     HRESULT CreateViewPort();
 
     /* sahders */
-    HRESULT	SetVertexShader(LPCWSTR compiledShaderFile);
-    HRESULT	CompileVertexShader(LPCWSTR shaderSource);
+    HRESULT	SetVertexShader(wchar_t *compiledShaderFile);
+    HRESULT	CompileVertexShader(wchar_t *shaderSource);
 
-    HRESULT SetHullShader(LPCWSTR compiledShaderFile);
-    HRESULT CompileHullShader(LPCWSTR shaderSource);
+    HRESULT SetHullShader(wchar_t *compiledShaderFile);
+    HRESULT CompileHullShader(wchar_t *shaderSource);
 
-    HRESULT SetDomainShader(LPCWSTR compiledShaderFile);
-    HRESULT CompileDomainShader(LPCWSTR shaderSource);
+    HRESULT SetDomainShader(wchar_t *compiledShaderFile);
+    HRESULT CompileDomainShader(wchar_t *shaderSource);
 
-    HRESULT SetGeometryShader(LPCWSTR compiledShaderFile);
-    HRESULT CompileGeometryShader(LPCWSTR shaderSource);
+    HRESULT SetGeometryShader(wchar_t *compiledShaderFile);
+    HRESULT CompileGeometryShader(wchar_t *shaderSource);
 
-    HRESULT SetPixelShader(LPCWSTR compiledShaderFile);
-    HRESULT CompilePixelShader(LPCWSTR shaderSource);
+    HRESULT SetPixelShader(wchar_t *compiledShaderFile);
+    HRESULT CompilePixelShader(wchar_t *shaderSource);
 
-    HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
+    HRESULT CompileShader(wchar_t *compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
 private:
-    LPCWSTR                         _standardVertexShader = L"../Debug/PhongVertexShader.cso";
-    LPCWSTR                         _standardPixelShader = L"../Debug/PhongPixelShader.cso";
+    wchar_t *                        _standardVertexShader = L"../Debug/PhongVertexShader.cso";
+    wchar_t *                        _standardPixelShader = L"../Debug/PhongPixelShader.cso";
 
     D3D11_TEXTURE2D_DESC            _depthBufferDesc;
     DXGI_SWAP_CHAIN_DESC            _swapChainDescription;

@@ -197,6 +197,7 @@
     <ClInclude Include="ObjParser.h" />
     <ClInclude Include="PhongPixelShader.h" />
     <ClInclude Include="PhongVertexShader.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderInput.h" />
     <ClInclude Include="RenderTarget.h" />
@@ -206,7 +207,6 @@
     <ClInclude Include="TesselationDomainShader.h" />
     <ClInclude Include="TesselationVertexShader.h" />
     <ClInclude Include="TesselationHullShader.h" />
-    <ClInclude Include="Types.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="WireframePixelShader.h" />
@@ -244,6 +244,7 @@
     <ClCompile Include="ObjParser.cpp" />
     <ClCompile Include="PhongPixelShader.cpp" />
     <ClCompile Include="PhongVertexShader.cpp" />
+    <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderInput.cpp" />
     <ClCompile Include="RenderTarget.cpp" />

@@ -1,7 +1,7 @@
 #pragma once
 
-//#include "common.h"
 #include "vector"
+#include "memory"
 #include "model.h"
 #include "light.h"
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "windows.h"
 #include "vector"
 #include "res.h"
 #include "d3d11.h"

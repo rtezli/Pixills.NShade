@@ -9,4 +9,3 @@ public:
 private:
     ID3D11Buffer* _targetBuffer;
 };
-

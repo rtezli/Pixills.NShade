@@ -1,6 +1,7 @@
 #pragma once
 
-#include "common.h"
+#include "res.h"
+#include "export.h"
 
 EXTERN class API FpsTextRenderer
 {

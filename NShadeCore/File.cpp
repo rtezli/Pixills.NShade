@@ -29,7 +29,7 @@ struct FileBytes* File::ReadFileBytes(char *fileName)
     }
 }
 
-struct FileBytes* File::ReadFileBytes(LPCWSTR fileName)
+struct FileBytes* File::ReadFileBytes(wchar_t *fileName)
 {
     fstream stream;
     FileBytes *result = (FileBytes*)malloc(sizeof(FileBytes));

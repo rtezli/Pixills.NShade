@@ -1,8 +1,13 @@
 #pragma once
 #pragma comment(lib, "D3DCompiler.lib")
 
-#include "common.h"
+#include "res.h"
+#include "file.h"
+#include "export.h"
+#include "vector"
 #include "d3dcompiler.h"
+
+using namespace std;
 
 #ifndef PS_PROFILE
 #define PS_PROFILE {"ps_5_0" }
@@ -47,24 +52,24 @@ enum ShaderType : char
 EXTERN class API Shader
 {
 public:
-    HRESULT	SetVertexShader(LPCWSTR compiledShaderFile);
-    HRESULT	CompileVertexShader(LPCWSTR shaderSource);
+    HRESULT	SetVertexShader(wchar_t *compiledShaderFile);
+    HRESULT	CompileVertexShader(wchar_t *shaderSource);
 
-    HRESULT SetHullShader(LPCWSTR compiledShaderFile);
-    HRESULT CompileHullShader(LPCWSTR shaderSource);
+    HRESULT SetHullShader(wchar_t *compiledShaderFile);
+    HRESULT CompileHullShader(wchar_t *shaderSource);
 
-    HRESULT SetDomainShader(LPCWSTR compiledShaderFile);
-    HRESULT CompileDomainShader(LPCWSTR shaderSource);
+    HRESULT SetDomainShader(wchar_t *compiledShaderFile);
+    HRESULT CompileDomainShader(wchar_t *shaderSource);
 
-    HRESULT SetGeometryShader(LPCWSTR compiledShaderFile);
-    HRESULT CompileGeometryShader(LPCWSTR shaderSource);
+    HRESULT SetGeometryShader(wchar_t *compiledShaderFile);
+    HRESULT CompileGeometryShader(wchar_t *shaderSource);
 
-    HRESULT SetPixelShader(LPCWSTR compiledShaderFile);
-    HRESULT CompilePixelShader(LPCWSTR shaderSource);
+    HRESULT SetPixelShader(wchar_t *compiledShaderFile);
+    HRESULT CompilePixelShader(wchar_t *shaderSource);
 
     HRESULT Set();
 private:
-    HRESULT CompileShader(LPCWSTR compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
+    HRESULT CompileShader(wchar_t *compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
 private:
     vector<D3D11_INPUT_ELEMENT_DESC>    _inputDescription;
     ShaderType                          _type;

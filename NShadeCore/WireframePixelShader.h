@@ -1,12 +1,12 @@
 #pragma once
 
-#include "common.h"
+#include "res.h"
 #include "shader.h"
 
 namespace WireframeShader
 {
-	class WireframePixelShader : public Shader
-	{
+    class WireframePixelShader : public Shader
+    {
 
-	};
+    };
 }

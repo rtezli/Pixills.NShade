@@ -2,10 +2,9 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
-#include "common.h"
-
-using namespace DirectX;
-
+#include "res.h"
+#include "export.h"
+#include "dinput.h"
 
 EXTERN class API Input
 {

@@ -3,8 +3,13 @@
 
 #include "res.h"
 #include "vector"
+#include "memory"
+#include "fbxreader.h"
+#include "objparser.h"
 #include "material.h"
 #include "phongvertexshader.h"
+
+using namespace std;
 
 EXTERN class API Model
 {
