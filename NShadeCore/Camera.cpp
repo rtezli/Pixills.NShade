@@ -63,28 +63,27 @@ void Camera::Rotate(POINT* p)
     _vAngle = _vAngle + p->y * moderationV;
 
     XMStoreFloat4x4(_worldMatrix, XMMatrixTranspose(XMMatrixRotationY(_hAngle)));
-    Res::Get()->ConstBufferData->world = *_worldMatrix;
+    Update();
 }
 
 void Camera::Update()
 {
-    ConstantBufferData constBufferData = { *_worldMatrix, *_viewMatrix, *_projectionMatrix, *_eyePosition };
-    Res::Get()->ConstBufferData = new ConstantBufferData(constBufferData);
-    InitializeConstantBuffer();
-}
+    auto constBufferData = new ConstantBufferData{ *_worldMatrix, *_viewMatrix, *_projectionMatrix, *_eyePosition };
 
-HRESULT Camera::InitializeConstantBuffer()
-{
-    // Belongs to renderer class
     D3D11_BUFFER_DESC constantBufferDesc = { 0 };
     constantBufferDesc.ByteWidth = sizeof(ConstantBufferData);
     constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 
     D3D11_SUBRESOURCE_DATA constantBufferData = { 0 };
-    constantBufferData.pSysMem = &Res::Get()->ConstBuffer;
+    constantBufferData.pSysMem = constBufferData;
     constantBufferData.SysMemPitch = 0;
     constantBufferData.SysMemSlicePitch = 0;
 
-    Res::Get()->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &Res::Get()->ConstBuffer);
-    return Res::Get()->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &Res::Get()->ConstBuffer);
+    ID3D11Buffer* buffer;
+    auto result = Res::Get()->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &buffer);
+    if (SUCCEEDED(result))
+    {
+        Res::Get()->ConstBuffer = buffer;
+        //Res::Get()->DeviceContext->UpdateSubresource(Res::Get()->ConstBuffer, 0, NULL, constBufferData, 0, 0);
+    }
 }

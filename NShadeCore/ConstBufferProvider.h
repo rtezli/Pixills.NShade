@@ -9,7 +9,7 @@ using namespace std;
 EXTERN class API ConstBufferProvider
 {
 public:
-    ID3D11Buffer* GetBufer(){ return _buffer.get(); }
+    ID3D11Buffer* GetBuffer(){ return _buffer.get(); }
 protected:
     void SetBuffer(char *data, unsigned int size, D3D11_BIND_FLAG bindFlags);
 private:

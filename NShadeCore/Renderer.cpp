@@ -471,10 +471,6 @@ HRESULT Renderer::CompileShader(wchar_t *compiledShaderFile, ID3DBlob *blob, LPC
 
 void Renderer::ClearScene()
 {
-    // Update the model data
-    Res::Get()->DeviceContext->UpdateSubresource(Res::Get()->ConstBuffer, 0, NULL, Res::Get()->ConstBufferData, 0, 0);
-
-    // Clear render targets and depth stencil
     Res::Get()->DeviceContext->OMSetRenderTargets(1, &Res::Get()->RenderTargetView, Res::Get()->DepthStencilView);
     Res::Get()->DeviceContext->ClearRenderTargetView(Res::Get()->RenderTargetView, Res::Get()->DefaultColor);
     Res::Get()->DeviceContext->ClearDepthStencilView(Res::Get()->DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
