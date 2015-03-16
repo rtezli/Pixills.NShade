@@ -485,14 +485,11 @@ HRESULT Renderer::Render(Scene *scene)
     Res::Get()->DeviceContext->IASetIndexBuffer(Res::Get()->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
     Res::Get()->DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    auto vs = Res::Get()->Shaders->VertexShader;
-    auto ps = Res::Get()->Shaders->PixelShader;
-
     Res::Get()->DeviceContext->VSSetConstantBuffers(0, 1, &Res::Get()->ConstBuffer);
-    Res::Get()->DeviceContext->VSSetShader(vs, NULL, 0);
+    Res::Get()->DeviceContext->VSSetShader(Res::Get()->Shaders->VertexShader, NULL, 0);
 
     Res::Get()->DeviceContext->PSSetConstantBuffers(0, 1, &Res::Get()->ConstBuffer);
-    Res::Get()->DeviceContext->PSSetShader(ps, NULL, 0);
+    Res::Get()->DeviceContext->PSSetShader(Res::Get()->Shaders->PixelShader, NULL, 0);
 
     Res::Get()->DeviceContext->DrawIndexed(Res::Get()->IndexCount, 0, 0);
 
