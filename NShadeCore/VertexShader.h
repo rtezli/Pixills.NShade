@@ -6,6 +6,7 @@
 class VertexShader
 {
 public:
+    unsigned int                const GetInputSize(){ return sizeof(NVertex); }
     ID3D11InputLayout*          const GetInputLayout(){ return _inputLayout; }
     ID3D11VertexShader*         const GetShader(){ return _vertexShader; }
     static VertexShader*        Load(wchar_t *fileName);

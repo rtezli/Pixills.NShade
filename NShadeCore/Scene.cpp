@@ -13,33 +13,34 @@ void Scene::Render()
 
     for (UINT m = 0; m < models->size(); m++)
     {
-        //auto model = models->at(m);
-        //auto material = model.GetMaterial();
+        auto model = models->at(m);
+        auto material = model.GetMaterial();
 
-        //auto shaders = model.GetMaterial()->GetShaders();
-        //auto layout  = shaders->VertexShader->GetInputLayout();
+        auto shaders = model.GetMaterial()->GetShaders();
+        auto layout  = shaders->VertexShader->GetInputLayout();
 
-        //auto camera = GetCamera();
-        //auto cameraConstBuffer = camera->GetConstBuffer();
-        //auto cameraPositionBuffer = camera->GetPositionBuffer();
-        //auto lights = GetLights();
-        //auto ambientLightConstBuffer = GetCamera()->GetBuffer();
+        auto camera = GetCamera();
+        auto cameraMatrixBuffer = camera->GetMatrixBuffer();
+        auto cameraPositionBuffer = camera->GetPositionBuffer();
+        auto sceneAmbientBuffer = GetAmbientBuffer();
 
-        //auto vertexShader = shaders->VertexShader;
-        //auto vertexBuffer = vertexShader->GetVertexBuffer();
-        //auto indexBuffer = vertexShader->GetIndexBuffer();
-        //auto strides = vertexShader->GetInputSize();
-        //UINT offset = 0;
+        auto vertexShader = shaders->VertexShader;
+        auto vertexBuffer = model.GetVertexBuffer();
+        auto indexBuffer = model.GetIndexBuffer();
+        auto strides = vertexShader->GetInputSize();
+        UINT offset = 0;
 
-        //Res::Get()->DeviceContext->IASetInputLayout(layout);
-        //Res::Get()->DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &strides, &offset);
-        //Res::Get()->DeviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-        //Res::Get()->DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        Res::Get()->DeviceContext->IASetInputLayout(layout);
+        Res::Get()->DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &strides, &offset);
+        Res::Get()->DeviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+        Res::Get()->DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
         //// maybe we provide extra data here and write it to the registers instead of merging data hardcoded
-        //Res::Get()->DeviceContext->VSSetConstantBuffers(0, 1, &cameraConstBuffer);
-        //Res::Get()->DeviceContext->VSSetConstantBuffers(1, 1, &cameraPositionBuffer);
+        Res::Get()->DeviceContext->VSSetConstantBuffers(0, 1, &cameraMatrixBuffer);
+        Res::Get()->DeviceContext->VSSetConstantBuffers(1, 1, &cameraPositionBuffer);
+        Res::Get()->DeviceContext->VSSetConstantBuffers(2, 1, &sceneAmbientBuffer);
 
+        //auto lights = GetLights();
         //for (UINT i = 0; i < lights->size(); i++)
         //{
         //    auto light = lights->at(i);
@@ -47,12 +48,12 @@ void Scene::Render()
         //    Res::Get()->DeviceContext->VSSetConstantBuffers(i + 2, 1, &buffer);
         //}
 
-        //Res::Get()->DeviceContext->VSSetShader(vertexShader->Shader(), NULL, 0);
+        Res::Get()->DeviceContext->VSSetShader(vertexShader->GetShader(), NULL, 0);
 
         //// Check if this is neccessary if the pixel shader does not use the registers
         ////_resources->DeviceContext->PSSetConstantBuffers(0, 1, &cameraConstBuffer);
-        //Res::Get()->DeviceContext->PSSetShader(shaders->PixelShader->Shader(), NULL, 0);
-        //Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
+        Res::Get()->DeviceContext->PSSetShader(shaders->PixelShader->GetShader(), NULL, 0);
+        Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
     }
 }
 
@@ -91,11 +92,12 @@ void Scene::SetAmbientLight(XMFLOAT4 *colorIntensity)
 Scene* Scene::CreateStandardScene()
 {
     auto scene = new Scene();
+    scene->SetAmbientLight(new XMFLOAT4(1.0f, 1.0f, 1.0f, 0.1f));
+
     auto stdCamera = new Camera();
     stdCamera->SetPosition(new XMFLOAT3(0.0f, 0.0f, 5.0f));
     stdCamera->SetFocusPoint(new XMFLOAT3(0.0f, 0.0f, 0.0f));
     scene->AddCamera(stdCamera);
-    scene->SetAmbientLight(new XMFLOAT4(1.0f, 1.0f, 1.0f, 0.1f));
 
     auto pointLightPosition = new XMFLOAT3(1.0f, 1.0f, 1.0f);
     auto pointLightColorIntensity = new XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -107,10 +109,11 @@ Scene* Scene::CreateStandardScene()
     auto stdPixelShader = PixelShader::Load(L"../Debug/PhongPixelShader.cso");
     auto stdVertexShader = VertexShader::Load(L"../Debug/PhongVertexShader.cso");
 
-    auto stdMaterial = new Material();
     auto shaders = new Shaders();
     shaders->PixelShader = stdPixelShader;
     shaders->VertexShader = stdVertexShader;
+
+    auto stdMaterial = new Material();
     stdMaterial->AssignShaders(shaders);
 
     auto stdModel = new Model();
