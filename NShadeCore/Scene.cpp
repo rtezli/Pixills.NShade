@@ -1,6 +1,11 @@
 #include "stdafx.h"
 #include "scene.h"
 
+Scene::Scene()
+{
+    _models = shared_ptr<vector<Model>>(new vector<Model>());
+    _lights = shared_ptr<vector<Light>>(new vector<Light>());
+}
 void Scene::Clear()
 {
     //auto constBuffer = GetCamera()->GetConstBufferData();
@@ -35,7 +40,7 @@ void Scene::Render()
         Res::Get()->DeviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
         Res::Get()->DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-        //// maybe we provide extra data here and write it to the registers instead of merging data hardcoded
+
         Res::Get()->DeviceContext->VSSetConstantBuffers(0, 1, &cameraMatrixBuffer);
         Res::Get()->DeviceContext->VSSetConstantBuffers(1, 1, &cameraPositionBuffer);
         Res::Get()->DeviceContext->VSSetConstantBuffers(2, 1, &sceneAmbientBuffer);
@@ -51,7 +56,8 @@ void Scene::Render()
         Res::Get()->DeviceContext->VSSetShader(vertexShader->GetShader(), NULL, 0);
 
         //// Check if this is neccessary if the pixel shader does not use the registers
-        ////_resources->DeviceContext->PSSetConstantBuffers(0, 1, &cameraConstBuffer);
+
+        // Res::Get()->DeviceContext->PSSetConstantBuffers(0, 1, &cameraConstBuffer);
         Res::Get()->DeviceContext->PSSetShader(shaders->PixelShader->GetShader(), NULL, 0);
         Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
     }
@@ -59,19 +65,11 @@ void Scene::Render()
 
 void Scene::AddModel(Model *model)
 {
-    if (_models == NULL)
-    {
-        _models = shared_ptr<vector<Model>>(new vector<Model>());
-    }
     _models->push_back(*model);
 }
 
 void Scene::AddLight(Light *light)
 {
-    if (_lights == NULL)
-    {
-        _lights = shared_ptr<vector<Light>>(new vector<Light>());
-    }
     _lights->push_back(*light);
 }
 
@@ -121,5 +119,5 @@ Scene* Scene::CreateStandardScene()
     stdModel->AssignMaterial(stdMaterial);
     scene->AddModel(stdModel);
 
-    return new Scene();
+    return scene;
 }

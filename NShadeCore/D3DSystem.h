@@ -38,14 +38,14 @@ private:
     HRESULT                 AttachOnRotate();
     HRESULT                 DetachOnRotate();
 
-    void                    CreateCamera();
+    //void                    CreateCamera();
     void                    CreateScene();
     void                    CreateViewPort();
     void                    Render();
 private:
     POINT                   *_lastPointerPosition;
     shared_ptr<Renderer>    _renderer;
-    shared_ptr<Camera>      _camera;
+    //shared_ptr<Camera>      _camera;
     shared_ptr<Input>       _inputDevices;
     shared_ptr<Model>       _model;
     shared_ptr<Scene>       _scene;

@@ -76,7 +76,7 @@ HRESULT D3DSystem::Initialize()
         return result;
     }
 
-    CreateCamera();
+    //CreateCamera();
 
     CreateScene();
 
@@ -297,10 +297,10 @@ HRESULT D3DSystem::CreateRenderer()
     return _renderer->Initialize();
 }
 
-void D3DSystem::CreateCamera()
-{
-    _camera = shared_ptr<Camera>(new Camera());
-}
+//void D3DSystem::CreateCamera()
+//{
+//    _camera = shared_ptr<Camera>(new Camera());
+//}
 
 void D3DSystem::CreateScene()
 {
@@ -387,7 +387,7 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, unsigned int umessage, WPARAM wpar
             auto offsetH = p.x - _lastPointerPosition->x;
             auto offsetV = p.y - _lastPointerPosition->y;
             auto offset = new POINT{ offsetH, offsetV };
-            _camera->Rotate(offset);
+            _scene->GetCamera()->Rotate(offset);
             _lastPointerPosition = new POINT(p);
         }
         return 0;
