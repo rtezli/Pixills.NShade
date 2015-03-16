@@ -76,11 +76,10 @@ HRESULT D3DSystem::Initialize()
         return result;
     }
 
-    result = CreateCamera();
-    if (FAILED(result))
-    {
-        return result;
-    }
+    CreateCamera();
+
+    CreateScene();
+
     auto sc = rxsc::make_new_thread();
     auto so = rx::synchronize_in_one_worker(sc);
     rx::observable<>::interval(sc.now(), FPS(25), so)
@@ -285,13 +284,6 @@ vector<MSAA>* D3DSystem::ProduceMsaaCapability(vector<MSAA>* options, int i)
     return new vector<MSAA>(localOptions);
 }
 
-HRESULT D3DSystem::CreateCamera()
-{
-    _camera = shared_ptr<Camera>(new Camera());
-    _camera->Initialize();
-    return 0;
-}
-
 HRESULT D3DSystem::LoadModels()
 {
     _model = shared_ptr<Model>(new Model());
@@ -303,6 +295,17 @@ HRESULT D3DSystem::CreateRenderer()
 {
     _renderer = shared_ptr<Renderer>(new Renderer(true));
     return _renderer->Initialize();
+}
+
+void D3DSystem::CreateCamera()
+{
+    _camera = shared_ptr<Camera>(new Camera());
+}
+
+void D3DSystem::CreateScene()
+{
+    auto scene = Scene::CreateStandardScene();
+    _scene = shared_ptr<Scene>(scene);
 }
 
 void D3DSystem::Render()

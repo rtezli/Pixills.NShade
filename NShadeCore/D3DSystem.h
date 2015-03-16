@@ -12,6 +12,7 @@
 #include "camera.h"
 #include "model.h"
 #include "input.h"
+#include "scene.h"
 
 namespace rx = rxcpp;
 namespace rxsc = rxcpp::schedulers;
@@ -32,11 +33,13 @@ private:
     HRESULT                 CreateInput();
     HRESULT                 GetRenderQualitySettings(ID3D11Device* device);
     vector<MSAA>*           ProduceMsaaCapability(vector<MSAA>* msaaOptions, int i);
-    HRESULT                 CreateCamera();
     HRESULT                 LoadModels();
     HRESULT                 CreateRenderer();
     HRESULT                 AttachOnRotate();
     HRESULT                 DetachOnRotate();
+
+    void                    CreateCamera();
+    void                    CreateScene();
     void                    CreateViewPort();
     void                    Render();
 private:
@@ -45,7 +48,7 @@ private:
     shared_ptr<Camera>      _camera;
     shared_ptr<Input>       _inputDevices;
     shared_ptr<Model>       _model;
-
+    shared_ptr<Scene>       _scene;
     D3D_FEATURE_LEVEL       _d3dFeatureLevel;
 
     XMVECTOR                _position;

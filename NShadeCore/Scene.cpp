@@ -60,7 +60,7 @@ void Scene::AddModel(Model *model)
 {
     if (_models == NULL)
     {
-        _models = shared_ptr<vector<Model>>();
+        _models = shared_ptr<vector<Model>>(new vector<Model>());
     }
     _models->push_back(*model);
 }
@@ -69,7 +69,7 @@ void Scene::AddLight(Light *light)
 {
     if (_lights == NULL)
     {
-        _lights = shared_ptr<vector<Light>>();
+        _lights = shared_ptr<vector<Light>>(new vector<Light>());
     }
     _lights->push_back(*light);
 }

@@ -1,6 +1,11 @@
 #include "stdafx.h"
 #include "model.h"
 
+Model::Model()
+{
+    Initialize();
+}
+
 HRESULT Model::Initialize()
 {
     _indices = shared_ptr<vector<unsigned int>>(new vector<unsigned int>());

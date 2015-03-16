@@ -14,6 +14,8 @@ using namespace std;
 EXTERN class API Model
 {
 public:
+    Model();
+public:
     HRESULT                 LoadModelFromFBXFile(char *fileName);
     HRESULT                 LoadModelFromOBJFile(char *fileName, bool isRightHand);
     HRESULT                 CreateCube(float size, XMFLOAT3 *position);

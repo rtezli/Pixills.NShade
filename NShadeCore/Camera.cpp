@@ -1,6 +1,11 @@
 #include "stdafx.h"
 #include "camera.h"
 
+Camera::Camera()
+{
+    Initialize();
+}
+
 void Camera::Initialize()
 {
     _worldMatrix = new XMFLOAT4X4();

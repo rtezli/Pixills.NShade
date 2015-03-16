@@ -85,7 +85,7 @@ private:
     HRESULT CompilePixelShader(wchar_t *shaderSource);
 
     HRESULT CompileShader(wchar_t *compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
-private:
+private:    
     wchar_t *                        _standardVertexShader = L"../Debug/PhongVertexShader.cso";
     wchar_t *                        _standardPixelShader = L"../Debug/PhongPixelShader.cso";
 

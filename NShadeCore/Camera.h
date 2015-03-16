@@ -14,6 +14,8 @@ enum Perspective : char
 EXTERN class API Camera : public ConstBufferProvider
 {
 public:
+    Camera();
+public:
     void    Initialize();
     void    SetPosition(XMFLOAT3 *position);
     void    SetFocusPoint(XMFLOAT3 *point);
