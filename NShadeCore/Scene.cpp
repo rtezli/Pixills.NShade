@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "scene.h"
 
-VOID Scene::Clear()
+void Scene::Clear()
 {
     //auto constBuffer = GetCamera()->GetConstBufferData();
     //Res::Get()->DeviceContext->UpdateSubresource(GetCamera()->GetConstBuffer(), 0, NULL, &constBuffer, 0, 0);
 }
 
-VOID Scene::Render()
+void Scene::Render()
 {
     auto models = GetModels();
 
@@ -56,7 +56,7 @@ VOID Scene::Render()
     }
 }
 
-VOID Scene::AddModel(Model *model)
+void Scene::AddModel(Model *model)
 {
     if (_models == NULL)
     {
@@ -65,7 +65,7 @@ VOID Scene::AddModel(Model *model)
     _models->push_back(*model);
 }
 
-VOID Scene::AddLight(Light *light)
+void Scene::AddLight(Light *light)
 {
     if (_lights == NULL)
     {
@@ -74,13 +74,18 @@ VOID Scene::AddLight(Light *light)
     _lights->push_back(*light);
 }
 
-VOID Scene::AddCamera(Camera *camera)
+void Scene::AddCamera(Camera *camera)
 {
     _camera = shared_ptr<Camera>(camera);
 }
 
-VOID Scene::Load(wstring fileName)
+void Scene::Load(wstring fileName)
 {
+}
+
+void Scene::SetAmbientLight(XMFLOAT4 *colorIntensity)
+{
+    _ambientLight = shared_ptr<XMFLOAT4>(colorIntensity);
 }
 
 Scene* Scene::CreateStandardScene()
@@ -90,11 +95,7 @@ Scene* Scene::CreateStandardScene()
     stdCamera->SetPosition(new XMFLOAT3(0.0f, 0.0f, 5.0f));
     stdCamera->SetFocusPoint(new XMFLOAT3(0.0f, 0.0f, 0.0f));
     scene->AddCamera(stdCamera);
-
-    //auto ambientLightColor = new XMFLOAT3(1.0f, 1.0f, 1.0f);
-    //auto ambientLightIntensity = 1.0f;
-    //auto stdAmbientLight = new AmbientLight(deviceResources, ambientLightColor, &ambientLightIntensity);
-    //scene->AddLight(stdAmbientLight);
+    scene->SetAmbientLight(new XMFLOAT4(1.0f, 1.0f, 1.0f, 0.1f));
 
     auto pointLightPosition = new XMFLOAT3(1.0f, 1.0f, 1.0f);
     auto pointLightColorIntensity = new XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -103,25 +104,19 @@ Scene* Scene::CreateStandardScene()
     stdPointLight->SetColorIntensity(pointLightColorIntensity);
     scene->AddLight(stdPointLight);
 
-    ////auto stdPixelShader = ResourceManager::Current->MainResourceMap->GetSubtree("Files")->GetValue("Assets/PhongPixelShader.cso");
-    ////auto stdVertexShader = ResourceManager::Current->MainResourceMap->GetSubtree("Files")->GetValue("Assets/PhongVertexShader.cso");
-
-    //auto stdPixelShader = new PhongShader::PhongPixelShader("../Debug/PhongPixelShader.cso", deviceResources);
-    //auto stdVertexShader = new PhongShader::PhongVertexShader("../Debug/PhongVertexShader.cso", deviceResources);
+    auto stdPixelShader = PixelShader::Load(L"../Debug/PhongPixelShader.cso");
+    auto stdVertexShader = VertexShader::Load(L"../Debug/PhongVertexShader.cso");
 
     auto stdMaterial = new Material();
     auto shaders = new Shaders();
-    //shaders->PixelShader = stdPixelShader;
-    //shaders->VertexShader = stdVertexShader;
+    shaders->PixelShader = stdPixelShader;
+    shaders->VertexShader = stdVertexShader;
     stdMaterial->AssignShaders(shaders);
-
-    ////auto stdModelFile = ResourceManager::Current->MainResourceMap->GetSubtree("Files")->GetValue("Assets/teapot.fbx");
 
     auto stdModel = new Model();
     stdModel->LoadModelFromFBXFile("../Debug/teapot.fbx");
     stdModel->AssignMaterial(stdMaterial);
-    //stdModel->CreateBuffers();
-   scene->AddModel(stdModel);
+    scene->AddModel(stdModel);
 
     return new Scene();
 }
