@@ -7,15 +7,6 @@ Renderer::Renderer(bool useSwapChain)
     _isInitialized = false;    
     _useSwapChain = useSwapChain;
     _rasterizerUseMultiSampling = true;
-
-    DXGI_FORMAT swapChainBufferFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
-    DXGI_FORMAT depthBufferFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    DXGI_FORMAT depthSencilViewFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    DXGI_FORMAT depthSencilFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-    DXGI_FORMAT vertexPositionFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
-    DXGI_FORMAT vertexColorFormat = DXGI_FORMAT_R32G32B32_FLOAT;
-
     Res::Get()->Shaders = new ShaderSet();
 }
 
@@ -62,6 +53,7 @@ HRESULT Renderer::Initialize()
     {
         return result;
     }
+
     _isInitialized = true;
     return SetPixelShader(_standardPixelShader);
 }
@@ -476,9 +468,8 @@ void Renderer::ClearScene()
     Res::Get()->DeviceContext->ClearDepthStencilView(Res::Get()->DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-HRESULT Renderer::Render()
+HRESULT Renderer::Render(Scene *scene)
 {
-    // Clear
     ClearScene();
 
     if (!_isInitialized)
@@ -489,32 +480,22 @@ HRESULT Renderer::Render()
     unsigned int stride = sizeof(PhongShader::InputLayout);
     unsigned int offset = 0;
 
-    // Set model data
     Res::Get()->DeviceContext->IASetInputLayout(Res::Get()->InputLayout);
-
-    // Set multiple buffers here ? i.e. each for one model since some shaders are not applied to all models
     Res::Get()->DeviceContext->IASetVertexBuffers(0, 1, &Res::Get()->VertexBuffer, &stride, &offset);
     Res::Get()->DeviceContext->IASetIndexBuffer(Res::Get()->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
     Res::Get()->DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    // Set shader data
 
-
-    // Set multiple shaders here ?
     auto vs = Res::Get()->Shaders->VertexShader;
     auto ps = Res::Get()->Shaders->PixelShader;
 
     Res::Get()->DeviceContext->VSSetConstantBuffers(0, 1, &Res::Get()->ConstBuffer);
     Res::Get()->DeviceContext->VSSetShader(vs, NULL, 0);
 
-    //Res::Get()->DeviceContext->VSSetConstantBuffers(0, 1, &Res::Get()->ConstBuffer);
-    //Res::Get()->DeviceContext->VSSetShader(vs, NULL, 0);
-
     Res::Get()->DeviceContext->PSSetConstantBuffers(0, 1, &Res::Get()->ConstBuffer);
     Res::Get()->DeviceContext->PSSetShader(ps, NULL, 0);
 
     Res::Get()->DeviceContext->DrawIndexed(Res::Get()->IndexCount, 0, 0);
 
-    // Present
     return Res::Get()->SwapChain->Present(1, 0);
 }
 

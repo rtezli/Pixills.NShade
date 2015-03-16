@@ -48,7 +48,7 @@ private:
     //shared_ptr<Camera>      _camera;
     shared_ptr<Input>       _inputDevices;
     shared_ptr<Model>       _model;
-    shared_ptr<Scene>       _scene;
+    Scene                   *_scene;
     D3D_FEATURE_LEVEL       _d3dFeatureLevel;
 
     XMVECTOR                _position;

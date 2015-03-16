@@ -304,13 +304,12 @@ HRESULT D3DSystem::CreateRenderer()
 
 void D3DSystem::CreateScene()
 {
-    auto scene = Scene::CreateStandardScene();
-    _scene = shared_ptr<Scene>(scene);
+    _scene = Scene::CreateStandardScene();
 }
 
 void D3DSystem::Render()
 {
-    _renderer->Render();
+    _renderer->Render(_scene);
 }
 
 LRESULT D3DSystem::MessageHandler(HWND* hWnd, unsigned int umessage, WPARAM wparam, LPARAM lParam)

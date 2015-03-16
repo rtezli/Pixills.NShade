@@ -24,6 +24,7 @@
 #include "d3d11.h"
 #include "d3dcompiler.h"
 #include "phongvertexshader.h"
+#include "scene.h"
 
 EXTERN class API Renderer
 {
@@ -33,7 +34,7 @@ public:
     HRESULT	ResizeSwapChain(UINT32 newWidth, UINT32 newHeight);
     HRESULT SetShaderParameters();
     HRESULT	Initialize();
-    HRESULT	Render();
+    HRESULT	Render(Scene *scene);
     HRESULT	Resize(D3D11_VIEWPORT* viewport);
 public:
     void ClearScene();

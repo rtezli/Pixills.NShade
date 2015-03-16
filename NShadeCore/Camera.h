@@ -21,12 +21,12 @@ public:
     void            SetFocusPoint(XMFLOAT3 *point);
     void            Rotate(POINT* p);
     void            Move(POINT* p);
-    void            Update();
     float           GetAspectRatio(){ return Res::Get()->ViewPort->Width / Res::Get()->ViewPort->Height; };
     float           GetFieldOfView(){ return 70.0f * XM_PI / 180.0f; };
     ID3D11Buffer*   const GetMatrixBuffer(){ return _matrixBuffer; }
     ID3D11Buffer*   const GetPositionBuffer(){ return _positionBuffer; }
 private:
+    void            Update();
     XMFLOAT4X4      *_worldMatrix, *_viewMatrix, *_projectionMatrix;
     XMFLOAT3        *_eyePosition, *_focusPosition, *_upDirection;
     ID3D11Buffer    *_matrixBuffer, *_positionBuffer;
