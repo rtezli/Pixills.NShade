@@ -14,13 +14,13 @@ using namespace std;
 EXTERN class API Model
 {
 public:
-    HRESULT                 AssignMaterial(Material *material);
     HRESULT                 LoadModelFromFBXFile(char *fileName);
     HRESULT                 LoadModelFromOBJFile(char *fileName, bool isRightHand);
     HRESULT                 CreateCube(float size, XMFLOAT3 *position);
     HRESULT                 CreateHorizontalPlane(float size, XMFLOAT3 *position);
     HRESULT                 Initialize();
 
+    void                    AssignMaterial(Material *material);
     Material*               GetMaterial(){ return _material.get(); }
 
     vector<NVertex>*        GetVertices(){ return _vertices.get(); }

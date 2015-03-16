@@ -179,16 +179,20 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ColorPixelShader.h" />
     <ClInclude Include="ColorVertexShader.h" />
+    <ClInclude Include="ComputeShader.h" />
     <ClInclude Include="ConstBufferProvider.h" />
     <ClInclude Include="D3DHelpers.h" />
     <ClInclude Include="D3DSystem.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Defines.h" />
+    <ClInclude Include="DomainShader.h" />
     <ClInclude Include="Export.h" />
     <ClInclude Include="FbxReader.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="FpsTextRenderer.h" />
     <ClInclude Include="Common.h" />
+    <ClInclude Include="GeometryShader.h" />
+    <ClInclude Include="HullShader.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
@@ -197,6 +201,7 @@
     <ClInclude Include="ObjParser.h" />
     <ClInclude Include="PhongPixelShader.h" />
     <ClInclude Include="PhongVertexShader.h" />
+    <ClInclude Include="PixelShader.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderInput.h" />
@@ -217,6 +222,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ColorPixelShader.cpp" />
     <ClCompile Include="ColorVertexShader.cpp" />
+    <ClCompile Include="ComputeShader.cpp" />
     <ClCompile Include="ConstBufferProvider.cpp" />
     <ClCompile Include="D3DHelpers.cpp" />
     <ClCompile Include="D3DSystem.cpp" />
@@ -234,9 +240,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="DomainShader.cpp" />
     <ClCompile Include="FbxReader.cpp" />
     <ClCompile Include="File.cpp" />
     <ClCompile Include="FpsTextRenderer.cpp" />
+    <ClCompile Include="GeometryShader.cpp" />
+    <ClCompile Include="HullShader.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Material.cpp" />
@@ -245,6 +254,7 @@
     <ClCompile Include="ObjParser.cpp" />
     <ClCompile Include="PhongPixelShader.cpp" />
     <ClCompile Include="PhongVertexShader.cpp" />
+    <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderInput.cpp" />

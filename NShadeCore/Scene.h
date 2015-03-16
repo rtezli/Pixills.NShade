@@ -4,7 +4,9 @@
 #include "memory"
 #include "model.h"
 #include "light.h"
+#include "pointlight.h"
 #include "camera.h"
+#include "shader.h"
 
 using namespace std;
 
@@ -15,8 +17,8 @@ struct SceneFile
 
 struct ResourceMapping
 {
-    ID3D11Buffer*   Buffer;
-    ID3D11Resource* Resource;
+    ID3D11Resource* Source;
+    ID3D11Resource* Target;
 };
 
 EXTERN class API Scene

@@ -28,6 +28,12 @@ On **Windows 8.1** (%PROGRAMFILES(x86)%\Windows Kits\8.1)
 
 [**Autodesk FBX SDK 2015.1 VS2013**](http://images.autodesk.com/adsk/files/fbx20151_fbxsdk_vs2013_win.exe)
 
+Don't forget to set your PATH in `Configuration Properties -> Debugging`  
+
+to 
+
+`PATH=$PATH;$(ProgramW6432)\Autodesk\FBX\FBX SDK\2015.1\lib\vs2013\<platform>\<target>\`
+
 Development Tools
 -
 For development, platform toolset v120 (Visual Studio 2013) is required

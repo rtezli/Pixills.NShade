@@ -135,10 +135,25 @@
     <ClInclude Include="Debug.h">
       <Filter>Header Files\Common</Filter>
     </ClInclude>
+    <ClInclude Include="VertexShader.h">
+      <Filter>Header Files\Shaders</Filter>
+    </ClInclude>
     <ClInclude Include="PointLight.h">
+      <Filter>Header Files\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="PixelShader.h">
+      <Filter>Header Files\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryShader.h">
+      <Filter>Header Files\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="HullShader.h">
+      <Filter>Header Files\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="DomainShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VertexShader.h">
+    <ClInclude Include="ComputeShader.h">
       <Filter>Header Files\Shaders</Filter>
     </ClInclude>
   </ItemGroup>
@@ -233,10 +248,25 @@
     <ClCompile Include="Light.cpp">
       <Filter>Source Files\Lights</Filter>
     </ClCompile>
-    <ClCompile Include="PointLight.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="VertexShader.cpp">
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Source Files\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="DomainShader.cpp">
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryShader.cpp">
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="PixelShader.cpp">
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="HullShader.cpp">
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputeShader.cpp">
       <Filter>Source Files\Shaders</Filter>
     </ClCompile>
   </ItemGroup>

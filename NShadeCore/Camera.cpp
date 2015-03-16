@@ -48,19 +48,31 @@ void Camera::Initialize()
     Update();
 }
 
-void Camera::Move(POINT* p)
+void Camera::SetPosition(XMFLOAT3 *position)
 {
-    XMStoreFloat4x4(_worldMatrix, XMMatrixTranspose(XMMatrixTranslation(p->x, 0.0, p->y)));
+    _eyePosition = position;
     Update();
 }
 
-void Camera::Rotate(POINT* p)
+void Camera::SetFocusPoint(XMFLOAT3 *position)
+{
+    _focusPosition = position;
+    Update();
+}
+
+void Camera::Move(POINT *point)
+{
+    XMStoreFloat4x4(_worldMatrix, XMMatrixTranspose(XMMatrixTranslation(point->x, 0.0, point->y)));
+    Update();
+}
+
+void Camera::Rotate(POINT *point)
 {
     auto moderationH = 0.001;
     auto moderationV = 0.009;
 
-    _hAngle = _hAngle + p->x * moderationH;
-    _vAngle = _vAngle + p->y * moderationV;
+    _hAngle = _hAngle + point->x * moderationH;
+    _vAngle = _vAngle + point->y * moderationV;
 
     XMStoreFloat4x4(_worldMatrix, XMMatrixTranspose(XMMatrixRotationY(_hAngle)));
     Update();

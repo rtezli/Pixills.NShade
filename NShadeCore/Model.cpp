@@ -270,3 +270,8 @@ HRESULT Model::SetTopology(char verticesPerFace)
     }
     return 0;
 }
+
+void Model::AssignMaterial(Material *material)
+{
+    _material = shared_ptr<Material>(material);
+}

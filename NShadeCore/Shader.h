@@ -1,11 +1,17 @@
 #pragma once
 #pragma comment(lib, "D3DCompiler.lib")
 
+#include "vector"
+#include "d3dcompiler.h"
 #include "res.h"
 #include "file.h"
 #include "export.h"
-#include "vector"
-#include "d3dcompiler.h"
+#include "vertexshader.h"
+#include "pixelshader.h"
+#include "domainshader.h"
+#include "hullshader.h"
+#include "geometryshader.h"
+#include "computeshader.h"
 
 using namespace std;
 
@@ -47,6 +53,16 @@ enum ShaderType : char
     HS = 4,
     CS = 5,
     DS = 6
+};
+
+struct Shaders
+{
+    PixelShader     *PixelShader;
+    VertexShader    *VertexShader;
+    HullShader      *HullShader;
+    DomainShader    *DomainShader;
+    GeometryShader  *GeometryShader;
+    ComputeShader   *ComputeShader;
 };
 
 EXTERN class API Shader
