@@ -125,9 +125,6 @@ Scene* Scene::CreateStandardScene()
     stdMaterial->AssignShaders(shaders);
     stdMaterial->SetColor(new XMFLOAT4(0.1f, 0.1f, 0.6f, 1.0f));
 
-    //auto stdModel = new Model();
-    //stdModel->LoadModelFromFBXFile("../Debug/teapot.fbx");
-
     auto stdTeapot = Model::LoadModelFromFBXFile("../Debug/teapot.fbx");
     stdTeapot->AssignMaterial(stdMaterial);
     scene->AddModel(stdTeapot);

@@ -7,7 +7,7 @@ Renderer::Renderer(bool useSwapChain)
     _isInitialized = false;
     _useSwapChain = useSwapChain;
     _rasterizerUseMultiSampling = true;
-    Res::Get()->Shaders = new ShaderSet();
+    //Res::Get()->Shaders = new ShaderSet();
 }
 
 HRESULT Renderer::Initialize()
@@ -48,14 +48,8 @@ HRESULT Renderer::Initialize()
         return result;
     }
 
-    //result = SetVertexShader(_standardVertexShader);
-    //if (FAILED(result))
-    //{
-    //    return result;
-    //}
-
     _isInitialized = true;
-    return SetPixelShader(_standardPixelShader);
+    return result;
 }
 
 
@@ -218,15 +212,17 @@ HRESULT Renderer::CreateDepthBuffer()
 
 HRESULT Renderer::CreateDepthStencilDescription()
 {
-    _depthStencilDesc.ArraySize = 1;
-    _depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    _depthStencilDesc.MipLevels = Res::Get()->RenderQuality->MipLevels;
-    _depthStencilDesc.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
-    _depthStencilDesc.SampleDesc.Count = Res::Get()->RenderQuality->SampleCount;
-    _depthStencilDesc.Format = Res::Get()->RenderQuality->BufferFormat;
-    _depthStencilDesc.Width = Res::Get()->ViewPort->Width;
-    _depthStencilDesc.Height = Res::Get()->ViewPort->Height;
+    D3D11_TEXTURE2D_DESC depthStencilDesc = { 0 };
+    depthStencilDesc.ArraySize = 1;
+    depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    depthStencilDesc.MipLevels = Res::Get()->RenderQuality->MipLevels;
+    depthStencilDesc.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
+    depthStencilDesc.SampleDesc.Count = Res::Get()->RenderQuality->SampleCount;
+    depthStencilDesc.Format = Res::Get()->RenderQuality->BufferFormat;
+    depthStencilDesc.Width = Res::Get()->ViewPort->Width;
+    depthStencilDesc.Height = Res::Get()->ViewPort->Height;
 
+    _depthStencilDesc = depthStencilDesc;
     return 0;
 }
 
@@ -261,6 +257,7 @@ HRESULT Renderer::CreateDepthStencilViewDescription()
     _depthStencilViewDesc.Format = Res::Get()->RenderQuality->BufferFormat;
     _depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
     _depthStencilViewDesc.Texture2D.MipSlice = 0;
+    _depthStencilViewDesc.Flags = 0;
 
     return 0;
 }
@@ -285,8 +282,7 @@ HRESULT Renderer::CreateDepthStencil()
         return result;
     }
 
-    ID3D11Texture2D* depthStencil = 0;
-
+    ID3D11Texture2D* depthStencil;
     result = Res::Get()->Device->CreateTexture2D(&_depthStencilDesc, NULL, &depthStencil);
     result = Res::Get()->Device->CreateDepthStencilView(depthStencil, &_depthStencilViewDesc, &Res::Get()->DepthStencilView);
 
@@ -346,120 +342,6 @@ HRESULT Renderer::CreateViewPort()
 
     return 0;
 }
-
-
-HRESULT Renderer::SetVertexShader(wchar_t *compiledShaderFile)
-{
-    auto vsByteCode = File::ReadFileBytes(compiledShaderFile);
-    auto result = Res::Get()->Device->CreateVertexShader(vsByteCode->Bytes, vsByteCode->Length, NULL, &Res::Get()->Shaders->VertexShader);
-
-    if (FAILED(result))
-    {
-        return result;
-    }
-
-    static const D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
-    {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // Vertex position
-        { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // Model color
-        { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // Normal vector
-
-        { "COLOR", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }, // Ambient light color where w is intensity
-        { "POSITION", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }  // Point light position w is intensity
-    };
-
-    return Res::Get()->Device->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), vsByteCode->Bytes, vsByteCode->Length, &Res::Get()->InputLayout);
-}
-
-HRESULT Renderer::CompileVertexShader(wchar_t *compiledShaderFile)
-{
-    ID3DBlob* shaderBlob = 0;
-    ID3D11VertexShader* vertexShader = 0;
-
-    auto result = CompileShader(compiledShaderFile, shaderBlob, VS_PROFILE);
-    if (FAILED(result))
-    {
-        return result;
-    }
-    return Res::Get()->Device->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &vertexShader);
-}
-
-HRESULT Renderer::SetHullShader(wchar_t *compiledShaderFile)
-{
-    auto hsByteCode = File::ReadFileBytes(compiledShaderFile);
-    auto shaders = Res::Get()->Shaders;
-    return Res::Get()->Device->CreateHullShader(hsByteCode->Bytes, hsByteCode->Length, NULL, &shaders->HullShader);
-}
-
-HRESULT Renderer::CompileHullShader(wchar_t *compiledShaderFile)
-{
-    ID3DBlob* shaderBlob = 0;
-    ID3D11HullShader* hullShader = 0;
-
-    auto result = CompileShader(compiledShaderFile, shaderBlob, HS_PROFILE);
-    if (FAILED(result))
-    {
-        return result;
-    }
-    return Res::Get()->Device->CreateHullShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &hullShader);
-}
-
-HRESULT Renderer::SetGeometryShader(wchar_t *compiledShaderFile)
-{
-    auto gsByteCode = File::ReadFileBytes(compiledShaderFile);
-    auto shaders = Res::Get()->Shaders;
-    return Res::Get()->Device->CreateGeometryShader(gsByteCode->Bytes, gsByteCode->Length, NULL, &shaders->GeometryShader);
-}
-
-HRESULT Renderer::CompileGeometryShader(wchar_t *compiledShaderFile)
-{
-    ID3DBlob* shaderBlob = 0;
-    ID3D11GeometryShader* geometryShader = 0;
-
-    auto result = CompileShader(compiledShaderFile, shaderBlob, GS_PROFILE);
-    if (FAILED(result))
-    {
-        return result;
-    }
-    return Res::Get()->Device->CreateGeometryShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &geometryShader);
-}
-
-HRESULT Renderer::SetPixelShader(wchar_t *compiledShaderFile)
-{
-    auto psByteCode = File::ReadFileBytes(compiledShaderFile);
-    return Res::Get()->Device->CreatePixelShader(psByteCode->Bytes, psByteCode->Length, NULL, &Res::Get()->Shaders->PixelShader);
-}
-
-HRESULT Renderer::CompilePixelShader(wchar_t *compiledShaderFile)
-{
-    ID3DBlob* shaderBlob = 0;
-    ID3D11PixelShader* pixelShader = 0;
-
-    auto result = CompileShader(compiledShaderFile, shaderBlob, PS_PROFILE);
-    if (FAILED(result))
-    {
-        return result;
-    }
-    return Res::Get()->Device->CreatePixelShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &pixelShader);
-}
-
-HRESULT Renderer::CompileShader(wchar_t *compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile)
-{
-    ID3DBlob* shaderBlob = 0;
-    unsigned int flags = D3DCOMPILE_ENABLE_STRICTNESS;
-
-#if defined( DEBUG ) || defined( _DEBUG )
-    flags |= D3DCOMPILE_DEBUG;
-#endif
-
-    const D3D_SHADER_MACRO defines[] =
-    {
-        { "Foo", "Bar" }
-    };
-
-    return D3DCompileFromFile(compiledShaderFile, defines, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", shaderProfile, flags, 0, &shaderBlob, &shaderBlob);
-}
-
 
 void Renderer::ClearScene()
 {

@@ -68,28 +68,7 @@ private:
     HRESULT CreateRasterizer();
 
     HRESULT CreateViewPort();
-
-    /* sahders */
-    HRESULT	SetVertexShader(wchar_t *compiledShaderFile);
-    HRESULT	CompileVertexShader(wchar_t *shaderSource);
-
-    HRESULT SetHullShader(wchar_t *compiledShaderFile);
-    HRESULT CompileHullShader(wchar_t *shaderSource);
-
-    HRESULT SetDomainShader(wchar_t *compiledShaderFile);
-    HRESULT CompileDomainShader(wchar_t *shaderSource);
-
-    HRESULT SetGeometryShader(wchar_t *compiledShaderFile);
-    HRESULT CompileGeometryShader(wchar_t *shaderSource);
-
-    HRESULT SetPixelShader(wchar_t *compiledShaderFile);
-    HRESULT CompilePixelShader(wchar_t *shaderSource);
-
-    HRESULT CompileShader(wchar_t *compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
 private:    
-    wchar_t *                        _standardVertexShader = L"../Debug/PhongVertexShader.cso";
-    wchar_t *                        _standardPixelShader = L"../Debug/PhongPixelShader.cso";
-
     D3D11_TEXTURE2D_DESC            _depthBufferDesc;
     DXGI_SWAP_CHAIN_DESC            _swapChainDescription;
 
