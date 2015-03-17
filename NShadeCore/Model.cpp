@@ -38,30 +38,30 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<unsigned int>* modelIndexes, vect
     auto ambient = XMFLOAT4{ 1.0f, 1.0f, 1.0f, 0.0f };
     auto color = XMFLOAT4{ 1.0f, 1.0f, 1.0f, 1.0f };
 
-    auto input = new  vector<PhongShader::InputLayout>();
+    //auto input = new  vector<PhongShader::InputLayout>();
 
-    for (unsigned int i = 0; i < modelVertices->size(); i++)
-    {
-        auto vertex = modelVertices->at(i);
+    _vertexCount = modelVertices->size();
+    _indexCount = modelIndexes->size();
 
-        auto vertexInput = new PhongShader::InputLayout();
-        vertexInput->Position = vertex.Position;
-        vertexInput->Color = color;
-        vertexInput->Normal = vertex.Normal;
-        vertexInput->AmbientColorIntensity = ambient;
-        vertexInput->LightPositionIntensity = spot;
-        input->push_back(*vertexInput);
-    }
+    //for (unsigned int i = 0; i < _vertexCount; i++)
+    //{
+    //    auto vertex = modelVertices->at(i);
 
-    Res::Get()->VertexCount = modelVertices->size();
-    Res::Get()->IndexCount = modelIndexes->size();
+    //    auto vertexInput = new PhongShader::InputLayout();
+    //    vertexInput->Position = vertex.Position;
+    //    vertexInput->Color = color;
+    //    vertexInput->Normal = vertex.Normal;
+    //    vertexInput->AmbientColorIntensity = ambient;
+    //    vertexInput->LightPositionIntensity = spot;
+    //    input->push_back(*vertexInput);
+    //}
 
-    PhongShader::InputLayout* vertexArr;
-    vertexArr = (PhongShader::InputLayout*)malloc(Res::Get()->VertexCount * sizeof(PhongShader::InputLayout));
-    copy(input->begin(), input->end(), vertexArr);
+    NVertex* vertexArr;
+    vertexArr = (NVertex*)malloc(_vertexCount * sizeof(NVertex));
+    copy(modelVertices->begin(), modelVertices->end(), vertexArr);
 
     D3D11_BUFFER_DESC vertexBufferDesc = { 0 };
-    vertexBufferDesc.ByteWidth = sizeof(PhongShader::InputLayout) * Res::Get()->VertexCount;
+    vertexBufferDesc.ByteWidth = sizeof(NVertex) * _vertexCount;
     vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
     vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vertexBufferDesc.CPUAccessFlags = 0;
@@ -73,18 +73,19 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<unsigned int>* modelIndexes, vect
     vertexBufferData.SysMemPitch = 0;
     vertexBufferData.SysMemSlicePitch = 0;
 
-    auto result = Res::Get()->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &Res::Get()->VertexBuffer);
+
+    auto result = Res::Get()->Device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &_vertexBuffer);// Res::Get()->VertexBuffer);
     if (FAILED(result))
     {
         return result;
     }
 
     unsigned int* indexArr;
-    indexArr = (unsigned int*)malloc(Res::Get()->IndexCount * sizeof(unsigned int));
+    indexArr = (unsigned int*)malloc(_indexCount * sizeof(unsigned int));
     copy(modelIndexes->begin(), modelIndexes->end(), indexArr);
 
     D3D11_BUFFER_DESC indexBufferDesc = { 0 };
-    indexBufferDesc.ByteWidth = sizeof(unsigned int) * Res::Get()->IndexCount;
+    indexBufferDesc.ByteWidth = sizeof(unsigned int) * _indexCount;
     indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
     indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     indexBufferDesc.CPUAccessFlags = 0;
@@ -96,7 +97,7 @@ HRESULT Model::FillVertexAndIndexBuffer(vector<unsigned int>* modelIndexes, vect
     indexBufferData.SysMemPitch = 0;
     indexBufferData.SysMemSlicePitch = 0;
 
-    return Res::Get()->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &Res::Get()->IndexBuffer);
+    return Res::Get()->Device->CreateBuffer(&indexBufferDesc, &indexBufferData, &_indexBuffer);// Res::Get()->IndexBuffer);
 }
 
 HRESULT Model::LoadModelFromOBJFile(char* fileName, bool isRightHand)
@@ -108,20 +109,20 @@ HRESULT Model::InitializeVertexBuffer()
 {
     static const NVertex cube[] =
     {
-        { XMFLOAT3(-0.5f, 0.0f, -0.5f), XMFLOAT4(0.0f, 0.0f, 0.0, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
-        { XMFLOAT3(-0.5f, 0.0f, 0.5f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
-        { XMFLOAT3(-0.5f, 1.0f, -0.5f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
-        { XMFLOAT3(-0.5f, 1.0f, 0.5f), XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
+        { XMFLOAT3(-0.5f, 0.0f, -0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
+        { XMFLOAT3(-0.5f, 0.0f, 0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
+        { XMFLOAT3(-0.5f, 1.0f, -0.5f),  XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
+        { XMFLOAT3(-0.5f, 1.0f, 0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
 
-        { XMFLOAT3(0.5f, 0.0f, -0.5f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
-        { XMFLOAT3(0.5f, 0.0f, 0.5f), XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
-        { XMFLOAT3(0.5f, 1.0f, -0.5f), XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
-        { XMFLOAT3(0.5f, 1.0f, 0.5f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
+        { XMFLOAT3(0.5f, 0.0f, -0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
+        { XMFLOAT3(0.5f, 0.0f, 0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
+        { XMFLOAT3(0.5f, 1.0f, -0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
+        { XMFLOAT3(0.5f, 1.0f, 0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
 
-        { XMFLOAT3(-15.0f, 0.0f, -15.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
-        { XMFLOAT3(15.0f, 0.0f, -15.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
-        { XMFLOAT3(15.0f, 0.0f, 15.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
-        { XMFLOAT3(-15.0f, 0.0f, 15.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
+        { XMFLOAT3(-15.0f, 0.0f, -15.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
+        { XMFLOAT3(15.0f, 0.0f, -15.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
+        { XMFLOAT3(15.0f, 0.0f, 15.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
+        { XMFLOAT3(-15.0f, 0.0f, 15.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
 
     };
 
@@ -185,28 +186,24 @@ HRESULT Model::CreateHorizontalPlane(float size, XMFLOAT3* position)
     {
         {
             XMFLOAT3(size * -1.0f + position->x, position->y, size * -1.0f + position->z),
-            XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
             XMFLOAT3(0.0f, 1.0f, 0.0f),
             XMFLOAT2(0.0f, 0.0f),
             XMFLOAT3(0.0f, 0.0f, 0.0f)
         },
         {
             XMFLOAT3(size + position->x, position->y, size * -1.0f + position->z),
-            XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
             XMFLOAT3(0.0f, 1.0f, 0.0f),
             XMFLOAT2(0.0f, 0.0f),
             XMFLOAT3(0.0f, 0.0f, 0.0f)
         },
         {
             XMFLOAT3(size + position->x, position->y, size + position->z),
-            XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
             XMFLOAT3(0.0f, 1.0f, 0.0f),
             XMFLOAT2(0.0f, 0.0f),
             XMFLOAT3(0.0f, 0.0f, 0.0f)
         },
         {
             XMFLOAT3(size * -1.0f + position->x, position->y, size + position->z),
-            XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
             XMFLOAT3(0.0f, 1.0f, 0.0f),
             XMFLOAT2(0.0f, 0.0f),
             XMFLOAT3(0.0f, 0.0f, 0.0f)

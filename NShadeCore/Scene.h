@@ -38,16 +38,15 @@ public:
 
     vector<Light>*              const GetLights()           { return _lights.get(); }
     vector<Model>*              const GetModels()           { return _models.get(); }
-    ID3D11Buffer*               const GetAmbientBuffer()    { return _ambientBuffer.get(); }
+    ID3D11Buffer*               const GetAmbientBuffer()    { return _ambientBuffer; }
 
     void                        SetAmbientLight(XMFLOAT4 *colorIntensity);
 
     static Scene*               CreateStandardScene();
 private:
-    shared_ptr<XMFLOAT4>                _ambientLight;
     shared_ptr<Camera>                  _camera;
     shared_ptr<vector<Light>>           _lights;
     shared_ptr<vector<Model>>           _models;
     shared_ptr<vector<ResourceMapping>> _resourceMappings;
-    shared_ptr<ID3D11Buffer>            _ambientBuffer;
+    ID3D11Buffer                        *_ambientBuffer;
 };

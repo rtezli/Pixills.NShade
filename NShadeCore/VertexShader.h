@@ -12,6 +12,8 @@ public:
     static VertexShader*        Load(wchar_t *fileName);
     static VertexShader*        Compile(wchar_t *sourceCode);
 private:
+    VertexShader(ID3D11VertexShader *shader, ID3D11InputLayout *layout);
+    unsigned int                *_strides;
     ID3D11InputLayout           *_inputLayout;
     ID3D11VertexShader          *_vertexShader;
 };

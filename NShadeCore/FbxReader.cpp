@@ -153,12 +153,6 @@ HRESULT nshade::FbxReader::TraverseAndStoreFbxNode(vector<FbxNode*> *nodes, FbxA
                 }
                 }
 
-                // Use a standard color for all vertices
-                newVertex->Color = XMFLOAT4
-                {
-                    0.7f, 0.2f, 0.7f, 0.6f
-                };
-
                 // Dont set that now
                 newVertex->UV = XMFLOAT2
                 {

@@ -96,11 +96,5 @@ void Camera::Update()
     constantBufferData.SysMemPitch = 0;
     constantBufferData.SysMemSlicePitch = 0;
 
-    ID3D11Buffer* buffer;
-    auto result = Res::Get()->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &buffer);
-    if (SUCCEEDED(result))
-    {
-        Res::Get()->ConstBuffer = buffer;
-        //Res::Get()->DeviceContext->UpdateSubresource(Res::Get()->ConstBuffer, 0, NULL, constBufferData, 0, 0);
-    }
+    Res::Get()->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &_matrixBuffer);
 }

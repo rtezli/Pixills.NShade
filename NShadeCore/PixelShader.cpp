@@ -1,13 +1,17 @@
 #include "stdafx.h"
 #include "pixelshader.h"
 
+PixelShader::PixelShader(ID3D11PixelShader *shader)
+{
+    _pixelShader = shader;
+}
+
 PixelShader* PixelShader::Load(wchar_t *fileName)
 {
-    auto ps = new PixelShader();
-    auto vsByteCode = File::ReadFileBytes(fileName);
-    auto shader = ps->GetShader();
-    auto result = Res::Get()->Device->CreatePixelShader(vsByteCode->Bytes, vsByteCode->Length, NULL, &shader);
-    return ps;
+    auto psByteCode = File::ReadFileBytes(fileName);
+    ID3D11PixelShader *shader;
+    Res::Get()->Device->CreatePixelShader(psByteCode->Bytes, psByteCode->Length, NULL, &shader);
+    return new PixelShader(shader);
 }
 
 PixelShader* PixelShader::Compile(wchar_t *sourceCode)
@@ -17,6 +21,6 @@ PixelShader* PixelShader::Compile(wchar_t *sourceCode)
 
     //auto result = CompileShader(compiledShaderFile, shaderBlob, VS_PROFILE);
     //result = Res::Get()->Device->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &vertexShader);
-    auto ps = new PixelShader();
+    auto ps = new PixelShader(nullptr);
     return ps;
 }

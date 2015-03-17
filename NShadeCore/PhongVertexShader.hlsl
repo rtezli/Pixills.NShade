@@ -4,37 +4,34 @@ cbuffer ConstantBufferData : register(b0)
     float4x4 view;
     float4x4 projection;
     float3   camera;
-    float    time;
 };
 
-cbuffer Camera : register(b1)
+cbuffer Material : register(b1)
 {
-    float3 cameraPosition;
+    float4 materialColor;
 }
 
-cbuffer Global : register(b2)
+cbuffer Ambient : register(b2)
 {
-    float globalTime;
+    float4 ambientColorIntensity;
 }
 
-cbuffer Ambient : register(b3)
-{
-    float ambientColor;
-}
-
-cbuffer PointLight : register(b4)
+cbuffer PointLight : register(b3)
 {
     float pointLightPosition;
+}
+
+cbuffer Global : register(b4)
+{
+    float globalTime;
 }
 
 struct VertexShaderInput
 {
     float3 position     : POSITION0;
-    float4 color        : COLOR0;
-    float3 normal       : NORMAL;
-
-    float4 ambient      : COLOR1;
-    float4 light        : POSITION1;
+    float3 normal       : NORMAL0;
+    float2 uv           : TEXCOORD0;
+    float3 bary         : POSITION1;
 };
 
 struct VertexShaderOutput
@@ -59,15 +56,15 @@ VertexShaderOutput main(VertexShaderInput input)
     position = mul(position, projection);
 
     vertexShaderOutput.position = position;
-    vertexShaderOutput.color = input.color;
+    vertexShaderOutput.color = materialColor;
 
     float4 normal = float4(input.normal, 0.0f);
 
     vertexShaderOutput.normal = mul(normal, world);
-    vertexShaderOutput.ambient = input.ambient;
+    vertexShaderOutput.ambient = ambientColorIntensity;
     vertexShaderOutput.camera = float4(camera, 0.0f);
 
-    vertexShaderOutput.light = mul(input.light, world);
+    vertexShaderOutput.light = mul(ambientColorIntensity, world);
 
 
     return vertexShaderOutput;

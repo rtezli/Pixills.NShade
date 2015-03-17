@@ -6,6 +6,7 @@ Scene::Scene()
     _models = shared_ptr<vector<Model>>(new vector<Model>());
     _lights = shared_ptr<vector<Light>>(new vector<Light>());
 }
+
 void Scene::Clear()
 {
     //auto constBuffer = GetCamera()->GetConstBufferData();
@@ -84,7 +85,16 @@ void Scene::Load(wstring fileName)
 
 void Scene::SetAmbientLight(XMFLOAT4 *colorIntensity)
 {
-    _ambientLight = shared_ptr<XMFLOAT4>(colorIntensity);
+    D3D11_BUFFER_DESC ambientBufferDesc = { 0 };
+    ambientBufferDesc.ByteWidth = sizeof(XMFLOAT4);
+    ambientBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+    D3D11_SUBRESOURCE_DATA  ambientBufferData = { 0 };
+    ambientBufferData.pSysMem = colorIntensity;
+    ambientBufferData.SysMemPitch = 0;
+    ambientBufferData.SysMemSlicePitch = 0;
+
+    Res::Get()->Device->CreateBuffer(&ambientBufferDesc, &ambientBufferData, &_ambientBuffer);
 }
 
 Scene* Scene::CreateStandardScene()
@@ -113,6 +123,7 @@ Scene* Scene::CreateStandardScene()
 
     auto stdMaterial = new Material();
     stdMaterial->AssignShaders(shaders);
+    stdMaterial->SetColor(new XMFLOAT4(0.8f, 0.6f, 1.0f, 1.0f));
 
     auto stdModel = new Model();
     stdModel->LoadModelFromFBXFile("../Debug/teapot.fbx");

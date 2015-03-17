@@ -4,11 +4,12 @@
 #include "light.h"
 #include "constbufferprovider.h"
 
-class PointLight : public ConstBufferProvider, public Light
+class PointLight : public Light //, public ConstBufferProvider, 
 {
 public:
     void SetPosition(XMFLOAT3 *position);
     void SetColorIntensity(XMFLOAT4 *colorIntesity);
+    ID3D11Buffer* GetBuffer(){ return _positionBuffer; };
 private:
     ID3D11Buffer    *_positionBuffer;
     XMFLOAT3        *_position;

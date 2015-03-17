@@ -8,7 +8,6 @@ using namespace DirectX;
 struct NVertex
 {
     XMFLOAT3 Position;
-    XMFLOAT4 Color;
     XMFLOAT3 Normal;
     XMFLOAT2 UV;
     XMFLOAT3 PolyPosition;

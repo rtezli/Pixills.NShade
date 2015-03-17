@@ -26,11 +26,11 @@ public:
     Material*               GetMaterial(){ return _material.get(); }
 
     vector<NVertex>*        GetVertices(){ return _vertices.get(); }
-    unsigned int            GetVertexCount(){ return _vertices->size(); }
+    unsigned int            GetVertexCount(){ return _vertexCount; }
     ID3D11Buffer*           GetVertexBuffer(){ return _vertexBuffer; }
 
     vector<unsigned int>*   GetIndices(){ return _indices.get(); }
-    unsigned int            GetIndexCount(){ return _indices->size(); }
+    unsigned int            GetIndexCount(){ return _indexCount; }
     ID3D11Buffer*           GetIndexBuffer(){ return _indexBuffer; }
 
     static NVertex          Cube[];
@@ -52,8 +52,11 @@ private:
     D3D11_BUFFER_DESC                   _bufferDesc;
     D3D11_SUBRESOURCE_DATA              _initData;
     D3D11_PRIMITIVE_TOPOLOGY            _topology;
+
     ID3D11Buffer                        *_vertexBuffer;
+    unsigned int                        _vertexCount;
     ID3D11Buffer                        *_indexBuffer;
+    unsigned int                        _indexCount;
 };
 
 #pragma warning( restore : 4996 )

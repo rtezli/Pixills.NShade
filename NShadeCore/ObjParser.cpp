@@ -44,7 +44,6 @@ HRESULT ObjParser::Parse(vector<NVertex> *vertices, vector<unsigned int> *indice
             }
 
             vertex->Position = position;
-            vertex->Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
             vertices->push_back(*vertex);
         }
     }

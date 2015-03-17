@@ -10,5 +10,6 @@ public:
     static PixelShader* Compile(wchar_t *sourceCode);
     ID3D11PixelShader*  const GetShader(){ return _pixelShader; }
 private:
+    PixelShader(ID3D11PixelShader *shader);
     ID3D11PixelShader          *_pixelShader;
 };

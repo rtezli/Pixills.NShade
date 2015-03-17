@@ -11,7 +11,7 @@ enum Perspective : char
     ISOMETRIC = 3
 };
 
-EXTERN class API Camera : public ConstBufferProvider
+EXTERN class API Camera //: public ConstBufferProvider
 {
 public:
     Camera();
