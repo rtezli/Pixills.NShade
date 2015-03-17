@@ -82,8 +82,6 @@ public:
 
     HRESULT SetPixelShader(wchar_t *compiledShaderFile);
     HRESULT CompilePixelShader(wchar_t *shaderSource);
-
-    HRESULT Set();
 private:
     HRESULT CompileShader(wchar_t *compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
 private:

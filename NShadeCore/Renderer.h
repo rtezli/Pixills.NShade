@@ -34,10 +34,12 @@ public:
     HRESULT	ResizeSwapChain(UINT32 newWidth, UINT32 newHeight);
     HRESULT SetShaderParameters();
     HRESULT	Initialize();
-    HRESULT	Render(Scene *scene);
     HRESULT	Resize(D3D11_VIEWPORT* viewport);
 public:
     void ClearScene();
+    void Render(Scene *scene);
+    void PostProcess();
+    void CopyToBackbuffer();
     bool const Initialized(){ return _isInitialized; };
 private:
     /* render target */
@@ -69,6 +71,8 @@ private:
 
     HRESULT CreateViewPort();
 private:    
+    ID3D11Texture2D                 *_backBuffer;
+    ID3D11Texture2D                 *_deferredBuffer;
     D3D11_TEXTURE2D_DESC            _depthBufferDesc;
     DXGI_SWAP_CHAIN_DESC            _swapChainDescription;
 
@@ -83,5 +87,6 @@ private:
 
     bool                            _isInitialized;
     bool                            _useSwapChain;
+    bool                            _renderDeferred;
     bool                            _rasterizerUseMultiSampling;
 };

@@ -180,7 +180,7 @@
     <ClInclude Include="ColorPixelShader.h" />
     <ClInclude Include="ColorVertexShader.h" />
     <ClInclude Include="ComputeShader.h" />
-    <ClInclude Include="ConstBufferProvider.h" />
+    <ClInclude Include="ShaderBuffer.h" />
     <ClInclude Include="D3DHelpers.h" />
     <ClInclude Include="D3DSystem.h" />
     <ClInclude Include="Debug.h" />
@@ -222,7 +222,6 @@
     <ClCompile Include="ColorPixelShader.cpp" />
     <ClCompile Include="ColorVertexShader.cpp" />
     <ClCompile Include="ComputeShader.cpp" />
-    <ClCompile Include="ConstBufferProvider.cpp" />
     <ClCompile Include="D3DHelpers.cpp" />
     <ClCompile Include="D3DSystem.cpp" />
     <ClCompile Include="dllmain.cpp">
@@ -260,6 +259,7 @@
     <ClCompile Include="Res.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderBuffer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

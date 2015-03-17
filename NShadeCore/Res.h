@@ -114,11 +114,11 @@ public:
     ID3D11Device                *Device;
     ID3D11DeviceContext         *DeviceContext;
 
-    ID3D11Buffer                *VertexBuffer;
-    ID3D11Buffer                *IndexBuffer;
-    ID3D11Buffer                *ConstBuffer;
-    ConstantBufferData          *ConstBufferData;
-    ID3D11Texture2D             *BackBuffer;
+    //ID3D11Buffer                *VertexBuffer;
+    //ID3D11Buffer                *IndexBuffer;
+    //ID3D11Buffer                *ConstBuffer;
+    //ConstantBufferData          *ConstBufferData;
+
 
     ID3D11Texture2D             *DepthStencilBuffer;
     ID3D11DepthStencilState     *DepthStencilState;

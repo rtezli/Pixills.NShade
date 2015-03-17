@@ -1,5 +1,7 @@
 #pragma once
 
+#include "shaderbuffer.h"
+
 enum LightType : char
 {
     Directional = 1,
@@ -10,7 +12,7 @@ enum LightType : char
     Ambient = 6
 };
 
-class Light
+class Light : public ShaderBuffer
 {
 
 };

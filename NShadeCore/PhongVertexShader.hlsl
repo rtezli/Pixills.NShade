@@ -1,4 +1,4 @@
-cbuffer ConstantBufferData : register(b0)
+cbuffer Camera : register(b0)
 {
     float4x4 world;
     float4x4 view;

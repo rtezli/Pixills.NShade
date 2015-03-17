@@ -4,10 +4,10 @@
 
 Renderer::Renderer(bool useSwapChain)
 {
+    _renderDeferred = false;
     _isInitialized = false;
     _useSwapChain = useSwapChain;
     _rasterizerUseMultiSampling = true;
-    //Res::Get()->Shaders = new ShaderSet();
 }
 
 HRESULT Renderer::Initialize()
@@ -93,7 +93,15 @@ HRESULT Renderer::CreateRenderTarget()
         return result;
     }
 
-    return Res::Get()->Device->CreateRenderTargetView(Res::Get()->BackBuffer, &_renderTargetViewDesc, &Res::Get()->RenderTargetView);
+    if (_renderDeferred)
+    {
+        result = Res::Get()->Device->CreateRenderTargetView(_backBuffer, &_renderTargetViewDesc, &Res::Get()->RenderTargetView);
+    }
+    else
+    {
+        result = Res::Get()->Device->CreateRenderTargetView(_deferredBuffer, &_renderTargetViewDesc, &Res::Get()->RenderTargetView);
+    }
+    return result;
 }
 
 
@@ -168,7 +176,16 @@ HRESULT Renderer::CreateSwapChain()
         return result;
     }
 
-    result = Res::Get()->SwapChain->GetBuffer(0, IID_PPV_ARGS(&Res::Get()->BackBuffer));
+    
+
+    if (_renderDeferred)
+    {
+        result = Res::Get()->SwapChain->GetBuffer(0, IID_PPV_ARGS(&_backBuffer));
+    }
+    else
+    {
+        result = Res::Get()->SwapChain->GetBuffer(0, IID_PPV_ARGS(&_deferredBuffer));
+    }
     if (FAILED(result))
     {
         return result;
@@ -329,8 +346,6 @@ HRESULT Renderer::CreateRasterizer()
         return result;
     }
 
-    // Set rasterizer
-    ID3D11RasterizerState* tempState = 0;
     Res::Get()->DeviceContext->RSSetState(Res::Get()->RasterizerState);
 
     return 0;
@@ -339,9 +354,9 @@ HRESULT Renderer::CreateRasterizer()
 HRESULT Renderer::CreateViewPort()
 {
     Res::Get()->DeviceContext->RSSetViewports(1, Res::Get()->ViewPort);
-
     return 0;
 }
+
 
 void Renderer::ClearScene()
 {
@@ -350,13 +365,13 @@ void Renderer::ClearScene()
     Res::Get()->DeviceContext->ClearDepthStencilView(Res::Get()->DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-HRESULT Renderer::Render(Scene *scene)
+void Renderer::Render(Scene *scene)
 {
     ClearScene();
 
-    for (unsigned int i = 0; i < scene->GetModels()->size(); i++)
+    for (unsigned int m = 0; m < scene->GetModels()->size(); m++)
     {
-        auto model = scene->GetModels()->at(i);
+        auto model = scene->GetModels()->at(m);
         auto material = model.GetMaterial();
         auto shaders = material->GetShaders();
 
@@ -371,46 +386,51 @@ HRESULT Renderer::Render(Scene *scene)
         Res::Get()->DeviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
         Res::Get()->DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-        // Res::Get()->DeviceContext->VSSetShaderResources();
-        // Res::Get()->DeviceContext->VSSetSamplers();
         auto cameraConstantBuffer = scene->GetCamera()->GetMatrixBuffer();
         auto materialColorBuffer = material->GetColorBuffer();
         auto ambientBuffer = scene->GetAmbientBuffer();
 
-        //auto pointLightBuffer     = scene->GetLights()->GetAmbientBuffer();
+        unsigned int index = 0;
+        Res::Get()->DeviceContext->VSSetConstantBuffers(index, 1, &cameraConstantBuffer);
+        index++;
+        Res::Get()->DeviceContext->VSSetConstantBuffers(index, 1, &materialColorBuffer);
+        index++;
+        Res::Get()->DeviceContext->VSSetConstantBuffers(index, 1, &ambientBuffer);
+        index++;
 
-        Res::Get()->DeviceContext->VSSetConstantBuffers(0, 1, &cameraConstantBuffer);
-        Res::Get()->DeviceContext->VSSetConstantBuffers(1, 1, &materialColorBuffer);
-        Res::Get()->DeviceContext->VSSetConstantBuffers(2, 1, &ambientBuffer);
+        auto lights = scene->GetLights();
+        for (unsigned int l = 0; l < lights->size(); l++)
+        {
+            auto light = lights->at(l);
+            auto lightBuffer = light.GetBuffer();
+            Res::Get()->DeviceContext->VSSetConstantBuffers(index, 1, &lightBuffer);
+            index++;
+        }
+
         Res::Get()->DeviceContext->VSSetShader(shaders->VertexShader->GetShader(), NULL, 0);
 
         Res::Get()->DeviceContext->PSSetConstantBuffers(0, 1, &cameraConstantBuffer);
         Res::Get()->DeviceContext->PSSetShader(shaders->PixelShader->GetShader(), NULL, 0);
-
         Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
     }
 
-    //unsigned int stride = sizeof(PhongShader::InputLayout);
-    //unsigned int offset = 0;
+    PostProcess();
 
-    //Res::Get()->DeviceContext->IASetInputLayout(Res::Get()->InputLayout);
-    //Res::Get()->DeviceContext->IASetVertexBuffers(0, 1, &Res::Get()->VertexBuffer, &stride, &offset);
-    //Res::Get()->DeviceContext->IASetIndexBuffer(Res::Get()->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-    //Res::Get()->DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    CopyToBackbuffer();
 
-    //// Res::Get()->DeviceContext->VSSetShaderResources();
-    //// Res::Get()->DeviceContext->VSSetSamplers();
-    //auto cameraConstantBuffer = scene->GetCamera()->GetMatrixBuffer();
-    //Res::Get()->DeviceContext->VSSetConstantBuffers(0, 1, &cameraConstantBuffer);
-    //Res::Get()->DeviceContext->VSSetShader(Res::Get()->Shaders->VertexShader, NULL, 0);
-
-    //Res::Get()->DeviceContext->PSSetConstantBuffers(0, 1, &cameraConstantBuffer);
-    //Res::Get()->DeviceContext->PSSetShader(Res::Get()->Shaders->PixelShader, NULL, 0);
-
-    //Res::Get()->DeviceContext->DrawIndexed(Res::Get()->IndexCount, 0, 0);
-
-    return Res::Get()->SwapChain->Present(1, 0);
+    Res::Get()->SwapChain->Present(1, 0);
 }
+
+void Renderer::PostProcess()
+{
+
+}
+
+void Renderer::CopyToBackbuffer()
+{
+
+}
+
 
 HRESULT	Renderer::ResizeSwapChain(UINT32 newWidth, UINT32 newHeight)
 {

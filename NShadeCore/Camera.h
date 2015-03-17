@@ -1,7 +1,7 @@
 #pragma once
 
 #include "res.h"
-#include "constbufferprovider.h"
+#include "export.h"
 
 enum Perspective : char
 {
@@ -11,7 +11,7 @@ enum Perspective : char
     ISOMETRIC = 3
 };
 
-EXTERN class API Camera //: public ConstBufferProvider
+EXTERN class API Camera
 {
 public:
     Camera();

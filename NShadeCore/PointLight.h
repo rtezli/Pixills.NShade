@@ -2,9 +2,8 @@
 
 #include "res.h"
 #include "light.h"
-#include "constbufferprovider.h"
 
-class PointLight : public Light //, public ConstBufferProvider, 
+class PointLight : public Light  
 {
 public:
     void SetPosition(XMFLOAT3 *position);
