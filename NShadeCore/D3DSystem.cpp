@@ -70,14 +70,6 @@ HRESULT D3DSystem::Initialize()
         return result;
     }
 
-    result = LoadModels();
-    if (FAILED(result))
-    {
-        return result;
-    }
-
-    //CreateCamera();
-
     CreateScene();
 
     auto sc = rxsc::make_new_thread();
@@ -283,14 +275,7 @@ vector<MSAA>* D3DSystem::ProduceMsaaCapability(vector<MSAA>* options, int i)
     }
     return new vector<MSAA>(localOptions);
 }
-
-HRESULT D3DSystem::LoadModels()
-{
-    _model = shared_ptr<Model>(new Model());
-    auto result = _model->Initialize();
-    return 0;
-}
-
+ 
 HRESULT D3DSystem::CreateRenderer()
 {
     _renderer = shared_ptr<Renderer>(new Renderer(true));

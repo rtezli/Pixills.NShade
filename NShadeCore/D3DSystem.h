@@ -33,19 +33,17 @@ private:
     HRESULT                 CreateInput();
     HRESULT                 GetRenderQualitySettings(ID3D11Device* device);
     vector<MSAA>*           ProduceMsaaCapability(vector<MSAA>* msaaOptions, int i);
-    HRESULT                 LoadModels();
+ 
     HRESULT                 CreateRenderer();
     HRESULT                 AttachOnRotate();
     HRESULT                 DetachOnRotate();
 
-    //void                    CreateCamera();
     void                    CreateScene();
     void                    CreateViewPort();
     void                    Render();
 private:
     POINT                   *_lastPointerPosition;
     shared_ptr<Renderer>    _renderer;
-    //shared_ptr<Camera>      _camera;
     shared_ptr<Input>       _inputDevices;
     shared_ptr<Model>       _model;
     Scene                   *_scene;

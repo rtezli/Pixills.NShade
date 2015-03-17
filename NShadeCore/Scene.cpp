@@ -123,12 +123,18 @@ Scene* Scene::CreateStandardScene()
 
     auto stdMaterial = new Material();
     stdMaterial->AssignShaders(shaders);
-    stdMaterial->SetColor(new XMFLOAT4(0.8f, 0.6f, 1.0f, 1.0f));
+    stdMaterial->SetColor(new XMFLOAT4(0.1f, 0.1f, 0.6f, 1.0f));
 
-    auto stdModel = new Model();
-    stdModel->LoadModelFromFBXFile("../Debug/teapot.fbx");
-    stdModel->AssignMaterial(stdMaterial);
-    scene->AddModel(stdModel);
+    //auto stdModel = new Model();
+    //stdModel->LoadModelFromFBXFile("../Debug/teapot.fbx");
+
+    auto stdTeapot = Model::LoadModelFromFBXFile("../Debug/teapot.fbx");
+    stdTeapot->AssignMaterial(stdMaterial);
+    scene->AddModel(stdTeapot);
+
+    auto stdPlane = Model::CreateHorizontalPlane(20.0f, new XMFLOAT3(0.0f, 0.0f, 0.0f));
+    stdPlane->AssignMaterial(stdMaterial);
+    scene->AddModel(stdPlane);
 
     return scene;
 }
