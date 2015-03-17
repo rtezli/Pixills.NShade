@@ -138,8 +138,6 @@ HRESULT D3DSystem::CreateDevice()
         return createResult;
     }
 
-    Res::Get()->BufferCount = 2;
-    Res::Get()->SwapChainFlags = 0;
     Res::Get()->DefaultColor = new float[4]{1.0f, 1.0f, 1.0f, 1.0f};
 
     // TODO : Calculate DPI

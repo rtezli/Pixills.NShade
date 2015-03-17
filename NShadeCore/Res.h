@@ -114,31 +114,11 @@ public:
     ID3D11Device                *Device;
     ID3D11DeviceContext         *DeviceContext;
 
-    //ID3D11Buffer                *VertexBuffer;
-    //ID3D11Buffer                *IndexBuffer;
-    //ID3D11Buffer                *ConstBuffer;
-    //ConstantBufferData          *ConstBufferData;
-
-
-    ID3D11Texture2D             *DepthStencilBuffer;
-    ID3D11DepthStencilState     *DepthStencilState;
-    ID3D11DepthStencilView      *DepthStencilView;
-
     ID3D11RasterizerState       *RasterizerState;
 
-    IDXGISwapChain              *SwapChain;
-    ID3D11RenderTargetView      *RenderTargetView;
-    ID3D11InputLayout           *InputLayout;
-
-    ShaderSet                   *Shaders;
     float                       *DefaultColor;
     D3D11_VIEWPORT              *ViewPort;
     RenderingQuality            *RenderQuality;
-
-    int                         SwapChainFlags;
-    int                         BufferCount;
-    int                         IndexCount;
-    int                         VertexCount;
 
     float                       Dpi;
     float                       NearZ;

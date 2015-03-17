@@ -8,6 +8,8 @@ Renderer::Renderer(bool useSwapChain)
     _isInitialized = false;
     _useSwapChain = useSwapChain;
     _rasterizerUseMultiSampling = true;
+    _bufferCount = 2;
+    _swapChainFlags = 0;
 }
 
 HRESULT Renderer::Initialize()
@@ -67,9 +69,7 @@ HRESULT Renderer::CreateRenderTargetDesciption()
     _renderTargetDesc.CPUAccessFlags = 0;
     _renderTargetDesc.MiscFlags = 0;
 
-    ID3D11Texture2D* renderTarget = 0;
-
-    return Res::Get()->Device->CreateTexture2D(&_renderTargetDesc, NULL, &renderTarget);
+    return Res::Get()->Device->CreateTexture2D(&_renderTargetDesc, NULL, &_renderTarget);
 }
 
 HRESULT Renderer::CreateRenderTargetViewDesciption()
@@ -95,11 +95,11 @@ HRESULT Renderer::CreateRenderTarget()
 
     if (_renderDeferred)
     {
-        result = Res::Get()->Device->CreateRenderTargetView(_backBuffer, &_renderTargetViewDesc, &Res::Get()->RenderTargetView);
+        result = Res::Get()->Device->CreateRenderTargetView(_deferredBuffer, &_renderTargetViewDesc, &_renderTargetView);
     }
     else
     {
-        result = Res::Get()->Device->CreateRenderTargetView(_deferredBuffer, &_renderTargetViewDesc, &Res::Get()->RenderTargetView);
+        result = Res::Get()->Device->CreateRenderTargetView(_backBuffer, &_renderTargetViewDesc, &_renderTargetView);
     }
     return result;
 }
@@ -109,11 +109,11 @@ HRESULT Renderer::CreateSwapChainDesciption()
 {
     _swapChainDescription = { 0 };
 
-    _swapChainDescription.BufferCount = Res::Get()->BufferCount;
+    _swapChainDescription.BufferCount = _bufferCount;
     _swapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
     _swapChainDescription.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-    _swapChainDescription.Flags = Res::Get()->SwapChainFlags;
+    _swapChainDescription.Flags = _swapChainFlags;
 
     _swapChainDescription.BufferDesc.RefreshRate.Numerator = 0;
     _swapChainDescription.BufferDesc.RefreshRate.Denominator = 1;
@@ -170,21 +170,19 @@ HRESULT Renderer::CreateSwapChain()
         return result;
     }
 
-    result = dxgiFactory->CreateSwapChain(Res::Get()->Device, &_swapChainDescription, &Res::Get()->SwapChain);
+    result = dxgiFactory->CreateSwapChain(Res::Get()->Device, &_swapChainDescription, &_swapChain);
     if (FAILED(result))
     {
         return result;
     }
 
-    
-
     if (_renderDeferred)
     {
-        result = Res::Get()->SwapChain->GetBuffer(0, IID_PPV_ARGS(&_backBuffer));
+        result = _swapChain->GetBuffer(0, IID_PPV_ARGS(&_deferredBuffer));
     }
     else
     {
-        result = Res::Get()->SwapChain->GetBuffer(0, IID_PPV_ARGS(&_deferredBuffer));
+        result = _swapChain->GetBuffer(0, IID_PPV_ARGS(&_backBuffer));
     }
     if (FAILED(result))
     {
@@ -223,7 +221,7 @@ HRESULT Renderer::CreateDepthBuffer()
     {
         return result;
     }
-    return Res::Get()->Device->CreateTexture2D(&_depthBufferDesc, NULL, &Res::Get()->DepthStencilBuffer);
+    return Res::Get()->Device->CreateTexture2D(&_depthBufferDesc, NULL, &_depthStencilBuffer);
 }
 
 
@@ -263,9 +261,9 @@ HRESULT Renderer::CreateDepthStencilStateDescription()
     _depthStencilStateDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
     _depthStencilStateDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-    auto result = Res::Get()->Device->CreateDepthStencilState(&_depthStencilStateDesc, &Res::Get()->DepthStencilState);
+    auto result = Res::Get()->Device->CreateDepthStencilState(&_depthStencilStateDesc, &_depthStencilState);
 
-    Res::Get()->DeviceContext->OMSetDepthStencilState(Res::Get()->DepthStencilState, 1);
+    Res::Get()->DeviceContext->OMSetDepthStencilState(_depthStencilState, 1);
     return result;
 }
 
@@ -301,7 +299,7 @@ HRESULT Renderer::CreateDepthStencil()
 
     ID3D11Texture2D* depthStencil;
     result = Res::Get()->Device->CreateTexture2D(&_depthStencilDesc, NULL, &depthStencil);
-    result = Res::Get()->Device->CreateDepthStencilView(depthStencil, &_depthStencilViewDesc, &Res::Get()->DepthStencilView);
+    result = Res::Get()->Device->CreateDepthStencilView(depthStencil, &_depthStencilViewDesc, &_depthStencilView);
 
     if (FAILED(result))
     {
@@ -360,9 +358,9 @@ HRESULT Renderer::CreateViewPort()
 
 void Renderer::ClearScene()
 {
-    Res::Get()->DeviceContext->OMSetRenderTargets(1, &Res::Get()->RenderTargetView, Res::Get()->DepthStencilView);
-    Res::Get()->DeviceContext->ClearRenderTargetView(Res::Get()->RenderTargetView, Res::Get()->DefaultColor);
-    Res::Get()->DeviceContext->ClearDepthStencilView(Res::Get()->DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+    Res::Get()->DeviceContext->OMSetRenderTargets(1, &_renderTargetView, _depthStencilView);
+    Res::Get()->DeviceContext->ClearRenderTargetView(_renderTargetView, Res::Get()->DefaultColor);
+    Res::Get()->DeviceContext->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 void Renderer::Render(Scene *scene)
@@ -418,7 +416,7 @@ void Renderer::Render(Scene *scene)
 
     CopyToBackbuffer();
 
-    Res::Get()->SwapChain->Present(1, 0);
+    _swapChain->Present(1, 0);
 }
 
 void Renderer::PostProcess()
@@ -434,14 +432,14 @@ void Renderer::CopyToBackbuffer()
 
 HRESULT	Renderer::ResizeSwapChain(UINT32 newWidth, UINT32 newHeight)
 {
-    return Res::Get()->SwapChain->ResizeBuffers(Res::Get()->BufferCount, 0, 0, Res::Get()->RenderQuality->BufferFormat, Res::Get()->SwapChainFlags);
+    return _swapChain->ResizeBuffers(_bufferCount, 0, 0, Res::Get()->RenderQuality->BufferFormat, _swapChainFlags);
 }
 
 HRESULT Renderer::Resize(D3D11_VIEWPORT* viewPort)
 {
     HRESULT result;
     Res::Get()->ViewPort = viewPort;
-    if (NULL != Res::Get()->SwapChain && _isInitialized)
+    if (NULL != _swapChain && _isInitialized)
     {
         result = Initialize();
     }
