@@ -26,9 +26,10 @@ EXTERN class API Scene
 public:
     Scene();
 public:
-    void AddModel(Model* model);
-    void AddLight(Light* light);
-    void AddCamera(Camera* camera);
+    void AddModel(Model *model);
+    void AddLight(Light *light);
+    void AddCamera(Camera *camera);
+    void AddResourceMapping(ResourceMapping *mapping);
     void Load(wstring fileName);
     void Clear();
     void Render();

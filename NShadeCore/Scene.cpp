@@ -5,6 +5,7 @@ Scene::Scene()
 {
     _models = shared_ptr<vector<Model>>(new vector<Model>());
     _lights = shared_ptr<vector<Light>>(new vector<Light>());
+    _resourceMappings = shared_ptr<vector<ResourceMapping>>(new vector<ResourceMapping>());
 }
 
 void Scene::Clear()
@@ -56,9 +57,7 @@ void Scene::Render()
 
         Res::Get()->DeviceContext->VSSetShader(vertexShader->GetShader(), NULL, 0);
 
-        //// Check if this is neccessary if the pixel shader does not use the registers
 
-        // Res::Get()->DeviceContext->PSSetConstantBuffers(0, 1, &cameraConstBuffer);
         Res::Get()->DeviceContext->PSSetShader(shaders->PixelShader->GetShader(), NULL, 0);
         Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
     }
@@ -77,6 +76,11 @@ void Scene::AddLight(Light *light)
 void Scene::AddCamera(Camera *camera)
 {
     _camera = shared_ptr<Camera>(camera);
+}
+
+void Scene::AddResourceMapping(ResourceMapping *mapping)
+{
+    _resourceMappings->push_back(*mapping);
 }
 
 void Scene::Load(wstring fileName)
@@ -121,17 +125,37 @@ Scene* Scene::CreateStandardScene()
     shaders->PixelShader = stdPixelShader;
     shaders->VertexShader = stdVertexShader;
 
-    auto stdMaterial = new Material();
-    stdMaterial->AssignShaders(shaders);
-    stdMaterial->SetColor(new XMFLOAT4(0.1f, 0.1f, 0.6f, 1.0f));
+    auto phongMaterial1 = new Material();
+    phongMaterial1->AssignShaders(shaders);
+    phongMaterial1->SetColor(new XMFLOAT4(0.1f, 0.1f, 0.6f, 1.0f));
+
+    auto phongMaterial2 = new Material();
+    phongMaterial2->AssignShaders(shaders);
+    phongMaterial2->SetColor(new XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f));
 
     auto stdTeapot = Model::LoadModelFromFBXFile("../Debug/teapot.fbx");
-    stdTeapot->AssignMaterial(stdMaterial);
+    stdTeapot->AssignMaterial(phongMaterial1);
     scene->AddModel(stdTeapot);
 
     auto stdPlane = Model::CreateHorizontalPlane(20.0f, new XMFLOAT3(0.0f, 0.0f, 0.0f));
-    stdPlane->AssignMaterial(stdMaterial);
+    stdPlane->AssignMaterial(phongMaterial2);
     scene->AddModel(stdPlane);
+
+    auto cameraMatrixBuffer = stdCamera->GetMatrixBuffer();
+    auto cameraPositionBuffer = stdCamera->GetPositionBuffer();
+    auto sceneAmbientBuffer = scene->GetAmbientBuffer();
+
+    ResourceMapping m1 = { cameraMatrixBuffer, shaders->PixelShader->GetInput() };
+    scene->AddResourceMapping(&m1);
+
+    ResourceMapping m2 = { cameraPositionBuffer, shaders->PixelShader->GetInput() };
+    scene->AddResourceMapping(&m2);
+
+    ResourceMapping m3 = { sceneAmbientBuffer, shaders->PixelShader->GetInput() };
+    scene->AddResourceMapping(&m3);
+
+    ResourceMapping m4 = { stdPointLight->GetBuffer(), shaders->PixelShader->GetInput() };
+    scene->AddResourceMapping(&m4);
 
     return scene;
 }
