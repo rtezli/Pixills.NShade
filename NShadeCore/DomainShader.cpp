@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "domainshader.h"
 
-DomainShader::DomainShader(ID3D11DomainShader * shader)
+DomainShader::DomainShader(ID3D11DomainShader *shader)
 {
     _shader = shader;
 }

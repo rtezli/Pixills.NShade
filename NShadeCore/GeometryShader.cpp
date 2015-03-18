@@ -1,12 +1,16 @@
 #include "stdafx.h"
-#include "GeometryShader.h"
+#include "geometryshader.h"
 
-
-GeometryShader::GeometryShader()
+GeometryShader::GeometryShader(ID3D11GeometryShader *shader)
 {
+    _shader = shader;
 }
 
-
-GeometryShader::~GeometryShader()
+GeometryShader* GeometryShader::Load(wchar_t *fileName)
 {
+    auto gsByteCode = File::ReadFileBytes(fileName);
+
+    ID3D11GeometryShader *shader;
+    Res::Get()->Device->CreateGeometryShader(gsByteCode->Bytes, gsByteCode->Length, NULL, &shader);
+    return new GeometryShader(shader);
 }

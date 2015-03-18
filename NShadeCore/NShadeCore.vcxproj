@@ -200,8 +200,6 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ObjParser.h" />
-    <ClInclude Include="PhongPixelShader.h" />
-    <ClInclude Include="PhongVertexShader.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Renderer.h" />
@@ -212,13 +210,9 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="VertexShader.h" />
-    <ClInclude Include="WireframePixelShader.h" />
-    <ClInclude Include="WireframeVertexShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="ColorPixelShader.cpp" />
-    <ClCompile Include="ColorVertexShader.cpp" />
     <ClCompile Include="ComputeShader.cpp" />
     <ClCompile Include="D3DHelpers.cpp" />
     <ClCompile Include="D3DSystem.cpp" />
@@ -248,8 +242,6 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="ObjParser.cpp" />
-    <ClCompile Include="PhongPixelShader.cpp" />
-    <ClCompile Include="PhongVertexShader.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -265,8 +257,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="VertexShader.cpp" />
-    <ClCompile Include="WireframePixelShader.cpp" />
-    <ClCompile Include="WireframeVertexShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Bloom.hlsl">

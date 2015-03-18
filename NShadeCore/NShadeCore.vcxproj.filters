@@ -78,18 +78,6 @@
     <ClInclude Include="FbxReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PhongVertexShader.h">
-      <Filter>Header Files\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="PhongPixelShader.h">
-      <Filter>Header Files\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="WireframePixelShader.h">
-      <Filter>Header Files\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="WireframeVertexShader.h">
-      <Filter>Header Files\Shaders</Filter>
-    </ClInclude>
     <ClInclude Include="ColorVertexShader.h">
       <Filter>Header Files\Shaders</Filter>
     </ClInclude>
@@ -187,24 +175,6 @@
     </ClCompile>
     <ClCompile Include="FbxReader.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PhongVertexShader.cpp">
-      <Filter>Source Files\Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="PhongPixelShader.cpp">
-      <Filter>Source Files\Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="WireframePixelShader.cpp">
-      <Filter>Source Files\Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="WireframeVertexShader.cpp">
-      <Filter>Source Files\Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="ColorVertexShader.cpp">
-      <Filter>Source Files\Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="ColorPixelShader.cpp">
-      <Filter>Source Files\Shaders</Filter>
     </ClCompile>
     <ClCompile Include="RenderInput.cpp">
       <Filter>Source Files</Filter>

@@ -7,7 +7,6 @@
 #include "fbxreader.h"
 #include "objparser.h"
 #include "material.h"
-#include "phongvertexshader.h"
 
 using namespace std;
 
