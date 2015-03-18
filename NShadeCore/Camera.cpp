@@ -19,18 +19,18 @@ void Camera::Initialize()
     auto z = _radius * sin(_hAngle * -1);
     auto x = sqrt(pow(_radius, 2) - pow(z, 2));
 
-    _eyePosition = new XMFLOAT3{ 0.0f, 4.0f, _radius };
-    _focusPosition = new XMFLOAT3{ 0.0f, 0.0f, 0.0f };
-    _upDirection = new XMFLOAT3{ 0.0f, 1.0f, 0.0f };
+    _eyePosition = new XMFLOAT4{ 0.0f, 4.0f, _radius, 0.0f };
+    _focusPosition = new XMFLOAT4{ 0.0f, 0.0f, 0.0f, 0.0f };
+    _upDirection = new XMFLOAT4{ 0.0f, 1.0f, 0.0f, 0.0f };
 
     auto wMatrix = XMMatrixTranspose(XMMatrixIdentity());
     XMStoreFloat4x4(_worldMatrix, wMatrix);
 
     auto vMatrix = XMMatrixTranspose(
         XMMatrixLookAtRH(
-        XMLoadFloat3(_eyePosition),
-        XMLoadFloat3(_focusPosition),
-        XMLoadFloat3(_upDirection)
+        XMLoadFloat4(_eyePosition),
+        XMLoadFloat4(_focusPosition),
+        XMLoadFloat4(_upDirection)
         )
         );
 
@@ -53,15 +53,15 @@ void Camera::Initialize()
     Update();
 }
 
-void Camera::SetPosition(XMFLOAT3 *position)
+void Camera::SetPosition(XMFLOAT3 *p)
 {
-    _eyePosition = position;
+    _eyePosition = new XMFLOAT4(p->x, p->y, p->z, 0.0f);
     Update();
 }
 
-void Camera::SetFocusPoint(XMFLOAT3 *position)
+void Camera::SetFocusPoint(XMFLOAT3 *p)
 {
-    _focusPosition = position;
+    _focusPosition = new XMFLOAT4(p->x, p->y, p->z, 0.0f);
     Update();
 }
 

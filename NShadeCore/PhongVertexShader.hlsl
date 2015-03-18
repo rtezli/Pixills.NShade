@@ -3,7 +3,7 @@ cbuffer Camera : register(b0)
     float4x4 world;
     float4x4 view;
     float4x4 projection;
-    float3   camera;
+    float4   camera;
 };
 
 cbuffer Material : register(b1)
@@ -60,9 +60,9 @@ VertexShaderOutput main(VertexShaderInput input)
 
     float4 normal = float4(input.normal, 0.0f);
 
-    vertexShaderOutput.normal = mul(normal, world);
+    vertexShaderOutput.normal  = mul(normal, world);
     vertexShaderOutput.ambient = ambientColorIntensity;
-    vertexShaderOutput.camera = float4(camera, 0.0f);
+    vertexShaderOutput.camera  = camera;
 
     vertexShaderOutput.light = mul(ambientColorIntensity, world);
 

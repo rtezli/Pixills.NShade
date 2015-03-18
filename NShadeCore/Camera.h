@@ -28,7 +28,7 @@ public:
 private:
     void            Update();
     XMFLOAT4X4      *_worldMatrix, *_viewMatrix, *_projectionMatrix;
-    XMFLOAT3        *_eyePosition, *_focusPosition, *_upDirection;
+    XMFLOAT4        *_eyePosition, *_focusPosition, *_upDirection;
     ID3D11Buffer    *_matrixBuffer, *_positionBuffer;
     float           _hAngle, _vAngle, _radius;
 };
