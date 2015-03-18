@@ -1,19 +1,11 @@
 #pragma once
-#pragma comment(lib, "D3DCompiler.lib")
 
-#include "vector"
-#include "d3dcompiler.h"
-#include "res.h"
-#include "file.h"
-#include "export.h"
 #include "vertexshader.h"
 #include "pixelshader.h"
 #include "domainshader.h"
 #include "hullshader.h"
 #include "geometryshader.h"
 #include "computeshader.h"
-
-using namespace std;
 
 #ifndef PS_PROFILE
 #define PS_PROFILE {"ps_5_0" }
@@ -64,23 +56,3 @@ struct Shaders
     GeometryShader  *GeometryShader;
     ComputeShader   *ComputeShader;
 };
-
-//EXTERN class API Shader
-//{
-//public:
-//    vector<ID3D11Buffer*>   const GetInputs(){ return _inputs; }
-//    void                    AddInput(ID3D11Buffer *buffer);
-//    HRESULT                 CompilePixelShader(wchar_t *shaderSource);
-//private:
-//    HRESULT CompileShader(wchar_t *compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
-//private:
-//    vector<ID3D11Buffer*>               _inputs;
-//    //vector<D3D11_INPUT_ELEMENT_DESC>    _inputDescription;
-//    ShaderType                          _type;
-//    ID3D11PixelShader*                  _pixelShader;
-//    ID3D11VertexShader*                 _vertexShader;
-//    ID3D11HullShader*                   _hullShader;
-//    ID3D11DomainShader*                 _domainShader;
-//    ID3D11GeometryShader*               _geometryShader;
-//    ID3D11ComputeShader*                _computeShader;
-//};

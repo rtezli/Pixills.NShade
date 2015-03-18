@@ -31,6 +31,18 @@
     <Filter Include="Source Files\Lights">
       <UniqueIdentifier>{cc4023b6-36f5-4455-b715-79f9c0eb52ae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\PostProcessing">
+      <UniqueIdentifier>{358f219a-b5b2-4959-b092-40671f30e5fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\PostProcessing">
+      <UniqueIdentifier>{562be4b5-1786-40b9-a008-ab368271543e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Animation">
+      <UniqueIdentifier>{4bfd9fa1-1389-4ac6-9379-e2c4aef6fb18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Animation">
+      <UniqueIdentifier>{2b372d0b-732c-4bc9-9fd3-37a5ec9a08de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -135,6 +147,9 @@
     <ClInclude Include="Shader.h">
       <Filter>Header Files\Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -216,6 +231,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Node.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

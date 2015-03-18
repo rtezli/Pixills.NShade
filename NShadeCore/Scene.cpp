@@ -16,51 +16,7 @@ void Scene::Clear()
 
 void Scene::Render()
 {
-    auto models = GetModels();
 
-    for (UINT m = 0; m < models->size(); m++)
-    {
-        auto model = models->at(m);
-        auto material = model.GetMaterial();
-
-        auto shaders = model.GetMaterial()->GetShaders();
-        auto layout  = shaders->VertexShader->GetInputLayout();
-
-        auto camera = GetCamera();
-        auto cameraMatrixBuffer = camera->GetMatrixBuffer();
-        auto cameraPositionBuffer = camera->GetPositionBuffer();
-        auto sceneAmbientBuffer = GetAmbientBuffer();
-
-        auto vertexShader = shaders->VertexShader;
-        auto vertexBuffer = model.GetVertexBuffer();
-        auto indexBuffer = model.GetIndexBuffer();
-        auto strides = vertexShader->GetInputSize();
-        UINT offset = 0;
-
-        Res::Get()->DeviceContext->IASetInputLayout(layout);
-        Res::Get()->DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &strides, &offset);
-        Res::Get()->DeviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-        Res::Get()->DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-
-        Res::Get()->DeviceContext->VSSetConstantBuffers(0, 1, &cameraMatrixBuffer);
-        Res::Get()->DeviceContext->VSSetConstantBuffers(1, 1, &cameraPositionBuffer);
-        Res::Get()->DeviceContext->VSSetConstantBuffers(2, 1, &sceneAmbientBuffer);
-
-        //auto lights = GetLights();
-        //for (UINT i = 0; i < lights->size(); i++)
-        //{
-        //    auto light = lights->at(i);
-        //    auto buffer = light.GetBuffer();
-        //    Res::Get()->DeviceContext->VSSetConstantBuffers(i + 2, 1, &buffer);
-        //}
-
-        Res::Get()->DeviceContext->VSSetShader(vertexShader->GetShader(), NULL, 0);
-
-
-        Res::Get()->DeviceContext->PSSetShader(shaders->PixelShader->GetShader(), NULL, 0);
-        Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
-    }
 }
 
 void Scene::AddModel(Model *model)

@@ -406,7 +406,6 @@ void Renderer::Render(Scene *scene)
 
         Tesselate(shaders);
 
-        Res::Get()->DeviceContext->PSSetConstantBuffers(0, 1, &cameraConstantBuffer);
         Res::Get()->DeviceContext->PSSetShader(shaders->PixelShader->GetShader(), NULL, 0);
         Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
     }
