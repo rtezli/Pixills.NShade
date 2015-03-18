@@ -2,8 +2,9 @@
 
 #include "res.h"
 #include "file.h"
+#include "node.h"
 
-class VertexShader
+class VertexShader : public Node
 {
 public:
     unsigned int                const GetInputSize(){ return sizeof(NVertex); }

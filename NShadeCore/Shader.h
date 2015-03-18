@@ -68,24 +68,14 @@ struct Shaders
 EXTERN class API Shader
 {
 public:
-    HRESULT	SetVertexShader(wchar_t *compiledShaderFile);
-    HRESULT	CompileVertexShader(wchar_t *shaderSource);
-
-    HRESULT SetHullShader(wchar_t *compiledShaderFile);
-    HRESULT CompileHullShader(wchar_t *shaderSource);
-
-    HRESULT SetDomainShader(wchar_t *compiledShaderFile);
-    HRESULT CompileDomainShader(wchar_t *shaderSource);
-
-    HRESULT SetGeometryShader(wchar_t *compiledShaderFile);
-    HRESULT CompileGeometryShader(wchar_t *shaderSource);
-
-    HRESULT SetPixelShader(wchar_t *compiledShaderFile);
-    HRESULT CompilePixelShader(wchar_t *shaderSource);
+    vector<ID3D11Buffer*>   const GetInputs(){ return _inputs; }
+    void                    AddInput(ID3D11Buffer *buffer);
+    HRESULT                 CompilePixelShader(wchar_t *shaderSource);
 private:
     HRESULT CompileShader(wchar_t *compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
 private:
-    vector<D3D11_INPUT_ELEMENT_DESC>    _inputDescription;
+    vector<ID3D11Buffer*>               _inputs;
+    //vector<D3D11_INPUT_ELEMENT_DESC>    _inputDescription;
     ShaderType                          _type;
     ID3D11PixelShader*                  _pixelShader;
     ID3D11VertexShader*                 _vertexShader;
