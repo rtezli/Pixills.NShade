@@ -22,9 +22,6 @@ _Resharper*
 *.pch
 
 *.so
-
-*.dylib
-
 *.dll
 
 
