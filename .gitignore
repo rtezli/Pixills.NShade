@@ -1,8 +1,5 @@
 NShade.Frontend
 
-Debug
-DebugPS
-Release
 ipch
 packages
 _Resharper*
@@ -25,7 +22,8 @@ _Resharper*
 *.dll
 
 
-
 ReadMe.txt
 NShadeATL/NShadeATL_i.c
 NShadeATL/NShadeATL_i.h
+Debug
+Release

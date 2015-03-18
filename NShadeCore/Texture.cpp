@@ -9,7 +9,6 @@ Texture::Texture(ID3D11ShaderResourceView *texture)
  
 Texture* Texture::Load(wchar_t *fileName)
 {
-    unsigned int result;
     ID3D11Resource *texture;
     ID3D11ShaderResourceView *resourceView;
     CreateDDSTextureFromFile(Res::Get()->Device, fileName, &texture, &resourceView, 0, nullptr);
