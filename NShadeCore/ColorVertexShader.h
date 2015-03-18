@@ -1,18 +1,18 @@
 #pragma once
 
 #include "res.h"
-#include "shader.h"
+#include "node.h"
 
 namespace ColorShader
 {
-	struct InputLayout
-	{
-		XMFLOAT3 Position;
-		XMFLOAT4 ColorWithAlpha;
-	};
+    struct InputLayout
+    {
+        XMFLOAT3 Position;
+        XMFLOAT4 ColorWithAlpha;
+    };
 
-	class ColorVertexShader : public Shader
-	{
+    class ColorVertexShader : public Node
+    {
 
-	};
+    };
 }

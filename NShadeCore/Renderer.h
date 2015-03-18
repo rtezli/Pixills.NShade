@@ -38,6 +38,7 @@ public:
 public:
     void ClearScene();
     void Render(Scene *scene);
+    void Tesselate(Shaders *shaders);
     void PostProcess();
     void CopyToBackbuffer();
     bool const Initialized(){ return _isInitialized; };
@@ -73,6 +74,7 @@ private:
 private:
     ID3D11Texture2D                 *_backBuffer;
     ID3D11Texture2D                 *_deferredBuffer;
+    ID3D11Texture2D                 *_depthStencil;
     ID3D11Texture2D                 *_depthStencilBuffer;
 
     ID3D11Texture2D                 *_renderTarget;

@@ -121,9 +121,14 @@ Scene* Scene::CreateStandardScene()
     auto stdPixelShader = PixelShader::Load(L"../Debug/PhongPixelShader.cso");
     auto stdVertexShader = VertexShader::Load(L"../Debug/PhongVertexShader.cso");
 
+    auto stdHullShader = HullShader::Load(L"../Debug/TesselationHullShader.cso");
+    auto stdDomainShader = DomainShader::Load(L"../Debug/TesselationDomainShader.cso");
+
     auto shaders = new Shaders();
     shaders->PixelShader = stdPixelShader;
     shaders->VertexShader = stdVertexShader;
+    shaders->HullShader = stdHullShader;
+    shaders->DomainShader = stdDomainShader;
 
     auto phongMaterial1 = new Material();
     phongMaterial1->AssignShaders(shaders);

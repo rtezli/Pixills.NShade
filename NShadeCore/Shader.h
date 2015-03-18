@@ -65,22 +65,22 @@ struct Shaders
     ComputeShader   *ComputeShader;
 };
 
-EXTERN class API Shader
-{
-public:
-    vector<ID3D11Buffer*>   const GetInputs(){ return _inputs; }
-    void                    AddInput(ID3D11Buffer *buffer);
-    HRESULT                 CompilePixelShader(wchar_t *shaderSource);
-private:
-    HRESULT CompileShader(wchar_t *compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
-private:
-    vector<ID3D11Buffer*>               _inputs;
-    //vector<D3D11_INPUT_ELEMENT_DESC>    _inputDescription;
-    ShaderType                          _type;
-    ID3D11PixelShader*                  _pixelShader;
-    ID3D11VertexShader*                 _vertexShader;
-    ID3D11HullShader*                   _hullShader;
-    ID3D11DomainShader*                 _domainShader;
-    ID3D11GeometryShader*               _geometryShader;
-    ID3D11ComputeShader*                _computeShader;
-};
+//EXTERN class API Shader
+//{
+//public:
+//    vector<ID3D11Buffer*>   const GetInputs(){ return _inputs; }
+//    void                    AddInput(ID3D11Buffer *buffer);
+//    HRESULT                 CompilePixelShader(wchar_t *shaderSource);
+//private:
+//    HRESULT CompileShader(wchar_t *compiledShaderFile, ID3DBlob *blob, LPCSTR shaderProfile);
+//private:
+//    vector<ID3D11Buffer*>               _inputs;
+//    //vector<D3D11_INPUT_ELEMENT_DESC>    _inputDescription;
+//    ShaderType                          _type;
+//    ID3D11PixelShader*                  _pixelShader;
+//    ID3D11VertexShader*                 _vertexShader;
+//    ID3D11HullShader*                   _hullShader;
+//    ID3D11DomainShader*                 _domainShader;
+//    ID3D11GeometryShader*               _geometryShader;
+//    ID3D11ComputeShader*                _computeShader;
+//};

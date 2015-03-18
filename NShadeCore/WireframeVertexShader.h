@@ -1,7 +1,7 @@
 #pragma once
 
 #include "res.h"
-#include "shader.h"
+#include "node.h"
 
 namespace WireframeShader
 {
@@ -12,7 +12,7 @@ namespace WireframeShader
 		XMFLOAT3 BaryCoord;
 	};
 
-	class WireframeVertexShader : public Shader
+	class WireframeVertexShader : public Node
 	{
 
 	};

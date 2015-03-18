@@ -1,12 +1,12 @@
 #pragma once
 
 #include "res.h"
-#include "shader.h"
+#include "node.h"
 
 namespace PhongShader
 {
-	class PhongPixelSHader : public Shader
-	{
+    class PhongPixelSHader : public Node
+    {
 
-	};
+    };
 }
