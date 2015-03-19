@@ -37,9 +37,6 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="System.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NShadeATL_i.h">
@@ -56,9 +53,6 @@
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>Header Files\common</Filter>
-    </ClInclude>
-    <ClInclude Include="System.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

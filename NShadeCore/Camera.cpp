@@ -67,14 +67,14 @@ void Camera::SetFocusPoint(XMFLOAT3 *p)
 
 void Camera::Move(POINT *point)
 {
-    XMStoreFloat4x4(_worldMatrix, XMMatrixTranspose(XMMatrixTranslation(point->x, 0.0, point->y)));
+    XMStoreFloat4x4(_worldMatrix, XMMatrixTranspose(XMMatrixTranslation(point->x, 0.0f, point->y)));
     Update();
 }
 
 void Camera::Rotate(POINT *point)
 {
-    auto moderationH = 0.001;
-    auto moderationV = 0.009;
+    auto moderationH = 0.001f;
+    auto moderationV = 0.009f;
 
     _hAngle = _hAngle + point->x * moderationH;
     _vAngle = _vAngle + point->y * moderationV;
