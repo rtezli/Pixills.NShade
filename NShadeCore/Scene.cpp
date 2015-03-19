@@ -10,8 +10,7 @@ Scene::Scene()
 
 void Scene::Clear()
 {
-    //auto constBuffer = GetCamera()->GetConstBufferData();
-    //Res::Get()->DeviceContext->UpdateSubresource(GetCamera()->GetConstBuffer(), 0, NULL, &constBuffer, 0, 0);
+
 }
 
 void Scene::Render()
@@ -91,6 +90,8 @@ Scene* Scene::CreateStandardScene()
     phongMaterial1->SetColor(new XMFLOAT4(0.1f, 0.1f, 0.6f, 1.0f));
 
     auto phongMaterial2 = new Material();
+    auto gridTexture = Texture::Load(L"../Textures/grid_texture.dds");
+    phongMaterial2->AssignTexture(gridTexture);
     phongMaterial2->AssignShaders(shaders);
     phongMaterial2->SetColor(new XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f));
 
@@ -101,6 +102,8 @@ Scene* Scene::CreateStandardScene()
     auto stdPlane = Model::CreateHorizontalPlane(20.0f, new XMFLOAT3(0.0f, 0.0f, 0.0f));
     stdPlane->AssignMaterial(phongMaterial2);
     scene->AddModel(stdPlane);
+
+
 
     auto cameraMatrixBuffer = stdCamera->GetMatrixBuffer();
     auto cameraPositionBuffer = stdCamera->GetPositionBuffer();

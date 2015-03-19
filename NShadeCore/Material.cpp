@@ -6,6 +6,11 @@ void Material::AssignShaders(Shaders *shaders)
     _shaders = shared_ptr<Shaders>(shaders);
 }
 
+void Material::AssignTexture(Texture *texture)
+{
+    _texture = shared_ptr<Texture>(texture);
+}
+
 void Material::SetColor(XMFLOAT4 *color)
 {
     D3D11_BUFFER_DESC colorBufferDesc = { 0 };

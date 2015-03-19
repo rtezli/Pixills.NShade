@@ -2,15 +2,14 @@
 #include "texture.h"
 
 
-Texture::Texture(ID3D11ShaderResourceView *texture)
+Texture::Texture(ID3D11ShaderResourceView *resourceView)
 {
-    _texture = texture;
+    _resourceView = resourceView;
 }
- 
+
 Texture* Texture::Load(wchar_t *fileName)
 {
-    ID3D11Resource *texture;
-    ID3D11ShaderResourceView *resourceView;
-    CreateDDSTextureFromFile(Res::Get()->Device, fileName, &texture, &resourceView, 0, nullptr);
+    ID3D11ShaderResourceView *resourceView = nullptr;
+    auto result = CreateDDSTextureFromFile(Res::Get()->Device, fileName, nullptr, &resourceView, 0);
     return new Texture(resourceView);
 }

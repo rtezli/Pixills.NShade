@@ -5,14 +5,13 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace NShadeTests
 {
-    TEST_CLASS(UnitTest1)
+    TEST_CLASS(D3DSystemTests)
     {
     public:
 
-        TEST_METHOD(TestMethod1)
+        TEST_METHOD(InitializeTest)
         {
-            // TODO: Your test code here
+             
         }
-
     };
 }

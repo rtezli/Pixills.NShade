@@ -110,7 +110,6 @@ HRESULT Renderer::CreateDepthBufferDescription()
     _depthBufferDesc.Width = Res::Get()->ViewPort->Width;
     _depthBufferDesc.Height = Res::Get()->ViewPort->Height;
     _depthBufferDesc.MipLevels = Res::Get()->RenderQuality->MipLevels;
-    _depthBufferDesc.ArraySize = 1;
     _depthBufferDesc.Format = Res::Get()->RenderQuality->BufferFormat;
     _depthBufferDesc.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
     _depthBufferDesc.SampleDesc.Count = Res::Get()->RenderQuality->SampleCount;
@@ -118,6 +117,7 @@ HRESULT Renderer::CreateDepthBufferDescription()
     _depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
     _depthBufferDesc.CPUAccessFlags = 0;
     _depthBufferDesc.MiscFlags = 0;
+    _depthBufferDesc.ArraySize = 1;
 
     return 0;
 }
@@ -416,8 +416,6 @@ void Renderer::Render(Scene *scene)
 
     _swapChain->Present(1, 0);
 }
-
-
 
 void Renderer::PostProcess()
 {

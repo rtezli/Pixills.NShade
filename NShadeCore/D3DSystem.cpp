@@ -280,11 +280,6 @@ HRESULT D3DSystem::CreateRenderer()
     return _renderer->Initialize();
 }
 
-//void D3DSystem::CreateCamera()
-//{
-//    _camera = shared_ptr<Camera>(new Camera());
-//}
-
 void D3DSystem::CreateScene()
 {
     _scene = Scene::CreateStandardScene();
