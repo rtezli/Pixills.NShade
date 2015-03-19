@@ -3,8 +3,9 @@
 #include "res.h"
 #include "file.h"
 #include "node.h"
+#include "shader.h"
 
-class HullShader : public Node
+class HullShader : public Node, public Shader
 {
 public:
     static HullShader* Load(wchar_t *fileName);

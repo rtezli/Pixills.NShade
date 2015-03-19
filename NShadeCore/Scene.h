@@ -6,7 +6,7 @@
 #include "light.h"
 #include "pointlight.h"
 #include "camera.h"
-#include "shader.h"
+#include "shaders.h"
 
 using namespace std;
 

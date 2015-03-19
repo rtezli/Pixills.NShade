@@ -2,8 +2,10 @@
 
 #include "res.h"
 #include "file.h"
+#include "export.h"
+#include "shader.h"
 
-class PixelShader
+EXTERN class API PixelShader : public Shader
 {
 public:
     static PixelShader*     Load(wchar_t *fileName);

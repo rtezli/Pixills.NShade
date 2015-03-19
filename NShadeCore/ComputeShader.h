@@ -3,8 +3,10 @@
 #include "res.h"
 #include "file.h"
 #include "node.h"
+#include "export.h"
+#include "shader.h"
 
-class ComputeShader : public Node
+EXTERN class API ComputeShader : public Node, public Shader
 {
 public:
     static ComputeShader* Load(wchar_t *fileName);

@@ -3,8 +3,10 @@
 #include "res.h"
 #include "file.h"
 #include "node.h"
+#include "export.h"
+#include "shader.h"
 
-class DomainShader : public Node
+EXTERN class API  DomainShader : public Node, public Shader
 {
 public:
     static DomainShader* Load(wchar_t *fileName);

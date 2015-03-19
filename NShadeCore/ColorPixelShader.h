@@ -2,11 +2,10 @@
 
 #include "shader.h"
 #include "node.h"
+#include "export.h"
+#include "shader.h"
 
-namespace ColorShader
+EXTERN class API  ColorPixelShader : public Node, public Shader
 {
-    class ColorPixelShader : public Node
-    {
 
-    };
-}
+};

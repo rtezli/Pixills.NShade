@@ -2,17 +2,10 @@
 
 #include "res.h"
 #include "node.h"
+#include "export.h"
+#include "shader.h"
 
-namespace ColorShader
+EXTERN class API ColorVertexShader : public Node, public Shader
 {
-    struct InputLayout
-    {
-        XMFLOAT3 Position;
-        XMFLOAT4 ColorWithAlpha;
-    };
 
-    class ColorVertexShader : public Node
-    {
-
-    };
-}
+};

@@ -2,10 +2,11 @@
 
 #include "res.h"
 #include "file.h"
+#include "export.h"
 #include "ddstextureloader.h"
 #include "wictextureloader.h"
 
-class Texture
+EXTERN class API Texture
 {
 public:
     static Texture* Load(wchar_t *fileName);

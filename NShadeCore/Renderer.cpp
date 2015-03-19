@@ -417,10 +417,7 @@ void Renderer::Render(Scene *scene)
     _swapChain->Present(1, 0);
 }
 
-void Renderer::PostProcess()
-{
 
-}
 
 void Renderer::Tesselate(Shaders *shaders)
 {
@@ -428,6 +425,11 @@ void Renderer::Tesselate(Shaders *shaders)
     {
         return;
     }
+
+}
+
+void Renderer::PostProcess()
+{
 
 }
 

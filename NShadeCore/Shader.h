@@ -1,11 +1,8 @@
 #pragma once
 
-#include "vertexshader.h"
-#include "pixelshader.h"
-#include "domainshader.h"
-#include "hullshader.h"
-#include "geometryshader.h"
-#include "computeshader.h"
+#include "vector"
+#include "d3d11.h"
+#include "export.h"
 
 #ifndef PS_PROFILE
 #define PS_PROFILE {"ps_5_0" }
@@ -47,12 +44,12 @@ enum ShaderType : char
     DS = 6
 };
 
-struct Shaders
+EXTERN class API Shader
 {
-    PixelShader     *PixelShader;
-    VertexShader    *VertexShader;
-    HullShader      *HullShader;
-    DomainShader    *DomainShader;
-    GeometryShader  *GeometryShader;
-    ComputeShader   *ComputeShader;
+public:
+    vector<ID3D11Buffer*>                const GetBuffers(){ return _buffers; }
+    vector<ID3D11ShaderResourceView*>    const GetResources(){ return _resources; }
+private:
+    vector<ID3D11Buffer*>               _buffers;
+    vector<ID3D11ShaderResourceView*>   _resources;
 };

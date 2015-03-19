@@ -3,8 +3,10 @@
 #include "res.h"
 #include "file.h"
 #include "node.h"
+#include "export.h"
+#include "shader.h"
 
-class VertexShader : public Node
+EXTERN class API VertexShader : public Node, public Shader
 {
 public:
     unsigned int                const GetInputSize(){ return sizeof(NVertex); }
@@ -14,7 +16,7 @@ public:
     static VertexShader*        Compile(wchar_t *sourceCode);
 private:
     VertexShader(ID3D11VertexShader *shader, ID3D11InputLayout *layout);
-    unsigned int                *_strides;
-    ID3D11InputLayout           *_inputLayout;
-    ID3D11VertexShader          *_vertexShader;
+    unsigned int                    *_strides;
+    ID3D11InputLayout               *_inputLayout;
+    ID3D11VertexShader              *_vertexShader;
 };
