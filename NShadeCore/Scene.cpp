@@ -73,52 +73,54 @@ Scene* Scene::CreateStandardScene()
     stdPointLight->SetColorIntensity(pointLightColorIntensity);
     scene->AddLight(stdPointLight);
 
-    auto stdPixelShader = PixelShader::Load(L"../Debug/PhongPixelShader.cso");
-    auto stdVertexShader = VertexShader::Load(L"../Debug/PhongVertexShader.cso");
+    /* teapot */
+    auto phongPixelShader = PixelShader::Load(L"../Debug/PhongPixelShader.cso");
+    auto phongVertexShader = VertexShader::Load(L"../Debug/PhongVertexShader.cso");
 
-    auto stdHullShader = HullShader::Load(L"../Debug/TesselationHullShader.cso");
-    auto stdDomainShader = DomainShader::Load(L"../Debug/TesselationDomainShader.cso");
+    auto phongShaders = new Shaders();
+    phongShaders->PixelShader = phongPixelShader;
+    phongShaders->VertexShader = phongVertexShader;
 
-    auto shaders = new Shaders();
-    shaders->PixelShader = stdPixelShader;
-    shaders->VertexShader = stdVertexShader;
-    shaders->HullShader = stdHullShader;
-    shaders->DomainShader = stdDomainShader;
+    auto phongMaterial = new Material();
+    phongMaterial->AssignShaders(phongShaders);
+    phongMaterial->SetColor(new XMFLOAT4(0.1f, 0.1f, 0.6f, 1.0f));
 
-    auto phongMaterial1 = new Material();
-    phongMaterial1->AssignShaders(shaders);
-    phongMaterial1->SetColor(new XMFLOAT4(0.1f, 0.1f, 0.6f, 1.0f));
+    auto teapot = Model::LoadModelFromFBXFile("../Debug/teapot.fbx");
+    teapot->AssignMaterial(phongMaterial);
+    scene->AddModel(teapot);
 
-    auto phongMaterial2 = new Material();
+    /* plane */
+    auto texturePixelShader = PixelShader::Load(L"../Debug/TexturePixelShader.cso");
+    auto textureVertexShader = VertexShader::Load(L"../Debug/TextureVertexShader.cso");
+
+    auto textureShaders = new Shaders();
+    textureShaders->PixelShader = texturePixelShader;
+    textureShaders->VertexShader = textureVertexShader;
+
+    auto textureMaterial = new Material();
     auto gridTexture = Texture::Load(L"../Textures/grid_texture.dds");
-    phongMaterial2->AssignTexture(gridTexture);
-    phongMaterial2->AssignShaders(shaders);
-    phongMaterial2->SetColor(new XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f));
+    textureMaterial->AssignTexture(gridTexture);
+    textureMaterial->AssignShaders(textureShaders);
+    textureMaterial->SetColor(new XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f));
 
-    auto stdTeapot = Model::LoadModelFromFBXFile("../Debug/teapot.fbx");
-    stdTeapot->AssignMaterial(phongMaterial1);
-    scene->AddModel(stdTeapot);
-
-    auto stdPlane = Model::CreateHorizontalPlane(20.0f, new XMFLOAT3(0.0f, 0.0f, 0.0f));
-    stdPlane->AssignMaterial(phongMaterial2);
-    scene->AddModel(stdPlane);
-
-
+    auto plane = Model::CreateHorizontalPlane(20.0f, new XMFLOAT3(0.0f, 0.0f, 0.0f));
+    plane->AssignMaterial(textureMaterial);
+    scene->AddModel(plane);
 
     auto cameraMatrixBuffer = stdCamera->GetMatrixBuffer();
     auto cameraPositionBuffer = stdCamera->GetPositionBuffer();
     auto sceneAmbientBuffer = scene->GetAmbientBuffer();
 
-    ResourceMapping m1 = { cameraMatrixBuffer, shaders->PixelShader->GetInput() };
+    ResourceMapping m1 = { cameraMatrixBuffer, phongShaders->PixelShader->GetInput() };
     scene->AddResourceMapping(&m1);
 
-    ResourceMapping m2 = { cameraPositionBuffer, shaders->PixelShader->GetInput() };
+    ResourceMapping m2 = { cameraPositionBuffer, phongShaders->PixelShader->GetInput() };
     scene->AddResourceMapping(&m2);
 
-    ResourceMapping m3 = { sceneAmbientBuffer, shaders->PixelShader->GetInput() };
+    ResourceMapping m3 = { sceneAmbientBuffer, phongShaders->PixelShader->GetInput() };
     scene->AddResourceMapping(&m3);
 
-    ResourceMapping m4 = { stdPointLight->GetBuffer(), shaders->PixelShader->GetInput() };
+    ResourceMapping m4 = { stdPointLight->GetBuffer(), phongShaders->PixelShader->GetInput() };
     scene->AddResourceMapping(&m4);
 
     return scene;
