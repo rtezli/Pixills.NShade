@@ -96,5 +96,14 @@ void Camera::Update()
     constantBufferData.SysMemPitch = 0;
     constantBufferData.SysMemSlicePitch = 0;
 
-    Res::Get()->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &_matrixBuffer);
+    ID3D11Buffer* matrixBuffer;
+    Res::Get()->Device->CreateBuffer(&constantBufferDesc, &constantBufferData, &matrixBuffer);
+    if (!_matrixBuffer)
+    {
+        _matrixBuffer = matrixBuffer;
+    }
+    else
+    {
+        memcpy(_matrixBuffer, matrixBuffer, sizeof(ConstantBufferData));
+    }
 }

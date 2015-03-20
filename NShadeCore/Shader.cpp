@@ -3,7 +3,11 @@
 
 void Shader::AddBuffer(ID3D11Buffer *buffer)
 {
-    _buffers.push_back(buffer);
+    if (!_buffers)
+    {
+        _buffers = shared_ptr<vector<ID3D11Buffer*>>(new vector<ID3D11Buffer*>());
+    }
+    _buffers->push_back(buffer);
 }
 
 void Shader::AddResource(ID3D11ShaderResourceView *resource)
@@ -27,5 +31,9 @@ void Shader::AddResource(ID3D11ShaderResourceView *resource)
 
     Res::Get()->Device->CreateSamplerState(&samplerDesc, &_samplerState);
 
-    _resources.push_back(resource);
+    if (!_resources)
+    {
+        _resources = shared_ptr<vector<ID3D11ShaderResourceView*>>(new vector<ID3D11ShaderResourceView*>());
+    }
+    _resources->push_back(resource);
 }

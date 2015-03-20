@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vector"
+#include "memory"
 #include "res.h"
 #include "export.h"
 
@@ -51,13 +52,13 @@ EXTERN class API Shader
 public:
     //Shader();
 public:
-    vector<ID3D11Buffer*>               const GetBuffers(){ return _buffers; }
-    vector<ID3D11ShaderResourceView*>   const GetResources(){ return _resources; }
+    vector<ID3D11Buffer*>*              const GetBuffers(){ return _buffers.get(); }
+    vector<ID3D11ShaderResourceView*>*  const GetResources(){ return _resources.get(); }
     ID3D11SamplerState*                 const GetSamplerState(){ return _samplerState; }
     void                                AddBuffer(ID3D11Buffer *buffer);
     void                                AddResource(ID3D11ShaderResourceView *resource);
 protected:
-    vector<ID3D11Buffer*>               _buffers;
-    vector<ID3D11ShaderResourceView*>   _resources;
-    ID3D11SamplerState*                 _samplerState;
+    shared_ptr<vector<ID3D11Buffer*>>               _buffers;
+    shared_ptr<vector<ID3D11ShaderResourceView*>>   _resources;
+    ID3D11SamplerState*                             _samplerState;
 };

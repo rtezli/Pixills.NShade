@@ -385,17 +385,24 @@ void Renderer::Render(Scene *scene)
         if (vertexShader)
         {
             auto buffers = vertexShader->GetBuffers();
-            for (unsigned int b = 0; b < buffers.size() ; b++)
+            if (buffers)
             {
-                auto buffer = buffers.at(b);
-                Res::Get()->DeviceContext->VSSetConstantBuffers(b, 1, &buffer);
+                for (unsigned int b = 0; b < buffers->size(); b++)
+                {
+                    auto buffer = buffers->at(b);
+
+                    Res::Get()->DeviceContext->VSSetConstantBuffers(b, 1, &buffer);
+                }
             }
 
             auto resources = vertexShader->GetResources();
-            for (unsigned int r = 0; r < resources.size(); r++)
+            if (resources)
             {
-                auto resource = resources.at(r);
-                Res::Get()->DeviceContext->VSSetShaderResources(r, 1, &resource);
+                for (unsigned int r = 0; r < resources->size(); r++)
+                {
+                    auto resource = resources->at(r);
+                    Res::Get()->DeviceContext->VSSetShaderResources(r, 1, &resource);
+                }
             }
             Res::Get()->DeviceContext->VSSetShader(shaders->VertexShader->GetShader(), NULL, 0);
         }
@@ -404,17 +411,23 @@ void Renderer::Render(Scene *scene)
         if (pixelshader)
         {
             auto buffers = pixelshader->GetBuffers();
-            for (unsigned int b = 0; b < buffers.size(); b++)
+            if (buffers)
             {
-                auto buffer = buffers.at(b);
-                Res::Get()->DeviceContext->PSSetConstantBuffers(b, 1, &buffer);
+                for (unsigned int b = 0; b < buffers->size(); b++)
+                {
+                    auto buffer = buffers->at(b);
+                    Res::Get()->DeviceContext->PSSetConstantBuffers(b, 1, &buffer);
+                }
             }
 
             auto resources = pixelshader->GetResources();
-            for (unsigned int r = 0; r < resources.size(); r++)
+            if (resources)
             {
-                auto resource = resources.at(r);
-                Res::Get()->DeviceContext->PSSetShaderResources(r, 1, &resource);
+                for (unsigned int r = 0; r < resources->size(); r++)
+                {
+                    auto resource = resources->at(r);
+                    Res::Get()->DeviceContext->PSSetShaderResources(r, 1, &resource);
+                }
             }
 
             auto samplerState = pixelshader->GetSamplerState();
