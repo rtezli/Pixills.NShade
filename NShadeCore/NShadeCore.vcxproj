@@ -251,6 +251,7 @@
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="Res.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderBuffer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -350,6 +351,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Models\teapot.fbx" />
     <None Include="packages.config" />
     <None Include="scene.json" />
   </ItemGroup>
@@ -360,6 +362,9 @@
     <Content Include="..\Models\teapot.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Textures\grid_texture.dds" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

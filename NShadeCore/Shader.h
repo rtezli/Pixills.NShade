@@ -1,7 +1,7 @@
 #pragma once
 
 #include "vector"
-#include "d3d11.h"
+#include "res.h"
 #include "export.h"
 
 #ifndef PS_PROFILE
@@ -44,12 +44,20 @@ enum ShaderType : char
     DS = 6
 };
 
+using namespace std;
+
 EXTERN class API Shader
 {
 public:
-    vector<ID3D11Buffer*>                const GetBuffers(){ return _buffers; }
-    vector<ID3D11ShaderResourceView*>    const GetResources(){ return _resources; }
-private:
+    //Shader();
+public:
+    vector<ID3D11Buffer*>               const GetBuffers(){ return _buffers; }
+    vector<ID3D11ShaderResourceView*>   const GetResources(){ return _resources; }
+    ID3D11SamplerState*                 const GetSamplerState(){ return _samplerState; }
+    void                                AddBuffer(ID3D11Buffer *buffer);
+    void                                AddResource(ID3D11ShaderResourceView *resource);
+protected:
     vector<ID3D11Buffer*>               _buffers;
     vector<ID3D11ShaderResourceView*>   _resources;
+    ID3D11SamplerState*                 _samplerState;
 };

@@ -61,17 +61,17 @@ Scene* Scene::CreateStandardScene()
     auto scene = new Scene();
     scene->SetAmbientLight(new XMFLOAT4(1.0f, 1.0f, 1.0f, 0.1f));
 
-    auto stdCamera = new Camera();
-    stdCamera->SetPosition(new XMFLOAT3(0.0f, 0.0f, 5.0f));
-    stdCamera->SetFocusPoint(new XMFLOAT3(0.0f, 0.0f, 0.0f));
-    scene->AddCamera(stdCamera);
+    auto camera = new Camera();
+    camera->SetPosition(new XMFLOAT3(0.0f, 0.0f, 5.0f));
+    camera->SetFocusPoint(new XMFLOAT3(0.0f, 0.0f, 0.0f));
+    scene->AddCamera(camera);
 
     auto pointLightPosition = new XMFLOAT3(1.0f, 1.0f, 1.0f);
     auto pointLightColorIntensity = new XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-    auto stdPointLight = new PointLight();
-    stdPointLight->SetPosition(pointLightPosition);
-    stdPointLight->SetColorIntensity(pointLightColorIntensity);
-    scene->AddLight(stdPointLight);
+    auto pointLight = new PointLight();
+    pointLight->SetPosition(pointLightPosition);
+    pointLight->SetColorIntensity(pointLightColorIntensity);
+    scene->AddLight(pointLight);
 
     /* teapot */
     auto phongPixelShader = PixelShader::Load(L"../Debug/PhongPixelShader.cso");
@@ -82,8 +82,15 @@ Scene* Scene::CreateStandardScene()
     phongShaders->VertexShader = phongVertexShader;
 
     auto phongMaterial = new Material();
-    phongMaterial->AssignShaders(phongShaders);
     phongMaterial->SetColor(new XMFLOAT4(0.1f, 0.1f, 0.6f, 1.0f));
+    
+    auto b = camera->GetMatrixBuffer();
+    phongVertexShader->AddBuffer(b);
+    phongVertexShader->AddBuffer(phongMaterial->GetColorBuffer());
+    phongVertexShader->AddBuffer(scene->GetAmbientBuffer());
+    phongVertexShader->AddBuffer(pointLight->GetBuffer());
+
+    phongMaterial->AssignShaders(phongShaders);
 
     auto teapot = Model::LoadModelFromFBXFile("../Debug/teapot.fbx");
     teapot->AssignMaterial(phongMaterial);
@@ -100,6 +107,11 @@ Scene* Scene::CreateStandardScene()
     auto textureMaterial = new Material();
     auto gridTexture = Texture::Load(L"../Textures/grid_texture.dds");
     textureMaterial->AssignTexture(gridTexture);
+
+    textureVertexShader->AddBuffer(camera->GetMatrixBuffer());
+    textureVertexShader->AddResource(gridTexture->GetResources());
+    texturePixelShader->AddResource(gridTexture->GetResources());
+
     textureMaterial->AssignShaders(textureShaders);
     textureMaterial->SetColor(new XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f));
 
@@ -107,21 +119,9 @@ Scene* Scene::CreateStandardScene()
     plane->AssignMaterial(textureMaterial);
     scene->AddModel(plane);
 
-    auto cameraMatrixBuffer = stdCamera->GetMatrixBuffer();
-    auto cameraPositionBuffer = stdCamera->GetPositionBuffer();
+    auto cameraMatrixBuffer = camera->GetMatrixBuffer();
+    auto cameraPositionBuffer = camera->GetPositionBuffer();
     auto sceneAmbientBuffer = scene->GetAmbientBuffer();
-
-    ResourceMapping m1 = { cameraMatrixBuffer, phongShaders->PixelShader->GetInput() };
-    scene->AddResourceMapping(&m1);
-
-    ResourceMapping m2 = { cameraPositionBuffer, phongShaders->PixelShader->GetInput() };
-    scene->AddResourceMapping(&m2);
-
-    ResourceMapping m3 = { sceneAmbientBuffer, phongShaders->PixelShader->GetInput() };
-    scene->AddResourceMapping(&m3);
-
-    ResourceMapping m4 = { stdPointLight->GetBuffer(), phongShaders->PixelShader->GetInput() };
-    scene->AddResourceMapping(&m4);
 
     return scene;
 }

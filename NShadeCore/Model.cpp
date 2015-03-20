@@ -87,19 +87,19 @@ Model* Model::CreateHorizontalPlane(float size, XMFLOAT3* position)
         {
             XMFLOAT3(size * -1.0f + position->x, position->y, size * -1.0f + position->z),
             XMFLOAT3(0.0f, 1.0f, 0.0f),
-            XMFLOAT2(0.0f, 0.0f),
+            XMFLOAT2(0.0f, 100.0f),
             XMFLOAT3(0.0f, 0.0f, 0.0f)
         },
         {
             XMFLOAT3(size + position->x, position->y, size * -1.0f + position->z),
             XMFLOAT3(0.0f, 1.0f, 0.0f),
-            XMFLOAT2(0.0f, 0.0f),
+            XMFLOAT2(100.0f, 100.0f),
             XMFLOAT3(0.0f, 0.0f, 0.0f)
         },
         {
             XMFLOAT3(size + position->x, position->y, size + position->z),
             XMFLOAT3(0.0f, 1.0f, 0.0f),
-            XMFLOAT2(0.0f, 0.0f),
+            XMFLOAT2(100.0f, 0.0f),
             XMFLOAT3(0.0f, 0.0f, 0.0f)
         },
         {

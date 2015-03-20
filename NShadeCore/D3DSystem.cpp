@@ -138,7 +138,7 @@ HRESULT D3DSystem::CreateDevice()
         return createResult;
     }
 
-    Res::Get()->DefaultColor = new float[4]{1.0f, 1.0f, 1.0f, 1.0f};
+    Res::Get()->DefaultColor = new float[4]{0.0f, 0.0f, 0.0f, 0.0f};
 
     // TODO : Calculate DPI
     Res::Get()->Dpi = 96.00;
