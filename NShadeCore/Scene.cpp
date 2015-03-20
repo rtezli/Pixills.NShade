@@ -82,7 +82,7 @@ Scene* Scene::CreateStandardScene()
     phongShaders->VertexShader = phongVertexShader;
 
     auto phongMaterial = new Material();
-    phongMaterial->SetColor(new XMFLOAT4(0.1f, 0.1f, 0.6f, 1.0f));
+    phongMaterial->SetColor(new XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
     
     auto b = camera->GetMatrixBuffer();
     phongVertexShader->AddBuffer(b);
