@@ -23,6 +23,7 @@ public:
     void CopyToBackbuffer();
     bool const Initialized(){ return _isInitialized; };
 private:
+
     /* render target */
     HRESULT CreateRenderTargetDesciption();
     HRESULT CreateRenderTargetViewDesciption();

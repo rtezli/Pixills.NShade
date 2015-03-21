@@ -57,6 +57,7 @@ public:
     ID3D11SamplerState*                 const GetSamplerState(){ return _samplerState; }
     void                                AddBuffer(ID3D11Buffer *buffer);
     void                                AddResource(ID3D11ShaderResourceView *resource);
+    void                                Render();
 protected:
     shared_ptr<vector<ID3D11Buffer*>>               _buffers;
     shared_ptr<vector<ID3D11ShaderResourceView*>>   _resources;

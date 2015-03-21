@@ -2,13 +2,13 @@
 
 #include "res.h"
 #include "file.h"
-#include "node.h"
 #include "shader.h"
 
-class HullShader : public Node, public Shader
+class HullShader : public Shader
 {
 public:
-    static HullShader* Load(wchar_t *fileName);
+    static HullShader*  Load(wchar_t *fileName);
+    void                Render();
 private:
     HullShader(ID3D11HullShader *shader);
     ID3D11HullShader *_shader;

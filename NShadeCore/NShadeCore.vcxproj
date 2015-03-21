@@ -179,8 +179,6 @@
     <ClInclude Include="BloomFilter.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ColorGradingFilter.h" />
-    <ClInclude Include="ColorPixelShader.h" />
-    <ClInclude Include="ColorVertexShader.h" />
     <ClInclude Include="ComputeShader.h" />
     <ClInclude Include="DepthOfField.h" />
     <ClInclude Include="MiniView.h" />

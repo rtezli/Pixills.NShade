@@ -371,7 +371,7 @@ void Renderer::Render(Scene *scene)
     }
 
     ClearScene();
-    //Res::Get()->DeviceContext->UpdateSubresource(Resources()->ConstBuffer, 0, nullptr, Resources()->ConstBufferData, 0, 0);
+
     for (unsigned int m = 0; m < scene->GetModels()->size(); m++)
     {
         auto model = scene->GetModels()->at(m);
@@ -389,62 +389,35 @@ void Renderer::Render(Scene *scene)
         Res::Get()->DeviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
         Res::Get()->DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+
         auto vertexShader = shaders->VertexShader;
         if (vertexShader)
         {
-            auto buffers = vertexShader->GetBuffers();
-            if (buffers)
-            {
-                for (unsigned int b = 0; b < buffers->size(); b++)
-                {
-                    auto buffer = buffers->at(b);
+            vertexShader->Render();
+        }
 
-                    Res::Get()->DeviceContext->VSSetConstantBuffers(b, 1, &buffer);
-                }
-            }
+        auto hullShader = shaders->HullShader;
+        if (hullShader)
+        {
+            hullShader->Render();
+        }
 
-            auto resources = vertexShader->GetResources();
-            if (resources)
-            {
-                for (unsigned int r = 0; r < resources->size(); r++)
-                {
-                    auto resource = resources->at(r);
-                    Res::Get()->DeviceContext->VSSetShaderResources(r, 1, &resource);
-                }
-            }
-            Res::Get()->DeviceContext->VSSetShader(shaders->VertexShader->GetShader(), NULL, 0);
+        auto domainShader = shaders->DomainShader;
+        if (domainShader)
+        {
+            domainShader->Render();
+        }
+
+        auto geometryShader = shaders->GeometryShader;
+        if (geometryShader)
+        {
+            geometryShader->Render();
         }
 
         auto pixelshader = shaders->PixelShader;
         if (pixelshader)
         {
-            auto buffers = pixelshader->GetBuffers();
-            if (buffers)
-            {
-                for (unsigned int b = 0; b < buffers->size(); b++)
-                {
-                    auto buffer = buffers->at(b);
-                    Res::Get()->DeviceContext->PSSetConstantBuffers(b, 1, &buffer);
-                }
-            }
-
-            auto resources = pixelshader->GetResources();
-            if (resources)
-            {
-                for (unsigned int r = 0; r < resources->size(); r++)
-                {
-                    auto resource = resources->at(r);
-                    Res::Get()->DeviceContext->PSSetShaderResources(r, 1, &resource);
-                }
-            }
-
-            auto samplerState = pixelshader->GetSamplerState();
-            if (samplerState)
-            {
-                Res::Get()->DeviceContext->PSSetSamplers(0, 1, &samplerState);
-            }
-
-            Res::Get()->DeviceContext->PSSetShader(shaders->PixelShader->GetShader(), NULL, 0);
+            pixelshader->Render();
         }
 
         Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);

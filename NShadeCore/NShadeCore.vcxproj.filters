@@ -49,6 +49,12 @@
     <Filter Include="Header Files\Overlays">
       <UniqueIdentifier>{2a63f77b-2aef-4587-9811-408a027c8c38}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Effects">
+      <UniqueIdentifier>{29db1774-f8a2-471e-bb11-5b4930934ab0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Effects">
+      <UniqueIdentifier>{550737b0-8ea4-4f38-bc29-fd0dd7e5787d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -89,12 +95,6 @@
     </ClInclude>
     <ClInclude Include="FbxReader.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ColorVertexShader.h">
-      <Filter>Header Files\Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="ColorPixelShader.h">
-      <Filter>Header Files\Shaders</Filter>
     </ClInclude>
     <ClInclude Include="Common.h">
       <Filter>Header Files\Common</Filter>

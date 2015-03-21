@@ -96,31 +96,29 @@ Scene* Scene::CreateStandardScene()
     scene->AddModel(teapot);
 
     /* plane */
-    auto texturePixelShader = PixelShader::Load(L"../Debug/TexturePixelShader.cso");
+
     auto textureVertexShader = VertexShader::Load(L"../Debug/TextureVertexShader.cso");
+    textureVertexShader->AddBuffer(camera->GetMatrixBuffer());
+    
+
+    auto textureMaterial = new Material();
+    textureMaterial->SetColor(new XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f));
+
+    auto gridTexture = Texture::Load(L"../Textures/grid_texture.dds");
+
+    auto texturePixelShader = PixelShader::Load(L"../Debug/TexturePixelShader.cso");
+    texturePixelShader->AddResource(gridTexture->GetResources());
+    textureVertexShader->AddResource(gridTexture->GetResources());
 
     auto textureShaders = new Shaders();
     textureShaders->PixelShader = texturePixelShader;
     textureShaders->VertexShader = textureVertexShader;
-
-    auto textureMaterial = new Material();
-    auto gridTexture = Texture::Load(L"../Textures/grid_texture.dds");
-    textureMaterial->AssignTexture(gridTexture);
-
-    textureVertexShader->AddBuffer(camera->GetMatrixBuffer());
-    textureVertexShader->AddResource(gridTexture->GetResources());
-    texturePixelShader->AddResource(gridTexture->GetResources());
-
     textureMaterial->AssignShaders(textureShaders);
-    textureMaterial->SetColor(new XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f));
-
+    
     auto plane = Model::CreateHorizontalPlane(20.0f, new XMFLOAT3(0.0f, 0.0f, 0.0f));
     plane->AssignMaterial(textureMaterial);
-    scene->AddModel(plane);
 
-    auto cameraMatrixBuffer = camera->GetMatrixBuffer();
-    auto cameraPositionBuffer = camera->GetPositionBuffer();
-    auto sceneAmbientBuffer = scene->GetAmbientBuffer();
+    scene->AddModel(plane);
 
     return scene;
 }

@@ -9,6 +9,7 @@ EXTERN class API Overlay
 {
 public:
     static Overlay* Create(IDXGISwapChain *swapChain);
+    void            Render();
 protected:
     IDXGISurface    *_surface;
     RECT            *_poistion;

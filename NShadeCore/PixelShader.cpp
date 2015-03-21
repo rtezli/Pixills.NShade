@@ -3,7 +3,7 @@
 
 PixelShader::PixelShader(ID3D11PixelShader *shader)
 {
-    _pixelShader = shader;
+    _shader = shader;
 }
 
 PixelShader* PixelShader::Load(wchar_t *fileName)
@@ -23,4 +23,29 @@ PixelShader* PixelShader::Compile(wchar_t *sourceCode)
     //result = Res::Get()->Device->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &vertexShader);
     auto ps = new PixelShader(nullptr);
     return ps;
+}
+
+void PixelShader::Render()
+{
+    auto buffers = GetBuffers();
+    if (buffers)
+    {
+        for (unsigned int b = 0; b < buffers->size(); b++)
+        {
+            auto buffer = buffers->at(b);
+
+            Res::Get()->DeviceContext->PSSetConstantBuffers(b, 1, &buffer);
+        }
+    }
+
+    auto resources = GetResources();
+    if (resources)
+    {
+        for (unsigned int r = 0; r < resources->size(); r++)
+        {
+            auto resource = resources->at(r);
+            Res::Get()->DeviceContext->PSSetShaderResources(r, 1, &resource);
+        }
+    }
+    Res::Get()->DeviceContext->PSSetShader(_shader, NULL, 0);
 }

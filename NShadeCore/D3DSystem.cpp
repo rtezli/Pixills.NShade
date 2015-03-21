@@ -101,8 +101,8 @@ HRESULT D3DSystem::CreateDevice()
         D3D_FEATURE_LEVEL_9_1
     };
 
-    ID3D11Device* device = 0;
-    ID3D11DeviceContext* context = 0;
+    ID3D11Device* device;
+    ID3D11DeviceContext* context;
 
     auto createResult = D3D11CreateDevice(
         NULL,
