@@ -79,7 +79,6 @@ Scene* Scene::CreateStandardScene()
 
     auto tessHullShader = HullShader::Load(L"../Debug/TesselationHullShader.cso");
     auto tessDomainShader = DomainShader::Load(L"../Debug/TesselationDomainShader.cso");
-    auto tessGeometryShader = GeometryShader::Load(L"../Debug/TesselationGeometryShader.cso");
 
     auto phongShaders = new Shaders();
     phongShaders->PixelShader = phongPixelShader;
@@ -103,7 +102,6 @@ Scene* Scene::CreateStandardScene()
 
     auto textureVertexShader = VertexShader::Load(L"../Debug/TextureVertexShader.cso");
     textureVertexShader->AddBuffer(camera->GetMatrixBuffer());
-    
 
     auto textureMaterial = new Material();
     textureMaterial->SetColor(new XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f));

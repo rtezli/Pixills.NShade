@@ -1,56 +1,56 @@
-// Input control point
-struct VS_CONTROL_POINT_OUTPUT
+cbuffer TessellationBuffer
 {
-	float3 vPosition : WORLDPOS;
-	// TODO: change/add other stuff
+    float tessellationAmount;
+    float3 padding;
 };
 
-// Output control point
-struct HS_CONTROL_POINT_OUTPUT
+struct HullInput
 {
-	float3 vPosition : WORLDPOS; 
+    float4 position : SV_POSITION;
+    float4 color    : COLOR0;
+    float4 normal   : NORMAL;
+
+    float4 ambient  : COLOR1;
+    float4 light    : POSITION1;
+    float4 camera   : POSITION2;
 };
 
-// Output patch constant data.
-struct HS_CONSTANT_DATA_OUTPUT
+struct ConstantOutput
 {
-	float EdgeTessFactor[3]			: SV_TessFactor; // e.g. would be [4] for a quad domain
-	float InsideTessFactor			: SV_InsideTessFactor; // e.g. would be Inside[2] for a quad domain
-	// TODO: change/add other stuff
+    float edges[3]  : SV_TessFactor;
+    float inside    : SV_InsideTessFactor;
 };
 
-#define NUM_CONTROL_POINTS 3
-
-// Patch Constant Function
-HS_CONSTANT_DATA_OUTPUT CalcHSPatchConstants(
-	InputPatch<VS_CONTROL_POINT_OUTPUT, NUM_CONTROL_POINTS> ip,
-	uint PatchID : SV_PrimitiveID)
+struct HullOutput
 {
-	HS_CONSTANT_DATA_OUTPUT Output;
+    float3 position : POSITION;
+    float4 color    : COLOR;
+};
 
-	// Insert code to compute Output here
-	Output.EdgeTessFactor[0] = 
-		Output.EdgeTessFactor[1] = 
-		Output.EdgeTessFactor[2] = 
-		Output.InsideTessFactor = 15; // e.g. could calculate dynamic tessellation factors instead
+ConstantOutput ColorPatchConstantFunction(InputPatch<HullInput, 3> inputPatch, uint patchId : SV_PrimitiveID)
+{
+    ConstantOutput output;
 
-	return Output;
+    output.edges[0] = tessellationAmount;
+    output.edges[1] = tessellationAmount;
+    output.edges[2] = tessellationAmount;
+
+    output.inside = tessellationAmount;
+
+    return output;
 }
 
 [domain("tri")]
-[partitioning("fractional_odd")]
-[outputtopology("triangle_cw")]
+[partitioning("integer")]
+[outputtopology("triangle_ccw")]
 [outputcontrolpoints(3)]
-[patchconstantfunc("CalcHSPatchConstants")]
-HS_CONTROL_POINT_OUTPUT main( 
-	InputPatch<VS_CONTROL_POINT_OUTPUT, NUM_CONTROL_POINTS> ip, 
-	uint i : SV_OutputControlPointID,
-	uint PatchID : SV_PrimitiveID )
+[patchconstantfunc("ColorPatchConstantFunction")]
+HullOutput main(InputPatch<HullInput, 3> patch, uint pointId : SV_OutputControlPointID, uint patchId : SV_PrimitiveID)
 {
-	HS_CONTROL_POINT_OUTPUT Output;
+    HullOutput output;
 
-	// Insert code to compute Output here
-	Output.vPosition = ip[i].vPosition;
+    output.position = patch[pointId].position;
+    output.color = patch[pointId].color;
 
-	return Output;
+    return output;
 }

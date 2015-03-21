@@ -1,34 +1,46 @@
-struct DS_OUTPUT
+cbuffer Camera
 {
-    float4 vPosition  : SV_POSITION;
-    // TODO: change/add other stuff
+    float4x4 world;
+    float4x4 view;
+    float4x4 projection;
+    float4   camera;
 };
 
-// Output control point
-struct HS_CONTROL_POINT_OUTPUT
+struct ConstantOutput
 {
-    float3 vPosition : WORLDPOS;
+    float edges[3]  : SV_TessFactor;
+    float inside    : SV_InsideTessFactor;
 };
 
-// Output patch constant data.
-struct HS_CONSTANT_DATA_OUTPUT
+struct HullOutput
 {
-    float EdgeTessFactor[3] : SV_TessFactor;       // e.g. would be [4] for a quad domain
-    float InsideTessFactor  : SV_InsideTessFactor; // e.g. would be Inside[2] for a quad domain
+    float3 position : POSITION;
+    float4 color    : COLOR;
 };
 
-#define NUM_CONTROL_POINTS 3
+struct PixelInput
+{
+    float4 position : SV_POSITION;
+    float4 color    : COLOR0;
+    float4 normal   : NORMAL;
+
+    float4 ambient  : COLOR1;
+    float4 light    : POSITION1;
+    float4 camera   : POSITION2;
+};
 
 [domain("tri")]
-DS_OUTPUT main(
-    HS_CONSTANT_DATA_OUTPUT input,
-    float3 domain : SV_DomainLocation,
-    const OutputPatch<HS_CONTROL_POINT_OUTPUT, NUM_CONTROL_POINTS> patch)
+PixelInput main(ConstantOutput input, float3 uvwCoord : SV_DomainLocation, const OutputPatch<HullOutput, 3> patch)
 {
-    DS_OUTPUT Output;
+    float3 vertexPosition;
+    PixelInput output;
 
-    Output.vPosition = float4(
-        patch[0].vPosition*domain.x + patch[1].vPosition*domain.y + patch[2].vPosition*domain.z, 1);
+    vertexPosition = uvwCoord.x * patch[0].position + uvwCoord.y * patch[1].position + uvwCoord.z * patch[2].position;
 
-    return Output;
+    output.position = mul(float4(vertexPosition, 1.0f), world);
+    output.position = mul(output.position, view);
+    output.position = mul(output.position, projection);
+    output.color = patch[0].color;
+
+    return output;
 }

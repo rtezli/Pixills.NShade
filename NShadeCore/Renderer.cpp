@@ -125,12 +125,17 @@ HRESULT Renderer::CreateDepthBufferDescription()
 
 HRESULT Renderer::CreateDepthBuffer()
 {
-    auto quality = Res::Get()->RenderQuality;
-    _depthStencilBuffer = D3DHelpers::CreateTexture(
-        Res::Get()->ViewPort->Width,
-        Res::Get()->ViewPort->Height,
-        D3D11_BIND_DEPTH_STENCIL,
-        Res::Get()->RenderQuality);
+    D3D11_TEXTURE2D_DESC depthStencilDesc = { 0 };
+    depthStencilDesc.ArraySize = 1;
+    depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    depthStencilDesc.MipLevels = Res::Get()->RenderQuality->MipLevels;
+    depthStencilDesc.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
+    depthStencilDesc.SampleDesc.Count = Res::Get()->RenderQuality->SampleCount;
+    depthStencilDesc.Format = Res::Get()->RenderQuality->BufferFormat;
+    depthStencilDesc.Width = Res::Get()->ViewPort->Width;
+    depthStencilDesc.Height = Res::Get()->ViewPort->Height;
+
+    Res::Get()->Device->CreateTexture2D(&depthStencilDesc, NULL, &_depthStencilBuffer);
 
     return 0;
 }

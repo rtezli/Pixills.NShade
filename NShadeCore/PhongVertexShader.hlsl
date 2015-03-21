@@ -36,13 +36,13 @@ struct VertexShaderInput
 
 struct VertexShaderOutput
 {
-    float4 position         : SV_POSITION;
-    float4 color            : COLOR0;
-    float4 normal           : NORMAL;
+    float4 position : SV_POSITION;
+    float4 color    : COLOR0;
+    float4 normal   : NORMAL;
 
-    float4 ambient          : COLOR1;
-    float4 light            : POSITION1;
-    float4 camera           : POSITION2;
+    float4 ambient  : COLOR1;
+    float4 light    : POSITION1;
+    float4 camera   : POSITION2;
 };
 
 VertexShaderOutput main(VertexShaderInput input)

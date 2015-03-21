@@ -337,9 +337,6 @@
     <FxCompile Include="FlatVertexShader.hlsl">
       <Filter>Source Files\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="TesselationGeometryShader.hlsl">
-      <Filter>Source Files\Shaders</Filter>
-    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
