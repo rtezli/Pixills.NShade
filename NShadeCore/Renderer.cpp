@@ -125,6 +125,7 @@ HRESULT Renderer::CreateDepthBufferDescription()
 
 HRESULT Renderer::CreateDepthBuffer()
 {
+    auto quality = Res::Get()->RenderQuality;
     _depthStencilBuffer = D3DHelpers::CreateTexture(
         Res::Get()->ViewPort->Width,
         Res::Get()->ViewPort->Height,

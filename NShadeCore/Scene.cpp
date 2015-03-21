@@ -77,6 +77,10 @@ Scene* Scene::CreateStandardScene()
     auto flatVertexShader = VertexShader::Load(L"../Debug/FlatVertexShader.cso");
     auto phongPixelShader = PixelShader::Load(L"../Debug/PhongPixelShader.cso");
 
+    auto tessHullShader = HullShader::Load(L"../Debug/TesselationHullShader.cso");
+    auto tessDomainShader = DomainShader::Load(L"../Debug/TesselationDomainShader.cso");
+    auto tessGeometryShader = GeometryShader::Load(L"../Debug/TesselationGeometryShader.cso");
+
     auto phongShaders = new Shaders();
     phongShaders->PixelShader = phongPixelShader;
     phongShaders->VertexShader = flatVertexShader;

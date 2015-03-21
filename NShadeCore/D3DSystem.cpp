@@ -144,12 +144,12 @@ HRESULT D3DSystem::CreateDevice()
     D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &factory);
     factory->GetDesktopDpi(&Res::Get()->DpiX, &Res::Get()->DpiY);
 
-    RenderingQuality quality0_8 = { DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT,  0, 1, 0 }; // Should work for everyone
-    RenderingQuality quality2_8 = { DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT,  2, 2, 1 };
-    RenderingQuality quality4_8 = { DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT, 16, 4, 1 };
-    RenderingQuality quality8_8 = { DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT, 32, 8, 1 }; // Works on my machine ;)
+    //RenderingQuality quality0_8 = { DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT,  0, 1, 0 }; // Should work for everyone
+    //RenderingQuality quality2_8 = { DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT,  2, 2, 1 };
+    //RenderingQuality quality4_8 = { DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT, 16, 4, 1 };
+    //RenderingQuality quality8_8 = { DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT, 32, 8, 1 }; // Works on my machine ;)
 
-    Res::Get()->RenderQuality = new RenderingQuality(quality0_8);
+    //Res::Get()->RenderQuality = new RenderingQuality(quality8_8);
 
     CreateViewPort();
 
@@ -205,38 +205,12 @@ HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device* device)
             {
                 continue;
             }
-            RenderingQuality quality = { DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_D32_FLOAT, i, numberOfLevels - 1, true };
+            RenderingQuality quality = { DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_D32_FLOAT, numberOfLevels - 1, i, true };
             availableLevels.push_back(quality);
         }
     }
-
-    for (unsigned int i = maxSamples; i > 0; i--)
-    {
-        result = device->CheckMultisampleQualityLevels(DXGI_FORMAT_R16G16B16A16_UNORM, i, &numberOfLevels);
-        if (SUCCEEDED(result))
-        {
-            if (numberOfLevels < 1)
-            {
-                continue;
-            }
-            RenderingQuality quality = { DXGI_FORMAT_R16G16B16A16_UNORM, DXGI_FORMAT_D32_FLOAT, i, numberOfLevels - 1, true };
-            availableLevels.push_back(quality);
-        }
-    }
-
-    for (unsigned int i = maxSamples; i > 0; i--)
-    {
-        result = device->CheckMultisampleQualityLevels(DXGI_FORMAT_D24_UNORM_S8_UINT, i, &numberOfLevels);
-        if (SUCCEEDED(result))
-        {
-            if (numberOfLevels < 1)
-            {
-                continue;
-            }
-            RenderingQuality quality = { DXGI_FORMAT_D24_UNORM_S8_UINT, DXGI_FORMAT_D32_FLOAT, i, numberOfLevels - 1, true };
-            availableLevels.push_back(quality);
-        }
-    }
+    auto highestQuality = availableLevels.front();
+    Res::Get()->RenderQuality = new RenderingQuality(highestQuality);
     return result;
 }
 
