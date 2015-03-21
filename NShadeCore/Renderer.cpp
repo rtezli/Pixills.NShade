@@ -14,6 +14,7 @@ Renderer::Renderer(bool useSwapChain)
 
 HRESULT Renderer::Initialize()
 {
+    _isInitialized = false;
     auto result = CreateDepthBuffer();
     if (FAILED(result))
     {
@@ -131,12 +132,6 @@ HRESULT Renderer::CreateDepthBuffer()
         Res::Get()->RenderQuality);
 
     return 0;
-    //auto result = CreateDepthBufferDescription();
-    //if (FAILED(result))
-    //{
-    //    return result;
-    //}
-    //return Res::Get()->Device->CreateTexture2D(&_depthBufferDesc, NULL, &_depthStencilBuffer);
 }
 
 HRESULT Renderer::CreateDepthStencilDescription()
@@ -355,7 +350,8 @@ HRESULT Renderer::CreateRasterizer()
 
 HRESULT Renderer::CreateViewPort()
 {
-    Res::Get()->DeviceContext->RSSetViewports(1, Res::Get()->ViewPort);
+    auto viewPort = Res::Get()->ViewPort;
+    Res::Get()->DeviceContext->RSSetViewports(1, viewPort);
     return 0;
 }
 
@@ -369,6 +365,11 @@ void Renderer::ClearScene()
 
 void Renderer::Render(Scene *scene)
 {
+    if (!_isInitialized)
+    {
+        return;
+    }
+
     ClearScene();
     //Res::Get()->DeviceContext->UpdateSubresource(Resources()->ConstBuffer, 0, nullptr, Resources()->ConstBufferData, 0, 0);
     for (unsigned int m = 0; m < scene->GetModels()->size(); m++)
@@ -475,19 +476,7 @@ void Renderer::CopyToBackbuffer()
 
 }
 
-
-HRESULT	Renderer::ResizeSwapChain(UINT32 newWidth, UINT32 newHeight)
+void Renderer::Resize()
 {
-    return _swapChain->ResizeBuffers(_bufferCount, 0, 0, Res::Get()->RenderQuality->BufferFormat, _swapChainFlags);
-}
-
-HRESULT Renderer::Resize(D3D11_VIEWPORT* viewPort)
-{
-    HRESULT result;
-    Res::Get()->ViewPort = viewPort;
-    if (NULL != _swapChain && _isInitialized)
-    {
-        result = Initialize();
-    }
-    return result;
+    Initialize();
 }

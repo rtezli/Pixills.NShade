@@ -14,7 +14,7 @@ public:
     HRESULT	ResizeSwapChain(UINT32 newWidth, UINT32 newHeight);
     HRESULT SetShaderParameters();
     HRESULT	Initialize();
-    HRESULT	Resize(D3D11_VIEWPORT* viewport);
+    void Resize();
 public:
     void ClearScene();
     void Render(Scene *scene);

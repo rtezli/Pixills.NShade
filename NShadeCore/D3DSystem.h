@@ -1,9 +1,11 @@
 #pragma once
+#pragma comment(lib, "d2d1.lib")
 
 #ifndef FPS
 #define FPS(fps) {std::chrono::milliseconds(1000 / fps)}
 #endif
 
+#include "d2d1.h"
 #include "d3d11.h"
 #include "res.h"
 #include "rx.hpp"

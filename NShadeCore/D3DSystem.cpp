@@ -140,20 +140,16 @@ HRESULT D3DSystem::CreateDevice()
 
     Res::Get()->DefaultColor = new float[4]{0.0f, 0.0f, 0.0f, 0.0f};
 
-    // TODO : Calculate DPI
-    Res::Get()->Dpi = 96.00;
+    ID2D1Factory *factory;
+    D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &factory);
+    factory->GetDesktopDpi(&Res::Get()->DpiX, &Res::Get()->DpiY);
 
-    // TODO : Get available formats dynamically
-    // 8 bit per channel (rgba)
-    RenderingQuality quality0_8 = { DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT, 0, 1, 0 }; // Should work for everyone
-    RenderingQuality quality2_8 = { DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT, 2, 2, 1 };
+    RenderingQuality quality0_8 = { DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT,  0, 1, 0 }; // Should work for everyone
+    RenderingQuality quality2_8 = { DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT,  2, 2, 1 };
     RenderingQuality quality4_8 = { DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT, 16, 4, 1 };
     RenderingQuality quality8_8 = { DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT, 32, 8, 1 }; // Works on my machine ;)
 
-    // 16 bit per channel  (rgba)
-    RenderingQuality quality0_16 = { DXGI_FORMAT_R16G16B16A16_UNORM, DXGI_FORMAT_D32_FLOAT, 0, 1, 0 };
-
-    Res::Get()->RenderQuality = new RenderingQuality(quality4_8);
+    Res::Get()->RenderQuality = new RenderingQuality(quality0_8);
 
     CreateViewPort();
 
@@ -309,8 +305,8 @@ LRESULT D3DSystem::MessageHandler(HWND* hWnd, unsigned int umessage, WPARAM wpar
     }
     case WM_SIZE:
     {
-        //auto viewPort = CreateViewPort(hWnd);
-        //m_pRenderer->Resize(viewPort);
+        CreateViewPort();
+        _renderer->Resize();
         return 0;
     }
 

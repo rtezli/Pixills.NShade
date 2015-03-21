@@ -109,7 +109,8 @@ public:
     D3D11_VIEWPORT              *ViewPort;
     RenderingQuality            *RenderQuality;
 
-    float                       Dpi;
+    float                       DpiX;
+    float                       DpiY;
     float                       NearZ;
     float                       FarZ;
 

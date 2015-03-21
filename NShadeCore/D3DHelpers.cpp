@@ -65,11 +65,7 @@ ID3D11RenderTargetView* D3DHelpers::CreateRenderTarget(ID3D11Resource *resource,
 
     ID3D11RenderTargetView* target;
     // resource is the back buffer i.e.
-    auto result = Res::Get()->Device->CreateRenderTargetView(resource, &renderTargetViewDesc, &target);
-    if (FAILED(result))
-    {
-        // ???  return result;
-    }
+    Res::Get()->Device->CreateRenderTargetView(resource, &renderTargetViewDesc, &target);
     return target;
 }
 
