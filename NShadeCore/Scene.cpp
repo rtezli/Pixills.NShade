@@ -74,21 +74,20 @@ Scene* Scene::CreateStandardScene()
     scene->AddLight(pointLight);
 
     /* teapot */
+    auto flatVertexShader = VertexShader::Load(L"../Debug/FlatVertexShader.cso");
     auto phongPixelShader = PixelShader::Load(L"../Debug/PhongPixelShader.cso");
-    auto phongVertexShader = VertexShader::Load(L"../Debug/PhongVertexShader.cso");
 
     auto phongShaders = new Shaders();
     phongShaders->PixelShader = phongPixelShader;
-    phongShaders->VertexShader = phongVertexShader;
+    phongShaders->VertexShader = flatVertexShader;
 
     auto phongMaterial = new Material();
     phongMaterial->SetColor(new XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
     
-    auto b = camera->GetMatrixBuffer();
-    phongVertexShader->AddBuffer(b);
-    phongVertexShader->AddBuffer(phongMaterial->GetColorBuffer());
-    phongVertexShader->AddBuffer(scene->GetAmbientBuffer());
-    phongVertexShader->AddBuffer(pointLight->GetBuffer());
+    flatVertexShader->AddBuffer(camera->GetMatrixBuffer());
+    flatVertexShader->AddBuffer(phongMaterial->GetColorBuffer());
+    flatVertexShader->AddBuffer(scene->GetAmbientBuffer());
+    flatVertexShader->AddBuffer(pointLight->GetBuffer());
 
     phongMaterial->AssignShaders(phongShaders);
 

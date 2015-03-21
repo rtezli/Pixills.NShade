@@ -3,6 +3,7 @@
 
 #include "d3d11.h"
 #include "d3dcompiler.h"
+#include "d3dhelpers.h"
 #include "scene.h"
 
 EXTERN class API Renderer

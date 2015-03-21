@@ -43,6 +43,12 @@
     <Filter Include="Header Files\Animation">
       <UniqueIdentifier>{2b372d0b-732c-4bc9-9fd3-37a5ec9a08de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Overlays">
+      <UniqueIdentifier>{3f017ea0-f882-44bb-94dc-2b3a99a5951a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Overlays">
+      <UniqueIdentifier>{2a63f77b-2aef-4587-9811-408a027c8c38}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -153,6 +159,30 @@
     <ClInclude Include="Shaders.h">
       <Filter>Header Files\Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="PostProcessor.h">
+      <Filter>Header Files\PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessingStep.h">
+      <Filter>Header Files\PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="NoiseFilter.h">
+      <Filter>Header Files\PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorGradingFilter.h">
+      <Filter>Header Files\PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="BloomFilter.h">
+      <Filter>Header Files\PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthOfField.h">
+      <Filter>Header Files\PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="MiniView.h">
+      <Filter>Header Files\Overlays</Filter>
+    </ClInclude>
+    <ClInclude Include="Overlay.h">
+      <Filter>Header Files\Overlays</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -242,6 +272,30 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Source Files\Shaders</Filter>
     </ClCompile>
+    <ClCompile Include="PostProcessor.cpp">
+      <Filter>Source Files\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="NoiseFilter.cpp">
+      <Filter>Source Files\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorGradingFilter.cpp">
+      <Filter>Source Files\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="BloomFilter.cpp">
+      <Filter>Source Files\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessingStep.cpp">
+      <Filter>Source Files\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthOfField.cpp">
+      <Filter>Source Files\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="MiniView.cpp">
+      <Filter>Source Files\Overlays</Filter>
+    </ClCompile>
+    <ClCompile Include="Overlay.cpp">
+      <Filter>Source Files\Overlays</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Bloom.hlsl">
@@ -278,6 +332,9 @@
       <Filter>Source Files\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="TextureVertexShader.hlsl">
+      <Filter>Source Files\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="FlatVertexShader.hlsl">
       <Filter>Source Files\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

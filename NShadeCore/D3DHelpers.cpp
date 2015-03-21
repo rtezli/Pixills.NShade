@@ -25,7 +25,7 @@ ID3D11Buffer* D3DHelpers::CreateBuffer(char *data, unsigned int size, D3D11_BIND
     return buffer;
 }
 
-ID3D11Texture2D* D3DHelpers::CreateTexture(D3D11_BIND_FLAG bindFlags)
+ID3D11Texture2D* D3DHelpers::CreateTexture(unsigned int width, unsigned int height, D3D11_BIND_FLAG bindFlags, RenderingQuality *quality)
 {
     D3D11_TEXTURE2D_DESC textureDesc = { 0 };
 
@@ -53,7 +53,11 @@ ID3D11Texture2D* D3DHelpers::CreateTexture(D3D11_BIND_FLAG bindFlags)
 
 ID3D11RenderTargetView* D3DHelpers::CreateRenderTarget(ID3D11Resource *resource, D3D11_RTV_DIMENSION dimensions)
 {
-    auto texture = D3DHelpers::CreateTexture(D3D11_BIND_RENDER_TARGET);
+    auto texture = D3DHelpers::CreateTexture(
+        Res::Get()->ViewPort->Width,
+        Res::Get()->ViewPort->Height,
+        D3D11_BIND_DEPTH_STENCIL,
+        Res::Get()->RenderQuality);
 
     D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
     renderTargetViewDesc.ViewDimension = dimensions;
@@ -67,4 +71,30 @@ ID3D11RenderTargetView* D3DHelpers::CreateRenderTarget(ID3D11Resource *resource,
         // ???  return result;
     }
     return target;
+}
+
+ID3D11DepthStencilView* D3DHelpers::CreateDepthStencilView()
+{ 
+    D3D11_TEXTURE2D_DESC depthStencilDesc = { 0 };
+    depthStencilDesc.ArraySize = 1;
+    depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    depthStencilDesc.MipLevels = Res::Get()->RenderQuality->MipLevels;
+    depthStencilDesc.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
+    depthStencilDesc.SampleDesc.Count = Res::Get()->RenderQuality->SampleCount;
+    depthStencilDesc.Format = Res::Get()->RenderQuality->BufferFormat;
+    depthStencilDesc.Width = Res::Get()->ViewPort->Width;
+    depthStencilDesc.Height = Res::Get()->ViewPort->Height;
+
+    ID3D11Texture2D *depthStencil;
+    Res::Get()->Device->CreateTexture2D(&depthStencilDesc, NULL, &depthStencil);
+    
+    D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+    depthStencilViewDesc.Format = Res::Get()->RenderQuality->BufferFormat;
+    depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
+    depthStencilViewDesc.Texture2D.MipSlice = 0;
+    depthStencilViewDesc.Flags = 0;
+
+    ID3D11DepthStencilView *depthstencilView;
+    Res::Get()->Device->CreateDepthStencilView(depthStencil, &depthStencilViewDesc, &depthstencilView);
+    return depthstencilView;
 }

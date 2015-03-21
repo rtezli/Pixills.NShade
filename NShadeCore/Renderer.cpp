@@ -124,12 +124,19 @@ HRESULT Renderer::CreateDepthBufferDescription()
 
 HRESULT Renderer::CreateDepthBuffer()
 {
-    auto result = CreateDepthBufferDescription();
-    if (FAILED(result))
-    {
-        return result;
-    }
-    return Res::Get()->Device->CreateTexture2D(&_depthBufferDesc, NULL, &_depthStencilBuffer);
+    _depthStencilBuffer = D3DHelpers::CreateTexture(
+        Res::Get()->ViewPort->Width,
+        Res::Get()->ViewPort->Height,
+        D3D11_BIND_DEPTH_STENCIL,
+        Res::Get()->RenderQuality);
+
+    return 0;
+    //auto result = CreateDepthBufferDescription();
+    //if (FAILED(result))
+    //{
+    //    return result;
+    //}
+    //return Res::Get()->Device->CreateTexture2D(&_depthBufferDesc, NULL, &_depthStencilBuffer);
 }
 
 HRESULT Renderer::CreateDepthStencilDescription()
@@ -448,16 +455,6 @@ void Renderer::Render(Scene *scene)
 
     _swapChain->Present(1, 0);
 }
-
-//void Renderer::SetupVertexShaders()
-//{
-//
-//}
-
-//void Renderer::SetupPixelShaders()
-//{
-//
-//}
 
 void Renderer::Tesselate(Shaders *shaders)
 {
