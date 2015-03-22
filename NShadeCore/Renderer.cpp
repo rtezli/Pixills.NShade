@@ -427,9 +427,20 @@ void Renderer::Render(Scene *scene)
         }
 
         Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
+
+        auto steps = scene->GetPostProcessingSteps();
+        if (steps)
+        {
+            for (unsigned int p = 0; p < steps->size(); p++)
+            {
+                auto step = steps->at(p);
+                _backBuffer = step.ApplyOn(_backBuffer);
+                Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
+            }
+        }  
     }
 
-    PostProcess();
+    PostProcess(scene);
 
     CopyToBackbuffer();
 
@@ -442,10 +453,9 @@ void Renderer::Tesselate(Shaders *shaders)
     {
         return;
     }
-
 }
 
-void Renderer::PostProcess()
+void Renderer::PostProcess(Scene *scene)
 {
 
 }

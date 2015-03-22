@@ -156,9 +156,6 @@
     <ClInclude Include="Shaders.h">
       <Filter>Header Files\Shaders</Filter>
     </ClInclude>
-    <ClInclude Include="PostProcessor.h">
-      <Filter>Header Files\PostProcessing</Filter>
-    </ClInclude>
     <ClInclude Include="ProcessingStep.h">
       <Filter>Header Files\PostProcessing</Filter>
     </ClInclude>
@@ -268,9 +265,6 @@
     </ClCompile>
     <ClCompile Include="Shader.cpp">
       <Filter>Source Files\Shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="PostProcessor.cpp">
-      <Filter>Source Files\PostProcessing</Filter>
     </ClCompile>
     <ClCompile Include="NoiseFilter.cpp">
       <Filter>Source Files\PostProcessing</Filter>

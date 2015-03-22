@@ -18,12 +18,11 @@ public:
 public:
     void ClearScene();
     void Render(Scene *scene);
-    void Tesselate(Shaders *shaders);
-    void PostProcess();
-    void CopyToBackbuffer();
     bool const Initialized(){ return _isInitialized; };
 private:
-
+    void Tesselate(Shaders *shaders);
+    void PostProcess(Scene *scene);
+    void CopyToBackbuffer();
     /* render target */
     HRESULT CreateRenderTargetDesciption();
     HRESULT CreateRenderTargetViewDesciption();

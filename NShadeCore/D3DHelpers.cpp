@@ -17,11 +17,7 @@ ID3D11Buffer* D3DHelpers::CreateBuffer(char *data, unsigned int size, D3D11_BIND
     bufferData.SysMemSlicePitch = 0;
 
     ID3D11Buffer* buffer;
-    auto result = Res::Get()->Device->CreateBuffer(&bufferDesc, &bufferData, &buffer);
-    if (FAILED(result))
-    {
-        // ???
-    }
+    Res::Get()->Device->CreateBuffer(&bufferDesc, &bufferData, &buffer);
     return buffer;
 }
 
@@ -43,11 +39,7 @@ ID3D11Texture2D* D3DHelpers::CreateTexture(unsigned int width, unsigned int heig
     textureDesc.ArraySize = 1;
 
     ID3D11Texture2D* texture;
-    auto result = Res::Get()->Device->CreateTexture2D(&textureDesc, NULL, &texture);
-    if (FAILED(result))
-    {
-        // ???  return result;
-    }
+    Res::Get()->Device->CreateTexture2D(&textureDesc, NULL, &texture);
     return texture;
 }
 
