@@ -5,7 +5,7 @@ Scene::Scene()
 {
     _models = shared_ptr<vector<Model>>(new vector<Model>());
     _lights = shared_ptr<vector<Light>>(new vector<Light>());
-    _resourceMappings = shared_ptr<vector<ResourceMapping>>(new vector<ResourceMapping>());
+    _processingSteps = shared_ptr<vector<ProcessingStep>>(new vector<ProcessingStep>());
 }
 
 void Scene::Clear()
@@ -33,9 +33,9 @@ void Scene::AddCamera(Camera *camera)
     _camera = shared_ptr<Camera>(camera);
 }
 
-void Scene::AddResourceMapping(ResourceMapping *mapping)
+void Scene::AddPostProcessingStep(ProcessingStep *step)
 {
-    _resourceMappings->push_back(*mapping);
+    _processingSteps->push_back(*step);
 }
 
 void Scene::Load(wstring fileName)
@@ -124,5 +124,12 @@ Scene* Scene::CreateStandardScene()
 
     scene->AddModel(plane);
 
+    auto bloomStep = new ProcessingStep();
+    auto bloomPixelShader = PixelShader::Load(L"../Debug/BloomPixelShader..cso");
+    auto bloomShaders = new Shaders();
+    bloomShaders->PixelShader = bloomPixelShader;
+    bloomStep->AssignShaders(bloomShaders);
+    //scene->AddPostProcessingStep(bloomStep);
+    
     return scene;
 }

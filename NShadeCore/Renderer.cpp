@@ -66,7 +66,7 @@ HRESULT Renderer::CreateRenderTargetDesciption()
     _renderTargetDesc.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
     _renderTargetDesc.SampleDesc.Count = Res::Get()->RenderQuality->SampleCount;
     _renderTargetDesc.Usage = D3D11_USAGE_DEFAULT;
-    _renderTargetDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
+    _renderTargetDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
     _renderTargetDesc.CPUAccessFlags = 0;
     _renderTargetDesc.MiscFlags = 0;
 

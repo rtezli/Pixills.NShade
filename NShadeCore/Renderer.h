@@ -58,9 +58,11 @@ private:
     ID3D11Texture2D                 *_depthStencilBuffer;
 
     ID3D11Texture2D                 *_renderTarget;
+    ID3D11RenderTargetView          *_renderTargetView;
+
     ID3D11DepthStencilState         *_depthStencilState;
     ID3D11DepthStencilView          *_depthStencilView;
-    ID3D11RenderTargetView          *_renderTargetView;
+
 
     IDXGISwapChain                  *_swapChain;
     int                             _swapChainFlags;
