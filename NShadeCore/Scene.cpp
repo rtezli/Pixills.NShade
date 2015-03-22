@@ -100,6 +100,7 @@ Scene* Scene::CreateStandardScene()
 
     /* plane */
 
+    auto particleGeometryShader = GeometryShader::Load(L"../Debug/ParticleGeometryShader.cso");
     auto textureVertexShader = VertexShader::Load(L"../Debug/TextureVertexShader.cso");
     textureVertexShader->AddBuffer(camera->GetMatrixBuffer());
 
@@ -115,6 +116,7 @@ Scene* Scene::CreateStandardScene()
     auto textureShaders = new Shaders();
     textureShaders->PixelShader = texturePixelShader;
     textureShaders->VertexShader = textureVertexShader;
+    //textureShaders->GeometryShader = particleGeometryShader;
     textureMaterial->AssignShaders(textureShaders);
     
     auto plane = Model::CreateHorizontalPlane(20.0f, new XMFLOAT3(0.0f, 0.0f, 0.0f));

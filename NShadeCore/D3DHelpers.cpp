@@ -20,7 +20,7 @@ ID3D11Buffer* D3DHelpers::CreateBuffer(char *data, unsigned int size, D3D11_BIND
     auto result = Res::Get()->Device->CreateBuffer(&bufferDesc, &bufferData, &buffer);
     if (FAILED(result))
     {
-       // ???
+        // ???
     }
     return buffer;
 }
@@ -70,7 +70,7 @@ ID3D11RenderTargetView* D3DHelpers::CreateRenderTarget(ID3D11Resource *resource,
 }
 
 ID3D11DepthStencilView* D3DHelpers::CreateDepthStencilView()
-{ 
+{
     D3D11_TEXTURE2D_DESC depthStencilDesc = { 0 };
     depthStencilDesc.ArraySize = 1;
     depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
@@ -83,7 +83,7 @@ ID3D11DepthStencilView* D3DHelpers::CreateDepthStencilView()
 
     ID3D11Texture2D *depthStencil;
     Res::Get()->Device->CreateTexture2D(&depthStencilDesc, NULL, &depthStencil);
-    
+
     D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
     depthStencilViewDesc.Format = Res::Get()->RenderQuality->BufferFormat;
     depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
@@ -93,4 +93,78 @@ ID3D11DepthStencilView* D3DHelpers::CreateDepthStencilView()
     ID3D11DepthStencilView *depthstencilView;
     Res::Get()->Device->CreateDepthStencilView(depthStencil, &depthStencilViewDesc, &depthstencilView);
     return depthstencilView;
+}
+
+ID3D11ShaderResourceView* D3DHelpers::CreateRandom1DTexture(unsigned int size)
+{
+    D3D11_SUBRESOURCE_DATA data = { 0 };
+    data.pSysMem = nullptr;
+    data.SysMemPitch = sizeof(XMFLOAT4) * size;
+    data.SysMemSlicePitch = 0;
+
+    D3D11_TEXTURE1D_DESC textureDesc = { 0 };
+    textureDesc.Width = 1024;
+    textureDesc.MiscFlags = 1;
+    textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+    textureDesc.Usage = D3D11_USAGE_IMMUTABLE;
+    textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+    textureDesc.ArraySize = 1;
+
+    ID3D11Texture1D* texture;
+    Res::Get()->Device->CreateTexture1D(&textureDesc, &data, &texture);
+
+    D3D11_SHADER_RESOURCE_VIEW_DESC resourceDesc;
+    resourceDesc.Format = textureDesc.Format;
+    resourceDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE1D;
+    resourceDesc.Texture1D.MipLevels = textureDesc.MipLevels;
+    resourceDesc.Texture1D.MostDetailedMip = 0;
+
+    ID3D11ShaderResourceView* resource;
+    Res::Get()->Device->CreateShaderResourceView(texture, &resourceDesc, &resource);
+    return resource;
+}
+
+ID3D11ShaderResourceView* D3DHelpers::CreateRandom2DTexture(unsigned int width, unsigned int height)
+{
+    D3D11_SUBRESOURCE_DATA data = { 0 };
+    data.pSysMem = nullptr;
+    data.SysMemPitch = sizeof(XMFLOAT4) * width * height;
+    data.SysMemSlicePitch = 0;
+
+    D3D11_TEXTURE2D_DESC textureDesc = { 0 };
+    textureDesc.Width = width;
+    textureDesc.Height = height;
+    textureDesc.MiscFlags = 1;
+    textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+    textureDesc.Usage = D3D11_USAGE_IMMUTABLE;
+    textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+    textureDesc.ArraySize = 1;
+
+    ID3D11Texture2D* texture;
+    Res::Get()->Device->CreateTexture2D(&textureDesc, &data, &texture);
+
+    D3D11_SHADER_RESOURCE_VIEW_DESC resourceDesc;
+    resourceDesc.Format = textureDesc.Format;
+    resourceDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    resourceDesc.Texture2D.MipLevels = textureDesc.MipLevels;
+    resourceDesc.Texture2D.MostDetailedMip = 0;
+
+    ID3D11ShaderResourceView* resource;
+    Res::Get()->Device->CreateShaderResourceView(texture, &resourceDesc, &resource);
+    return resource;
+}
+
+float D3DHelpers::RandomFloat(float min, float max)
+{
+    auto r = rand();
+    auto random = (float)(r) / (float)RAND_MAX;
+    return min + random * (max - min);
+}
+
+XMFLOAT4* D3DHelpers::RandomXMFLOAT4()
+{
+    auto x = D3DHelpers::RandomFloat(-1.0f, 1.0f);
+    auto y = D3DHelpers::RandomFloat(-1.0f, 1.0f);
+    auto z = D3DHelpers::RandomFloat(-1.0f, 1.0f);
+    return new XMFLOAT4(x, y, z, 0.0f);
 }
