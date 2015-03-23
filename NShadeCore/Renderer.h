@@ -27,7 +27,7 @@ private:
     /* render target */
 
     HRESULT CreateImmediateRenderTarget();
-    HRESULT CreateDeferredRenderTarget();
+    //HRESULT CreateDeferredRenderTarget();
 
     /* swap chain */
     HRESULT	CreateSwapChainDesciption();
@@ -54,11 +54,7 @@ private:
     HRESULT CreateViewPort();
 private:
     ID3D11Texture2D                 *_backBuffer;
-    ID3D11Texture2D                 *_deferredBuffer;
-    ID3D11Texture2D                 *_depthStencil;
-    ID3D11Texture2D                 *_depthStencilBuffer;
 
-    ID3D11Texture2D                 *_renderTarget;
     ID3D11RenderTargetView          *_renderTargetView;
 
     ID3D11DepthStencilState         *_depthStencilState;
@@ -69,15 +65,8 @@ private:
     int                             _swapChainFlags;
     int                             _bufferCount;
 
-    D3D11_TEXTURE2D_DESC            _depthBufferDesc;
+
     DXGI_SWAP_CHAIN_DESC            _swapChainDescription;
-
-    D3D11_TEXTURE2D_DESC            _depthStencilDesc;
-    D3D11_DEPTH_STENCIL_DESC        _depthStencilStateDesc;
-    D3D11_DEPTH_STENCIL_VIEW_DESC   _depthStencilViewDesc;
-
-    D3D11_TEXTURE2D_DESC            _renderTargetDesc;
-    D3D11_RENDER_TARGET_VIEW_DESC   _renderTargetViewDesc;
 
     D3D11_RASTERIZER_DESC           _rasterizerDesc;
 

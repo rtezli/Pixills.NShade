@@ -21,16 +21,16 @@ ID3D11Buffer* D3DHelpers::CreateBuffer(char *data, unsigned int size, D3D11_BIND
     return buffer;
 }
 
-ID3D11Texture2D* D3DHelpers::CreateTexture(unsigned int width, unsigned int height, D3D11_BIND_FLAG bindFlags, RenderingQuality *quality)
+ID3D11Texture2D* D3DHelpers::CreateTexture(unsigned int width, unsigned int height,  D3D11_BIND_FLAG bindFlags, RenderingQuality *quality)
 {
     D3D11_TEXTURE2D_DESC textureDesc = { 0 };
 
-    textureDesc.Width = (unsigned int)Res::Get()->ViewPort->Width;
-    textureDesc.Height = (unsigned int)Res::Get()->ViewPort->Height;
-    textureDesc.Format = Res::Get()->RenderQuality->TextureFormat;
-    textureDesc.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
-    textureDesc.SampleDesc.Count = Res::Get()->RenderQuality->SampleCount;
-    textureDesc.MipLevels = Res::Get()->RenderQuality->MipLevels;
+    textureDesc.Width = width;
+    textureDesc.Height = height;
+    textureDesc.Format = quality->BufferFormat;
+    textureDesc.SampleDesc.Quality = quality->Quality;
+    textureDesc.SampleDesc.Count = quality->SampleCount;
+    textureDesc.MipLevels = quality->MipLevels;
 
     textureDesc.Usage = D3D11_USAGE_DEFAULT;
     textureDesc.BindFlags = bindFlags;
@@ -45,11 +45,12 @@ ID3D11Texture2D* D3DHelpers::CreateTexture(unsigned int width, unsigned int heig
 
 ID3D11RenderTargetView* D3DHelpers::CreateRenderTarget(ID3D11Resource *resource, D3D11_RTV_DIMENSION dimensions)
 {
+    auto quality = Res::Get()->RenderQuality;
     auto texture = D3DHelpers::CreateTexture(
         Res::Get()->ViewPort->Width,
         Res::Get()->ViewPort->Height,
-        D3D11_BIND_DEPTH_STENCIL,
-        Res::Get()->RenderQuality);
+        D3D11_BIND_RENDER_TARGET,
+        quality);
 
     D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
     renderTargetViewDesc.ViewDimension = dimensions;

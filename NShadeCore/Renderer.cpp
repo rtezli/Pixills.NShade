@@ -15,13 +15,8 @@ Renderer::Renderer(bool useSwapChain)
 HRESULT Renderer::Initialize()
 {
     _isInitialized = false;
-    auto result = CreateDepthBuffer();
-    if (FAILED(result))
-    {
-        return result;
-    }
 
-    result = CreateDepthStencil();
+    auto result = CreateDepthStencil();
     if (FAILED(result))
     {
         return result;
@@ -34,12 +29,6 @@ HRESULT Renderer::Initialize()
     }
 
     result = CreateImmediateRenderTarget();
-    if (FAILED(result))
-    {
-        return result;
-    }
-
-    result = CreateDeferredRenderTarget();
     if (FAILED(result))
     {
         return result;
@@ -64,165 +53,62 @@ HRESULT Renderer::Initialize()
 
 HRESULT Renderer::CreateImmediateRenderTarget()
 {
-    _renderTargetDesc.Width = Res::Get()->ViewPort->Width;
-    _renderTargetDesc.Height = Res::Get()->ViewPort->Height;
-    _renderTargetDesc.MipLevels = Res::Get()->RenderQuality->MipLevels;
-    _renderTargetDesc.ArraySize = 1;
-    _renderTargetDesc.Format = Res::Get()->RenderQuality->TextureFormat;
-    _renderTargetDesc.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
-    _renderTargetDesc.SampleDesc.Count = Res::Get()->RenderQuality->SampleCount;
-    _renderTargetDesc.Usage = D3D11_USAGE_DEFAULT;
-    _renderTargetDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
-    _renderTargetDesc.CPUAccessFlags = 0;
-    _renderTargetDesc.MiscFlags = 0;
-
-    auto result = Res::Get()->Device->CreateTexture2D(&_renderTargetDesc, NULL, &_renderTarget);
-
-    _renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
-    _renderTargetViewDesc.Format = _renderTargetDesc.Format;
-
-    result = Res::Get()->Device->CreateRenderTargetView(_backBuffer, &_renderTargetViewDesc, &_renderTargetView);
-    return result;
-}
-
-
-HRESULT Renderer::CreateDeferredRenderTarget()
-{
-    D3D11_TEXTURE2D_DESC renderTargetDesc;
-    renderTargetDesc.Width = Res::Get()->ViewPort->Width;
-    renderTargetDesc.Height = Res::Get()->ViewPort->Height;
-    renderTargetDesc.MipLevels = Res::Get()->RenderQuality->MipLevels;
-    renderTargetDesc.ArraySize = 1;
-    renderTargetDesc.Format = Res::Get()->RenderQuality->TextureFormat;
-    renderTargetDesc.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
-    renderTargetDesc.SampleDesc.Count = Res::Get()->RenderQuality->SampleCount;
-    renderTargetDesc.Usage = D3D11_USAGE_DEFAULT;
-    renderTargetDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
-    renderTargetDesc.CPUAccessFlags = 0;
-    renderTargetDesc.MiscFlags = 0;
-
-    ID3D11Texture2D *texture;
-    auto result = Res::Get()->Device->CreateTexture2D(&renderTargetDesc, NULL, &texture);
-
     D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
     renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
-    renderTargetViewDesc.Format = renderTargetDesc.Format;
+    renderTargetViewDesc.Format = Res::Get()->RenderQuality->TextureFormat;
 
-    ID3D11RenderTargetView *renderTerget;
-    result = Res::Get()->Device->CreateRenderTargetView(_backBuffer, &renderTargetViewDesc, &renderTerget);
-
+    auto result = Res::Get()->Device->CreateRenderTargetView(_backBuffer, &renderTargetViewDesc, &_renderTargetView);
     return result;
 }
 
-
-HRESULT Renderer::CreateDepthBufferDescription()
-{
-    _depthBufferDesc.Width = Res::Get()->ViewPort->Width;
-    _depthBufferDesc.Height = Res::Get()->ViewPort->Height;
-    _depthBufferDesc.MipLevels = Res::Get()->RenderQuality->MipLevels;
-    _depthBufferDesc.Format = Res::Get()->RenderQuality->BufferFormat;
-    _depthBufferDesc.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
-    _depthBufferDesc.SampleDesc.Count = Res::Get()->RenderQuality->SampleCount;
-    _depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    _depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    _depthBufferDesc.CPUAccessFlags = 0;
-    _depthBufferDesc.MiscFlags = 0;
-    _depthBufferDesc.ArraySize = 1;
-
-    return 0;
-}
-
-HRESULT Renderer::CreateDepthBuffer()
-{
-    D3D11_TEXTURE2D_DESC depthStencilDesc = { 0 };
-    depthStencilDesc.ArraySize = 1;
-    depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    depthStencilDesc.MipLevels = Res::Get()->RenderQuality->MipLevels;
-    depthStencilDesc.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
-    depthStencilDesc.SampleDesc.Count = Res::Get()->RenderQuality->SampleCount;
-    depthStencilDesc.Format = Res::Get()->RenderQuality->BufferFormat;
-    depthStencilDesc.Width = Res::Get()->ViewPort->Width;
-    depthStencilDesc.Height = Res::Get()->ViewPort->Height;
-
-    Res::Get()->Device->CreateTexture2D(&depthStencilDesc, NULL, &_depthStencilBuffer);
-
-    return 0;
-}
-
-HRESULT Renderer::CreateDepthStencilDescription()
-{
-    D3D11_TEXTURE2D_DESC depthStencilDesc = { 0 };
-    depthStencilDesc.ArraySize = 1;
-    depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    depthStencilDesc.MipLevels = Res::Get()->RenderQuality->MipLevels;
-    depthStencilDesc.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
-    depthStencilDesc.SampleDesc.Count = Res::Get()->RenderQuality->SampleCount;
-    depthStencilDesc.Format = Res::Get()->RenderQuality->BufferFormat;
-    depthStencilDesc.Width = Res::Get()->ViewPort->Width;
-    depthStencilDesc.Height = Res::Get()->ViewPort->Height;
-
-    _depthStencilDesc = depthStencilDesc;
-    return 0;
-}
 
 HRESULT Renderer::CreateDepthStencilStateDescription()
 {
-    _depthStencilStateDesc.DepthEnable = true;
-    _depthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-    _depthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
+    D3D11_DEPTH_STENCIL_DESC depthStencilStateDesc;
+    depthStencilStateDesc.DepthEnable = true;
+    depthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    depthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
 
-    _depthStencilStateDesc.StencilEnable = true;
-    _depthStencilStateDesc.StencilReadMask = 0xFF;
-    _depthStencilStateDesc.StencilWriteMask = 0xFF;
+    depthStencilStateDesc.StencilEnable = true;
+    depthStencilStateDesc.StencilReadMask = 0xFF;
+    depthStencilStateDesc.StencilWriteMask = 0xFF;
 
-    _depthStencilStateDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-    _depthStencilStateDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-    _depthStencilStateDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-    _depthStencilStateDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+    depthStencilStateDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+    depthStencilStateDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+    depthStencilStateDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+    depthStencilStateDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-    _depthStencilStateDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-    _depthStencilStateDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-    _depthStencilStateDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-    _depthStencilStateDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+    depthStencilStateDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+    depthStencilStateDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+    depthStencilStateDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+    depthStencilStateDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-    auto result = Res::Get()->Device->CreateDepthStencilState(&_depthStencilStateDesc, &_depthStencilState);
-
+    auto result = Res::Get()->Device->CreateDepthStencilState(&depthStencilStateDesc, &_depthStencilState);
     Res::Get()->DeviceContext->OMSetDepthStencilState(_depthStencilState, 1);
     return result;
 }
 
-HRESULT Renderer::CreateDepthStencilViewDescription()
-{
-    _depthStencilViewDesc.Format = Res::Get()->RenderQuality->BufferFormat;
-    _depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
-    _depthStencilViewDesc.Texture2D.MipSlice = 0;
-    _depthStencilViewDesc.Flags = 0;
-
-    return 0;
-}
-
 HRESULT Renderer::CreateDepthStencil()
 {
-    auto result = CreateDepthStencilDescription();
+    auto result = CreateDepthStencilStateDescription();
     if (FAILED(result))
     {
         return result;
     }
 
-    result = CreateDepthStencilViewDescription();
-    if (FAILED(result))
-    {
-        return result;
-    }
+    auto depthStencil = D3DHelpers::CreateTexture(
+        Res::Get()->ViewPort->Width, 
+        Res::Get()->ViewPort->Height, 
+        D3D11_BIND_DEPTH_STENCIL, 
+        Res::Get()->RenderQuality);
 
-    result = CreateDepthStencilStateDescription();
-    if (FAILED(result))
-    {
-        return result;
-    }
+    D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+    depthStencilViewDesc.Format = Res::Get()->RenderQuality->BufferFormat;
+    depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
+    depthStencilViewDesc.Texture2D.MipSlice = 0;
+    depthStencilViewDesc.Flags = 0;
 
-    result = Res::Get()->Device->CreateTexture2D(&_depthStencilDesc, NULL, &_depthStencil);
-    result = Res::Get()->Device->CreateDepthStencilView(_depthStencil, &_depthStencilViewDesc, &_depthStencilView);
+    result = Res::Get()->Device->CreateDepthStencilView(depthStencil, &depthStencilViewDesc, &_depthStencilView);
 
     if (FAILED(result))
     {
@@ -302,14 +188,7 @@ HRESULT Renderer::CreateSwapChain()
         return result;
     }
 
-    if (_renderDeferred)
-    {
-        result = _swapChain->GetBuffer(0, IID_PPV_ARGS(&_deferredBuffer));
-    }
-    else
-    {
-        result = _swapChain->GetBuffer(0, IID_PPV_ARGS(&_backBuffer));
-    }
+    result = _swapChain->GetBuffer(0, IID_PPV_ARGS(&_backBuffer));
     if (FAILED(result))
     {
         return result;
@@ -443,10 +322,10 @@ void Renderer::Render(Scene *scene)
             for (unsigned int p = 0; p < steps->size(); p++)
             {
                 auto step = steps->at(p);
-                _backBuffer = step.ApplyOn(_backBuffer);
+                //_backBuffer = step.ApplyOn(_backBuffer);
                 Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
             }
-        }  
+        }
     }
 
     PostProcess(scene);
