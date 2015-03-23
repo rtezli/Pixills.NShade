@@ -23,10 +23,11 @@ private:
     void Tesselate(Shaders *shaders);
     void PostProcess(Scene *scene);
     void CopyToBackbuffer();
+    
     /* render target */
-    HRESULT CreateRenderTargetDesciption();
-    HRESULT CreateRenderTargetViewDesciption();
-    HRESULT CreateRenderTarget();
+
+    HRESULT CreateImmediateRenderTarget();
+    HRESULT CreateDeferredRenderTarget();
 
     /* swap chain */
     HRESULT	CreateSwapChainDesciption();

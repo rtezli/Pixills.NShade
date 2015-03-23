@@ -33,7 +33,13 @@ HRESULT Renderer::Initialize()
         return result;
     }
 
-    result = CreateRenderTarget();
+    result = CreateImmediateRenderTarget();
+    if (FAILED(result))
+    {
+        return result;
+    }
+
+    result = CreateDeferredRenderTarget();
     if (FAILED(result))
     {
         return result;
@@ -56,7 +62,7 @@ HRESULT Renderer::Initialize()
 }
 
 
-HRESULT Renderer::CreateRenderTargetDesciption()
+HRESULT Renderer::CreateImmediateRenderTarget()
 {
     _renderTargetDesc.Width = Res::Get()->ViewPort->Width;
     _renderTargetDesc.Height = Res::Get()->ViewPort->Height;
@@ -66,42 +72,45 @@ HRESULT Renderer::CreateRenderTargetDesciption()
     _renderTargetDesc.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
     _renderTargetDesc.SampleDesc.Count = Res::Get()->RenderQuality->SampleCount;
     _renderTargetDesc.Usage = D3D11_USAGE_DEFAULT;
-    _renderTargetDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+    _renderTargetDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
     _renderTargetDesc.CPUAccessFlags = 0;
     _renderTargetDesc.MiscFlags = 0;
 
-    return Res::Get()->Device->CreateTexture2D(&_renderTargetDesc, NULL, &_renderTarget);
-}
+    auto result = Res::Get()->Device->CreateTexture2D(&_renderTargetDesc, NULL, &_renderTarget);
 
-HRESULT Renderer::CreateRenderTargetViewDesciption()
-{
     _renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
     _renderTargetViewDesc.Format = _renderTargetDesc.Format;
-    return 0;
+
+    result = Res::Get()->Device->CreateRenderTargetView(_backBuffer, &_renderTargetViewDesc, &_renderTargetView);
+    return result;
 }
 
-HRESULT Renderer::CreateRenderTarget()
+
+HRESULT Renderer::CreateDeferredRenderTarget()
 {
-    auto result = CreateRenderTargetDesciption();
-    if (FAILED(result))
-    {
-        return result;
-    }
+    D3D11_TEXTURE2D_DESC renderTargetDesc;
+    renderTargetDesc.Width = Res::Get()->ViewPort->Width;
+    renderTargetDesc.Height = Res::Get()->ViewPort->Height;
+    renderTargetDesc.MipLevels = Res::Get()->RenderQuality->MipLevels;
+    renderTargetDesc.ArraySize = 1;
+    renderTargetDesc.Format = Res::Get()->RenderQuality->TextureFormat;
+    renderTargetDesc.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
+    renderTargetDesc.SampleDesc.Count = Res::Get()->RenderQuality->SampleCount;
+    renderTargetDesc.Usage = D3D11_USAGE_DEFAULT;
+    renderTargetDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
+    renderTargetDesc.CPUAccessFlags = 0;
+    renderTargetDesc.MiscFlags = 0;
 
-    result = CreateRenderTargetViewDesciption();
-    if (FAILED(result))
-    {
-        return result;
-    }
+    ID3D11Texture2D *texture;
+    auto result = Res::Get()->Device->CreateTexture2D(&renderTargetDesc, NULL, &texture);
 
-    if (_renderDeferred)
-    {
-        result = Res::Get()->Device->CreateRenderTargetView(_deferredBuffer, &_renderTargetViewDesc, &_renderTargetView);
-    }
-    else
-    {
-        result = Res::Get()->Device->CreateRenderTargetView(_backBuffer, &_renderTargetViewDesc, &_renderTargetView);
-    }
+    D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+    renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
+    renderTargetViewDesc.Format = renderTargetDesc.Format;
+
+    ID3D11RenderTargetView *renderTerget;
+    result = Res::Get()->Device->CreateRenderTargetView(_backBuffer, &renderTargetViewDesc, &renderTerget);
+
     return result;
 }
 
