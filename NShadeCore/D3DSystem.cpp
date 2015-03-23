@@ -103,7 +103,9 @@ HRESULT D3DSystem::CreateDevice()
 
     ID3D11Device* device;
     ID3D11DeviceContext* context;
+    ID3D11DeviceContext* deferredContext;
 
+ 
     auto createResult = D3D11CreateDevice(
         NULL,
         D3D_DRIVER_TYPE_HARDWARE, // D3D_DRIVER_TYPE_WARP, //
@@ -115,6 +117,8 @@ HRESULT D3DSystem::CreateDevice()
         &device,
         &_d3dFeatureLevel,
         &context);
+
+    device->CreateDeferredContext(0, &deferredContext);
 
     if (FAILED(createResult))
     {
@@ -155,6 +159,7 @@ HRESULT D3DSystem::CreateDevice()
 
     Res::Get()->Device = device;
     Res::Get()->DeviceContext = context;
+    Res::Get()->DeferredContext = deferredContext;
     Res::Get()->NearZ = 0.0f;
     Res::Get()->FarZ = 1000.0f;
 

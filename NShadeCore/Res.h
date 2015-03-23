@@ -103,6 +103,7 @@ public:
     HWND                        *WindowHandle;
     ID3D11Device                *Device;
     ID3D11DeviceContext         *DeviceContext;
+    ID3D11DeviceContext         *DeferredContext;
 
     ID3D11RasterizerState       *RasterizerState;
 

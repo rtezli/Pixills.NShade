@@ -25,14 +25,16 @@ ID3D11Texture2D* ProcessingStep::ApplyOn(ID3D11Texture2D *texture)
 {
     D3D11_TEXTURE2D_DESC desc;
     texture->GetDesc(&desc);
+    desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 
-    _resourceDescription.Format = desc.Format;
-    _resourceDescription.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
-    _resourceDescription.Texture2D.MipLevels = desc.MipLevels;
-    _resourceDescription.Texture2D.MostDetailedMip = 0;
+    D3D11_SHADER_RESOURCE_VIEW_DESC resourceDescription;
+    resourceDescription.Format = desc.Format;
+    resourceDescription.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
+    resourceDescription.Texture2D.MipLevels = desc.MipLevels;
+    resourceDescription.Texture2D.MostDetailedMip = 0;
 
     ID3D11ShaderResourceView *resource;
-    Res::Get()->Device->CreateShaderResourceView(texture, &_resourceDescription, &resource);
+    Res::Get()->Device->CreateShaderResourceView(texture, &resourceDescription, &resource);
     Res::Get()->DeviceContext->VSSetShaderResources(0, 1, &resource);
 
     auto vertexShader = _shaders->VertexShader;
