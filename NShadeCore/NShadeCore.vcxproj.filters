@@ -180,6 +180,9 @@
     <ClInclude Include="FpsTextRenderer.h">
       <Filter>Header Files\Overlays</Filter>
     </ClInclude>
+    <ClInclude Include="DeferredBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -289,6 +292,9 @@
     </ClCompile>
     <ClCompile Include="FpsTextRenderer.cpp">
       <Filter>Source Files\Overlays</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredBuffer.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

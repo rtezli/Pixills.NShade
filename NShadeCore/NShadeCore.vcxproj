@@ -180,6 +180,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ColorGradingFilter.h" />
     <ClInclude Include="ComputeShader.h" />
+    <ClInclude Include="DeferredBuffer.h" />
     <ClInclude Include="DepthOfField.h" />
     <ClInclude Include="MiniView.h" />
     <ClInclude Include="Node.h" />
@@ -225,6 +226,7 @@
     <ClCompile Include="ComputeShader.cpp" />
     <ClCompile Include="D3DHelpers.cpp" />
     <ClCompile Include="D3DSystem.cpp" />
+    <ClCompile Include="DeferredBuffer.cpp" />
     <ClCompile Include="DepthOfField.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>

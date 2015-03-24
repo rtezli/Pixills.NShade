@@ -43,18 +43,11 @@ ID3D11Texture2D* D3DHelpers::CreateTexture(unsigned int width, unsigned int heig
     return texture;
 }
 
-ID3D11RenderTargetView* D3DHelpers::CreateRenderTarget(ID3D11Resource *resource, D3D11_RTV_DIMENSION dimensions)
+ID3D11RenderTargetView* D3DHelpers::CreateRenderTarget(ID3D11Resource *resource, D3D11_RTV_DIMENSION dimensions, RenderingQuality *quality)
 {
-    auto quality = Res::Get()->RenderQuality;
-    auto texture = D3DHelpers::CreateTexture(
-        Res::Get()->ViewPort->Width,
-        Res::Get()->ViewPort->Height,
-        D3D11_BIND_RENDER_TARGET,
-        quality);
-
     D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
     renderTargetViewDesc.ViewDimension = dimensions;
-    renderTargetViewDesc.Format = Res::Get()->RenderQuality->TextureFormat;
+    renderTargetViewDesc.Format = quality->TextureFormat;
 
     ID3D11RenderTargetView* target;
     // resource is the back buffer i.e.
