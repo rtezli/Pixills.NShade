@@ -180,10 +180,10 @@
     <ClInclude Include="FpsTextRenderer.h">
       <Filter>Header Files\Overlays</Filter>
     </ClInclude>
-    <ClInclude Include="DeferredBuffer.h">
+    <ClInclude Include="ImmediateTarget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ImmediateBuffer.h">
+    <ClInclude Include="DeferredTarget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -296,10 +296,10 @@
     <ClCompile Include="FpsTextRenderer.cpp">
       <Filter>Source Files\Overlays</Filter>
     </ClCompile>
-    <ClCompile Include="DeferredBuffer.cpp">
+    <ClCompile Include="ImmediateTarget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ImmediateBuffer.cpp">
+    <ClCompile Include="DeferredTarget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -3,10 +3,10 @@
 #include "res.h"
 #include "d3dhelpers.h"
 
-class ImmediateBuffer
+class ImmediateTarget
 {
 public:
-    ImmediateBuffer();
+    ImmediateTarget();
     void SetRenderTargets();
     void ClearRenderTargets();
 private:

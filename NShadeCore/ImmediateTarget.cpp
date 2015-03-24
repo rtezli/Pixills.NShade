@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "immediatebuffer.h"
+#include "immediatetarget.h"
 
 
-ImmediateBuffer::ImmediateBuffer()
+ImmediateTarget::ImmediateTarget()
 {
     auto width = Res::Get()->ViewPort->Width;
     auto height = Res::Get()->ViewPort->Height;
@@ -23,13 +23,13 @@ ImmediateBuffer::ImmediateBuffer()
     _renderTargetView = renderTarget;
 }
 
-void ImmediateBuffer::SetRenderTargets()
+void ImmediateTarget::SetRenderTargets()
 {
     Res::Get()->DeferredContext->OMSetRenderTargets(1, &_renderTargetView, _depthStencilView);
     Res::Get()->DeferredContext->RSSetViewports(1, Res::Get()->ViewPort);
 }
 
-void ImmediateBuffer::ClearRenderTargets()
+void ImmediateTarget::ClearRenderTargets()
 {
     Res::Get()->DeferredContext->ClearRenderTargetView(_renderTargetView, Res::Get()->DefaultColor);
     Res::Get()->DeferredContext->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);

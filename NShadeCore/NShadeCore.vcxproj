@@ -180,9 +180,9 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ColorGradingFilter.h" />
     <ClInclude Include="ComputeShader.h" />
-    <ClInclude Include="DeferredBuffer.h" />
+    <ClInclude Include="DeferredTarget.h" />
     <ClInclude Include="DepthOfField.h" />
-    <ClInclude Include="ImmediateBuffer.h" />
+    <ClInclude Include="ImmediateTarget.h" />
     <ClInclude Include="MiniView.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="NoiseFilter.h" />
@@ -227,7 +227,7 @@
     <ClCompile Include="ComputeShader.cpp" />
     <ClCompile Include="D3DHelpers.cpp" />
     <ClCompile Include="D3DSystem.cpp" />
-    <ClCompile Include="DeferredBuffer.cpp" />
+    <ClCompile Include="DeferredTarget.cpp" />
     <ClCompile Include="DepthOfField.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
@@ -249,7 +249,7 @@
     <ClCompile Include="FpsTextRenderer.cpp" />
     <ClCompile Include="GeometryShader.cpp" />
     <ClCompile Include="HullShader.cpp" />
-    <ClCompile Include="ImmediateBuffer.cpp" />
+    <ClCompile Include="ImmediateTarget.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Material.cpp" />

@@ -5,10 +5,10 @@ const int BUFFER_COUNT = 2;
 #include "res.h"
 #include "d3dhelpers.h"
 
-class DeferredBuffer
+class DeferredTarget
 {
 public:
-    DeferredBuffer();
+    DeferredTarget();
     void SetRenderTargets();
     void ClearRenderTargets();
 private:

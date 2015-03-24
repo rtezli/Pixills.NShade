@@ -10,7 +10,7 @@ Renderer::Renderer(bool useSwapChain)
     _rasterizerUseMultiSampling = true;
     _bufferCount = 2;
     _swapChainFlags = 0;
-    _deferredBuffer = new DeferredBuffer();
+    _deferredTarget = new DeferredTarget();
 }
 
 HRESULT Renderer::Initialize()

@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "deferredbuffer.h"
+#include "deferredtarget.h"
 
 
-DeferredBuffer::DeferredBuffer()
+DeferredTarget::DeferredTarget()
 {
     auto width = Res::Get()->ViewPort->Width;
     auto height = Res::Get()->ViewPort->Height;
@@ -26,13 +26,13 @@ DeferredBuffer::DeferredBuffer()
     }
 }
 
-void DeferredBuffer::SetRenderTargets()
+void DeferredTarget::SetRenderTargets()
 {
     Res::Get()->DeferredContext->OMSetRenderTargets(BUFFER_COUNT, _renderTargetViewArray, _depthStencilView);
     Res::Get()->DeferredContext->RSSetViewports(1, Res::Get()->ViewPort);
 }
 
-void DeferredBuffer::ClearRenderTargets()
+void DeferredTarget::ClearRenderTargets()
 {
     for (int i = 0; i < BUFFER_COUNT; i++)
     {
