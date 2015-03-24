@@ -5,6 +5,7 @@
 #include "d3dcompiler.h"
 #include "d3dhelpers.h"
 #include "scene.h"
+#include "immediatebuffer.h"
 #include "deferredbuffer.h"
 
 EXTERN class API Renderer
@@ -62,6 +63,7 @@ private:
     ID3D11DepthStencilView          *_depthStencilView;
 
     DeferredBuffer                  *_deferredBuffer;
+    ImmediateBuffer                 *_mmediateBuffer;
     IDXGISwapChain                  *_swapChain;
     int                             _swapChainFlags;
     int                             _bufferCount;
