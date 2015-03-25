@@ -211,7 +211,7 @@
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderInput.h" />
-    <ClInclude Include="RenderTarget.h" />
+    <ClInclude Include="IRenderTarget.h" />
     <ClInclude Include="Res.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shaders.h" />
@@ -264,7 +264,6 @@
     <ClCompile Include="ProcessingStep.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderInput.cpp" />
-    <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="Res.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />

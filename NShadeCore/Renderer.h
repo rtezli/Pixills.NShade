@@ -5,6 +5,7 @@
 #include "d3dcompiler.h"
 #include "d3dhelpers.h"
 #include "scene.h"
+#include "irendertarget.h"
 #include "immediatetarget.h"
 #include "deferredtarget.h"
 
@@ -57,19 +58,20 @@ private:
 private:
     ID3D11Texture2D                 *_backBuffer;
 
-    ID3D11RenderTargetView          *_renderTargetView;
+    //ID3D11RenderTargetView          *_renderTargetView;
+    //ID3D11DepthStencilState         *_depthStencilState;
+    //ID3D11DepthStencilView          *_depthStencilView;
 
-    ID3D11DepthStencilState         *_depthStencilState;
-    ID3D11DepthStencilView          *_depthStencilView;
+    IRenderTarget                   *_renderTarget;
 
     DeferredTarget                  *_deferredTarget;
     ImmediateTarget                 *_immediateTarget;
+
     IDXGISwapChain                  *_swapChain;
-    int                             _swapChainFlags;
-    int                             _bufferCount;
-
-
     DXGI_SWAP_CHAIN_DESC            _swapChainDescription;
+    int                             _swapChainFlags;
+
+    int                             _bufferCount;
 
     D3D11_RASTERIZER_DESC           _rasterizerDesc;
 
