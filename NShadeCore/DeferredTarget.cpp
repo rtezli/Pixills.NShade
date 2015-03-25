@@ -32,8 +32,10 @@ DeferredTarget::DeferredTarget()
 DeferredTarget* DeferredTarget::Create()
 {
     auto target = new DeferredTarget();
+    target->CreateDepthStencil();
     return target;
 }
+
 
 void DeferredTarget::Render()
 {
@@ -92,4 +94,15 @@ void DeferredTarget::CreateDepthStencil()
     depthStencilViewDesc.Flags = 0;
 
     Res::Get()->Device->CreateDepthStencilView(_depthStencilBuffer, &depthStencilViewDesc, &_depthStencilView);
+}
+
+void DeferredTarget::CreateRenderTarget(ID3D11Resource *buffer)
+{
+    D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+    renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
+    renderTargetViewDesc.Format = Res::Get()->RenderQuality->TextureFormat;
+
+    ID3D11RenderTargetView *targetView;
+    Res::Get()->Device->CreateRenderTargetView(buffer, &renderTargetViewDesc, &targetView);
+    SetRenderTargetView(targetView);
 }

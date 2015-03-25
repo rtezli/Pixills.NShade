@@ -17,19 +17,7 @@ HRESULT Renderer::Initialize()
 {
     _isInitialized = false;
 
-    auto result = CreateDepthStencil();
-    if (FAILED(result))
-    {
-        return result;
-    }
-
-    result = CreateSwapChain();
-    if (FAILED(result))
-    {
-        return result;
-    }
-
-    result = CreateImmediateRenderTarget();
+    auto result = CreateSwapChain();
     if (FAILED(result))
     {
         return result;
@@ -50,72 +38,6 @@ HRESULT Renderer::Initialize()
     _isInitialized = true;
     return result;
 }
-
-
-HRESULT Renderer::CreateImmediateRenderTarget()
-{
-    D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
-    renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
-    renderTargetViewDesc.Format = Res::Get()->RenderQuality->TextureFormat;
-
-    auto target = _renderTarget->GetRenderTargetView();
-    ID3D11RenderTargetView *targetView;
-    Res::Get()->Device->CreateRenderTargetView(_backBuffer, &renderTargetViewDesc, &targetView);
-    _renderTarget->SetRenderTargetView(targetView);
-
-    return 0;
-}
-
-
-HRESULT Renderer::CreateDepthStencilStateDescription()
-{
-    D3D11_DEPTH_STENCIL_DESC depthStencilStateDesc;
-    depthStencilStateDesc.DepthEnable = true;
-    depthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-    depthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
-
-    depthStencilStateDesc.StencilEnable = true;
-    depthStencilStateDesc.StencilReadMask = 0xFF;
-    depthStencilStateDesc.StencilWriteMask = 0xFF;
-
-    depthStencilStateDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-    depthStencilStateDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-    depthStencilStateDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-    depthStencilStateDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-
-    depthStencilStateDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-    depthStencilStateDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-    depthStencilStateDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-    depthStencilStateDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-
-    auto depthStencilState = _renderTarget->GetDepthStencilState();
-    auto result = Res::Get()->Device->CreateDepthStencilState(&depthStencilStateDesc, &depthStencilState);
-    Res::Get()->DeviceContext->OMSetDepthStencilState(depthStencilState, 1);
-    return result;
-}
-
-HRESULT Renderer::CreateDepthStencil()
-{
-    auto result = CreateDepthStencilStateDescription();
-    if (FAILED(result))
-    {
-        return result;
-    }
-
-    D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
-    depthStencilViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
-    depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
-    depthStencilViewDesc.Texture2D.MipSlice = 0;
-    depthStencilViewDesc.Flags = 0;
-
-    auto depthStencilBuffer = _renderTarget->GetDepthStencilBuffer();
-
-    ID3D11DepthStencilView* view;
-    Res::Get()->Device->CreateDepthStencilView(depthStencilBuffer, &depthStencilViewDesc, &view);
-    _renderTarget->SetDepthStencilView(view);
-    return 0;
-}
-
 
 HRESULT Renderer::CreateSwapChainDesciption()
 {
@@ -198,6 +120,7 @@ HRESULT Renderer::CreateSwapChain()
     dxgiAdapter->Release();
     dxgiFactory->Release();
 
+    _renderTarget->CreateRenderTarget(_backBuffer);
     return 0;
 }
 

@@ -12,6 +12,7 @@ public:
     void Render();
     void SetRenderTargets();
     void ClearRenderTargets();
+    void CreateRenderTarget(ID3D11Resource *buffer);
 
     ID3D11Texture2D*            const GetDepthStencilBuffer(){ return _depthStencilBuffer; }
     ID3D11RenderTargetView*     const GetRenderTargetView(){ return _renderTargetView; }
@@ -31,6 +32,7 @@ private:
     void CreateDepthStencilViewDescription();
     void CreateDepthStencilStateDescription();
     void CreateDepthStencil();
+
 
     ID3D11Texture2D             *_renderTargetTexture;
     ID3D11RenderTargetView      *_renderTargetView;
