@@ -12,7 +12,6 @@ Renderer::Renderer(bool useSwapChain)
     _swapChainFlags = 0;
     _immediateTarget = ImmediateTarget::Create();
     _deferredTarget = DeferredTarget::Create();
-
 }
 
 HRESULT Renderer::Initialize()
@@ -111,7 +110,6 @@ HRESULT Renderer::CreateDepthStencil()
     depthStencilViewDesc.Flags = 0;
 
     auto depthStencilBuffer = _immediateTarget->GetDepthStencilBuffer();
-    auto depthStencilView = _immediateTarget->GetDepthStencilView();
 
     ID3D11DepthStencilView* view;
     Res::Get()->Device->CreateDepthStencilView(depthStencilBuffer, &depthStencilViewDesc, &view);
