@@ -64,8 +64,8 @@ private:
 
     IRenderTarget                   *_renderTarget;
 
-    DeferredTarget                  *_deferredTarget;
-    ImmediateTarget                 *_immediateTarget;
+    //DeferredTarget                  *_deferredTarget;
+    //ImmediateTarget                 *_immediateTarget;
 
     IDXGISwapChain                  *_swapChain;
     DXGI_SWAP_CHAIN_DESC            _swapChainDescription;

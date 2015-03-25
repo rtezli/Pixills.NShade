@@ -10,8 +10,7 @@ Renderer::Renderer(bool useSwapChain)
     _rasterizerUseMultiSampling = true;
     _bufferCount = 2;
     _swapChainFlags = 0;
-    _immediateTarget = ImmediateTarget::Create();
-    _deferredTarget = DeferredTarget::Create();
+    _renderTarget = ImmediateTarget::Create();
 }
 
 HRESULT Renderer::Initialize()
@@ -59,10 +58,10 @@ HRESULT Renderer::CreateImmediateRenderTarget()
     renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
     renderTargetViewDesc.Format = Res::Get()->RenderQuality->TextureFormat;
 
-    auto target = _immediateTarget->GetRenderTargetView();
+    auto target = _renderTarget->GetRenderTargetView();
     ID3D11RenderTargetView *targetView;
     Res::Get()->Device->CreateRenderTargetView(_backBuffer, &renderTargetViewDesc, &targetView);
-    _immediateTarget->SetRenderTargetView(targetView);
+    _renderTarget->SetRenderTargetView(targetView);
 
     return 0;
 }
@@ -89,7 +88,7 @@ HRESULT Renderer::CreateDepthStencilStateDescription()
     depthStencilStateDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
     depthStencilStateDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-    auto depthStencilState = _immediateTarget->GetDepthStencilState();
+    auto depthStencilState = _renderTarget->GetDepthStencilState();
     auto result = Res::Get()->Device->CreateDepthStencilState(&depthStencilStateDesc, &depthStencilState);
     Res::Get()->DeviceContext->OMSetDepthStencilState(depthStencilState, 1);
     return result;
@@ -109,11 +108,11 @@ HRESULT Renderer::CreateDepthStencil()
     depthStencilViewDesc.Texture2D.MipSlice = 0;
     depthStencilViewDesc.Flags = 0;
 
-    auto depthStencilBuffer = _immediateTarget->GetDepthStencilBuffer();
+    auto depthStencilBuffer = _renderTarget->GetDepthStencilBuffer();
 
     ID3D11DepthStencilView* view;
     Res::Get()->Device->CreateDepthStencilView(depthStencilBuffer, &depthStencilViewDesc, &view);
-    _immediateTarget->SetDepthStencilView(view);
+    _renderTarget->SetDepthStencilView(view);
     return 0;
 }
 
@@ -253,8 +252,8 @@ HRESULT Renderer::CreateViewPort()
 
 void Renderer::ClearScene()
 {
-    auto renderTarget = _immediateTarget->GetRenderTargetView();
-    auto depthStencil = _immediateTarget->GetDepthStencilView();
+    auto renderTarget = _renderTarget->GetRenderTargetView();
+    auto depthStencil = _renderTarget->GetDepthStencilView();
 
     Res::Get()->DeviceContext->OMSetRenderTargets(1, &renderTarget, depthStencil);
     Res::Get()->DeviceContext->ClearRenderTargetView(renderTarget, Res::Get()->DefaultColor);
