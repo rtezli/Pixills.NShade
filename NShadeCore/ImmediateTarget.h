@@ -7,7 +7,7 @@
 class ImmediateTarget : public IRenderTarget
 {
 public:
-    static ImmediateTarget*     Create();
+    static ImmediateTarget*     Create(RenderingQuality *quality);
 
     void Render();
     void SetRenderTargets();
@@ -28,12 +28,12 @@ public:
     void                        const SetDepthStencilView(ID3D11DepthStencilView *depthStencilView){ _depthStencilView = depthStencilView; }
     void                        const SetDepthStencilState(ID3D11DepthStencilState *depthStencilState){ _depthStencilState = depthStencilState; }
 private:
-    ImmediateTarget();
+    ImmediateTarget(RenderingQuality *quality);
     void CreateDepthStencilViewDescription();
     void CreateDepthStencilStateDescription();
     void CreateDepthStencil();
 
-
+    RenderingQuality            *_quality;
     ID3D11Texture2D             *_renderTargetTexture;
     ID3D11RenderTargetView      *_renderTargetView;
     ID3D11ShaderResourceView    *_shaderResourceView;

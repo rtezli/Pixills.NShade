@@ -2,36 +2,37 @@
 #include "deferredtarget.h"
 
 
-DeferredTarget::DeferredTarget()
+DeferredTarget::DeferredTarget(RenderingQuality *quality)
 {
-    auto width = Res::Get()->ViewPort->Width;
-    auto height = Res::Get()->ViewPort->Height;
-    auto bindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+    _quality = quality;
+    //auto width = Res::Get()->ViewPort->Width;
+    //auto height = Res::Get()->ViewPort->Height;
+    //auto bindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 
-    auto q = Res::Get()->RenderQuality;
+    //auto q = Res::Get()->RenderQuality;
 
-    auto quality = new RenderingQuality();
-    quality->Quality = Res::Get()->RenderQuality->Quality;
-    quality->SampleCount = Res::Get()->RenderQuality->SampleCount;
-    quality->MipLevels = Res::Get()->RenderQuality->MipLevels;
-    quality->BufferFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
-    quality->TextureFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+    //auto quality = new RenderingQuality();
+    //quality->Quality = Res::Get()->RenderQuality->Quality;
+    //quality->SampleCount = Res::Get()->RenderQuality->SampleCount;
+    //quality->MipLevels = Res::Get()->RenderQuality->MipLevels;
+    //quality->BufferFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
+    //quality->TextureFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 
-    _renderTargetView = (ID3D11RenderTargetView*)malloc(sizeof(ID3D11RenderTargetView) * BUFFER_COUNT);
-    _renderTargetTexture = (ID3D11Texture2D*)malloc(sizeof(ID3D11Texture2D) * BUFFER_COUNT);
+    //_renderTargetView = (ID3D11RenderTargetView*)malloc(sizeof(ID3D11RenderTargetView) * BUFFER_COUNT);
+    //_renderTargetTexture = (ID3D11Texture2D*)malloc(sizeof(ID3D11Texture2D) * BUFFER_COUNT);
 
-    for (unsigned int i = 0; i < BUFFER_COUNT; i++)
-    {
-        auto texture = D3DHelpers::CreateTexture(width, height, (D3D11_BIND_FLAG)bindFlags, quality);
-        auto renderTarget = D3DHelpers::CreateRenderTarget(texture, D3D11_RTV_DIMENSION_TEXTURE2DMS, quality);
-        _renderTargetTexture[i] = *texture;
-        _renderTargetView[i] = *renderTarget;
-    }
+    //for (unsigned int i = 0; i < BUFFER_COUNT; i++)
+    //{
+    //    auto texture = D3DHelpers::CreateTexture(width, height, (D3D11_BIND_FLAG)bindFlags, quality);
+    //    auto renderTarget = D3DHelpers::CreateRenderTarget(texture, D3D11_RTV_DIMENSION_TEXTURE2DMS, quality);
+    //    _renderTargetTexture[i] = *texture;
+    //    _renderTargetView[i] = *renderTarget;
+    //}
 }
 
-DeferredTarget* DeferredTarget::Create()
+DeferredTarget* DeferredTarget::Create(RenderingQuality *quality)
 {
-    auto target = new DeferredTarget();
+    auto target = new DeferredTarget(quality);
     target->CreateDepthStencil();
     return target;
 }
@@ -57,6 +58,17 @@ void DeferredTarget::ClearRenderTargets()
     Res::Get()->DeferredContext->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
+
+void DeferredTarget::CreateRenderTarget(ID3D11Resource *buffer)
+{
+    D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+    renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
+    renderTargetViewDesc.Format = Res::Get()->RenderQuality->TextureFormat;
+
+    ID3D11RenderTargetView *targetView;
+    Res::Get()->Device->CreateRenderTargetView(buffer, &renderTargetViewDesc, &targetView);
+    SetRenderTargetView(targetView);
+}
 
 void DeferredTarget::CreateDepthStencilStateDescription()
 {
@@ -96,13 +108,3 @@ void DeferredTarget::CreateDepthStencil()
     Res::Get()->Device->CreateDepthStencilView(_depthStencilBuffer, &depthStencilViewDesc, &_depthStencilView);
 }
 
-void DeferredTarget::CreateRenderTarget(ID3D11Resource *buffer)
-{
-    D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
-    renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
-    renderTargetViewDesc.Format = Res::Get()->RenderQuality->TextureFormat;
-
-    ID3D11RenderTargetView *targetView;
-    Res::Get()->Device->CreateRenderTargetView(buffer, &renderTargetViewDesc, &targetView);
-    SetRenderTargetView(targetView);
-}

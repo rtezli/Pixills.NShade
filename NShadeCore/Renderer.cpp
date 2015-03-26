@@ -10,7 +10,8 @@ Renderer::Renderer(bool useSwapChain)
     _rasterizerUseMultiSampling = true;
     _bufferCount = 2;
     _swapChainFlags = 0;
-    _renderTarget = ImmediateTarget::Create();
+
+    _renderTarget = ImmediateTarget::Create(Res::Get()->RenderQuality);
 }
 
 HRESULT Renderer::Initialize()
@@ -56,7 +57,7 @@ HRESULT Renderer::CreateSwapChainDesciption()
 
     _swapChainDescription.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
     _swapChainDescription.SampleDesc.Count = Res::Get()->RenderQuality->SampleCount;
-    _swapChainDescription.BufferDesc.Format = Res::Get()->RenderQuality->TextureFormat;
+    _swapChainDescription.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;// Res::Get()->RenderQuality->TextureFormat;
     _swapChainDescription.BufferDesc.Width = Res::Get()->ViewPort->Width;
     _swapChainDescription.BufferDesc.Height = Res::Get()->ViewPort->Height;
 

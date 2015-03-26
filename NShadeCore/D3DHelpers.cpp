@@ -27,7 +27,7 @@ ID3D11Texture2D* D3DHelpers::CreateTexture(unsigned int width, unsigned int heig
 
     textureDesc.Width = width;
     textureDesc.Height = height;
-    textureDesc.Format = quality->BufferFormat;
+    textureDesc.Format = quality->TextureFormat;
     textureDesc.SampleDesc.Quality = quality->Quality;
     textureDesc.SampleDesc.Count = quality->SampleCount;
     textureDesc.MipLevels = quality->MipLevels;

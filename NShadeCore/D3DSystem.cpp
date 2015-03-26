@@ -135,27 +135,19 @@ HRESULT D3DSystem::CreateDevice()
             &context);
     }
 
-
-    createResult = GetRenderQualitySettings(device);
-    if (FAILED(createResult))
-    {
-        return createResult;
-    }
-
     Res::Get()->DefaultColor = new float[4]{0.0f, 0.0f, 0.0f, 0.0f};
 
     ID2D1Factory *factory;
     D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &factory);
     factory->GetDesktopDpi(&Res::Get()->DpiX, &Res::Get()->DpiY);
 
-    //RenderingQuality quality0_8 = { DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT,  0, 1, 0 }; // Should work for everyone
-    //RenderingQuality quality2_8 = { DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT,  2, 2, 1 };
-    //RenderingQuality quality4_8 = { DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT, 16, 4, 1 };
-    //RenderingQuality quality8_8 = { DXGI_FORMAT_B8G8R8A8_UNORM, DXGI_FORMAT_D32_FLOAT, 32, 8, 1 }; // Works on my machine ;)
-
-    //Res::Get()->RenderQuality = new RenderingQuality(quality8_8);
-
     CreateViewPort();
+
+    createResult = GetRenderQualitySettings(device);
+    if (FAILED(createResult))
+    {
+        return createResult;
+    }
 
     Res::Get()->Device = device;
     Res::Get()->DeviceContext = context;
@@ -203,14 +195,16 @@ HRESULT D3DSystem::GetRenderQualitySettings(ID3D11Device* device)
 
     for (unsigned int i = maxSamples; i > 0; i--)
     {
-        result = device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, i, &numberOfLevels);
+        result = device->CheckMultisampleQualityLevels(DXGI_FORMAT_R32G32B32A32_FLOAT, i, &numberOfLevels);
         if (SUCCEEDED(result))
         {
             if (numberOfLevels < 1)
             {
                 continue;
             }
-            RenderingQuality quality = { DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_D32_FLOAT, numberOfLevels - 1, i, true };
+            auto width = Res::Get()->ViewPort->Width;
+            auto height = Res::Get()->ViewPort->Height;
+            RenderingQuality quality = { width, height, DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_D32_FLOAT, DXGI_FORMAT_R8G8B8A8_UNORM, numberOfLevels - 1, i, true };
             availableLevels.push_back(quality);
         }
     }

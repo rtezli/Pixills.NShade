@@ -23,8 +23,11 @@ struct NPolygon
 
 struct RenderingQuality
 {
+    UINT            Width;
+    UINT            Height;
     DXGI_FORMAT     TextureFormat;
     DXGI_FORMAT     BufferFormat;
+    DXGI_FORMAT     DephStencilFormat;
     unsigned int    Quality;
     unsigned int    SampleCount;
     unsigned int    MipLevels;
