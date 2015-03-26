@@ -21,12 +21,12 @@ ID3D11Buffer* D3DHelpers::CreateBuffer(char *data, unsigned int size, D3D11_BIND
     return buffer;
 }
 
-ID3D11Texture2D* D3DHelpers::CreateTexture(unsigned int width, unsigned int height,  D3D11_BIND_FLAG bindFlags, RenderingQuality *quality)
+ID3D11Texture2D* D3DHelpers::CreateTexture(D3D11_BIND_FLAG bindFlags, RenderingQuality *quality)
 {
     D3D11_TEXTURE2D_DESC textureDesc = { 0 };
 
-    textureDesc.Width = width;
-    textureDesc.Height = height;
+    textureDesc.Width = quality->Width;
+    textureDesc.Height = quality->Height;
     textureDesc.Format = quality->TextureFormat;
     textureDesc.SampleDesc.Quality = quality->Quality;
     textureDesc.SampleDesc.Count = quality->SampleCount;

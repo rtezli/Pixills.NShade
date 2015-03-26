@@ -3,22 +3,16 @@
 
 ImmediateTarget::ImmediateTarget(RenderingQuality *quality)
 {
-    _quality = quality;
+    auto q = new RenderingQuality();
+    q->Width = quality->Width;
+    q->Height = quality->Height;
+    q->Quality = quality->Quality;
+    q->SampleCount = quality->SampleCount;
+    q->MipLevels = quality->MipLevels;
+    q->TextureFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+    q->BufferFormat = DXGI_FORMAT_D32_FLOAT;
 
-    //auto bindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-
-    //auto quality = new RenderingQuality();
-    //quality->Quality = Res::Get()->RenderQuality->Quality;
-    //quality->SampleCount = Res::Get()->RenderQuality->SampleCount;
-    //quality->MipLevels = Res::Get()->RenderQuality->MipLevels; 
-    //quality->TextureFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
-    //quality->BufferFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
-
-    //_renderTargetTexture = D3DHelpers::CreateTexture(width, height, (D3D11_BIND_FLAG)bindFlags, quality);
-    //_renderTargetView = D3DHelpers::CreateRenderTarget(_renderTargetTexture, D3D11_RTV_DIMENSION_TEXTURE2DMS, quality);
-
-    //bindFlags = D3D11_BIND_DEPTH_STENCIL;
-    //quality->TextureFormat = DXGI_FORMAT_D32_FLOAT;
+    _quality = q;
     
 }
 
@@ -52,7 +46,7 @@ void ImmediateTarget::CreateRenderTarget(ID3D11Resource *buffer)
 {
     D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
     renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
-    renderTargetViewDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    renderTargetViewDesc.Format = _quality->TextureFormat;
 
     ID3D11RenderTargetView *targetView;
     Res::Get()->Device->CreateRenderTargetView(buffer, &renderTargetViewDesc, &targetView);
@@ -88,24 +82,16 @@ void ImmediateTarget::CreateDepthStencil()
 {
     CreateDepthStencilStateDescription();
 
-    auto quality = new RenderingQuality();
-    quality->Quality = Res::Get()->RenderQuality->Quality;
-    quality->SampleCount = Res::Get()->RenderQuality->SampleCount;
-    quality->MipLevels = Res::Get()->RenderQuality->MipLevels;
-    quality->TextureFormat = DXGI_FORMAT_D32_FLOAT;
-    quality->BufferFormat = DXGI_FORMAT_D32_FLOAT ;
-
     D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
-    depthStencilViewDesc.Format = quality->BufferFormat;
+    depthStencilViewDesc.Format = _quality->BufferFormat;
     depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
     depthStencilViewDesc.Texture2D.MipSlice = 0;
     depthStencilViewDesc.Flags = 0;
 
-    auto width = Res::Get()->ViewPort->Width;
-    auto height = Res::Get()->ViewPort->Height;
     auto bindFlags = D3D11_BIND_DEPTH_STENCIL;
-
-    _depthStencilBuffer = D3DHelpers::CreateTexture(width, height, (D3D11_BIND_FLAG)bindFlags, quality);
+    auto tf = _quality->TextureFormat;
+    _quality->TextureFormat = _quality->BufferFormat;
+    _depthStencilBuffer = D3DHelpers::CreateTexture((D3D11_BIND_FLAG)bindFlags, _quality);
+    _quality->TextureFormat = tf;
     Res::Get()->Device->CreateDepthStencilView(_depthStencilBuffer, &depthStencilViewDesc, &_depthStencilView);
 }
-
