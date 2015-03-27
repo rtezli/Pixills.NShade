@@ -43,6 +43,28 @@ ID3D11Texture2D* D3DHelpers::CreateTexture(D3D11_BIND_FLAG bindFlags, RenderingQ
     return texture;
 }
 
+ID3D11Texture2D* D3DHelpers::CreateTexture(D3D11_BIND_FLAG bindFlags, RenderingQuality *quality, DXGI_FORMAT format)
+{
+    D3D11_TEXTURE2D_DESC textureDesc = { 0 };
+
+    textureDesc.Width = quality->Width;
+    textureDesc.Height = quality->Height;
+    textureDesc.Format = format;
+    textureDesc.SampleDesc.Quality = quality->Quality;
+    textureDesc.SampleDesc.Count = quality->SampleCount;
+    textureDesc.MipLevels = quality->MipLevels;
+
+    textureDesc.Usage = D3D11_USAGE_DEFAULT;
+    textureDesc.BindFlags = bindFlags;
+    textureDesc.CPUAccessFlags = 0;
+    textureDesc.MiscFlags = 0;
+    textureDesc.ArraySize = 1;
+
+    ID3D11Texture2D* texture;
+    Res::Get()->Device->CreateTexture2D(&textureDesc, NULL, &texture);
+    return texture;
+}
+
 ID3D11RenderTargetView* D3DHelpers::CreateRenderTarget(ID3D11Resource *resource, D3D11_RTV_DIMENSION dimensions, RenderingQuality *quality)
 {
     D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;

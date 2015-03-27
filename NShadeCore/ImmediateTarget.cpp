@@ -90,8 +90,7 @@ void ImmediateTarget::CreateDepthStencil()
 
     auto bindFlags = D3D11_BIND_DEPTH_STENCIL;
     auto tf = _quality->TextureFormat;
-    _quality->TextureFormat = _quality->BufferFormat;
-    _depthStencilBuffer = D3DHelpers::CreateTexture((D3D11_BIND_FLAG)bindFlags, _quality);
-    _quality->TextureFormat = tf;
+    _depthStencilBuffer = D3DHelpers::CreateTexture((D3D11_BIND_FLAG)bindFlags, _quality, _quality->BufferFormat);
+ 
     Res::Get()->Device->CreateDepthStencilView(_depthStencilBuffer, &depthStencilViewDesc, &_depthStencilView);
 }
