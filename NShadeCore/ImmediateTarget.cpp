@@ -3,17 +3,7 @@
 
 ImmediateTarget::ImmediateTarget(RenderingQuality *quality)
 {
-    //auto q = new RenderingQuality();
-    //q->Width = quality->Width;
-    //q->Height = quality->Height;
-    //q->Quality = quality->Quality;
-    //q->SampleCount = quality->SampleCount;
-    //q->MipLevels = quality->MipLevels;
-    //q->TextureFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-    //q->BufferFormat = DXGI_FORMAT_D32_FLOAT;
-
-    _quality = quality;
-    
+    _quality = quality;   
 }
 
 ImmediateTarget* ImmediateTarget::Create(RenderingQuality *quality)
