@@ -33,7 +33,7 @@ DeferredTarget::DeferredTarget(RenderingQuality *quality)
 DeferredTarget* DeferredTarget::Create(RenderingQuality *quality)
 {
     auto target = new DeferredTarget(quality);
-    target->CreateDepthStencil();
+    //target->CreateDepthStencil();
     return target;
 }
 

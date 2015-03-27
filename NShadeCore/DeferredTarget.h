@@ -20,8 +20,8 @@ public:
     ID3D11RenderTargetView*     const GetRenderTargetView(){ return _renderTargetView; }
     ID3D11ShaderResourceView*   const GetShaderResourceView(){ return _shaderResourceView; }
 
-    ID3D11DepthStencilView*     const GetDepthStencilView()     { return _depthStencilView; }
-    ID3D11DepthStencilState*    const GetDepthStencilState()    { return _depthStencilState; }
+    ID3D11DepthStencilView*     const GetDepthStencilView(){ return _depthStencilView; }
+    ID3D11DepthStencilState*    const GetDepthStencilState(){ return _depthStencilState; }
 
     void                        const SetDepthStencilBuffer(ID3D11Texture2D *texture){ _depthStencilBuffer = texture; }
     void                        const SetRenderTargetView(ID3D11RenderTargetView *renderTargetView){ _renderTargetView = renderTargetView; }
