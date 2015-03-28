@@ -11,7 +11,8 @@ Renderer::Renderer(bool useSwapChain)
     _bufferCount = 2;
     _swapChainFlags = 0;
 
-    _renderTarget = ImmediateTarget::Create(Res::Get()->RenderQuality);
+    //_renderTarget = ImmediateTarget::Create(Res::Get()->RenderQuality);
+    _renderTarget = DeferredTarget::Create(Res::Get()->RenderQuality);
 }
 
 HRESULT Renderer::Initialize()
@@ -57,9 +58,9 @@ HRESULT Renderer::CreateSwapChainDesciption()
 
     _swapChainDescription.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
     _swapChainDescription.SampleDesc.Count = Res::Get()->RenderQuality->SampleCount;
-    _swapChainDescription.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;// Res::Get()->RenderQuality->TextureFormat;
-    _swapChainDescription.BufferDesc.Width = Res::Get()->ViewPort->Width;
-    _swapChainDescription.BufferDesc.Height = Res::Get()->ViewPort->Height;
+    _swapChainDescription.BufferDesc.Format =  Res::Get()->RenderQuality->DephStencilTextureFormat;//DXGI_FORMAT_R8G8B8A8_UNORM;
+    _swapChainDescription.BufferDesc.Width = Res::Get()->RenderQuality->Width;
+    _swapChainDescription.BufferDesc.Height = Res::Get()->RenderQuality->Height;
 
     auto handle = *Res::Get()->WindowHandle;
     _swapChainDescription.OutputWindow = handle;
