@@ -10,13 +10,18 @@ DeferredTarget::DeferredTarget(RenderingQuality *quality)
 
     auto bindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 
-    for (unsigned int i = 0; i < BUFFER_COUNT; i++)
-    {
-        auto texture = D3DHelpers::CreateTexture((D3D11_BIND_FLAG)bindFlags, quality);
-        auto renderTarget = D3DHelpers::CreateRenderTarget(texture, D3D11_RTV_DIMENSION_TEXTURE2DMS, quality);
-        _renderTargetTexture[i] = *texture;
-        _renderTargetView[i] = *renderTarget;
-    }
+    auto texture = D3DHelpers::CreateTexture((D3D11_BIND_FLAG)bindFlags, quality);
+    auto renderTarget = D3DHelpers::CreateRenderTarget(texture, D3D11_RTV_DIMENSION_TEXTURE2DMS, quality);
+    _renderTargetTexture = texture;
+    _renderTargetView = renderTarget;
+
+    //for (unsigned int i = 0; i < BUFFER_COUNT; i++)
+    //{
+    //    auto texture = D3DHelpers::CreateTexture((D3D11_BIND_FLAG)bindFlags, quality);
+    //    auto renderTarget = D3DHelpers::CreateRenderTarget(texture, D3D11_RTV_DIMENSION_TEXTURE2DMS, quality);
+    //    _renderTargetTexture[i] = *texture;
+    //    _renderTargetView[i] = *renderTarget;
+    //}
 }
 
 DeferredTarget* DeferredTarget::Create(RenderingQuality *quality)
@@ -34,17 +39,15 @@ void DeferredTarget::Render()
 
 void DeferredTarget::SetRenderTargets()
 {
-    Res::Get()->DeferredContext->OMSetRenderTargets(BUFFER_COUNT, &_renderTargetView, _depthStencilView);
+
     Res::Get()->DeferredContext->RSSetViewports(1, Res::Get()->ViewPort);
 }
 
 void DeferredTarget::ClearRenderTargets()
 {
-    for (int i = 0; i < BUFFER_COUNT; i++)
-    {
-        Res::Get()->DeferredContext->ClearRenderTargetView(&_renderTargetView[i], Res::Get()->DefaultColor);
-    }
-    Res::Get()->DeferredContext->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+    Res::Get()->DeviceContext->OMSetRenderTargets(1, &_renderTargetView, _depthStencilView);
+    Res::Get()->DeviceContext->ClearRenderTargetView(_renderTargetView, Res::Get()->DefaultColor);
+    Res::Get()->DeviceContext->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 
@@ -99,4 +102,3 @@ void DeferredTarget::CreateDepthStencil()
 
     Res::Get()->Device->CreateDepthStencilView(_depthStencilBuffer, &depthStencilViewDesc, &_depthStencilView);
 }
-

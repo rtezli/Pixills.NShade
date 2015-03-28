@@ -177,12 +177,13 @@ HRESULT Renderer::CreateViewPort()
 
 void Renderer::ClearScene()
 {
-    auto renderTarget = _renderTarget->GetRenderTargetView();
-    auto depthStencil = _renderTarget->GetDepthStencilView();
+    _renderTarget->ClearRenderTargets();
 
-    Res::Get()->DeviceContext->OMSetRenderTargets(1, &renderTarget, depthStencil);
-    Res::Get()->DeviceContext->ClearRenderTargetView(renderTarget, Res::Get()->DefaultColor);
-    Res::Get()->DeviceContext->ClearDepthStencilView(depthStencil, D3D11_CLEAR_DEPTH, 1.0f, 0);
+    //auto renderTarget = _renderTarget->GetRenderTargetView();
+    //auto depthStencil = _renderTarget->GetDepthStencilView();
+    //Res::Get()->DeviceContext->OMSetRenderTargets(1, &renderTarget, depthStencil);
+    //Res::Get()->DeviceContext->ClearRenderTargetView(renderTarget, Res::Get()->DefaultColor);
+    //Res::Get()->DeviceContext->ClearDepthStencilView(depthStencil, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 void Renderer::Render(Scene *scene)
