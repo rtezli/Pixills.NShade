@@ -178,12 +178,6 @@ HRESULT Renderer::CreateViewPort()
 void Renderer::ClearScene()
 {
     _renderTarget->ClearRenderTargets();
-
-    //auto renderTarget = _renderTarget->GetRenderTargetView();
-    //auto depthStencil = _renderTarget->GetDepthStencilView();
-    //Res::Get()->DeviceContext->OMSetRenderTargets(1, &renderTarget, depthStencil);
-    //Res::Get()->DeviceContext->ClearRenderTargetView(renderTarget, Res::Get()->DefaultColor);
-    //Res::Get()->DeviceContext->ClearDepthStencilView(depthStencil, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 void Renderer::Render(Scene *scene)
@@ -211,7 +205,6 @@ void Renderer::Render(Scene *scene)
         Res::Get()->DeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &strides, &offset);
         Res::Get()->DeviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
         Res::Get()->DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 
         auto vertexShader = shaders->VertexShader;
         if (vertexShader)
@@ -251,7 +244,9 @@ void Renderer::Render(Scene *scene)
             for (unsigned int p = 0; p < steps->size(); p++)
             {
                 auto step = steps->at(p);
-                //_backBuffer = step.ApplyOn(_backBuffer);
+                auto input = _renderTarget->GetShaderResourceView();
+                auto output = step.ApplyOn(input);
+                //_renderTarget->SetShaderResourceView(output);
                 Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
             }
         }

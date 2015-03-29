@@ -21,7 +21,7 @@ void ProcessingStep::AssignShaders(Shaders *texture)
     _samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 }
 
-ID3D11Texture2D* ProcessingStep::ApplyOn(ID3D11Texture2D *texture)
+ID3D11ShaderResourceView* ProcessingStep::ApplyOn(ID3D11Texture2D *texture)
 {
     D3D11_TEXTURE2D_DESC desc;
     texture->GetDesc(&desc);
@@ -53,5 +53,28 @@ ID3D11Texture2D* ProcessingStep::ApplyOn(ID3D11Texture2D *texture)
         }
         Res::Get()->DeviceContext->PSSetShader(pixelShader->GetShader(), NULL, 0);
     }
-    return texture;
+    return resource;
+}
+
+ID3D11ShaderResourceView* ProcessingStep::ApplyOn(ID3D11ShaderResourceView *view)
+{
+    Res::Get()->DeviceContext->VSSetShaderResources(0, 1, &view);
+
+    auto vertexShader = _shaders->VertexShader;
+    if (vertexShader)
+    {
+        Res::Get()->DeviceContext->VSSetShader(vertexShader->GetShader(), NULL, 0);
+    }
+
+    auto pixelShader = _shaders->PixelShader;
+    if (pixelShader)
+    {
+        auto state = pixelShader->GetSamplerState();
+        if (state)
+        {
+            Res::Get()->DeviceContext->PSSetSamplers(0, 1, &state);
+        }
+        Res::Get()->DeviceContext->PSSetShader(pixelShader->GetShader(), NULL, 0);
+    }
+    return view;
 }

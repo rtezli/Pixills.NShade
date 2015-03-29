@@ -6,9 +6,9 @@
 class ProcessingStep
 {
 public:
-    void                AssignShaders(Shaders *shaders);
-    ID3D11Texture2D*    ApplyOn(ID3D11Texture2D *texture);
-    ID3D11Texture2D*    ApplyOn(ID3D11ShaderResourceView *resource);
+    void                        AssignShaders(Shaders *shaders);
+    ID3D11ShaderResourceView*   ApplyOn(ID3D11Texture2D *texture);
+    ID3D11ShaderResourceView*   ApplyOn(ID3D11ShaderResourceView *resource);
 private:
     shared_ptr<Shaders>             _shaders;
     D3D11_SAMPLER_DESC              _samplerDesc;

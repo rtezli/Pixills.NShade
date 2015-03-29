@@ -59,4 +59,5 @@ private:
     float                   _nearZ;
     float                   _farZ;
     bool                    _trackInput;
+    bool                    _isInitialized;
 };

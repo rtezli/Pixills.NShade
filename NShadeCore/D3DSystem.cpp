@@ -171,8 +171,8 @@ void D3DSystem::CreateViewPort()
     GetWindowRect(*handle, &rect);
     AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, FALSE);
 
-    auto width = rect.right - rect.left;
-    auto height = rect.bottom - rect.top;
+    auto width = rect.right - abs(rect.left);
+    auto height = rect.bottom - abs(rect.top);
 
     D3D11_VIEWPORT viewPort;
     viewPort.Width = width;

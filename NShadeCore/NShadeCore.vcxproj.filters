@@ -343,6 +343,9 @@
     <FxCompile Include="BloomPixelShader..hlsl">
       <Filter>Source Files\PostProcessing</Filter>
     </FxCompile>
+    <FxCompile Include="BloomVertexShader.hlsl">
+      <Filter>Source Files\PostProcessing</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
