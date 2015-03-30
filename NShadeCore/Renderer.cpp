@@ -238,17 +238,26 @@ void Renderer::Render(Scene *scene)
 
         Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
 
+        //Res::Get()->DeviceContext->SetRenderTarget();
+        //Res::Get()->DeferredContext->SetTexture();
+        //Res::Get()->DeviceContext->Draw();
+        //Res::Get()->DeferredContext->Draw();
+        //Res::Get()->DeferredContext->FinishCommandList();
+
         auto steps = scene->GetPostProcessingSteps();
         if (steps)
         {
-            for (unsigned int p = 0; p < steps->size(); p++)
-            {
-                auto step = steps->at(p);
-                auto input = _renderTarget->GetShaderResourceView();
-                auto output = step.ApplyOn(input);
-                //_renderTarget->SetShaderResourceView(output);
-                Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
-            }
+            // Unbind render target
+            //for (unsigned int p = 0; p < steps->size(); p++)
+            //{
+            //    auto step = steps->at(p);
+            //    auto input = _renderTarget->GetRenderTarget();
+            //    auto output = step.ApplyOn(input);
+            //    Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
+            //}
+            //// Rebind render target
+            //_renderTarget->SetOutput(_backBuffer);
+            //Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
         }
     }
 

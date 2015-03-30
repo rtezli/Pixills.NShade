@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "deferredtarget.h"
 
-
 DeferredTarget::DeferredTarget(RenderingQuality *quality)
 {
     _quality = quality;
@@ -23,7 +22,6 @@ DeferredTarget* DeferredTarget::Create(RenderingQuality *quality)
     return target;
 }
 
-
 void DeferredTarget::Render()
 {
 
@@ -41,6 +39,10 @@ void DeferredTarget::ClearRenderTargets()
     Res::Get()->DeviceContext->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
+void DeferredTarget::SetOutput(ID3D11Texture2D *texture)
+{
+
+}
 
 void DeferredTarget::CreateRenderTarget(ID3D11Resource *buffer)
 {
@@ -83,13 +85,13 @@ void DeferredTarget::CreateDepthStencil()
     CreateDepthStencilStateDescription();
 
     D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
-    depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    depthStencilViewDesc.Format = _quality->BufferFormat;
     depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
     depthStencilViewDesc.Texture2D.MipSlice = 0;
     depthStencilViewDesc.Flags = 0;
 
     auto bindFlags = D3D11_BIND_DEPTH_STENCIL;
-    _depthStencilBuffer = D3DHelpers::CreateTexture((D3D11_BIND_FLAG)bindFlags, _quality, DXGI_FORMAT_D24_UNORM_S8_UINT);
+    _depthStencilBuffer = D3DHelpers::CreateTexture((D3D11_BIND_FLAG)bindFlags, _quality, _quality->BufferFormat);
 
     Res::Get()->Device->CreateDepthStencilView(_depthStencilBuffer, &depthStencilViewDesc, &_depthStencilView);
 }

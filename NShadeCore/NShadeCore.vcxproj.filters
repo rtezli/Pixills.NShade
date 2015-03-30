@@ -340,10 +340,10 @@
     <FxCompile Include="ParticleGeometryShader.hlsl">
       <Filter>Source Files\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="BloomPixelShader..hlsl">
+    <FxCompile Include="BloomVertexShader.hlsl">
       <Filter>Source Files\PostProcessing</Filter>
     </FxCompile>
-    <FxCompile Include="BloomVertexShader.hlsl">
+    <FxCompile Include="BloomPixelShader.hlsl">
       <Filter>Source Files\PostProcessing</Filter>
     </FxCompile>
   </ItemGroup>
