@@ -24,9 +24,7 @@ public:
     bool const Initialized(){ return _isInitialized; };
 private:
     void Tesselate(Shaders *shaders);
-    void PostProcess(Scene *scene);
-    void CopyToBackbuffer();
-    
+
     /* render target */
 
     HRESULT CreateImmediateRenderTarget();
@@ -58,14 +56,7 @@ private:
 private:
     ID3D11Texture2D                 *_backBuffer;
 
-    //ID3D11RenderTargetView          *_renderTargetView;
-    //ID3D11DepthStencilState         *_depthStencilState;
-    //ID3D11DepthStencilView          *_depthStencilView;
-
     IRenderTarget                   *_renderTarget;
-
-    //DeferredTarget                  *_deferredTarget;
-    //ImmediateTarget                 *_immediateTarget;
 
     IDXGISwapChain                  *_swapChain;
     DXGI_SWAP_CHAIN_DESC            _swapChainDescription;

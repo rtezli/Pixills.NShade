@@ -30,7 +30,7 @@ void ImmediateTarget::ClearRenderTargets()
     Res::Get()->DeviceContext->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void ImmediateTarget::SetOutput(ID3D11Texture2D *texture)
+void ImmediateTarget::SetOutput()
 {
 
 }

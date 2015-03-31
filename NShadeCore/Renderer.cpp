@@ -243,27 +243,23 @@ void Renderer::Render(Scene *scene)
         //Res::Get()->DeviceContext->Draw();
         //Res::Get()->DeferredContext->Draw();
         //Res::Get()->DeferredContext->FinishCommandList();
-
-        auto steps = scene->GetPostProcessingSteps();
-        if (steps)
-        {
-            // Unbind render target
-            //for (unsigned int p = 0; p < steps->size(); p++)
-            //{
-            //    auto step = steps->at(p);
-            //    auto input = _renderTarget->GetRenderTarget();
-            //    auto output = step.ApplyOn(input);
-            //    Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
-            //}
-            //// Rebind render target
-            //_renderTarget->SetOutput(_backBuffer);
-            //Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
-        }
     }
 
-    PostProcess(scene);
-
-    CopyToBackbuffer();
+    auto steps = scene->GetPostProcessingSteps();
+    if (steps)
+    {
+        // Unbind render target
+        for (unsigned int p = 0; p < steps->size(); p++)
+        {
+            auto step = steps->at(p);
+            auto input = _renderTarget->GetRenderTarget();
+            auto output = step.ApplyOn(input);
+           //Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
+        }
+        //// Rebind render target
+        _renderTarget->SetOutput();
+        //Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
+    }
 
     _swapChain->Present(1, 0);
 }
@@ -274,16 +270,6 @@ void Renderer::Tesselate(Shaders *shaders)
     {
         return;
     }
-}
-
-void Renderer::PostProcess(Scene *scene)
-{
-
-}
-
-void Renderer::CopyToBackbuffer()
-{
-
 }
 
 void Renderer::Resize()
