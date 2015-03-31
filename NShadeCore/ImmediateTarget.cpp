@@ -30,6 +30,17 @@ void ImmediateTarget::ClearRenderTargets()
     Res::Get()->DeviceContext->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
+void ImmediateTarget::SetInput()
+{
+    //D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+    //renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
+    //renderTargetViewDesc.Format = Res::Get()->RenderQuality->DephStencilTextureFormat;
+
+    //ID3D11RenderTargetView *targetView;
+    //Res::Get()->Device->CreateRenderTargetView(_finalTarget, &renderTargetViewDesc, &targetView);
+    //SetRenderTargetView(targetView);
+}
+
 void ImmediateTarget::SetOutput()
 {
 

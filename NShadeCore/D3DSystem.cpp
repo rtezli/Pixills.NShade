@@ -76,9 +76,9 @@ HRESULT D3DSystem::Initialize()
     auto so = rx::synchronize_in_one_worker(sc);
     rx::observable<>::interval(sc.now(), FPS(25), so)
         .subscribe([this](int val)
-    {
-        D3DSystem::Render();
-    }
+        {
+            D3DSystem::Render();
+        }
     );
     return result;
 }

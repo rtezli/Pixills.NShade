@@ -186,6 +186,9 @@
     <ClInclude Include="IRenderTarget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PostProcessor.h">
+      <Filter>Header Files\PostProcessing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -298,6 +301,9 @@
     </ClCompile>
     <ClCompile Include="DeferredTarget.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PostProcessor.cpp">
+      <Filter>Source Files\PostProcessing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
