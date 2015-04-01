@@ -247,7 +247,7 @@ void Renderer::Render(Scene *scene)
         for (unsigned int p = 0; p < steps->size(); p++)
         {
             auto step = steps->at(p);
-            auto input = _renderTarget->GetRenderTarget();
+            auto input = _renderTarget->GetRenderTargetAsResource();
             auto output = step.ApplyOn(input);
             Res::Get()->DeviceContext->DrawAuto();// DrawIndexed(model.GetIndexCount(), 0, 0);
         }

@@ -3,7 +3,7 @@
 
 ImmediateTarget::ImmediateTarget(RenderingQuality *quality)
 {
-    _quality = quality;   
+    _quality = quality;
 }
 
 ImmediateTarget* ImmediateTarget::Create(RenderingQuality *quality)
@@ -14,6 +14,11 @@ ImmediateTarget* ImmediateTarget::Create(RenderingQuality *quality)
 }
 
 void ImmediateTarget::Render()
+{
+
+}
+
+void ImmediateTarget::Prepare()
 {
 
 }
@@ -67,6 +72,11 @@ void ImmediateTarget::CreateDepthStencil()
 
     auto bindFlags = D3D11_BIND_DEPTH_STENCIL;
     _depthStencilBuffer = D3DHelpers::CreateTexture((D3D11_BIND_FLAG)bindFlags, _quality, _quality->BufferFormat);
- 
+
     Res::Get()->Device->CreateDepthStencilView(_depthStencilBuffer, &depthStencilViewDesc, &_depthStencilView);
+}
+
+ID3D11Texture2D* ImmediateTarget::GetRenderTargetAsResource()
+{
+    return nullptr;
 }

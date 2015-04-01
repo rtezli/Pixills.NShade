@@ -9,9 +9,9 @@ public:
     virtual void Render() = 0;
     virtual void SetRenderTargets() = 0;
     virtual void ClearRenderTargets() = 0;
-    //virtual void CreateRenderTarget(ID3D11Resource *buffer) = 0;
-    //virtual void SetInput() = 0;
-    //virtual void SetOutput() = 0;
+    virtual void Prepare() = 0;
+
+    virtual ID3D11Texture2D*            GetRenderTargetAsResource() = 0;
 
     virtual ID3D11Texture2D*            const GetDepthStencilBuffer() = 0;
     virtual ID3D11Texture2D*            const GetRenderTarget() = 0;
@@ -27,4 +27,18 @@ public:
 
     virtual void                        const SetDepthStencilView(ID3D11DepthStencilView *depthStencilView) = 0;
     virtual void                        const SetDepthStencilState(ID3D11DepthStencilState *depthStencilState) = 0;
+protected:
+    RenderingQuality            *_quality;
+
+    ID3D11Texture2D             *_renderTargetTexture;
+    ID3D11RenderTargetView      *_renderTargetView;
+
+    ID3D11Texture2D             *_backBufferTexture;
+    ID3D11RenderTargetView      *_backBufferView;
+
+    ID3D11ShaderResourceView    *_shaderResourceView;
+
+    ID3D11Texture2D             *_depthStencilBuffer;
+    ID3D11DepthStencilView      *_depthStencilView;
+    ID3D11DepthStencilState     *_depthStencilState;
 };

@@ -9,6 +9,9 @@ DeferredTarget::DeferredTarget(RenderingQuality *quality)
 
     _renderTargetTexture = D3DHelpers::CreateTexture((D3D11_BIND_FLAG)bindFlags, quality);
     _renderTargetView = D3DHelpers::CreateRenderTarget(_renderTargetTexture, D3D11_RTV_DIMENSION_TEXTURE2DMS, quality);
+
+    _backBufferTexture = D3DHelpers::CreateTexture((D3D11_BIND_FLAG)bindFlags, quality);
+    _backBufferView = D3DHelpers::CreateRenderTarget(_renderTargetTexture, D3D11_RTV_DIMENSION_TEXTURE2DMS, quality);
 }
 
 DeferredTarget* DeferredTarget::Create(RenderingQuality *quality)
@@ -21,6 +24,12 @@ DeferredTarget* DeferredTarget::Create(RenderingQuality *quality)
 void DeferredTarget::Render()
 {
 
+}
+
+void DeferredTarget::Prepare()
+{
+    // set blank render
+    // set current render target
 }
 
 void DeferredTarget::SetRenderTargets()
@@ -74,4 +83,9 @@ void DeferredTarget::CreateDepthStencil()
     _depthStencilBuffer = D3DHelpers::CreateTexture((D3D11_BIND_FLAG)bindFlags, _quality, _quality->BufferFormat);
 
     Res::Get()->Device->CreateDepthStencilView(_depthStencilBuffer, &depthStencilViewDesc, &_depthStencilView);
+}
+
+ID3D11Texture2D* DeferredTarget::GetRenderTargetAsResource()
+{
+    return nullptr;
 }

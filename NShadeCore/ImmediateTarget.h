@@ -12,9 +12,9 @@ public:
     void Render();
     void SetRenderTargets();
     void ClearRenderTargets();
-    //void CreateRenderTarget(ID3D11Resource *buffer);
-    //void SetInput();
-    //void SetOutput();
+    void Prepare();
+
+    ID3D11Texture2D*            GetRenderTargetAsResource();
 
     ID3D11Texture2D*            const GetDepthStencilBuffer(){ return _depthStencilBuffer; }
     ID3D11Texture2D*            const GetRenderTarget(){ return _renderTargetTexture; }
@@ -35,14 +35,5 @@ private:
     void CreateDepthStencilViewDescription();
     void CreateDepthStencilStateDescription();
     void CreateDepthStencil();
-
-    RenderingQuality            *_quality;
-    ID3D11Texture2D             *_renderTargetTexture;
-    ID3D11RenderTargetView      *_renderTargetView;
-    ID3D11ShaderResourceView    *_shaderResourceView;
-
-    ID3D11Texture2D             *_depthStencilBuffer;
-    ID3D11DepthStencilView      *_depthStencilView;
-    ID3D11DepthStencilState     *_depthStencilState;
 };
 
