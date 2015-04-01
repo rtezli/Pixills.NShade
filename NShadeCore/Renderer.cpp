@@ -122,7 +122,7 @@ HRESULT Renderer::CreateSwapChain()
     dxgiAdapter->Release();
     dxgiFactory->Release();
 
-    _renderTarget->CreateRenderTarget(_backBuffer);
+    //_renderTarget->CreateRenderTarget(_backBuffer);
     return 0;
 }
 
@@ -239,22 +239,22 @@ void Renderer::Render(Scene *scene)
         Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
     }
 
-    //auto steps = scene->GetPostProcessingSteps();
-    //if (steps)
-    //{
-    //    // Unbind render target
-    //    _renderTarget->SetInput();
-    //    for (unsigned int p = 0; p < steps->size(); p++)
-    //    {
-    //        auto step = steps->at(p);
-    //        auto input = _renderTarget->GetRenderTarget();
-    //        auto output = step.ApplyOn(input);
-    //        Res::Get()->DeviceContext->DrawAuto();// DrawIndexed(model.GetIndexCount(), 0, 0);
-    //    }
-    //    // Rebind render target
-    //    _renderTarget->SetOutput();
-    //    Res::Get()->DeviceContext->DrawAuto();//DrawIndexed(model.GetIndexCount(), 0, 0);
-    //}
+    auto steps = scene->GetPostProcessingSteps();
+    if (steps)
+    {
+        // Unbind render target
+        //_renderTarget->SetInput();
+        for (unsigned int p = 0; p < steps->size(); p++)
+        {
+            auto step = steps->at(p);
+            auto input = _renderTarget->GetRenderTarget();
+            auto output = step.ApplyOn(input);
+            Res::Get()->DeviceContext->DrawAuto();// DrawIndexed(model.GetIndexCount(), 0, 0);
+        }
+        // Rebind render target
+        //_renderTarget->SetOutput();
+        //Res::Get()->DeviceContext->DrawAuto();//DrawIndexed(model.GetIndexCount(), 0, 0);
+    }
 
     _swapChain->Present(1, 0);
 }

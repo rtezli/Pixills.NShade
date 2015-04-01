@@ -72,7 +72,6 @@ void PostProcessor::Render()
         {
             auto step = _processingSteps->at(p);
         }
-
         Res::Get()->DeviceContext->DrawAuto();
     }
 }

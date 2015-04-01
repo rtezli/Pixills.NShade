@@ -9,9 +9,9 @@ public:
     virtual void Render() = 0;
     virtual void SetRenderTargets() = 0;
     virtual void ClearRenderTargets() = 0;
-    virtual void CreateRenderTarget(ID3D11Resource *buffer) = 0;
-    virtual void SetInput() = 0;
-    virtual void SetOutput() = 0;
+    //virtual void CreateRenderTarget(ID3D11Resource *buffer) = 0;
+    //virtual void SetInput() = 0;
+    //virtual void SetOutput() = 0;
 
     virtual ID3D11Texture2D*            const GetDepthStencilBuffer() = 0;
     virtual ID3D11Texture2D*            const GetRenderTarget() = 0;
