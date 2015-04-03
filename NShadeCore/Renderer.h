@@ -23,6 +23,7 @@ public:
     void Render(Scene *scene);
     bool const Initialized(){ return _isInitialized; };
 private:
+    void PostProcess(Scene *scene, IRenderTarget *target, unsigned int indexCount);
     void Tesselate(Shaders *shaders);
 
     /* render target */

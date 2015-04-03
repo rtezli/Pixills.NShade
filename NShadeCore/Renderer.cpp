@@ -236,9 +236,16 @@ void Renderer::Render(Scene *scene)
             pixelshader->Render();
         }
 
+        PostProcess(scene, _renderTarget, model.GetIndexCount());
+
         Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
     }
 
+    _swapChain->Present(1, 0);
+}
+
+void Renderer::PostProcess(Scene *scene, IRenderTarget *target, unsigned int indexCount)
+{
     auto steps = scene->GetPostProcessingSteps();
     if (steps)
     {
@@ -247,16 +254,14 @@ void Renderer::Render(Scene *scene)
         for (unsigned int p = 0; p < steps->size(); p++)
         {
             auto step = steps->at(p);
-            auto input = _renderTarget->GetRenderTargetAsResource();
+            auto input = target->GetRenderTargetAsResource();
             auto output = step.ApplyOn(input);
-            Res::Get()->DeviceContext->DrawAuto();// DrawIndexed(model.GetIndexCount(), 0, 0);
+            Res::Get()->DeviceContext->DrawIndexed(indexCount, 0, 0);
         }
         // Rebind render target
         //_renderTarget->SetOutput();
         //Res::Get()->DeviceContext->DrawAuto();//DrawIndexed(model.GetIndexCount(), 0, 0);
     }
-
-    _swapChain->Present(1, 0);
 }
 
 void Renderer::Tesselate(Shaders *shaders)

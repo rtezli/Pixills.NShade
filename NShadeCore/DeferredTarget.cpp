@@ -87,5 +87,7 @@ void DeferredTarget::CreateDepthStencil()
 
 ID3D11Texture2D* DeferredTarget::GetRenderTargetAsResource()
 {
+    // Unbind
     return nullptr;
+    // Bind
 }
