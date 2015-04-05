@@ -55,8 +55,8 @@ private:
 
     HRESULT CreateViewPort();
 private:
-    ID3D11Texture2D                 *_backBuffer;
-
+    ID3D11Texture2D                 *_backBufferTexture;
+    ID3D11RenderTargetView          *_backBufferTarget;
     IRenderTarget                   *_renderTarget;
 
     IDXGISwapChain                  *_swapChain;

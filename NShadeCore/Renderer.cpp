@@ -58,7 +58,7 @@ HRESULT Renderer::CreateSwapChainDesciption()
 
     _swapChainDescription.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
     _swapChainDescription.SampleDesc.Count = Res::Get()->RenderQuality->SampleCount;
-    _swapChainDescription.BufferDesc.Format =  Res::Get()->RenderQuality->DephStencilTextureFormat;//DXGI_FORMAT_R8G8B8A8_UNORM;
+    _swapChainDescription.BufferDesc.Format = Res::Get()->RenderQuality->DephStencilTextureFormat;//DXGI_FORMAT_R8G8B8A8_UNORM;
     _swapChainDescription.BufferDesc.Width = Res::Get()->RenderQuality->Width;
     _swapChainDescription.BufferDesc.Height = Res::Get()->RenderQuality->Height;
 
@@ -112,7 +112,7 @@ HRESULT Renderer::CreateSwapChain()
         return result;
     }
 
-    result = _swapChain->GetBuffer(0, IID_PPV_ARGS(&_backBuffer));
+    result = _swapChain->GetBuffer(0, IID_PPV_ARGS(&_backBufferTexture));
     if (FAILED(result))
     {
         return result;
@@ -121,8 +121,11 @@ HRESULT Renderer::CreateSwapChain()
     dxgiDevice->Release();
     dxgiAdapter->Release();
     dxgiFactory->Release();
-
-    //_renderTarget->CreateRenderTarget(_backBuffer);
+    
+    auto quality = new RenderingQuality();
+    quality->TextureFormat = _swapChainDescription.BufferDesc.Format;
+ 
+    _backBufferTarget = D3DHelpers::CreateRenderTarget(_backBufferTexture, D3D11_RTV_DIMENSION_TEXTURE2DMS, quality);
     return 0;
 }
 
@@ -236,9 +239,9 @@ void Renderer::Render(Scene *scene)
             pixelshader->Render();
         }
 
-        PostProcess(scene, _renderTarget, model.GetIndexCount());
-
         Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
+
+        PostProcess(scene, _renderTarget, model.GetIndexCount());
     }
 
     _swapChain->Present(1, 0);
@@ -246,20 +249,26 @@ void Renderer::Render(Scene *scene)
 
 void Renderer::PostProcess(Scene *scene, IRenderTarget *target, unsigned int indexCount)
 {
+    // Do stuff like PPAA and/or bloom
     auto steps = scene->GetPostProcessingSteps();
     if (steps)
     {
-        // Rendered is now on _targetTexture
-        // Unbind _targetTexture
         for (unsigned int p = 0; p < steps->size(); p++)
         {
-            auto step = steps->at(p);
-            auto input = target->Swap();
-            step.Render(input, indexCount);
+            if (p == steps->size() - 1)
+            {
+                // Let the last pass render to back buffer
+                auto step = steps->at(p);
+                auto input = target->Swap();
+                step.Finalize(input, _backBufferTarget, target->GetDepthStencilView(), indexCount);
+            }
+            else
+            {
+                auto step = steps->at(p);
+                auto input = target->Swap();
+                step.Render(input, indexCount);
+            }
         }
-        // Rebind render target
-        //_renderTarget->SetOutput();
-        //Res::Get()->DeviceContext->DrawAuto();//DrawIndexed(model.GetIndexCount(), 0, 0);
     }
 }
 
