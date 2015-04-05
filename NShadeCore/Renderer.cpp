@@ -255,8 +255,7 @@ void Renderer::PostProcess(Scene *scene, IRenderTarget *target, unsigned int ind
         {
             auto step = steps->at(p);
             auto input = target->Swap();
-            auto output = step.ApplyOn(input);
-            Res::Get()->DeviceContext->DrawIndexed(indexCount, 0, 0);
+            step.Render(input, indexCount);
         }
         // Rebind render target
         //_renderTarget->SetOutput();

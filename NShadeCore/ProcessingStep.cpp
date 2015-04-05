@@ -21,7 +21,7 @@ void ProcessingStep::AssignShaders(Shaders *texture)
     _samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 }
 
-ID3D11Texture2D* ProcessingStep::ApplyOn(ID3D11Texture2D *resource)
+void ProcessingStep::Render(ID3D11Texture2D *resource, unsigned int indexCount)
 {
     D3D11_TEXTURE2D_DESC desc;
     resource->GetDesc(&desc);
@@ -53,5 +53,8 @@ ID3D11Texture2D* ProcessingStep::ApplyOn(ID3D11Texture2D *resource)
         }
         Res::Get()->DeviceContext->PSSetShader(pixelShader->GetShader(), NULL, 0);
     }
-    return resource;
+    Res::Get()->DeviceContext->DrawIndexed(indexCount, 0, 0);
+
+    res = nullptr;
+    Res::Get()->DeviceContext->VSSetShaderResources(0, 1, &res);
 }
