@@ -189,6 +189,9 @@
     <ClInclude Include="PostProcessor.h">
       <Filter>Header Files\PostProcessing</Filter>
     </ClInclude>
+    <ClInclude Include="Pass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -304,6 +307,9 @@
     </ClCompile>
     <ClCompile Include="PostProcessor.cpp">
       <Filter>Source Files\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="Pass.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

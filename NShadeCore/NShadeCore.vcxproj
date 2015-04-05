@@ -187,6 +187,7 @@
     <ClInclude Include="Node.h" />
     <ClInclude Include="NoiseFilter.h" />
     <ClInclude Include="Overlay.h" />
+    <ClInclude Include="Pass.h" />
     <ClInclude Include="PostProcessor.h" />
     <ClInclude Include="ProcessingStep.h" />
     <ClInclude Include="Shader.h" />
@@ -260,6 +261,7 @@
     <ClCompile Include="NoiseFilter.cpp" />
     <ClCompile Include="ObjParser.cpp" />
     <ClCompile Include="Overlay.cpp" />
+    <ClCompile Include="Pass.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PostProcessor.cpp" />
