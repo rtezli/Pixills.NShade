@@ -249,12 +249,12 @@ void Renderer::PostProcess(Scene *scene, IRenderTarget *target, unsigned int ind
     auto steps = scene->GetPostProcessingSteps();
     if (steps)
     {
-        // Unbind render target
-        //_renderTarget->SetInput();
+        // Rendered is now on _targetTexture
+        // Unbind _targetTexture
         for (unsigned int p = 0; p < steps->size(); p++)
         {
             auto step = steps->at(p);
-            auto input = target->GetRenderTargetAsResource();
+            auto input = target->Swap();
             auto output = step.ApplyOn(input);
             Res::Get()->DeviceContext->DrawIndexed(indexCount, 0, 0);
         }

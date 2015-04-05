@@ -30,8 +30,8 @@ void ImmediateTarget::SetRenderTargets()
 
 void ImmediateTarget::ClearRenderTargets()
 {
-    Res::Get()->DeviceContext->OMSetRenderTargets(1, &_renderTargetView, _depthStencilView);
-    Res::Get()->DeviceContext->ClearRenderTargetView(_renderTargetView, Res::Get()->DefaultColor);
+    Res::Get()->DeviceContext->OMSetRenderTargets(1, &_targetView, _depthStencilView);
+    Res::Get()->DeviceContext->ClearRenderTargetView(_targetView, Res::Get()->DefaultColor);
     Res::Get()->DeviceContext->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
@@ -71,12 +71,12 @@ void ImmediateTarget::CreateDepthStencil()
     depthStencilViewDesc.Flags = 0;
 
     auto bindFlags = D3D11_BIND_DEPTH_STENCIL;
-    _depthStencilBuffer = D3DHelpers::CreateTexture((D3D11_BIND_FLAG)bindFlags, _quality, _quality->BufferFormat);
+    _depthStencilTexture = D3DHelpers::CreateTexture((D3D11_BIND_FLAG)bindFlags, _quality, _quality->BufferFormat);
 
-    Res::Get()->Device->CreateDepthStencilView(_depthStencilBuffer, &depthStencilViewDesc, &_depthStencilView);
+    Res::Get()->Device->CreateDepthStencilView(_depthStencilTexture, &depthStencilViewDesc, &_depthStencilView);
 }
 
-ID3D11Texture2D* ImmediateTarget::GetRenderTargetAsResource()
+ID3D11Texture2D* ImmediateTarget::Swap()
 {
     return nullptr;
 }
