@@ -162,9 +162,6 @@
     <ClInclude Include="ColorGradingFilter.h">
       <Filter>Header Files\PostProcessing</Filter>
     </ClInclude>
-    <ClInclude Include="BloomFilter.h">
-      <Filter>Header Files\PostProcessing</Filter>
-    </ClInclude>
     <ClInclude Include="DepthOfField.h">
       <Filter>Header Files\PostProcessing</Filter>
     </ClInclude>
@@ -281,9 +278,6 @@
     <ClCompile Include="ColorGradingFilter.cpp">
       <Filter>Source Files\PostProcessing</Filter>
     </ClCompile>
-    <ClCompile Include="BloomFilter.cpp">
-      <Filter>Source Files\PostProcessing</Filter>
-    </ClCompile>
     <ClCompile Include="ProcessingStep.cpp">
       <Filter>Source Files\PostProcessing</Filter>
     </ClCompile>
@@ -352,10 +346,10 @@
     <FxCompile Include="ParticleGeometryShader.hlsl">
       <Filter>Source Files\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="BloomVertexShader.hlsl">
+    <FxCompile Include="BlurPixelShader.hlsl">
       <Filter>Source Files\PostProcessing</Filter>
     </FxCompile>
-    <FxCompile Include="BloomPixelShader.hlsl">
+    <FxCompile Include="BlurVertexShader.hlsl">
       <Filter>Source Files\PostProcessing</Filter>
     </FxCompile>
   </ItemGroup>

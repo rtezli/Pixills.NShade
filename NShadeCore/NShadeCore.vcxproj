@@ -176,7 +176,6 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BloomFilter.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ColorGradingFilter.h" />
     <ClInclude Include="ComputeShader.h" />
@@ -223,7 +222,6 @@
     <ClInclude Include="VertexShader.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BloomFilter.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ColorGradingFilter.cpp" />
     <ClCompile Include="ComputeShader.cpp" />
@@ -282,13 +280,13 @@
     <ClCompile Include="VertexShader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="BloomPixelShader.hlsl">
+    <FxCompile Include="BlurPixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="BloomVertexShader.hlsl">
+    <FxCompile Include="BlurVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

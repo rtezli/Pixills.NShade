@@ -124,15 +124,15 @@ Scene* Scene::CreateStandardScene()
 
     scene->AddModel(plane);
 
-    auto bloomStep = new ProcessingStep();
-    auto bloomPixelShader = PixelShader::Load(L"../Debug/BloomPixelShader.cso");
-    auto bloomVertexShader = VertexShader::Load(L"../Debug/BloomVertexShader.cso");
+    auto blurStep = new ProcessingStep();
+    auto blurPixelShader = PixelShader::Load(L"../Debug/BlurPixelShader.cso");
+    auto blurVertexShader = VertexShader::Load(L"../Debug/BlurVertexShader.cso");
     //bloomVertexShader->AddBuffer();
-    auto bloomShaders = new Shaders();
-    bloomShaders->PixelShader = bloomPixelShader;
-    bloomShaders->VertexShader = bloomVertexShader;
-    bloomStep->AssignShaders(bloomShaders);
-    scene->AddPostProcessingStep(bloomStep);
+    auto blurShaders = new Shaders();
+    blurShaders->PixelShader = blurPixelShader;
+    blurShaders->VertexShader = blurVertexShader;
+    blurStep->AssignShaders(blurShaders);
+    scene->AddPostProcessingStep(blurStep);
     
     return scene;
 }
