@@ -127,6 +127,7 @@ Scene* Scene::CreateStandardScene()
     auto bloomStep = new ProcessingStep();
     auto bloomPixelShader = PixelShader::Load(L"../Debug/BloomPixelShader.cso");
     auto bloomVertexShader = VertexShader::Load(L"../Debug/BloomVertexShader.cso");
+    //bloomVertexShader->AddBuffer();
     auto bloomShaders = new Shaders();
     bloomShaders->PixelShader = bloomPixelShader;
     bloomShaders->VertexShader = bloomVertexShader;
