@@ -33,8 +33,7 @@ void ProcessingStep::Render(ID3D11Texture2D *resource, unsigned int indexCount)
     resourceDescription.Texture2D.MipLevels = desc.MipLevels;
     resourceDescription.Texture2D.MostDetailedMip = 0;
 
-    ID3D11ShaderResourceView *res;
-    Res::Get()->Device->CreateShaderResourceView(resource, &resourceDescription, &res);
+    Res::Get()->Device->CreateShaderResourceView(resource, &resourceDescription, &_shaderResource);
     Res::Get()->DeviceContext->VSSetShaderResources(0, 1, &res);
 
     auto vertexShader = _shaders->VertexShader;

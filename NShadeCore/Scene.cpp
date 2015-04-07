@@ -127,6 +127,7 @@ Scene* Scene::CreateStandardScene()
     auto blurStep = new ProcessingStep();
     auto blurPixelShader = PixelShader::Load(L"../Debug/BlurPixelShader.cso");
     auto blurVertexShader = VertexShader::Load(L"../Debug/BlurVertexShader.cso");
+    blurPixelShader->AddResource(blurStep->GetTextureResource());
     blurVertexShader->AddBuffer(camera->GetMatrixBuffer());
 
     auto blurShaders = new Shaders();

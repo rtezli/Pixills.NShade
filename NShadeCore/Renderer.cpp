@@ -251,7 +251,7 @@ void Renderer::Render(Scene *scene)
 
 void Renderer::PostProcess(Scene *scene, IRenderTarget *target, unsigned int indexCount)
 {
-    // Do stuff like PPAA and/or bloom
+    // Do stuff like PPAA, DoF, and/or bloom
     auto steps = scene->GetPostProcessingSteps();
     if (steps)
     {
