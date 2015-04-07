@@ -94,6 +94,7 @@ ID3D11Texture2D* DeferredTarget::Swap()
     ID3D11Texture2D* texture;
     if (_targetIndex == 0)
     {
+
         _targetTexture = _targetTexture1;
         _targetView = _targetView1;
         _targetIndex = 1;
