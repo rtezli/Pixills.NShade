@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "d3dhelpers.h"
 
-ID3D11Buffer* D3DHelpers::CreateBuffer(char *data, unsigned int size, D3D11_BIND_FLAG bindFlags)
+ID3D11Buffer* D3DHelpers::CreateConstBuffer(char *data, unsigned int size)
 {
     D3D11_BUFFER_DESC bufferDesc = { 0 };
     bufferDesc.ByteWidth = size;
     bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    bufferDesc.BindFlags = bindFlags;
+    bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     bufferDesc.CPUAccessFlags = 0;
     bufferDesc.MiscFlags = 0;
     bufferDesc.StructureByteStride = 0;

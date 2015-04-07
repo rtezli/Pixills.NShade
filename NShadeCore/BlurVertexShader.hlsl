@@ -6,12 +6,6 @@ cbuffer Camera : register(b0)
     float4   camera;
 };
 
-cbuffer ScreenSizeBuffer
-{
-    float   screenWidth;
-    float3  padding;
-};
-
 struct VertexShaderInput
 {
     float3 position : POSITION0;
@@ -54,7 +48,9 @@ VertexShaderOutput main(VertexShaderInput input)
   
 
     // Determine the floating point size of a texel for a screen with this specific width.
-    texelSize = 1.0f / screenWidth;
+    //texelSize = 1.0f / screenWidth;
+
+    texelSize = 1.0f / 1920;
 
     // Create UV coordinates for the pixel and its four horizontal neighbors on either side.
     output.texCoord1 = input.uv + float2(texelSize * -4.0f, 0.0f);
