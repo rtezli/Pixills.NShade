@@ -262,12 +262,14 @@ void Renderer::PostProcess(Scene *scene, IRenderTarget *target, unsigned int ind
                 // Let the last pass render to back buffer
                 auto step = steps->at(p);
                 auto input = target->Swap();
+                auto resource = target->GetShaderResourceView();
                 step.Finalize(input, _backBufferTarget, target->GetDepthStencilView(), indexCount);
             }
             else
             {
                 auto step = steps->at(p);
                 auto input = target->Swap();
+                auto resource = target->GetShaderResourceView();
                 step.Render(input, indexCount);
             }
         }

@@ -21,10 +21,10 @@ void ProcessingStep::AssignShaders(Shaders *shaders)
     _samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 }
 
-void ProcessingStep::Render(ID3D11Texture2D *resource, unsigned int indexCount)
+void ProcessingStep::Render(ID3D11Texture2D *source, unsigned int indexCount)
 {
     D3D11_TEXTURE2D_DESC desc;
-    resource->GetDesc(&desc);
+    source->GetDesc(&desc);
     desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
     
     D3D11_SHADER_RESOURCE_VIEW_DESC resourceDescription;
@@ -33,7 +33,8 @@ void ProcessingStep::Render(ID3D11Texture2D *resource, unsigned int indexCount)
     resourceDescription.Texture2D.MipLevels = desc.MipLevels;
     resourceDescription.Texture2D.MostDetailedMip = 0;
 
-    Res::Get()->Device->CreateShaderResourceView(resource, &resourceDescription, &_shaderResource);
+    ID3D11ShaderResourceView *res;
+    Res::Get()->Device->CreateShaderResourceView(source, &resourceDescription, &res);
     Res::Get()->DeviceContext->VSSetShaderResources(0, 1, &res);
 
     auto vertexShader = _shaders->VertexShader;
@@ -48,6 +49,7 @@ void ProcessingStep::Render(ID3D11Texture2D *resource, unsigned int indexCount)
         auto state = pixelShader->GetSamplerState();
         if (state)
         {
+            Res::Get()->DeviceContext->PSSetShaderResources(0, 1, &res);
             Res::Get()->DeviceContext->PSSetSamplers(0, 1, &state);
         }
         Res::Get()->DeviceContext->PSSetShader(pixelShader->GetShader(), NULL, 0);
@@ -86,6 +88,7 @@ void ProcessingStep::Finalize(ID3D11Texture2D *source, ID3D11RenderTargetView *t
         auto state = pixelShader->GetSamplerState();
         if (state)
         {
+            Res::Get()->DeviceContext->PSSetShaderResources(0, 1, &res);
             Res::Get()->DeviceContext->PSSetSamplers(0, 1, &state);
         }
         Res::Get()->DeviceContext->PSSetShader(pixelShader->GetShader(), NULL, 0);
