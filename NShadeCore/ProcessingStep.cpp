@@ -54,9 +54,9 @@ void ProcessingStep::Render(ID3D11Texture2D *source, unsigned int indexCount)
         }
         Res::Get()->DeviceContext->PSSetShader(pixelShader->GetShader(), NULL, 0);
     }
-    Res::Get()->DeviceContext->DrawIndexed(indexCount, 0, 0);
 
     res = nullptr;
+    Res::Get()->DeviceContext->DrawIndexed(indexCount, 0, 0);
     Res::Get()->DeviceContext->VSSetShaderResources(0, 1, &res);
 }
 
