@@ -153,7 +153,7 @@ ID3D11ShaderResourceView* D3DHelpers::CreateRandom2DTexture(unsigned int width, 
 
     D3D11_SHADER_RESOURCE_VIEW_DESC resourceDesc;
     resourceDesc.Format = textureDesc.Format;
-    resourceDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    resourceDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
     resourceDesc.Texture2D.MipLevels = textureDesc.MipLevels;
     resourceDesc.Texture2D.MostDetailedMip = 0;
 

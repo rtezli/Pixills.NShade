@@ -21,7 +21,7 @@ Texture* Texture::Load(ID3D11Texture2D *texture)
 
     D3D11_SHADER_RESOURCE_VIEW_DESC desc;
     desc.Format = d.Format;
-    desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
     desc.Texture2D.MipLevels = d.MipLevels;
     desc.Texture2D.MostDetailedMip = 0;
 

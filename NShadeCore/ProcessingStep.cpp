@@ -93,7 +93,7 @@ void ProcessingStep::Finalize(ID3D11Texture2D *source, ID3D11RenderTargetView *t
         }
         Res::Get()->DeviceContext->PSSetShader(pixelShader->GetShader(), NULL, 0);
     }
-
+    res = nullptr;
     Res::Get()->DeviceContext->OMSetRenderTargets(1, &target, depthStencil);
     Res::Get()->DeviceContext->DrawIndexed(indexCount, 0, 0);
 }
