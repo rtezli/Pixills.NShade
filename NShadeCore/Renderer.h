@@ -8,6 +8,7 @@
 #include "irendertarget.h"
 #include "immediatetarget.h"
 #include "deferredtarget.h"
+#include "postprocessor.h"
 
 EXTERN class API Renderer
 {

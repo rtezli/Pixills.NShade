@@ -58,7 +58,7 @@ HRESULT Renderer::CreateSwapChainDesciption()
 
     _swapChainDescription.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
     _swapChainDescription.SampleDesc.Count = Res::Get()->RenderQuality->SampleCount;
-    _swapChainDescription.BufferDesc.Format = Res::Get()->RenderQuality->DephStencilTextureFormat;//DXGI_FORMAT_R8G8B8A8_UNORM;
+    _swapChainDescription.BufferDesc.Format = Res::Get()->RenderQuality->DephStencilTextureFormat;
     _swapChainDescription.BufferDesc.Width = Res::Get()->RenderQuality->Width;
     _swapChainDescription.BufferDesc.Height = Res::Get()->RenderQuality->Height;
 
@@ -139,13 +139,12 @@ HRESULT Renderer::CreateRasterizerDescription()
     _rasterizerDesc.DepthBiasClamp = 0.0f;
     _rasterizerDesc.DepthClipEnable = true;
     _rasterizerDesc.FillMode = D3D11_FILL_SOLID;
-    //_rasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;
 
     _rasterizerDesc.MultisampleEnable = _rasterizerUseMultiSampling;
     _rasterizerDesc.ScissorEnable = false;
     _rasterizerDesc.SlopeScaledDepthBias = 0.0f;
 
-    _rasterizerDesc.CullMode = D3D11_CULL_NONE;// D3D11_CULL_BACK;//
+    _rasterizerDesc.CullMode = D3D11_CULL_BACK;//D3D11_CULL_NONE;// 
     _rasterizerDesc.FrontCounterClockwise = true;
 
     return 0;
@@ -191,6 +190,8 @@ void Renderer::Render(Scene *scene)
     }
 
     ClearScene();
+
+    Res::Get()->DeviceContext->ClearRenderTargetView(_backBufferTarget, Res::Get()->DefaultColor);
 
     for (unsigned int m = 0; m < scene->GetModels()->size(); m++)
     {
@@ -241,6 +242,7 @@ void Renderer::Render(Scene *scene)
             pixelshader->Render();
         }
 
+       
         Res::Get()->DeviceContext->OMSetRenderTargets(1, &_backBufferTarget, _renderTarget->GetDepthStencilView());
         Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
 
