@@ -241,9 +241,10 @@ void Renderer::Render(Scene *scene)
             pixelshader->Render();
         }
 
+        Res::Get()->DeviceContext->OMSetRenderTargets(1, &_backBufferTarget, _renderTarget->GetDepthStencilView());
         Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
 
-        PostProcess(scene, _renderTarget, model.GetIndexCount());
+        //PostProcess(scene, _renderTarget, model.GetIndexCount());
     }
 
     _swapChain->Present(1, 0);

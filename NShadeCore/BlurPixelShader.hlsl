@@ -1,5 +1,5 @@
-Texture2D    shaderTexture;
-SamplerState samplerState;
+//Texture2D       shaderTexture;
+//SamplerState    samplerState;
 
 struct PixelShaderInput
 {
@@ -43,15 +43,15 @@ float4 main(PixelShaderInput input) : SV_TARGET
     color = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
     // Add the nine horizontal pixels to the color by the specific weight of each.
-    color += shaderTexture.Sample(samplerState, input.texCoord1) * weight4;
-    color += shaderTexture.Sample(samplerState, input.texCoord2) * weight3;
-    color += shaderTexture.Sample(samplerState, input.texCoord3) * weight2;
-    color += shaderTexture.Sample(samplerState, input.texCoord4) * weight1;
-    color += shaderTexture.Sample(samplerState, input.texCoord5) * weight0;
-    color += shaderTexture.Sample(samplerState, input.texCoord6) * weight1;
-    color += shaderTexture.Sample(samplerState, input.texCoord7) * weight2;
-    color += shaderTexture.Sample(samplerState, input.texCoord8) * weight3;
-    color += shaderTexture.Sample(samplerState, input.texCoord9) * weight4;
+    //color += shaderTexture.Sample(samplerState, input.texCoord1) * weight4;
+    //color += shaderTexture.Sample(samplerState, input.texCoord2) * weight3;
+    //color += shaderTexture.Sample(samplerState, input.texCoord3) * weight2;
+    //color += shaderTexture.Sample(samplerState, input.texCoord4) * weight1;
+    //color += shaderTexture.Sample(samplerState, input.texCoord5) * weight0;
+    //color += shaderTexture.Sample(samplerState, input.texCoord6) * weight1;
+    //color += shaderTexture.Sample(samplerState, input.texCoord7) * weight2;
+    //color += shaderTexture.Sample(samplerState, input.texCoord8) * weight3;
+    //color += shaderTexture.Sample(samplerState, input.texCoord9) * weight4;
 
     // Set the alpha channel to one.
     color.a = 1.0f;

@@ -8,16 +8,16 @@ cbuffer Camera : register(b0)
 
 struct VertexShaderInput
 {
-    float3 position     : POSITION0;
-    float3 normal       : NORMAL0;
-    float2 uv           : TEXCOORD0;
-    float3 bary         : POSITION1;
+    float3 position : POSITION0;
+    float3 normal   : NORMAL0;
+    float2 uv       : TEXCOORD0;
+    float3 bary     : POSITION1;
 };
 
 struct VertexShaderOutput
 {
-    float4 position     : SV_POSITION;
-    float2 uv           : TEXCOORD0;
+    float4 position : SV_POSITION;
+    float2 uv       : TEXCOORD0;
 };
 
 VertexShaderOutput main(VertexShaderInput input)

@@ -55,9 +55,8 @@ void ProcessingStep::Render(ID3D11Texture2D *source, unsigned int indexCount)
         Res::Get()->DeviceContext->PSSetShader(pixelShader->GetShader(), NULL, 0);
     }
 
-    res = nullptr;
     Res::Get()->DeviceContext->DrawIndexed(indexCount, 0, 0);
-    Res::Get()->DeviceContext->VSSetShaderResources(0, 1, &res);
+    Clear();
 }
 
 void ProcessingStep::Finalize(ID3D11Texture2D *source, ID3D11RenderTargetView *target, ID3D11DepthStencilView *depthStencil, unsigned int indexCount)
@@ -65,6 +64,10 @@ void ProcessingStep::Finalize(ID3D11Texture2D *source, ID3D11RenderTargetView *t
     D3D11_TEXTURE2D_DESC sDesc;
     source->GetDesc(&sDesc);
     sDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+    D3D11_RENDER_TARGET_VIEW_DESC tDesc;
+    target->GetDesc(&tDesc);
+    auto dimension = tDesc.ViewDimension;
 
     D3D11_SHADER_RESOURCE_VIEW_DESC resourceDescription;
     resourceDescription.Format = sDesc.Format;
@@ -74,11 +77,12 @@ void ProcessingStep::Finalize(ID3D11Texture2D *source, ID3D11RenderTargetView *t
 
     ID3D11ShaderResourceView *res;
     Res::Get()->Device->CreateShaderResourceView(source, &resourceDescription, &res);
-    Res::Get()->DeviceContext->VSSetShaderResources(0, 1, &res);
+
 
     auto vertexShader = _shaders->VertexShader;
     if (vertexShader)
     {
+        Res::Get()->DeviceContext->VSSetShaderResources(0, 1, &res);
         Res::Get()->DeviceContext->VSSetShader(vertexShader->GetShader(), NULL, 0);
     }
 
@@ -88,12 +92,20 @@ void ProcessingStep::Finalize(ID3D11Texture2D *source, ID3D11RenderTargetView *t
         auto state = pixelShader->GetSamplerState();
         if (state)
         {
-            Res::Get()->DeviceContext->PSSetShaderResources(0, 1, &res);
+            //Res::Get()->DeviceContext->PSSetShaderResources(0, 1, &res);
             Res::Get()->DeviceContext->PSSetSamplers(0, 1, &state);
         }
         Res::Get()->DeviceContext->PSSetShader(pixelShader->GetShader(), NULL, 0);
     }
-    res = nullptr;
+
     Res::Get()->DeviceContext->OMSetRenderTargets(1, &target, depthStencil);
     Res::Get()->DeviceContext->DrawIndexed(indexCount, 0, 0);
+    Clear();
+}
+
+void ProcessingStep::Clear()
+{
+    ID3D11ShaderResourceView *res = nullptr;
+    Res::Get()->DeviceContext->VSSetShaderResources(0, 1, &res);
+    Res::Get()->DeviceContext->PSSetShaderResources(0, 1, &res);
 }
