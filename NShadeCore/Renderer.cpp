@@ -242,9 +242,12 @@ void Renderer::Render(Scene *scene)
 
         Res::Get()->DeviceContext->OMSetRenderTargets(1, &_backBufferTarget, _renderTarget->GetDepthStencilView());
         Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
+    }
 
-        scene->GetPostProcessor()->Render();
-        //PostProcess(scene, _renderTarget, model.GetIndexCount());
+    auto postProcessor = scene->GetPostProcessor();
+    if (postProcessor)
+    {
+        postProcessor->Render();
     }
 
     _swapChain->Present(1, 0);
