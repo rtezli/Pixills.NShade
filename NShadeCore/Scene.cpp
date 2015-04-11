@@ -5,7 +5,6 @@ Scene::Scene()
 {
     _models = shared_ptr<vector<Model>>(new vector<Model>());
     _lights = shared_ptr<vector<Light>>(new vector<Light>());
-    _processingSteps = shared_ptr<vector<ProcessingStep>>(new vector<ProcessingStep>());
 }
 
 void Scene::Clear()
@@ -31,11 +30,6 @@ void Scene::AddLight(Light *light)
 void Scene::AddCamera(Camera *camera)
 {
     _camera = shared_ptr<Camera>(camera);
-}
-
-void Scene::AddPostProcessingStep(ProcessingStep *step)
-{
-    _processingSteps->push_back(*step);
 }
 
 void Scene::Load(wstring fileName)
@@ -86,7 +80,7 @@ Scene* Scene::CreateStandardScene()
 
     auto phongMaterial = new Material();
     phongMaterial->SetColor(new XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-    
+
     flatVertexShader->AddBuffer(camera->GetMatrixBuffer());
     flatVertexShader->AddBuffer(phongMaterial->GetColorBuffer());
     flatVertexShader->AddBuffer(scene->GetAmbientBuffer());
@@ -118,7 +112,7 @@ Scene* Scene::CreateStandardScene()
     textureShaders->VertexShader = textureVertexShader;
     //textureShaders->GeometryShader = particleGeometryShader;
     textureMaterial->AssignShaders(textureShaders);
-    
+
     auto plane = Model::CreateHorizontalPlane(20.0f, new XMFLOAT3(0.0f, 0.0f, 0.0f));
     plane->AssignMaterial(textureMaterial);
 
@@ -134,7 +128,10 @@ Scene* Scene::CreateStandardScene()
     blurShaders->PixelShader = blurPixelShader;
     blurShaders->VertexShader = blurVertexShader;
     blurStep->AssignShaders(blurShaders);
-    scene->AddPostProcessingStep(blurStep);
-    
+
+    //auto postProzessor = GetPostProcessor();
+    //_postProcessor = PostProcessor::Create(Res::Get()->RenderQuality);
+    //GetPostProcessor()->AddPostProcessingStep(blurStep);
+
     return scene;
 }

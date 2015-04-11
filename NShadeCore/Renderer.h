@@ -8,16 +8,15 @@
 #include "irendertarget.h"
 #include "immediatetarget.h"
 #include "deferredtarget.h"
-#include "postprocessor.h"
 
 EXTERN class API Renderer
 {
 public:
     Renderer(bool useSwapChain);
 public:
-    HRESULT	ResizeSwapChain(UINT32 newWidth, UINT32 newHeight);
+    HRESULT ResizeSwapChain(UINT32 newWidth, UINT32 newHeight);
     HRESULT SetShaderParameters();
-    HRESULT	Initialize();
+    HRESULT Initialize();
     void Resize();
 public:
     void ClearScene();

@@ -10,8 +10,6 @@ Renderer::Renderer(bool useSwapChain)
     _rasterizerUseMultiSampling = true;
     _bufferCount = 2;
     _swapChainFlags = 0;
-
-    //_renderTarget = ImmediateTarget::Create(Res::Get()->RenderQuality);
     _renderTarget = DeferredTarget::Create(Res::Get()->RenderQuality);
 }
 
@@ -242,41 +240,14 @@ void Renderer::Render(Scene *scene)
             pixelshader->Render();
         }
 
-       
         Res::Get()->DeviceContext->OMSetRenderTargets(1, &_backBufferTarget, _renderTarget->GetDepthStencilView());
         Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
 
+        scene->GetPostProcessor()->Render();
         //PostProcess(scene, _renderTarget, model.GetIndexCount());
     }
 
     _swapChain->Present(1, 0);
-}
-
-void Renderer::PostProcess(Scene *scene, IRenderTarget *target, unsigned int indexCount)
-{
-    // Do stuff like PPAA, DoF, and/or bloom
-    auto steps = scene->GetPostProcessingSteps();
-    if (steps)
-    {
-        for (unsigned int p = 0; p < steps->size(); p++)
-        {
-            if (p == steps->size() - 1)
-            {
-                // Let the last pass render to back buffer
-                auto step = steps->at(p);
-                auto input = target->Swap();
-                auto resource = target->GetShaderResourceView();
-                step.Finalize(input, _backBufferTarget, target->GetDepthStencilView(), indexCount);
-            }
-            else
-            {
-                auto step = steps->at(p);
-                auto input = target->Swap();
-                auto resource = target->GetShaderResourceView();
-                step.Render(input, indexCount);
-            }
-        }
-    }
 }
 
 void Renderer::Tesselate(Shaders *shaders)

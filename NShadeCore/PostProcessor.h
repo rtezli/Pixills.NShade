@@ -4,16 +4,18 @@
 #include "processingstep.h"
 #include "d3dhelpers.h"
 
+
 class PostProcessor
 {
 public:
-    void Render();
-    void AddStep(ProcessingStep *step);
-    PostProcessor* Create(RenderingQuality *quality);
+    void                    Render();
+    void                    AddStep(ProcessingStep *step);
+    static PostProcessor*   Create(RenderingQuality *quality);
 private:
     PostProcessor(RenderingQuality *quality);
     void CreateDepthStencil();
     void CreateDepthStencilStateDescription();
+private:
     shared_ptr<vector<ProcessingStep>>  _processingSteps;
 
     RenderingQuality                    *_quality;

@@ -64,14 +64,25 @@ void PostProcessor::AddStep(ProcessingStep *step)
 
 void PostProcessor::Render()
 {
-    Res::Get()->DeviceContext->OMSetRenderTargets(1, &_renderTargetView, _depthStencilView);
-
     if (_processingSteps)
     {
-        for (unsigned int p = 0; p < _processingSteps->size(); p++)
-        {
-            auto step = _processingSteps->at(p);
-        }
-        Res::Get()->DeviceContext->DrawAuto();
+        //for (unsigned int p = 0; p < _processingSteps->size(); p++)
+        //{
+        //    if (p == _processingSteps->size() - 1)
+        //    {
+        //        // Let the last pass render to back buffer
+        //        auto step = _processingSteps->at(p);
+        //        auto input = target->Swap();
+        //        auto resource = target->GetShaderResourceView();
+        //        step.Finalize(input, _backBufferTarget, target->GetDepthStencilView(), indexCount);
+        //    }
+        //    else
+        //    {
+        //        auto step = _processingSteps->at(p);
+        //        auto input = target->Swap();
+        //        auto resource = target->GetShaderResourceView();
+        //        step.Render(input, indexCount);
+        //    }
+        //}
     }
 }
