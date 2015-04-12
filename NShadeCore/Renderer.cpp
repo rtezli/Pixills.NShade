@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "renderer.h"
 
-
 Renderer::Renderer(bool useSwapChain)
 {
     _renderDeferred = false;
