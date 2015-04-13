@@ -17,7 +17,7 @@ SwapChain::~SwapChain()
 
 HRESULT SwapChain::CreateSwapChainDesciption()
 {
-    _swapChainDescription = { 0 };
+    _swapChainDescription = (DXGI_SWAP_CHAIN_DESC*)malloc(sizeof(DXGI_SWAP_CHAIN_DESC));
 
     _swapChainDescription->BufferCount = _bufferCount;
     _swapChainDescription->BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
