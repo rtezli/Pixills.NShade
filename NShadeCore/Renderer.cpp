@@ -7,20 +7,27 @@ Renderer::Renderer(bool useSwapChain)
     _isInitialized = false;
     _useSwapChain = useSwapChain;
     _rasterizerUseMultiSampling = true;
-    _bufferCount = 2;
-    _swapChainFlags = 0;
-    _renderTarget = DeferredTarget::Create(Res::Get()->RenderQuality);
+
+    _swapChain = new SwapChain();
+
+    //_bufferCount = 2;
+    //_swapChainFlags = 0;
+    //_renderTarget = DeferredTarget::Create(Res::Get()->RenderQuality);
 }
 
 HRESULT Renderer::Initialize()
 {
     _isInitialized = false;
 
-    auto result = CreateSwapChain();
-    if (FAILED(result))
-    {
-        return result;
-    }
+    _swapChain = new SwapChain();
+
+    auto result = _swapChain->Initialize();
+
+    //auto result = CreateSwapChain();
+    //if (FAILED(result))
+    //{
+    //    return result;
+    //}
 
     result = CreateRasterizer();
     if (FAILED(result))
@@ -38,93 +45,93 @@ HRESULT Renderer::Initialize()
     return result;
 }
 
-HRESULT Renderer::CreateSwapChainDesciption()
-{
-    _swapChainDescription = { 0 };
-
-    _swapChainDescription.BufferCount = _bufferCount;
-    _swapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-
-    _swapChainDescription.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-    _swapChainDescription.Flags = _swapChainFlags;
-
-    _swapChainDescription.BufferDesc.RefreshRate.Numerator = 0;
-    _swapChainDescription.BufferDesc.RefreshRate.Denominator = 1;
-    _swapChainDescription.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-    _swapChainDescription.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-
-    _swapChainDescription.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
-    _swapChainDescription.SampleDesc.Count = Res::Get()->RenderQuality->SampleCount;
-    _swapChainDescription.BufferDesc.Format = Res::Get()->RenderQuality->DephStencilTextureFormat;
-    _swapChainDescription.BufferDesc.Width = Res::Get()->RenderQuality->Width;
-    _swapChainDescription.BufferDesc.Height = Res::Get()->RenderQuality->Height;
-
-    auto handle = *Res::Get()->WindowHandle;
-    _swapChainDescription.OutputWindow = handle;
-
-    if (Res::Get()->FullScreen)
-    {
-        _swapChainDescription.Windowed = false;
-    }
-    else
-    {
-        _swapChainDescription.Windowed = true;
-    }
-    return 0;
-}
-
-HRESULT Renderer::CreateSwapChain()
-{
-    auto result = CreateSwapChainDesciption();
-    if (FAILED(result))
-    {
-        return result;
-    }
-
-    IDXGIDevice *dxgiDevice = 0;
-    IDXGIAdapter *dxgiAdapter = 0;
-    IDXGIFactory *dxgiFactory = 0;
-
-    result = Res::Get()->Device->QueryInterface(__uuidof(IDXGIDevice), (void **)&dxgiDevice);
-    if (FAILED(result))
-    {
-        return result;
-    }
-
-    result = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&dxgiAdapter);
-    if (FAILED(result))
-    {
-        return result;
-    }
-
-    result = dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&dxgiFactory);
-    if (FAILED(result))
-    {
-        return result;
-    }
-
-    result = dxgiFactory->CreateSwapChain(Res::Get()->Device, &_swapChainDescription, &_swapChain);
-    if (FAILED(result))
-    {
-        return result;
-    }
-
-    result = _swapChain->GetBuffer(0, IID_PPV_ARGS(&_backBufferTexture));
-    if (FAILED(result))
-    {
-        return result;
-    }
-
-    dxgiDevice->Release();
-    dxgiAdapter->Release();
-    dxgiFactory->Release();
-    
-    auto quality = new RenderingQuality();
-    quality->TextureFormat = _swapChainDescription.BufferDesc.Format;
- 
-    _backBufferTarget = D3DHelpers::CreateRenderTarget(_backBufferTexture, D3D11_RTV_DIMENSION_TEXTURE2DMS, quality);
-    return 0;
-}
+//HRESULT Renderer::CreateSwapChainDesciption()
+//{
+//    _swapChainDescription = { 0 };
+//
+//    _swapChainDescription.BufferCount = _bufferCount;
+//    _swapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+//
+//    _swapChainDescription.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+//    _swapChainDescription.Flags = _swapChainFlags;
+//
+//    _swapChainDescription.BufferDesc.RefreshRate.Numerator = 0;
+//    _swapChainDescription.BufferDesc.RefreshRate.Denominator = 1;
+//    _swapChainDescription.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+//    _swapChainDescription.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+//
+//    _swapChainDescription.SampleDesc.Quality = Res::Get()->RenderQuality->Quality;
+//    _swapChainDescription.SampleDesc.Count = Res::Get()->RenderQuality->SampleCount;
+//    _swapChainDescription.BufferDesc.Format = Res::Get()->RenderQuality->DephStencilTextureFormat;
+//    _swapChainDescription.BufferDesc.Width = Res::Get()->RenderQuality->Width;
+//    _swapChainDescription.BufferDesc.Height = Res::Get()->RenderQuality->Height;
+//
+//    auto handle = *Res::Get()->WindowHandle;
+//    _swapChainDescription.OutputWindow = handle;
+//
+//    if (Res::Get()->FullScreen)
+//    {
+//        _swapChainDescription.Windowed = false;
+//    }
+//    else
+//    {
+//        _swapChainDescription.Windowed = true;
+//    }
+//    return 0;
+//}
+//
+//HRESULT Renderer::CreateSwapChain()
+//{
+//    auto result = CreateSwapChainDesciption();
+//    if (FAILED(result))
+//    {
+//        return result;
+//    }
+//
+//    IDXGIDevice *dxgiDevice = 0;
+//    IDXGIAdapter *dxgiAdapter = 0;
+//    IDXGIFactory *dxgiFactory = 0;
+//
+//    result = Res::Get()->Device->QueryInterface(__uuidof(IDXGIDevice), (void **)&dxgiDevice);
+//    if (FAILED(result))
+//    {
+//        return result;
+//    }
+//
+//    result = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&dxgiAdapter);
+//    if (FAILED(result))
+//    {
+//        return result;
+//    }
+//
+//    result = dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void **)&dxgiFactory);
+//    if (FAILED(result))
+//    {
+//        return result;
+//    }
+//
+//    result = dxgiFactory->CreateSwapChain(Res::Get()->Device, &_swapChainDescription, &_swapChain);
+//    if (FAILED(result))
+//    {
+//        return result;
+//    }
+//
+//    result = _swapChain->GetBuffer(0, IID_PPV_ARGS(&_backBufferTexture));
+//    if (FAILED(result))
+//    {
+//        return result;
+//    }
+//
+//    dxgiDevice->Release();
+//    dxgiAdapter->Release();
+//    dxgiFactory->Release();
+//    
+//    auto quality = new RenderingQuality();
+//    quality->TextureFormat = _swapChainDescription.BufferDesc.Format;
+// 
+//    _backBufferTarget = D3DHelpers::CreateRenderTarget(_backBufferTexture, D3D11_RTV_DIMENSION_TEXTURE2DMS, quality);
+//    return 0;
+//}
 
 
 HRESULT Renderer::CreateRasterizerDescription()
@@ -177,7 +184,7 @@ HRESULT Renderer::CreateViewPort()
 
 void Renderer::ClearScene()
 {
-    _renderTarget->ClearRenderTargets();
+    _swapChain->ClearRenderTargets();
 }
 
 void Renderer::Render(Scene *scene)
@@ -189,7 +196,7 @@ void Renderer::Render(Scene *scene)
 
     ClearScene();
 
-    Res::Get()->DeviceContext->ClearRenderTargetView(_backBufferTarget, Res::Get()->DefaultColor);
+    Res::Get()->DeviceContext->ClearRenderTargetView(_swapChain->GetBackBufferTarget(), Res::Get()->DefaultColor);
 
     /* Render each model in the scene */
     for (unsigned int m = 0; m < scene->GetModels()->size(); m++)
@@ -241,7 +248,9 @@ void Renderer::Render(Scene *scene)
             pixelshader->Render();
         }
 
-        Res::Get()->DeviceContext->OMSetRenderTargets(1, &_backBufferTarget, _renderTarget->GetDepthStencilView());
+        auto backBuffer = _swapChain->GetBackBufferTarget();
+        auto depthStencil = _swapChain->GetDepthStencilView();
+        Res::Get()->DeviceContext->OMSetRenderTargets(1, &backBuffer, depthStencil);
         Res::Get()->DeviceContext->DrawIndexed(model.GetIndexCount(), 0, 0);
     }
 
@@ -255,7 +264,7 @@ void Renderer::Render(Scene *scene)
     {
         return;
     }
-    _swapChain->Present(1, 0);
+    _swapChain->Present();
 }
 
 void Renderer::Tesselate(Shaders *shaders)

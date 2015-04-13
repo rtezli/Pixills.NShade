@@ -4,7 +4,9 @@
 
 SwapChain::SwapChain()
 {
-
+    _bufferCount = 2;
+    _swapChainFlags = 0;
+    _renderTarget = DeferredTarget::Create(Res::Get()->RenderQuality);
 }
 
 

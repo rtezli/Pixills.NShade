@@ -5,9 +5,8 @@
 #include "d3dcompiler.h"
 #include "d3dhelpers.h"
 #include "scene.h"
-#include "irendertarget.h"
-#include "immediatetarget.h"
-#include "deferredtarget.h"
+
+#include "swapchain.h"
 
 EXTERN class API Renderer
 {
@@ -32,8 +31,8 @@ private:
     //HRESULT CreateDeferredRenderTarget();
 
     /* swap chain */
-    HRESULT	CreateSwapChainDesciption();
-    HRESULT CreateSwapChain();
+    //HRESULT	CreateSwapChainDesciption();
+    //HRESULT CreateSwapChain();
 
     /* constant buffer */
     HRESULT CreateConstantBufferDescription();
@@ -55,15 +54,16 @@ private:
 
     HRESULT CreateViewPort();
 private:
-    ID3D11Texture2D                 *_backBufferTexture;
-    ID3D11RenderTargetView          *_backBufferTarget;
-    IRenderTarget                   *_renderTarget;
+    SwapChain                       *_swapChain;
+    //ID3D11Texture2D                 *_backBufferTexture;
+    //ID3D11RenderTargetView          *_backBufferTarget;
+    //IRenderTarget                   *_renderTarget;
 
-    IDXGISwapChain                  *_swapChain;
-    DXGI_SWAP_CHAIN_DESC            _swapChainDescription;
-    int                             _swapChainFlags;
+    //IDXGISwapChain                  *_swapChain;
+    //DXGI_SWAP_CHAIN_DESC            _swapChainDescription;
+    //int                             _swapChainFlags;
 
-    int                             _bufferCount;
+    //int                             _bufferCount;
 
     D3D11_RASTERIZER_DESC           _rasterizerDesc;
 

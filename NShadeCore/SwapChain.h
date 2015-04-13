@@ -3,6 +3,8 @@
 #include "d3d11.h"
 #include "d3dhelpers.h"
 #include "irendertarget.h"
+#include "immediatetarget.h"
+#include "deferredtarget.h"
 #include "res.h"
 
 class SwapChain
@@ -11,6 +13,10 @@ public:
     SwapChain();
     ~SwapChain();
     HRESULT Initialize();
+    ID3D11RenderTargetView* const GetBackBufferTarget() { return _backBufferTarget; }
+    ID3D11DepthStencilView* const GetDepthStencilView() { return _renderTarget->GetDepthStencilView(); }
+    void const ClearRenderTargets(){ _renderTarget->ClearRenderTargets(); }
+    void Present() const { _swapChain->Present(1, 0); }
 private:
     HRESULT                 CreateSwapChainDesciption();
     HRESULT                 CreateSwapChain();
