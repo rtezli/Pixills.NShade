@@ -45,4 +45,4 @@ private:
     unsigned int                        _indexCount;
 };
 
-#pragma warning( restore : 4996 )
+#pragma warning(default : 4996 )

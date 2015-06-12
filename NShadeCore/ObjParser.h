@@ -18,4 +18,4 @@ public:
     static HRESULT Parse(vector<NVertex> *vertices, vector<unsigned int> *indices, char *fileName);
 };
 
-#pragma warning(restore:4996)
+#pragma warning(default : 4996)

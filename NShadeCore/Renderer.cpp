@@ -167,6 +167,7 @@ HRESULT Renderer::CreateRasterizer()
     return 0;
 }
 
+
 HRESULT Renderer::CreateViewPort()
 {
     auto viewPort = Res::Get()->ViewPort;
@@ -191,6 +192,7 @@ void Renderer::Render(Scene *scene)
 
     Res::Get()->DeviceContext->ClearRenderTargetView(_backBufferTarget, Res::Get()->DefaultColor);
 
+    /* Render each model in the scene */
     for (unsigned int m = 0; m < scene->GetModels()->size(); m++)
     {
         auto model = scene->GetModels()->at(m);
