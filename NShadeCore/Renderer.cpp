@@ -250,6 +250,10 @@ void Renderer::Render(Scene *scene)
         postProcessor->Render();
     }
 
+    if (!_swapChain)
+    {
+        return;
+    }
     _swapChain->Present(1, 0);
 }
 
